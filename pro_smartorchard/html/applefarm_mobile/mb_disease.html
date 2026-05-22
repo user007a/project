@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 识病虫</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .content { padding: 16px; padding-bottom: 80px; }
+    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .upload-area { width: 100%; height: 200px; border: 2px dashed var(--border); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all .2s; background: #fff; }
+    .upload-area:active { background: var(--gray-light); }
+    .upload-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
+    .upload-icon svg { width: 32px; height: 32px; color: var(--primary); }
+    .upload-text { font-size: 14px; color: var(--text-secondary); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 24px; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all .2s; border: none; }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
+    .btn-block { width: 100%; }
+    .result-card { margin-top: 20px; }
+    .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .result-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+    .result-icon.danger { background: var(--red-light); color: var(--red); }
+    .result-icon.warning { background: var(--orange-light); color: var(--orange); }
+    .result-icon.success { background: var(--primary-light); color: var(--primary); }
+    .result-icon svg { width: 32px; height: 32px; }
+    .result-info { flex: 1; }
+    .result-name { font-size: 18px; font-weight: 700; color: var(--text); }
+    .result-confidence { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+    .tips-box { padding: 14px; background: var(--blue-light); border-radius: 8px; margin-top: 16px; }
+    .tips-title { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
+    .tips-content { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .history-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .history-item:last-child { border-bottom: none; }
+    .history-thumb { width: 64px; height: 64px; border-radius: 8px; background: var(--gray-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .history-thumb svg { width: 32px; height: 32px; color: var(--text-light); }
+    .history-info { flex: 1; min-width: 0; }
+    .history-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .history-time { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 90%; max-width: 340px; text-align: center; }
+    .spinner { width: 48px; height: 48px; border: 4px solid var(--gray-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .modal-text { font-size: 15px; color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="padding-left: 40px;">
+        <div class="header-title">病虫害识别</div>
+        <div class="header-sub">拍照识别果树病虫害</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <div class="card-title">上传图片</div>
+        <div class="upload-area" onclick="triggerUpload()">
+          <div class="upload-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <div class="upload-text">点击或拖拽上传图片</div>
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleUpload(event)">
+        <button class="btn btn-primary btn-block" style="margin-top: 16px;" onclick="startIdentify()">开始识别</button>
+      </div>
+
+      <div id="resultArea" style="display:none;">
+        <div class="card result-card">
+          <div class="card-title">识别结果</div>
+          <div class="result-header">
+            <div class="result-icon danger">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="result-info">
+              <div class="result-name">苹果轮纹病</div>
+              <div class="result-confidence">置信度：92%</div>
+            </div>
+          </div>
+          <div class="tips-box">
+            <div class="tips-title">防治建议</div>
+            <div class="tips-content">1. 及时清除病枝病果<br>2. 春季发芽前喷布波尔多液<br>3. 谢花后喷施甲基托布津<br>4. 加强果园排水通风</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">识别历史</div>
+        <div class="history-item">
+          <div class="history-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <div class="history-info">
+            <div class="history-name">苹果斑点落叶病</div>
+            <div class="history-time">2026-05-20 14:30</div>
+          </div>
+        </div>
+        <div class="history-item">
+          <div class="history-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <div class="history-info">
+            <div class="history-name">红蜘蛛虫害</div>
+            <div class="history-time">2026-05-18 09:15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="loadingModal">
+    <div class="modal-box">
+      <div class="spinner"></div>
+      <div class="modal-text">正在识别中...</div>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function triggerUpload() {
+      document.getElementById('imageInput').click();
+    }
+
+    function handleUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        console.log('Uploaded:', file.name);
+      }
+    }
+
+    function startIdentify() {
+      document.getElementById('loadingModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('loadingModal').classList.remove('show');
+        document.getElementById('resultArea').style.display = 'block';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 画地块</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .tab-badge { position: absolute; top: 4px; right: 50%; margin-right: -18px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .content { padding: 16px; padding-bottom: 80px; }
+    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .map-container { width: 100%; height: 400px; background: linear-gradient(135deg, #e8f5ec 0%, #c8e6d0 100%); border-radius: var(--radius); position: relative; overflow: hidden; margin-bottom: 16px; border: 2px solid var(--primary-light); }
+    .map-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(46, 158, 90, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(46, 158, 90, 0.1) 1px, transparent 1px); background-size: 40px 40px; }
+    .plot-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: crosshair; }
+    .point-marker { position: absolute; width: 16px; height: 16px; background: var(--primary); border: 3px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; z-index: 10; box-shadow: 0 2px 8px rgba(46, 158, 90, 0.4); }
+    .point-marker.remove { background: var(--red); }
+    .action-bar { display: flex; gap: 12px; margin-bottom: 16px; }
+    .action-btn { flex: 1; height: 44px; background: #fff; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all .2s; }
+    .action-btn:active { transform: scale(0.98); background: #f8f8f8; }
+    .action-btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; }
+    .action-btn.danger { background: var(--red-light); color: var(--red); border: none; }
+    .action-btn svg { width: 18px; height: 18px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 0 14px; font-size: 14px; color: var(--text); background: #fff; transition: border-color .2s; }
+    .form-input:focus { border-color: var(--primary); }
+    .form-textarea { width: 100%; min-height: 88px; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--text); resize: vertical; transition: border-color .2s; }
+    .form-textarea:focus { border-color: var(--primary); }
+    .stats-row { display: flex; gap: 12px; }
+    .stat-box { flex: 1; background: var(--primary-light); border-radius: 8px; padding: 12px; text-align: center; }
+    .stat-value { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .btn-submit { width: 100%; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-submit:active { opacity: 0.9; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 85%; max-width: 320px; }
+    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .modal-btn { width: 100%; height: 44px; background: var(--primary); color: #fff; border: none; border-radius: 22px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .success-icon { width: 56px; height: 56px; margin: 0 auto 16px; background: #e8f5ec; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .success-icon svg { width: 32px; height: 32px; color: #22a84a; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="padding-left: 40px;">
+        <div class="header-title">绘制地块</div>
+        <div class="header-sub">点击地图添加地块边界</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="map-container">
+        <div class="map-grid"></div>
+        <canvas id="plotCanvas" class="plot-canvas"></canvas>
+        <div id="pointsContainer"></div>
+      </div>
+
+      <div class="action-bar">
+        <button class="action-btn" onclick="clearPoints()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          清除
+        </button>
+        <button class="action-btn danger" onclick="undoPoint()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7v6h6"/>
+            <path d="M21 17v-6h-6"/>
+            <path d="M5.64 17.36A8.5 8.5 0 0 1 12 11h6.36"/>
+            <path d="M18.36 6.64A8.5 8.5 0 0 0 12 13H5.64"/>
+          </svg>
+          撤销
+        </button>
+        <button class="action-btn primary" onclick="closePolygon()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="M12 5v14"/>
+          </svg>
+          闭合
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">地块信息</div>
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-value" id="areaValue">0</div>
+            <div class="stat-label">面积（亩）</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="pointCount">0</div>
+            <div class="stat-label">边界点</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">地块名称</label>
+          <input type="text" class="form-input" id="plotName" placeholder="请输入地块名称">
+        </div>
+        <div class="form-group">
+          <label class="form-label">地块类型</label>
+          <div class="radio-group" id="plotTypeGroup">
+            <div class="radio-item active" data-type="apple">
+              <div class="radio-circle"></div>
+              <div class="radio-text">苹果园</div>
+            </div>
+            <div class="radio-item" data-type="peach">
+              <div class="radio-circle"></div>
+              <div class="radio-text">桃园</div>
+            </div>
+            <div class="radio-item" data-type="grape">
+              <div class="radio-circle"></div>
+              <div class="radio-text">葡萄园</div>
+            </div>
+            <div class="radio-item" data-type="other">
+              <div class="radio-circle"></div>
+              <div class="radio-text">其他</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">备注信息</label>
+          <textarea class="form-textarea" id="plotRemark" placeholder="请输入备注信息（选填）"></textarea>
+        </div>
+        <button class="btn-submit" id="saveBtn" onclick="savePlot()" disabled>保存地块</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="modal-title" id="modalTitle">保存成功</div>
+      <button class="modal-btn" onclick="closeModal()">确 定</button>
+    </div>
+  </div>
+
+  <script>
+    let points = [];
+    let isClosed = false;
+    let canvas, ctx;
+    let selectedType = 'apple';
+
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function initCanvas() {
+      canvas = document.getElementById('plotCanvas');
+      const container = canvas.parentElement;
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      ctx = canvas.getContext('2d');
+      
+      canvas.addEventListener('click', handleCanvasClick);
+      
+      document.querySelectorAll('.radio-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          selectedType = item.dataset.type;
+        });
+      });
+    }
+
+    function handleCanvasClick(e) {
+      if (isClosed) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      points.push({ x, y });
+      updatePointCount();
+      render();
+      createPointMarker(x, y, points.length - 1);
+    }
+
+    function createPointMarker(x, y, index) {
+      const marker = document.createElement('div');
+      marker.className = 'point-marker';
+      marker.style.left = x + 'px';
+      marker.style.top = y + 'px';
+      marker.dataset.index = index;
+      marker.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!isClosed) {
+          removePoint(index);
+        }
+      });
+      document.getElementById('pointsContainer').appendChild(marker);
+    }
+
+    function removePoint(index) {
+      if (isClosed) return;
+      points.splice(index, 1);
+      updatePointCount();
+      render();
+      updateMarkers();
+    }
+
+    function updateMarkers() {
+      const container = document.getElementById('pointsContainer');
+      container.innerHTML = '';
+      points.forEach((point, index) => {
+        createPointMarker(point.x, point.y, index);
+      });
+    }
+
+    function clearPoints() {
+      if (points.length === 0) return;
+      points = [];
+      isClosed = false;
+      updatePointCount();
+      updateArea(0);
+      document.getElementById('saveBtn').disabled = true;
+      document.getElementById('pointsContainer').innerHTML = '';
+      render();
+    }
+
+    function undoPoint() {
+      if (points.length === 0 || isClosed) return;
+      points.pop();
+      updatePointCount();
+      if (!isClosed && points.length >= 3) {
+        calculateArea();
+      }
+      render();
+      updateMarkers();
+    }
+
+    function closePolygon() {
+      if (points.length < 3) {
+        alert('请至少添加3个点');
+        return;
+      }
+      isClosed = true;
+      calculateArea();
+      document.getElementById('saveBtn').disabled = false;
+      render();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (points.length > 0) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        
+        if (isClosed) {
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(46, 158, 90, 0.2)';
+          ctx.fill();
+        }
+        
+        ctx.strokeStyle = isClosed ? 'rgba(46, 158, 90, 1)' : 'rgba(46, 158, 90, 0.8)';
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+      }
+    }
+
+    function calculateArea() {
+      let area = 0;
+      for (let i = 0; i < points.length; i++) {
+        const j = (i + 1) % points.length;
+        area += points[i].x * points[j].y;
+        area -= points[j].x * points[i].y;
+      }
+      area = Math.abs(area / 2);
+      
+      const pixelToMeter = 0.5;
+      const squareMeterToMu = 0.0015;
+      const areaMu = (area * pixelToMeter * pixelToMeter * squareMeterToMu).toFixed(2);
+      
+      updateArea(areaMu);
+    }
+
+    function updatePointCount() {
+      document.getElementById('pointCount').textContent = points.length;
+    }
+
+    function updateArea(value) {
+      document.getElementById('areaValue').textContent = value;
+    }
+
+    function savePlot() {
+      const name = document.getElementById('plotName').value;
+      const remark = document.getElementById('plotRemark').value;
+      
+      if (!name) {
+        alert('请输入地块名称');
+        return;
+      }
+      
+      if (!isClosed || points.length < 3) {
+        alert('请先完成地块绘制');
+        return;
+      }
+      
+      const plot = {
+        id: Date.now(),
+        name,
+        type: selectedType,
+        area: parseFloat(document.getElementById('areaValue').textContent),
+        points,
+        remark,
+        createTime: new Date().toISOString()
+      };
+      
+      const plots = JSON.parse(localStorage.getItem('plots') || '[]');
+      plots.push(plot);
+      localStorage.setItem('plots', JSON.stringify(plots));
+      
+      openModal('保存成功');
+    }
+
+    function openModal(title) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+      navigateTo('mb_plot.html');
+    }
+
+    window.addEventListener('load', initCanvas);
+    window.addEventListener('resize', () => {
+      const oldWidth = canvas.width;
+      const oldHeight = canvas.height;
+      const container = canvas.parentElement;
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      
+      points = points.map(p => ({
+        x: p.x * canvas.width / oldWidth,
+        y: p.y * canvas.height / oldHeight
+      }));
+      updateMarkers();
+      render();
+      if (isClosed) calculateArea();
+    });
+  </script>
+</body>
+</html>

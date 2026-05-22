@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 服务</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .tab-badge { position: absolute; top: 4px; right: 50%; margin-right: -18px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .content { padding: 16px; padding-bottom: 72px; }
+    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .service-item { background: #fff; border-radius: var(--radius); padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .service-item:active { transform: scale(0.96); }
+    .service-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+    .service-icon svg { width: 24px; height: 24px; }
+    .service-icon.green { background: #e8f5ec; color: #22a84a; }
+    .service-icon.orange { background: var(--orange-light); color: var(--orange); }
+    .service-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .service-icon.red { background: var(--red-light); color: var(--red); }
+    .service-icon.purple { background: #f5eef8; color: #9b59b6; }
+    .service-icon.cyan { background: #e8f8f5; color: #1abc9c; }
+    .service-icon.yellow { background: #fef9e7; color: #f39c12; }
+    .service-icon.gradient { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+    .service-name { font-size: 12px; color: var(--text); text-align: center; }
+    .service-badge { position: absolute; top: 6px; right: 6px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 0 14px; font-size: 14px; color: var(--text); background: #fff; transition: border-color .2s; }
+    .form-input:focus { border-color: var(--primary); }
+    .form-textarea { width: 100%; min-height: 100px; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--text); resize: vertical; transition: border-color .2s; }
+    .form-textarea:focus { border-color: var(--primary); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 20px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; border: none; }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
+    .btn-block { width: 100%; }
+    .photo-upload { width: 100%; height: 120px; border: 2px dashed var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all .2s; }
+    .photo-upload:hover { border-color: var(--primary); }
+    .photo-upload.has-photo { border-style: solid; border-color: var(--primary); }
+    .photo-upload svg { width: 28px; height: 28px; color: var(--text-light); }
+    .photo-upload.has-photo svg { color: var(--primary); }
+    .photo-text { font-size: 13px; color: var(--text-light); }
+    .radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .radio-item { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #f8f8f8; border-radius: 20px; cursor: pointer; transition: all .2s; }
+    .radio-item.active { background: var(--primary-light); }
+    .radio-item.active .radio-circle { background: var(--primary); border-color: var(--primary); }
+    .radio-circle { width: 16px; height: 16px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .radio-circle::after { content: ''; width: 8px; height: 8px; background: #fff; border-radius: 50%; opacity: 0; }
+    .radio-item.active .radio-circle::after { opacity: 1; }
+    .radio-text { font-size: 13px; color: var(--text); }
+    .section-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 20px 0 12px; }
+    .task-list { margin-top: 8px; }
+    .task-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+    .task-item:last-child { border-bottom: none; }
+    .task-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .task-dot.pending { background: var(--orange); }
+    .task-dot.completed { background: var(--primary); }
+    .task-info { flex: 1; min-width: 0; }
+    .task-name { font-size: 14px; color: var(--text); }
+    .task-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+    .btn-submit { width: 100%; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-submit:active { opacity: 0.9; }
+    .status-tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .status-tag.pending { background: var(--orange-light); color: var(--orange); }
+    .status-tag.processing { background: var(--blue-light); color: var(--blue); }
+    .status-tag.passed { background: #e8f5ec; color: #22a84a; }
+    .status-tag.rejected { background: var(--red-light); color: var(--red); }
+    .feedback-item { padding: 14px; background: #fff; border-radius: var(--radius); margin-bottom: 10px; border: 1px solid var(--border); }
+    .feedback-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .feedback-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .feedback-time { font-size: 11px; color: var(--text-light); }
+    .feedback-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .feedback-reason { margin-top: 8px; padding: 10px; background: var(--red-light); border-radius: 6px; }
+    .feedback-reason-title { font-size: 12px; color: var(--red); font-weight: 600; margin-bottom: 4px; }
+    .feedback-reason-text { font-size: 12px; color: var(--red); }
+    .device-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .device-header { display: flex; align-items: center; gap: 12px; }
+    .device-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .device-icon.online { background: #e8f5ec; color: #22a84a; }
+    .device-icon.offline { background: #f5f5f5; color: #999; }
+    .device-icon svg { width: 20px; height: 20px; }
+    .device-info { flex: 1; }
+    .device-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .device-status { font-size: 12px; margin-top: 2px; }
+    .device-status.online { color: #22a84a; }
+    .device-status.offline { color: #999; }
+    .device-params { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+    .param-item { text-align: center; }
+    .param-value { font-size: 16px; font-weight: 700; color: var(--text); }
+    .param-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+    .news-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer; }
+    .news-title { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .news-meta { display: flex; gap: 12px; margin-top: 8px; font-size: 11px; color: var(--text-light); }
+    .news-tag { padding: 2px 6px; background: var(--primary-light); color: var(--primary); border-radius: 4px; font-size: 10px; }
+    .expert-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .expert-header { display: flex; align-items: center; gap: 12px; }
+    .expert-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
+    .expert-avatar svg { width: 24px; height: 24px; color: var(--primary); }
+    .expert-info { flex: 1; }
+    .expert-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .expert-title { font-size: 12px; color: var(--text-secondary); }
+    .expert-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .expert-tag { padding: 2px 8px; background: #f5f5f5; border-radius: 10px; font-size: 11px; color: var(--text-secondary); }
+    .disease-result { background: #fff; border-radius: var(--radius); padding: 16px; margin-top: 12px; border: 1px solid var(--border); }
+    .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .result-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+    .result-icon.high { background: var(--red-light); color: var(--red); }
+    .result-icon.medium { background: var(--orange-light); color: var(--orange); }
+    .result-icon.low { background: #e8f5ec; color: #22a84a; }
+    .result-icon svg { width: 28px; height: 28px; }
+    .result-info { flex: 1; }
+    .result-name { font-size: 16px; font-weight: 600; color: var(--text); }
+    .result-confidence { font-size: 12px; color: var(--text-secondary); }
+    .result-tips { padding: 12px; background: #f8f9fa; border-radius: 8px; margin-top: 10px; }
+    .tips-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .tips-content { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .search-box { width: 100%; height: 40px; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 0 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .search-box svg { width: 18px; height: 18px; color: var(--text-light); }
+    .search-input { flex: 1; height: 100%; font-size: 14px; border: none; outline: none; background: transparent; }
+    .search-input::placeholder { color: var(--text-light); }
+    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 85%; max-width: 320px; }
+    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .modal-btn { width: 100%; height: 44px; background: var(--primary); color: #fff; border: none; border-radius: 22px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .success-icon { width: 56px; height: 56px; margin: 0 auto 16px; background: #e8f5ec; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .success-icon svg { width: 32px; height: 32px; color: #22a84a; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="padding-left: 40px;">
+        <div class="header-title">服务中心</div>
+        <div class="header-sub">农事服务 · 专家咨询</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <div class="card-title">快捷服务</div>
+        <div class="service-grid">
+          <div class="service-item" onclick="openRecordTask()">
+            <div class="service-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="service-name">记农事</div>
+          </div>
+          <div class="service-item" onclick="openPatrol()">
+            <div class="service-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="service-name">巡果园</div>
+          </div>
+          <div class="service-item" onclick="openDrawPlot()">
+            <div class="service-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </div>
+            <div class="service-name">画地块</div>
+          </div>
+          <div class="service-item" onclick="openMap()">
+            <div class="service-icon cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                <line x1="8" y1="2" x2="8" y2="18"/>
+                <line x1="16" y1="6" x2="16" y2="22"/>
+              </svg>
+            </div>
+            <div class="service-name">看地图</div>
+          </div>
+          <div class="service-item" onclick="openDevice()">
+            <div class="service-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="12" y="2" width="8" height="14" rx="2"/>
+                <line x1="8" y1="2" x2="8" y2="18"/>
+                <line x1="16" y1="18" x2="20" y2="18"/>
+                <line x1="16" y1="22" x2="20" y2="22"/>
+                <line x1="2" y1="6" x2="12" y2="6"/>
+                <line x1="2" y1="10" x2="12" y2="10"/>
+                <line x1="2" y1="14" x2="12" y2="14"/>
+              </svg>
+            </div>
+            <div class="service-name">看设备</div>
+          </div>
+          <div class="service-item" onclick="openFeedback()">
+            <div class="service-icon yellow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="service-name">跟反馈</div>
+          </div>
+          <div class="service-item" onclick="openModel()">
+            <div class="service-icon gradient">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+            </div>
+            <div class="service-name">模型预测</div>
+          </div>
+          <div class="service-item" onclick="openExpert()">
+            <div class="service-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="service-name">问专家</div>
+          </div>
+          <div class="service-item" onclick="openDisease()">
+            <div class="service-icon red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="service-name">识病虫</div>
+          </div>
+          <div class="service-item" onclick="openTroubleshoot()">
+            <div class="service-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </div>
+            <div class="service-name">查故障</div>
+          </div>
+          <div class="service-item" onclick="openMaterial()">
+            <div class="service-icon cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <path d="M3 9h18"/>
+                <path d="M9 21V9"/>
+              </svg>
+            </div>
+            <div class="service-name">领农资</div>
+          </div>
+          <div class="service-item" onclick="openLabel()">
+            <div class="service-icon yellow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <path d="M7 7h.01"/>
+              </svg>
+            </div>
+            <div class="service-name">领标签</div>
+          </div>
+          <div class="service-item" onclick="openPlan()">
+            <div class="service-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <path d="M16 2v4"/>
+                <path d="M8 2v4"/>
+                <path d="M3 10h18"/>
+              </svg>
+            </div>
+            <div class="service-name">看计划</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">最新资讯</div>
+        <div class="news-card" onclick="openNewsDetail()">
+          <div class="news-title">苹果着色期管理要点：如何提高果实着色质量</div>
+          <div class="news-meta">
+            <span>2026-05-20</span>
+            <span class="news-tag">着色期</span>
+          </div>
+        </div>
+        <div class="news-card" onclick="openNewsDetail()">
+          <div class="news-title">夏季高温天气苹果园管理技术指南</div>
+          <div class="news-meta">
+            <span>2026-05-19</span>
+            <span class="news-tag">膨大期</span>
+          </div>
+        </div>
+        <div class="news-card" onclick="openNewsDetail()">
+          <div class="news-title">苹果病虫害综合防治方案（2026年版）</div>
+          <div class="news-meta">
+            <span>2026-05-18</span>
+            <span class="news-tag">病虫害</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">推荐专家</div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <div class="expert-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="expert-info">
+              <div class="expert-name">王教授</div>
+              <div class="expert-title">农业大学果树学教授</div>
+            </div>
+          </div>
+          <div class="expert-tags">
+            <span class="expert-tag">苹果栽培</span>
+            <span class="expert-tag">病虫害防治</span>
+            <span class="expert-tag">施肥管理</span>
+          </div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <div class="expert-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="expert-info">
+              <div class="expert-name">李农艺师</div>
+              <div class="expert-title">资深苹果种植专家</div>
+            </div>
+          </div>
+          <div class="expert-tags">
+            <span class="expert-tag">物候期管理</span>
+            <span class="expert-tag">水肥一体化</span>
+            <span class="expert-tag">采收技术</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="modal-title" id="modalTitle">提交成功</div>
+      <button class="modal-btn" onclick="closeModal()">确 定</button>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    function goBack() {
+      window.history.back();
+    }
+    function openModal(title) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modal').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+    function openRecordTask() {
+      localStorage.setItem('serviceAction', 'record');
+      navigateTo('mb_record_task.html');
+    }
+    function openPatrol() {
+      localStorage.setItem('serviceAction', 'patrol');
+      navigateTo('mb_patrol.html');
+    }
+    function openDrawPlot() {
+      localStorage.setItem('serviceAction', 'draw');
+      navigateTo('mb_draw_plot.html');
+    }
+    function openMap() {
+      localStorage.setItem('serviceAction', 'map');
+      navigateTo('mb_map.html');
+    }
+    function openDevice() {
+      localStorage.setItem('serviceAction', 'device');
+      navigateTo('mb_device.html');
+    }
+    function openFeedback() {
+      localStorage.setItem('serviceAction', 'feedback');
+      navigateTo('mb_feedback.html');
+    }
+    function openModel() {
+      navigateTo('mb_model.html');
+    }
+    function openExpert() {
+      localStorage.setItem('serviceAction', 'expert');
+      navigateTo('mb_expert.html');
+    }
+    function openDisease() {
+      localStorage.setItem('serviceAction', 'disease');
+      navigateTo('mb_disease.html');
+    }
+    function openTroubleshoot() {
+      localStorage.setItem('serviceAction', 'troubleshoot');
+      navigateTo('mb_troubleshoot.html');
+    }
+    function openMaterial() {
+      localStorage.setItem('serviceAction', 'material');
+      navigateTo('mb_material.html');
+    }
+    function openLabel() {
+      localStorage.setItem('serviceAction', 'label');
+      navigateTo('mb_label.html');
+    }
+    function openPlan() {
+      localStorage.setItem('serviceAction', 'plan');
+      navigateTo('mb_plan.html');
+    }
+    function openNewsDetail() {
+      openModal('资讯详情');
+    }
+  </script>
+</body>
+</html>

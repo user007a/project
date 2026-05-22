@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 地块</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .tab-badge { position: absolute; top: 4px; right: 50%; margin-right: -18px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .content { padding: 16px; padding-bottom: 72px; }
+    .stats-bar { display: flex; gap: 12px; margin-bottom: 16px; }
+    .stat-card { flex: 1; background: #fff; border-radius: var(--radius); padding: 14px; text-align: center; border: 1px solid var(--border); }
+    .stat-num { font-size: 22px; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+    .filter-btn { flex: 1; height: 36px; padding: 0 12px; background: #fff; border: 1px solid var(--border); border-radius: 18px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all .2s; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .plot-card { background: #fff; border-radius: var(--radius); margin-bottom: 12px; padding: 16px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .plot-card:active { transform: scale(0.99); }
+    .plot-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .plot-name { font-size: 16px; font-weight: 600; color: var(--text); }
+    .plot-status { font-size: 11px; padding: 3px 10px; border-radius: 12px; }
+    .plot-status.normal { background: #e8f5ec; color: #22a84a; }
+    .plot-status.warning { background: var(--orange-light); color: var(--orange); }
+    .plot-status.overdue { background: var(--red-light); color: var(--red); }
+    .plot-info { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); }
+    .plot-info-item { display: flex; align-items: center; gap: 4px; }
+    .plot-info-item svg { width: 14px; height: 14px; }
+    .plot-tasks { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+    .plot-tasks-title { font-size: 12px; color: var(--text-light); margin-bottom: 8px; }
+    .task-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+    .task-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .task-dot.pending { background: var(--orange); }
+    .task-dot.completed { background: var(--primary); }
+    .task-dot.overdue { background: var(--red); }
+    .task-name { flex: 1; font-size: 12px; color: var(--text-secondary); }
+    .task-status { font-size: 11px; padding: 2px 6px; border-radius: 8px; }
+    .task-status.pending { background: var(--orange-light); color: var(--orange); }
+    .task-status.completed { background: #e8f5ec; color: #22a84a; }
+    .task-status.overdue { background: var(--red-light); color: var(--red); }
+    .quick-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .quick-action { flex: 1; background: #fff; border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .quick-action:active { transform: scale(0.96); }
+    .quick-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .quick-icon svg { width: 22px; height: 22px; }
+    .quick-icon.green { background: #e8f5ec; color: #22a84a; }
+    .quick-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .quick-icon.orange { background: var(--orange-light); color: var(--orange); }
+    .quick-name { font-size: 12px; color: var(--text); }
+    .detail-header { padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
+    .detail-title { font-size: 18px; font-weight: 700; }
+    .detail-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    .detail-stats { display: flex; gap: 16px; margin-top: 12px; }
+    .detail-stat { text-align: center; }
+    .detail-stat-value { font-size: 20px; font-weight: 700; }
+    .detail-stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+    .detail-content { padding: 16px; }
+    .detail-section { background: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .detail-section-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+    .detail-info-row { display: flex; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .detail-info-row:last-child { border-bottom: none; }
+    .detail-info-label { width: 70px; font-size: 13px; color: var(--text-light); flex-shrink: 0; }
+    .detail-info-value { flex: 1; font-size: 13px; color: var(--text); }
+    .today-tasks-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+    .today-task-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+    .today-task-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .today-task-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .today-task-time { font-size: 11px; color: var(--text-light); }
+    .today-task-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+    .btn-record { width: 100%; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .btn-record:active { opacity: 0.9; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 85%; max-width: 320px; }
+    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .modal-btn { width: 100%; height: 44px; background: var(--primary); color: #fff; border: none; border-radius: 22px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .nav-tabs { display: flex; gap: 8px; margin-bottom: 16px; padding: 0 16px; }
+    .nav-tab { flex: 1; height: 36px; padding: 0 12px; background: #fff; border: 1px solid var(--border); border-radius: 18px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; }
+    .nav-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-title">我的地块</div>
+      <div class="header-sub">管理您负责的种植地块</div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num">8</div>
+        <div class="stat-label">总地块</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">今日任务</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">120</div>
+        <div class="stat-label">总面积(亩)</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterPlots('all')">全部</button>
+      <button class="filter-btn" onclick="filterPlots('pending')">待执行</button>
+      <button class="filter-btn" onclick="filterPlots('overdue')">已逾期</button>
+    </div>
+
+    <div class="content">
+      <div class="plot-card" onclick="openPlotDetail('地块A1区')">
+        <div class="plot-header">
+          <div class="plot-name">地块A1区</div>
+          <span class="plot-status normal">正常</span>
+        </div>
+        <div class="plot-info">
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+            </svg>
+            <span>红富士 · 5年树龄</span>
+          </div>
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="9" x2="15" y2="9"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            <span>15亩</span>
+          </div>
+        </div>
+        <div class="plot-tasks">
+          <div class="plot-tasks-title">今日任务 (2)</div>
+          <div class="task-row">
+            <span class="task-dot pending"></span>
+            <span class="task-name">疏果作业</span>
+            <span class="task-status pending">待执行</span>
+          </div>
+          <div class="task-row">
+            <span class="task-dot pending"></span>
+            <span class="task-name">病虫害防治</span>
+            <span class="task-status pending">待执行</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="plot-card" onclick="openPlotDetail('地块A2区')">
+        <div class="plot-header">
+          <div class="plot-name">地块A2区</div>
+          <span class="plot-status warning">预警</span>
+        </div>
+        <div class="plot-info">
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+            </svg>
+            <span>红富士 · 5年树龄</span>
+          </div>
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="9" x2="15" y2="9"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            <span>18亩</span>
+          </div>
+        </div>
+        <div class="plot-tasks">
+          <div class="plot-tasks-title">今日任务 (1)</div>
+          <div class="task-row">
+            <span class="task-dot overdue"></span>
+            <span class="task-name">灌溉浇水</span>
+            <span class="task-status overdue">已逾期</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="plot-card" onclick="openPlotDetail('地块B1区')">
+        <div class="plot-header">
+          <div class="plot-name">地块B1区</div>
+          <span class="plot-status normal">正常</span>
+        </div>
+        <div class="plot-info">
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+            </svg>
+            <span>嘎啦 · 8年树龄</span>
+          </div>
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="9" x2="15" y2="9"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            <span>22亩</span>
+          </div>
+        </div>
+        <div class="plot-tasks">
+          <div class="plot-tasks-title">今日任务 (0)</div>
+          <div style="text-align: center; padding: 8px; color: var(--text-light); font-size: 12px;">暂无任务</div>
+        </div>
+      </div>
+
+      <div class="plot-card" onclick="openPlotDetail('地块B2区')">
+        <div class="plot-header">
+          <div class="plot-name">地块B2区</div>
+          <span class="plot-status normal">正常</span>
+        </div>
+        <div class="plot-info">
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+            </svg>
+            <span>秦冠 · 10年树龄</span>
+          </div>
+          <div class="plot-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="9" x2="15" y2="9"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            <span>25亩</span>
+          </div>
+        </div>
+        <div class="plot-tasks">
+          <div class="plot-tasks-title">今日任务 (1)</div>
+          <div class="task-row">
+            <span class="task-dot completed"></span>
+            <span class="task-name">追肥作业</span>
+            <span class="task-status completed">已完成</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action" onclick="navigateToRecord()">
+          <div class="quick-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div class="quick-name">记农事</div>
+        </div>
+        <div class="quick-action" onclick="navigateToPatrol()">
+          <div class="quick-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="quick-name">巡果园</div>
+        </div>
+        <div class="quick-action" onclick="navigateToDraw()">
+          <div class="quick-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div class="quick-name">画地块</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detailModal">
+    <div style="width: 100%; max-width: 750px; height: 100%; background: #f5f5f5; overflow-y: auto;">
+      <div class="detail-header">
+        <div class="back-btn" onclick="closeDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <div style="padding-left: 40px;">
+          <div class="detail-title" id="detailTitle">地块详情</div>
+          <div class="detail-sub" id="detailSub">查看地块详细信息</div>
+        </div>
+      </div>
+      <div class="detail-content">
+        <div class="quick-actions">
+          <div class="quick-action" onclick="navigateToRecord()">
+            <div class="quick-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="quick-name">记农事</div>
+          </div>
+          <div class="quick-action" onclick="navigateToPatrol()">
+            <div class="quick-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="quick-name">巡果园</div>
+          </div>
+          <div class="quick-action" onclick="navigateToDraw()">
+            <div class="quick-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </div>
+            <div class="quick-name">画地块</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">地块信息</div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">地块名称</div>
+            <div class="detail-info-value">地块A1区</div>
+          </div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">种植品种</div>
+            <div class="detail-info-value">红富士</div>
+          </div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">树龄</div>
+            <div class="detail-info-value">5年</div>
+          </div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">面积</div>
+            <div class="detail-info-value">15亩</div>
+          </div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">负责人</div>
+            <div class="detail-info-value">张三</div>
+          </div>
+          <div class="detail-info-row">
+            <div class="detail-info-label">当前物候期</div>
+            <div class="detail-info-value">幼果期</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="today-tasks-title">今日任务</div>
+          <div class="today-task-card">
+            <div class="today-task-header">
+              <div class="today-task-name">疏果作业</div>
+              <div class="today-task-time">09:00 - 12:00</div>
+            </div>
+            <div class="today-task-desc">对地块A1区进行疏果作业，保留健壮果实，提高坐果率。</div>
+            <button class="btn-record" onclick="navigateToRecord()">立即记录</button>
+          </div>
+          <div class="today-task-card">
+            <div class="today-task-header">
+              <div class="today-task-name">病虫害防治</div>
+              <div class="today-task-time">14:00 - 17:00</div>
+            </div>
+            <div class="today-task-desc">喷洒杀虫剂，预防苹果蚜虫和红蜘蛛。</div>
+            <button class="btn-record" onclick="navigateToRecord()">立即记录</button>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">历史农事记录</div>
+          <div style="padding: 8px 0;">
+            <div class="task-row">
+              <span class="task-dot completed"></span>
+              <span class="task-name">追肥作业</span>
+              <span style="font-size: 11px; color: var(--text-light);">2026-05-20</span>
+            </div>
+            <div class="task-row">
+              <span class="task-dot completed"></span>
+              <span class="task-name">灌溉浇水</span>
+              <span style="font-size: 11px; color: var(--text-light);">2026-05-19</span>
+            </div>
+            <div class="task-row">
+              <span class="task-dot completed"></span>
+              <span class="task-name">套袋作业</span>
+              <span style="font-size: 11px; color: var(--text-light);">2026-05-18</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const plotData = [
+      {
+        id: 'A1',
+        name: '地块A1区',
+        status: 'normal',
+        variety: '红富士',
+        age: '5年',
+        area: '15亩',
+        tasks: [
+          { name: '疏果作业', status: 'pending' },
+          { name: '病虫害防治', status: 'pending' }
+        ]
+      },
+      {
+        id: 'A2',
+        name: '地块A2区',
+        status: 'warning',
+        variety: '红富士',
+        age: '5年',
+        area: '18亩',
+        tasks: [
+          { name: '灌溉浇水', status: 'overdue' }
+        ]
+      },
+      {
+        id: 'B1',
+        name: '地块B1区',
+        status: 'normal',
+        variety: '嘎啦',
+        age: '8年',
+        area: '22亩',
+        tasks: []
+      },
+      {
+        id: 'B2',
+        name: '地块B2区',
+        status: 'normal',
+        variety: '秦冠',
+        age: '10年',
+        area: '25亩',
+        tasks: [
+          { name: '追肥作业', status: 'completed' }
+        ]
+      }
+    ];
+
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
+    function filterPlots(type) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.plot-card');
+      cards.forEach(card => card.style.display = 'none');
+
+      if (type === 'all') {
+        cards.forEach(card => card.style.display = 'block');
+      } else if (type === 'pending') {
+        cards.forEach(card => {
+          const pendingTasks = card.querySelectorAll('.task-dot.pending');
+          if (pendingTasks.length > 0) {
+            card.style.display = 'block';
+          }
+        });
+      } else if (type === 'overdue') {
+        cards.forEach(card => {
+          const overdueTasks = card.querySelectorAll('.task-dot.overdue');
+          if (overdueTasks.length > 0) {
+            card.style.display = 'block';
+          }
+        });
+      }
+    }
+
+    function openPlotDetail(name) {
+      document.getElementById('detailTitle').textContent = name;
+      document.getElementById('detailSub').textContent = '查看地块详细信息';
+      document.getElementById('detailModal').classList.add('show');
+    }
+
+    function closeDetail() {
+      document.getElementById('detailModal').classList.remove('show');
+    }
+
+    function navigateToRecord() {
+      window.location.href = 'mb_record_task.html';
+    }
+
+    function navigateToPatrol() {
+      window.location.href = 'mb_patrol.html';
+    }
+
+    function navigateToDraw() {
+      window.location.href = 'mb_draw_plot.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 产量估测</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 66px; }
+    
+    .header-bg { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding-bottom: 16px; }
+    .header { display: flex; align-items: center; padding: 16px; padding-top: 44px; }
+    .back-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; cursor: pointer; }
+    .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: 700; color: #fff; margin-right: 32px; }
+    
+    .content { padding: 16px; }
+    
+    .total-card { background: linear-gradient(135deg, var(--primary), #3ddc84); border-radius: 16px; padding: 24px 20px; margin-bottom: 16px; color: #fff; box-shadow: var(--shadow); }
+    .total-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .total-title { font-size: 14px; opacity: 0.9; display: flex; align-items: center; gap: 6px; }
+    .total-update { font-size: 11px; opacity: 0.7; }
+    .total-main { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 8px; }
+    .total-value { font-size: 48px; font-weight: 800; }
+    .total-unit { font-size: 18px; opacity: 0.9; }
+    .total-compare { text-align: center; font-size: 13px; opacity: 0.9; margin-bottom: 16px; }
+    .total-range { display: flex; justify-content: center; gap: 16px; font-size: 12px; opacity: 0.8; }
+    
+    .chart-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .chart-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+    .chart-bars { display: flex; align-items: flex-end; justify-content: space-around; height: 120px; padding: 0 10px; }
+    .chart-bar-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .chart-bar { width: 50px; background: linear-gradient(180deg, var(--primary), #86e3c3); border-radius: 6px 6px 0 0; transition: height .5s ease; }
+    .chart-bar-label { font-size: 11px; color: var(--text-secondary); }
+    .chart-bar-value { font-size: 12px; font-weight: 600; color: var(--text); margin-top: 4px; }
+    
+    .plot-list { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .plot-header { padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .plot-item { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .plot-item:last-child { border-bottom: none; }
+    .plot-color { width: 8px; height: 40px; border-radius: 4px; }
+    .plot-color.green { background: var(--primary); }
+    .plot-color.orange { background: var(--orange); }
+    .plot-color.blue { background: var(--blue); }
+    .plot-info { flex: 1; }
+    .plot-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .plot-variety { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .plot-percent { width: 50px; height: 6px; background: #f0f0f0; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+    .plot-percent-fill { height: 100%; border-radius: 3px; }
+    .plot-percent-fill.green { background: var(--primary); }
+    .plot-percent-fill.orange { background: var(--orange); }
+    .plot-percent-fill.blue { background: var(--blue); }
+    .plot-value { text-align: right; }
+    .plot-tons { font-size: 18px; font-weight: 700; color: var(--text); }
+    .plot-tons-unit { font-size: 11px; color: var(--text-light); }
+    
+    .factors-card { background: #fff; border-radius: 16px; padding: 16px; margin-top: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .factors-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .factors-section { margin-bottom: 12px; }
+    .factors-section:last-child { margin-bottom: 0; }
+    .factors-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .factors-label.positive { color: var(--primary); }
+    .factors-label.negative { color: var(--red); }
+    .factors-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+    .factors-icon { font-size: 14px; }
+    .factors-text { font-size: 13px; color: var(--text-secondary); }
+    
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header-bg">
+      <div class="header">
+        <div class="back-btn" onclick="history.back()">←</div>
+        <div class="header-title">产量估测</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="total-card">
+        <div class="total-header">
+          <div class="total-title">
+            <span>📊</span>
+            <span>2026年预估总产量</span>
+          </div>
+          <div class="total-update">模型预测 · 更新于 5月21日</div>
+        </div>
+        <div class="total-main">
+          <div class="total-value">450</div>
+          <div class="total-unit">吨</div>
+        </div>
+        <div class="total-compare">较去年实际产量 420吨 ↑增长 7.1%</div>
+        <div class="total-range">
+          <span>置信区间：420-480吨</span>
+          <span>误差范围 ±8%</span>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-title">📈 分品种预估占比</div>
+        <div class="chart-bars">
+          <div class="chart-bar-item">
+            <div class="chart-bar" style="height: 80px;"></div>
+            <div class="chart-bar-label">红富士</div>
+            <div class="chart-bar-value">40%</div>
+          </div>
+          <div class="chart-bar-item">
+            <div class="chart-bar" style="height: 60px; background: linear-gradient(180deg, var(--orange), #ffd699);"></div>
+            <div class="chart-bar-label">嘎啦</div>
+            <div class="chart-bar-value">27%</div>
+          </div>
+          <div class="chart-bar-item">
+            <div class="chart-bar" style="height: 70px; background: linear-gradient(180deg, var(--blue), #85c1e9);"></div>
+            <div class="chart-bar-label">乔纳金</div>
+            <div class="chart-bar-value">33%</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="plot-list">
+        <div class="plot-header">
+          <span>📍</span>
+          <span>各地块预估产量</span>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color green"></div>
+          <div class="plot-info">
+            <div class="plot-name">A区</div>
+            <div class="plot-variety">红富士</div>
+            <div class="plot-percent"><div class="plot-percent-fill green" style="width: 40%;"></div></div>
+          </div>
+          <div class="plot-value">
+            <div class="plot-tons">180</div>
+            <div class="plot-tons-unit">吨 (40%)</div>
+          </div>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color orange"></div>
+          <div class="plot-info">
+            <div class="plot-name">B区</div>
+            <div class="plot-variety">嘎啦</div>
+            <div class="plot-percent"><div class="plot-percent-fill orange" style="width: 27%;"></div></div>
+          </div>
+          <div class="plot-value">
+            <div class="plot-tons">120</div>
+            <div class="plot-tons-unit">吨 (27%)</div>
+          </div>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color blue"></div>
+          <div class="plot-info">
+            <div class="plot-name">C区</div>
+            <div class="plot-variety">乔纳金</div>
+            <div class="plot-percent"><div class="plot-percent-fill blue" style="width: 33%;"></div></div>
+          </div>
+          <div class="plot-value">
+            <div class="plot-tons">150</div>
+            <div class="plot-tons-unit">吨 (33%)</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="factors-card">
+        <div class="factors-title">
+          <span>⚖️</span>
+          <span>影响因子分析</span>
+        </div>
+        <div class="factors-section">
+          <div class="factors-label positive">
+            <span>⬆️</span>
+            <span>正向因子</span>
+          </div>
+          <div class="factors-item">
+            <span class="factors-icon">✓</span>
+            <span class="factors-text">坐果率高于去年 5%</span>
+          </div>
+          <div class="factors-item">
+            <span class="factors-icon">✓</span>
+            <span class="factors-text">膨大期水肥充足，长势良好</span>
+          </div>
+        </div>
+        <div class="factors-section">
+          <div class="factors-label negative">
+            <span>⬇️</span>
+            <span>负向因子</span>
+          </div>
+          <div class="factors-item">
+            <span class="factors-icon">!</span>
+            <span class="factors-text">5月干旱影响，部分地块减产约 3%</span>
+          </div>
+          <div class="factors-item">
+            <span class="factors-icon">!</span>
+            <span class="factors-text">C区局部受冰雹影响，预计减产 8%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_model.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function navigateTo(page) { window.location.href = page; }
+  </script>
+</body>
+</html>

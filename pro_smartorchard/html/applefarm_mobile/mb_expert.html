@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 问专家</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .content { padding: 16px; padding-bottom: 80px; }
+    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .expert-card { display: flex; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; cursor: pointer; transition: all .2s; }
+    .expert-card:active { transform: scale(0.98); }
+    .expert-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .expert-avatar svg { width: 32px; height: 32px; color: var(--primary); }
+    .expert-info { flex: 1; min-width: 0; }
+    .expert-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .expert-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .expert-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .expert-tag { padding: 3px 10px; background: var(--gray-light); border-radius: 12px; font-size: 11px; color: var(--text-secondary); }
+    .question-item { padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; }
+    .question-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .question-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .question-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .question-status.pending { background: var(--orange-light); color: var(--orange); }
+    .question-status.answered { background: var(--primary-light); color: var(--primary); }
+    .question-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+    .answer-box { padding: 12px; background: var(--blue-light); border-radius: 8px; }
+    .answer-title { font-size: 12px; font-weight: 600; color: var(--blue); margin-bottom: 6px; }
+    .answer-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .float-btn { position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 16px rgba(46, 158, 90, 0.4); z-index: 50; transition: all .2s; }
+    .float-btn:active { transform: scale(0.95); }
+    .float-btn svg { width: 28px; height: 28px; color: #fff; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; height: 48px; border: 1px solid var(--border); border-radius: 8px; padding: 0 14px; font-size: 14px; color: var(--text); background: #fff; transition: border-color .2s; }
+    .form-textarea { width: 100%; min-height: 120px; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; color: var(--text); resize: vertical; transition: border-color .2s; }
+    .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+    .btn { flex: 1; height: 48px; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+    .btn-outline { border: 1px solid var(--border); background: #fff; color: var(--text); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="padding-left: 40px;">
+        <div class="header-title">专家咨询</div>
+        <div class="header-sub">向农业专家提问咨询</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="card">
+        <div class="card-title">推荐专家</div>
+        <div class="expert-card">
+          <div class="expert-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="expert-info">
+            <div class="expert-name">王教授</div>
+            <div class="expert-title">农业大学果树学教授</div>
+            <div class="expert-tags">
+              <span class="expert-tag">苹果栽培</span>
+              <span class="expert-tag">病虫害防治</span>
+              <span class="expert-tag">施肥管理</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="expert-card">
+          <div class="expert-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="expert-info">
+            <div class="expert-name">李农艺师</div>
+            <div class="expert-title">资深苹果种植专家</div>
+            <div class="expert-tags">
+              <span class="expert-tag">物候期管理</span>
+              <span class="expert-tag">水肥一体化</span>
+              <span class="expert-tag">采收技术</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">我的提问</div>
+        <div class="question-item">
+          <div class="question-header">
+            <div class="question-title">苹果树叶片发黄怎么办？</div>
+            <span class="question-status answered">已回复</span>
+          </div>
+          <div class="question-content">最近发现部分苹果树叶片开始发黄，主要是老叶，新叶还好，请问是什么原因？</div>
+          <div class="answer-box">
+            <div class="answer-title">王教授 回复</div>
+            <div class="answer-content">根据描述，老叶发黄可能是缺氮或镁元素。建议：1. 检查土壤肥力情况；2. 适量追施复合肥；3. 叶面喷施镁肥。同时注意排水，避免根系积水。</div>
+          </div>
+        </div>
+
+        <div class="question-item">
+          <div class="question-header">
+            <div class="question-title">今年什么时候套袋合适？</div>
+            <span class="question-status pending">待回复</span>
+          </div>
+          <div class="question-content">想咨询一下今年苹果套袋的最佳时间，谢谢！</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="float-btn" onclick="openAskModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="askModal">
+    <div class="modal-box">
+      <div class="modal-title">发起提问</div>
+      <div class="form-group">
+        <label class="form-label">问题标题</label>
+        <input type="text" class="form-input" placeholder="请输入问题标题">
+      </div>
+      <div class="form-group">
+        <label class="form-label">问题描述</label>
+        <textarea class="form-textarea" placeholder="请详细描述您的问题..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="closeAskModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitQuestion()">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function openAskModal() {
+      document.getElementById('askModal').classList.add('show');
+    }
+
+    function closeAskModal() {
+      document.getElementById('askModal').classList.remove('show');
+    }
+
+    function submitQuestion() {
+      alert('提问提交成功！');
+      closeAskModal();
+    }
+  </script>
+</body>
+</html>

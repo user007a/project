@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生长模型 - 模型预测中心 - 数农智果</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; animation: pageIn 0.25s ease; }
+  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .header {
+    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-right: 30px;
+  }
+  .logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item {
+    color: rgba(255,255,255,0.9);
+    padding: 0 14px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+
+  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .jg-mobile-nav-item.active { background: rgba(255,255,255,0.2); font-weight: 600; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
+  .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
+  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: #fff; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; font-size: 13px; background: none; border: none; }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
+  .snzg-user-menu.show { display: block; }
+  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .snzg-user-info-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #1a7a3c, #22a84a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 600; }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item { display: block; padding: 10px 16px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+
+  .main-wrap { margin-top: 56px; padding: 16px 20px 24px; min-height: calc(100vh - 56px); }
+
+  .subnav-bar {
+    background: #fff;
+    padding: 0 20px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 56px;
+    z-index: 50;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .subnav-bar::-webkit-scrollbar { display: none; }
+  .subnav-back { display: flex; align-items: center; gap: 4px; color: #666; font-size: 13px; cursor: pointer; text-decoration: none; padding: 6px 10px; border-radius: 4px; transition: all 0.2s; }
+  .subnav-back:hover { color: #22a84a; background: #f0faf3; }
+  .subnav-sep { width: 1px; height: 20px; background: #e8e8e8; margin: 0 8px; flex-shrink: 0; }
+  .subnav-item { padding: 6px 14px; font-size: 13px; color: #666; cursor: pointer; border-radius: 16px; transition: all 0.2s; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+  .subnav-item:hover { color: #22a84a; }
+  .subnav-item.active { background: #22a84a; color: #fff; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+  .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 8px; }
+  .page-title-icon { font-size: 22px; }
+  .page-actions { display: flex; gap: 10px; }
+  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 13px; color: #333; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .snzg-stat-card { background: #fff; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+  .snzg-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .snzg-stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+  .snzg-stat-card.green::before { background: #22a84a; }
+  .snzg-stat-card.blue::before { background: #1890ff; }
+  .snzg-stat-card.orange::before { background: #fa8c16; }
+  .snzg-stat-card.red::before { background: #ff4d4f; }
+  .metric-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .metric-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .snzg-stat-card.green .metric-icon { background: #f0faf3; }
+  .snzg-stat-card.blue .metric-icon { background: #e6f4ff; }
+  .snzg-stat-card.orange .metric-icon { background: #fff7e6; }
+  .snzg-stat-card.red .metric-icon { background: #fff1f0; }
+  .metric-label { font-size: 12px; color: #666; }
+  .metric-value { font-size: 26px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+  .snzg-stat-card.green .metric-value { color: #22a84a; }
+  .snzg-stat-card.blue .metric-value { color: #1890ff; }
+  .snzg-stat-card.orange .metric-value { color: #fa8c16; }
+  .snzg-stat-card.red .metric-value { color: #ff4d4f; }
+  .metric-unit { font-size: 13px; font-weight: 400; }
+  .metric-footer { font-size: 11px; color: #666; }
+
+  .main-grid { display: grid; grid-template-columns: 60% 40%; gap: 16px; margin-bottom: 16px; }
+  .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+  .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .snzg-panel-title { font-size: 14px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-badge { display: inline-block; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-weight: 600; min-width: 18px; text-align: center; }
+  .snzg-panel-link { font-size: 12px; color: #22a84a; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 2px; }
+  .snzg-panel-link:hover { color: #1a9940; text-decoration: underline; }
+  .snzg-panel-body { padding: 14px 16px; }
+
+  .gantt-container { padding: 16px; overflow-x: auto; }
+  .gantt-header { display: flex; align-items: center; margin-bottom: 12px; gap: 8px; }
+  .gantt-legend { display: flex; gap: 16px; font-size: 11px; }
+  .gantt-legend-item { display: flex; align-items: center; gap: 4px; }
+  .gantt-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .gantt-table { width: 100%; border-collapse: collapse; }
+  .gantt-table th, .gantt-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+  .gantt-table th { background: #fafafa; font-weight: 600; color: #666; white-space: nowrap; }
+  .gantt-table tr:hover { background: #f9f9f9; }
+  .gantt-stage { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .gantt-stage.dormancy { background: #e6e6e6; color: #666; }
+  .gantt-stage.sprouting { background: #d4f4dd; color: #1a7a3c; }
+  .gantt-stage.flowering { background: #ffe6f0; color: #c41d7f; }
+  .gantt-stage.fruiting { background: #fff7e6; color: #fa8c16; }
+  .gantt-stage.enlarging { background: #e6f4ff; color: #1890ff; }
+  .gantt-stage.coloring { background: #f5f0ff; color: #722ed1; }
+  .gantt-stage.harvesting { background: #fff1f0; color: #ff4d4f; }
+  .gantt-progress { width: 100px; height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+  .gantt-progress-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .gantt-progress-bar.green { background: linear-gradient(90deg, #22a84a, #52c41a); }
+  .gantt-progress-bar.blue { background: linear-gradient(90deg, #1890ff, #40a9ff); }
+  .gantt-progress-bar.orange { background: linear-gradient(90deg, #fa8c16, #ffc53d); }
+  .gantt-status { font-size: 11px; padding: 2px 6px; border-radius: 8px; }
+  .gantt-status.normal { background: #f0faf3; color: #22a84a; }
+  .gantt-status.warning { background: #fff7e6; color: #fa8c16; }
+  .gantt-status.danger { background: #fff1f0; color: #ff4d4f; }
+
+  .advice-list { list-style: none; }
+  .advice-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+  .advice-item:last-child { border-bottom: none; }
+  .advice-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .advice-icon.water { background: #e6f4ff; }
+  .advice-icon.fertilizer { background: #f0faf3; }
+  .advice-icon.pest { background: #fff7e6; }
+  .advice-icon.pruning { background: #f5f0ff; }
+  .advice-content { flex: 1; }
+  .advice-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 4px; }
+  .advice-desc { font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 6px; }
+  .advice-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: #999; }
+  .advice-action { padding: 4px 12px; border-radius: 4px; font-size: 12px; border: 1px solid #22a84a; color: #22a84a; cursor: pointer; transition: all 0.2s; background: #fff; }
+  .advice-action:hover { background: #22a84a; color: #fff; }
+
+  .alert-list { list-style: none; }
+  .alert-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .alert-dot.red { background: #ff4d4f; }
+  .alert-dot.orange { background: #fa8c16; }
+  .alert-content { flex: 1; }
+  .alert-title { font-size: 13px; color: #333; margin-bottom: 2px; }
+  .alert-meta { font-size: 11px; color: #666; display: flex; gap: 8px; }
+
+  .chart-container { padding: 16px; }
+  .chart-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 12px; }
+  .chart-svg { width: 100%; height: 200px; }
+
+  .radar-container { padding: 16px; text-align: center; }
+  .radar-svg { width: 100%; max-width: 280px; height: 240px; }
+  .radar-legend { display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; }
+  .radar-legend-item { display: flex; align-items: center; gap: 4px; }
+  .radar-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .jg-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 6px; font-size: 13px; z-index: 9999; animation: toastIn 0.3s ease; }
+  .jg-toast.jg-toast-info { background: #e6f4ff; color: #1890ff; border: 1px solid #91d5ff; }
+  .jg-toast.jg-toast-success { background: #f0faf3; color: #22a84a; border: 1px solid #b7eb8f; }
+  .jg-toast.jg-toast-error { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f5f5f5; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+  @media (max-width: 1344px) {
+    .nav-menu { display: none; }
+    .jg-hamburger { display: flex; }
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .metrics-row { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-actions { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="38" height="38" viewBox="0 0 38 38">
+        <rect width="38" height="38" fill="#fff" rx="4"/>
+        <circle cx="19" cy="18" r="12" fill="#ff6b35"/>
+        <circle cx="15" cy="15" r="2" fill="#fff" opacity="0.6"/>
+        <circle cx="23" cy="15" r="1.5" fill="#fff" opacity="0.4"/>
+        <path d="M12 28 Q19 34 26 28" fill="none" stroke="#22a84a" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="14" y="30" width="10" height="4" rx="2" fill="#22a84a"/>
+      </svg>
+    </div>
+    <span style="margin-left:48px;">数农智果</span>
+  </div>
+  <nav class="nav-menu" id="navMenu">
+    <a class="snzg-nav-item" href="home.html"><span class="nav-icon">🏠</span> 系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="enterprise_base.html"><span class="nav-icon">🏢</span> 企业管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="farming_plan.html"><span class="nav-icon">🌾</span> 农事管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="material_info.html"><span class="nav-icon">📦</span> 农资管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="device_monitor.html"><span class="nav-icon">📡</span> 设备管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="alert_device.html"><span class="nav-icon">🔔</span> 预警管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="trace_code.html"><span class="nav-icon">🏷️</span> 产品追溯</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="harvest_plan.html"><span class="nav-icon">🍎</span> 采收管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item active" href="model_growth.html"><span class="nav-icon">🧠</span> 模型预测中心</a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="system_settings.html"><span class="nav-icon">⚙</span> 系统设置</a>
+  </nav>
+  <button class="jg-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  <div class="header-right">
+    <div class="msg-btn" onclick="showToast('您有3条未读消息', 'info')">✉<span class="msg-badge">3</span></div>
+    <button class="snzg-user-btn" id="userBtn">
+      <div class="snzg-user-avatar">👤</div>
+      <span>管理员</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </button>
+    <div class="snzg-user-menu" id="userMenu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">管</div>
+        <div><div class="snzg-user-info-name">管理员</div><div class="snzg-user-info-role">系统管理员</div></div>
+      </div>
+      <a class="snzg-user-menu-item" href="#">⚙ 个人设置</a>
+      <a class="snzg-user-menu-item" onclick="showToast('修改密码功能开发中', 'info')">🔑 修改密码</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a class="snzg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+</header>
+
+<div class="jg-mobile-nav" id="mobileNav">
+  <a class="jg-mobile-nav-item" href="home.html">🏠 系统首页</a>
+  <a class="jg-mobile-nav-item" href="enterprise_base.html">🏢 企业管理</a>
+  <a class="jg-mobile-nav-item" href="farming_plan.html">🌾 农事管理</a>
+  <a class="jg-mobile-nav-item" href="material_info.html">📦 农资管理</a>
+  <a class="jg-mobile-nav-item" href="device_monitor.html">📡 设备管理</a>
+  <a class="jg-mobile-nav-item" href="alert_device.html">🔔 预警管理</a>
+  <a class="jg-mobile-nav-item" href="trace_code.html">🏷️ 产品追溯</a>
+  <a class="jg-mobile-nav-item" href="harvest_plan.html">🍎 采收管理</a>
+  <a class="jg-mobile-nav-item active" href="model_growth.html">🧠 模型预测中心</a>
+  <a class="jg-mobile-nav-item" href="system_settings.html">⚙ 系统设置</a>
+</div>
+
+<div class="subnav-bar">
+  <a class="subnav-back" href="home.html">← 返回</a>
+  <span class="subnav-sep"></span>
+  <a class="subnav-item active" href="model_growth.html">🌱 生长模型</a>
+  <a class="subnav-item" href="model_weather.html">🌤️ 气象模型</a>
+  <a class="subnav-item" href="model_pest.html">🐛 病虫害模型</a>
+  <a class="subnav-item" href="model_phenology.html">📅 物候期模型</a>
+  <a class="subnav-item" href="model_yield.html">📊 产量预估模型</a>
+  <a class="subnav-item" href="model_price.html">💰 价格预测模型</a>
+</div>
+
+<div class="main-wrap">
+  <div class="page-header">
+    <div class="page-title"><span class="page-title-icon">🌱</span> 生长模型</div>
+    <div class="page-actions">
+      <button class="jg-btn" onclick="showToast('刷新数据成功', 'success')">🔄 刷新数据</button>
+      <button class="jg-btn jg-btn-primary" onclick="showToast('生成农事计划功能开发中', 'info')">📋 生成农事计划</button>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="snzg-stat-card green">
+      <div class="metric-header"><span class="metric-icon">🗺️</span><span class="metric-label">监测地块总数</span></div>
+      <div class="metric-value">126<span class="metric-unit">块</span></div>
+      <div class="metric-footer">覆盖8个基地</div>
+    </div>
+    <div class="snzg-stat-card blue">
+      <div class="metric-header"><span class="metric-icon">📈</span><span class="metric-label">膨大期地块</span></div>
+      <div class="metric-value">98<span class="metric-unit">块</span></div>
+      <div class="metric-footer">占比77.8%</div>
+    </div>
+    <div class="snzg-stat-card red">
+      <div class="metric-header"><span class="metric-icon">⚠️</span><span class="metric-label">生长异常地块</span></div>
+      <div class="metric-value">5<span class="metric-unit">块</span></div>
+      <div class="metric-footer">需关注处理</div>
+    </div>
+    <div class="snzg-stat-card orange">
+      <div class="metric-header"><span class="metric-icon">📝</span><span class="metric-label">本周农事建议</span></div>
+      <div class="metric-value">12<span class="metric-unit">项</span></div>
+      <div class="metric-footer">基于模型推荐</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">📊</span> 生长阶段甘特图</div>
+        <a class="snzg-panel-link" href="enterprise_plot.html">查看地块详情 →</a>
+      </div>
+      <div class="gantt-container">
+        <div class="gantt-header">
+          <div class="gantt-legend">
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#e6e6e6"></span> 休眠期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#d4f4dd"></span> 萌芽期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#ffe6f0"></span> 花期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#fff7e6"></span> 幼果期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#e6f4ff"></span> 膨大期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#f5f0ff"></span> 着色期</div>
+            <div class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#fff1f0"></span> 采收期</div>
+          </div>
+        </div>
+        <table class="gantt-table">
+          <thead>
+            <tr>
+              <th style="width:120px">地块名称</th>
+              <th style="width:80px">品种</th>
+              <th style="width:80px">当前阶段</th>
+              <th>阶段进度</th>
+              <th style="width:60px">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>烟台A区-1号</td>
+              <td>红富士</td>
+              <td><span class="gantt-stage enlarging">膨大期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar green" style="width:65%"></div></div></td>
+              <td><span class="gantt-status normal">正常</span></td>
+            </tr>
+            <tr>
+              <td>烟台A区-2号</td>
+              <td>红富士</td>
+              <td><span class="gantt-stage enlarging">膨大期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar green" style="width:72%"></div></div></td>
+              <td><span class="gantt-status normal">正常</span></td>
+            </tr>
+            <tr>
+              <td>栖霞B区-1号</td>
+              <td>嘎啦</td>
+              <td><span class="gantt-stage coloring">着色期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar blue" style="width:45%"></div></div></td>
+              <td><span class="gantt-status normal">正常</span></td>
+            </tr>
+            <tr>
+              <td>蓬莱C区-1号</td>
+              <td>红富士</td>
+              <td><span class="gantt-stage enlarging">膨大期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar orange" style="width:38%"></div></div></td>
+              <td><span class="gantt-status warning">偏慢</span></td>
+            </tr>
+            <tr>
+              <td>威海D区-1号</td>
+              <td>红富士</td>
+              <td><span class="gantt-stage enlarging">膨大期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar green" style="width:58%"></div></div></td>
+              <td><span class="gantt-status normal">正常</span></td>
+            </tr>
+            <tr>
+              <td>招远E区-1号</td>
+              <td>嘎啦</td>
+              <td><span class="gantt-stage harvesting">采收期</span></td>
+              <td><div class="gantt-progress"><div class="gantt-progress-bar green" style="width:20%"></div></div></td>
+              <td><span class="gantt-status normal">正常</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">🔔</span> 生长异常报警 <span class="snzg-panel-badge">5</span></div>
+        <a class="snzg-panel-link" href="alert_farming.html">查看全部 →</a>
+      </div>
+      <div class="snzg-panel-body">
+        <ul class="alert-list">
+          <li class="alert-item">
+            <span class="alert-dot red"></span>
+            <div class="alert-content">
+              <div class="alert-title">蓬莱C区-1号：生长迟缓，积温偏差-15%</div>
+              <div class="alert-meta"><span>蓬莱基地</span><span>30分钟前</span></div>
+            </div>
+          </li>
+          <li class="alert-item">
+            <span class="alert-dot red"></span>
+            <div class="alert-content">
+              <div class="alert-title">龙口F区-2号：土壤水分不足，影响膨大</div>
+              <div class="alert-meta"><span>龙口基地</span><span>1小时前</span></div>
+            </div>
+          </li>
+          <li class="alert-item">
+            <span class="alert-dot orange"></span>
+            <div class="alert-content">
+              <div class="alert-title">青岛G区-1号：营养指标偏低，建议追肥</div>
+              <div class="alert-meta"><span>青岛基地</span><span>2小时前</span></div>
+            </div>
+          </li>
+          <li class="alert-item">
+            <span class="alert-dot orange"></span>
+            <div class="alert-content">
+              <div class="alert-title">莱阳H区-1号：光照不足，建议修剪透光</div>
+              <div class="alert-meta"><span>莱阳基地</span><span>3小时前</span></div>
+            </div>
+          </li>
+          <li class="alert-item">
+            <span class="alert-dot orange"></span>
+            <div class="alert-content">
+              <div class="alert-title">招远E区-3号：叶片发黄，疑似缺铁</div>
+              <div class="alert-meta"><span>招远基地</span><span>昨天</span></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">💡</span> 农事建议看板</div>
+        <a class="snzg-panel-link" href="farming_plan.html">创建计划 →</a>
+      </div>
+      <div class="snzg-panel-body">
+        <ul class="advice-list">
+          <li class="advice-item">
+            <div class="advice-icon water">💧</div>
+            <div class="advice-content">
+              <div class="advice-title">膨大期灌溉建议</div>
+              <div class="advice-desc">当前98块地块处于膨大期，建议增加灌溉频率至每3天一次，单次灌水量30-40m³/亩，确保果实正常膨大。</div>
+              <div class="advice-meta"><span>适用地块：98块</span><span>优先级：高</span><span>有效期：7天</span></div>
+            </div>
+            <button class="advice-action" onclick="showToast('已生成灌溉任务', 'success')">采纳建议</button>
+          </li>
+          <li class="advice-item">
+            <div class="advice-icon fertilizer">🌱</div>
+            <div class="advice-content">
+              <div class="advice-title">追施高钾肥建议</div>
+              <div class="advice-desc">膨大期是果实增大的关键期，建议追施高钾复合肥，用量0.5-1kg/株，促进果实膨大和糖分积累。</div>
+              <div class="advice-meta"><span>适用地块：98块</span><span>优先级：高</span><span>有效期：5天</span></div>
+            </div>
+            <button class="advice-action" onclick="showToast('已生成追肥任务', 'success')">采纳建议</button>
+          </li>
+          <li class="advice-item">
+            <div class="advice-icon pest">🐛</div>
+            <div class="advice-content">
+              <div class="advice-title">病虫害防治提醒</div>
+              <div class="advice-desc">当前温湿度条件有利于苹果轮纹病发生，建议喷施代森锰锌或甲基硫菌灵进行预防，间隔10-15天。</div>
+              <div class="advice-meta"><span>适用地块：全部</span><span>优先级：中</span><span>有效期：10天</span></div>
+            </div>
+            <button class="advice-action" onclick="showToast('已生成防治任务', 'success')">采纳建议</button>
+          </li>
+          <li class="advice-item">
+            <div class="advice-icon pruning">✂️</div>
+            <div class="advice-content">
+              <div class="advice-title">夏季修剪建议</div>
+              <div class="advice-desc">建议对徒长枝、背上枝进行疏除，改善树冠通风透光条件，促进果实着色和花芽分化。</div>
+              <div class="advice-meta"><span>适用地块：65块</span><span>优先级：中</span><span>有效期：14天</span></div>
+            </div>
+            <button class="advice-action" onclick="showToast('已生成修剪任务', 'success')">采纳建议</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="snzg-panel" style="margin-bottom:16px;">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">📈</span> 积温曲线对比</div>
+        </div>
+        <div class="chart-container">
+          <svg class="chart-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1890ff" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#1890ff" stop-opacity="0.02"/>
+              </linearGradient>
+            </defs>
+            <line x1="40" y1="20" x2="380" y2="20" stroke="#f0f0f0"/>
+            <line x1="40" y1="60" x2="380" y2="60" stroke="#f0f0f0"/>
+            <line x1="40" y1="100" x2="380" y2="100" stroke="#f0f0f0"/>
+            <line x1="40" y1="140" x2="380" y2="140" stroke="#f0f0f0"/>
+            <line x1="40" y1="180" x2="380" y2="180" stroke="#e8e8e8"/>
+            <text x="35" y="24" font-size="9" fill="#999" text-anchor="end">2000</text>
+            <text x="35" y="64" font-size="9" fill="#999" text-anchor="end">1500</text>
+            <text x="35" y="104" font-size="9" fill="#999" text-anchor="end">1000</text>
+            <text x="35" y="144" font-size="9" fill="#999" text-anchor="end">500</text>
+            <text x="35" y="184" font-size="9" fill="#999" text-anchor="end">0</text>
+            <text x="60" y="195" font-size="8" fill="#999" text-anchor="middle">3月</text>
+            <text x="120" y="195" font-size="8" fill="#999" text-anchor="middle">4月</text>
+            <text x="180" y="195" font-size="8" fill="#999" text-anchor="middle">5月</text>
+            <text x="240" y="195" font-size="8" fill="#999" text-anchor="middle">6月</text>
+            <text x="300" y="195" font-size="8" fill="#999" text-anchor="middle">7月</text>
+            <text x="360" y="195" font-size="8" fill="#999" text-anchor="middle">8月</text>
+            <path d="M60,170 L120,140 L180,100 L240,70 L300,45 L360,30" fill="none" stroke="#d9d9d9" stroke-width="2" stroke-dasharray="5,3"/>
+            <path d="M60,165 L120,135 L180,95 L240,60 L300,35 L360,20" fill="none" stroke="#1890ff" stroke-width="2.5"/>
+            <circle cx="60" cy="165" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="120" cy="135" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="180" cy="95" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="240" cy="60" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="300" cy="35" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="360" cy="20" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <line x1="280" y1="15" x2="300" y2="15" stroke="#1890ff" stroke-width="2"/>
+            <text x="305" y="18" font-size="9" fill="#555">实际积温</text>
+            <line x1="280" y1="28" x2="300" y2="28" stroke="#d9d9d9" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="305" y="31" font-size="9" fill="#555">理论积温</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">🎯</span> 生长指标评分</div>
+        </div>
+        <div class="radar-container">
+          <svg class="radar-svg" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="140,30 230,80 230,160 140,210 50,160 50,80" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+            <polygon points="140,55 200,90 200,145 140,180 80,145 80,90" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+            <polygon points="140,80 170,100 170,130 140,150 110,130 110,100" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+            <polygon points="140,35 225,82 218,155 140,198 62,155 55,82" fill="rgba(34,168,74,0.15)" stroke="#22a84a" stroke-width="2"/>
+            <circle cx="140" cy="35" r="4" fill="#22a84a"/>
+            <circle cx="225" cy="82" r="4" fill="#22a84a"/>
+            <circle cx="218" cy="155" r="4" fill="#22a84a"/>
+            <circle cx="140" cy="198" r="4" fill="#22a84a"/>
+            <circle cx="62" cy="155" r="4" fill="#22a84a"/>
+            <circle cx="55" cy="82" r="4" fill="#22a84a"/>
+            <text x="140" y="18" font-size="10" fill="#333" text-anchor="middle" font-weight="600">长势</text>
+            <text x="245" y="82" font-size="10" fill="#333" text-anchor="start" font-weight="600">营养</text>
+            <text x="245" y="160" font-size="10" fill="#333" text-anchor="start" font-weight="600">产量</text>
+            <text x="140" y="228" font-size="10" fill="#333" text-anchor="middle" font-weight="600">品质</text>
+            <text x="35" y="160" font-size="10" fill="#333" text-anchor="end" font-weight="600">抗病</text>
+            <text x="35" y="82" font-size="10" fill="#333" text-anchor="end" font-weight="600">成熟</text>
+          </svg>
+          <div class="radar-legend">
+            <div class="radar-legend-item"><span class="radar-legend-dot" style="background:#22a84a"></span> 当前评分</div>
+            <div class="radar-legend-item"><span class="radar-legend-dot" style="background:#e8e8e8"></span> 标准值</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+if (hamburgerBtn && mobileNav) {
+  hamburgerBtn.addEventListener('click', function() { mobileNav.classList.toggle('show'); });
+}
+
+const userBtn = document.getElementById('userBtn');
+const userMenu = document.getElementById('userMenu');
+if (userBtn && userMenu) {
+  userBtn.addEventListener('click', function(e) { e.stopPropagation(); userMenu.classList.toggle('show'); });
+  document.addEventListener('click', function(e) { if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) { userMenu.classList.remove('show'); } });
+}
+
+function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); sessionStorage.removeItem('snzg_user'); window.location.href = 'login.html'; }
+
+function showToast(msg, type) {
+  type = type || 'info';
+  var toast = document.createElement('div');
+  toast.className = 'jg-toast jg-toast-' + type;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.remove(); }, 2600);
+}
+</script>
+</body>
+</html>

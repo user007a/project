@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 采收管理</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+  .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
+  .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
+  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: #fff; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; font-size: 13px; background: none; border: none; }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
+  .snzg-user-menu.show { display: block; }
+  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .snzg-user-info-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #1a7a3c, #22a84a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 600; }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item { display: block; padding: 10px 16px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+  .main-wrap { margin-top: 100px; padding: 16px 20px 24px; min-height: calc(100vh - 100px); }
+  .subnav-bar { position: fixed; top: 56px; left: 0; right: 0; height: 44px; background: #fff; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; padding: 0 12px; z-index: 90; overflow: hidden; }
+  .nav-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 4px; cursor: pointer; font-size: 18px; color: #666; flex-shrink: 0; transition: all 0.2s; }
+  .nav-arrow:hover { background: #e8e8e8; color: #333; }
+  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scroll-behavior: smooth; }
+  .subnav-menu::-webkit-scrollbar { display: none; }
+  .subnav-item { padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 12px; color: #666; white-space: nowrap; transition: all 0.2s; }
+  .subnav-item:hover { background: #f0f0f0; color: #22a84a; }
+  .subnav-item.active { background: #22a84a; color: #fff; }
+  .page-header { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+  .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 10px; }
+  .page-title .title-icon { font-size: 22px; }
+  .page-desc { font-size: 13px; color: #666; margin-top: 4px; }
+  .page-actions { display: flex; gap: 10px; }
+  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 12px; color: #333; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+  .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 16px; }
+  .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .snzg-panel-title { font-size: 14px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-body { padding: 14px 16px; }
+  .search-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; width: 200px; transition: border-color 0.2s; }
+  .search-input:focus { outline: none; border-color: #22a84a; }
+  .search-select { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .search-select:focus { outline: none; border-color: #22a84a; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+  .data-table th { background: #fafafa; font-weight: 600; color: #333; }
+  .data-table tr:hover { background: #fafafa; }
+  .data-table .text-center { text-align: center; }
+  .data-table .text-right { text-align: right; }
+  .data-table .type-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .type-tag.apple { background: #fff1f0; color: #ff4d4f; }
+  .type-tag.juice { background: #fff7e6; color: #fa8c16; }
+  .type-tag.dried { background: #f6ffed; color: #52c41a; }
+  .data-table .status-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .status-tag.planned { background: #e6f4ff; color: #1890ff; }
+  .status-tag.in_progress { background: #fff7e6; color: #fa8c16; }
+  .status-tag.completed { background: #f6ffed; color: #52c41a; }
+  .status-tag.cancelled { background: #f5f5f5; color: #999; }
+  .data-table .action-btns { display: flex; gap: 8px; }
+  .action-btn { padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; background: transparent; color: #666; transition: all 0.2s; }
+  .action-btn:hover { background: #f0f0f0; }
+  .action-btn.edit { color: #1890ff; }
+  .action-btn.edit:hover { background: #e6f4ff; }
+  .action-btn.detail { color: #22a84a; }
+  .action-btn.detail:hover { background: #f6ffed; }
+  .action-btn.delete { color: #ff4d4f; }
+  .action-btn.delete:hover { background: #fff1f0; }
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; }
+  .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer; background: #fff; font-size: 12px; transition: all 0.2s; }
+  .page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .page-btn.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-content { background: #fff; border-radius: 8px; width: 90%; max-width: 600px; overflow: hidden; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: #222; }
+  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+  .modal-close:hover { background: #f5f5f5; }
+  .modal-body { padding: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .form-input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: #22a84a; }
+  .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; resize: vertical; min-height: 80px; }
+  .form-textarea:focus { outline: none; border-color: #22a84a; }
+  .form-select { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .form-select:focus { outline: none; border-color: #22a84a; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+  .jg-toast { position: fixed; top: 70px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; font-size: 13px; z-index: 2000; animation: toastIn 0.3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .jg-toast-success { background: #52c41a; }
+  .jg-toast-error { background: #ff4d4f; }
+  .jg-toast-info { background: #1890ff; }
+  @media (max-width: 768px) { .main-wrap { padding: 12px; } .search-bar { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .page-header { flex-direction: column; gap: 12px; align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 8px 6px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
+        <circle cx="50" cy="55" r="35" fill="#e53935"/>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <div class="nav-menu">
+    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="device_monitor.html" class="snzg-nav-item"><span class="nav-icon">📡</span><span>设备管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="alert_device.html" class="snzg-nav-item"><span class="nav-icon">🔔</span><span>预警管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="harvest_plan.html" class="snzg-nav-item active"><span class="nav-icon">🍎</span><span>采收管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="model_growth.html">
+      <span class="nav-icon">🧠</span> 模型预测中心
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
+  </div>
+  <button id="hamburgerBtn" class="jg-hamburger">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-right">
+    <div class="msg-btn">
+      <span>🔔</span>
+      <span class="msg-badge">3</span>
+    </div>
+    <button id="userBtn" class="snzg-user-btn">
+      <span class="snzg-user-avatar">管</span>
+      <span>管理员</span>
+    </button>
+    <div id="userMenu" class="snzg-user-menu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">管</div>
+        <div>
+          <div class="snzg-user-info-name">系统管理员</div>
+          <div class="snzg-user-info-role">超级管理员</div>
+        </div>
+      </div>
+      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
+      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+    </div>
+  </div>
+</div>
+<div id="mobileNav" class="jg-mobile-nav">
+  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
+  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
+  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
+  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
+  <a href="device_monitor.html" class="jg-mobile-nav-item">📡 设备管理</a>
+  <a href="alert_device.html" class="jg-mobile-nav-item">🔔 预警管理</a>
+  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
+  <a href="harvest_plan.html" class="jg-mobile-nav-item active">🍎 采收管理</a>
+  <a class="jg-mobile-nav-item" href="model_growth.html">🧠 模型预测中心</a>
+  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
+</div>
+<div class="subnav-bar">
+  <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
+  <div class="subnav-menu">
+    <a href="harvest_plan.html" class="subnav-item active">采收计划</a>
+    <a href="harvest_record.html" class="subnav-item">采收记录</a>
+    <a href="harvest_post.html" class="subnav-item">采后处理</a>
+  </div>
+  <div class="nav-arrow" onclick="scrollNav(1)">›</div>
+</div>
+<div class="main-wrap">
+  <div class="page-header">
+    <div>
+      <div class="page-title"><span class="title-icon">🍎</span>采收管理</div>
+      <div class="page-desc">采收计划制定、采收记录管理、品质检测与分级</div>
+    </div>
+    <div class="page-actions">
+      <button class="jg-btn" onclick="showFilterModal()">
+        <span>⚙</span>筛选
+      </button>
+      <button class="jg-btn jg-btn-primary" onclick="showAddModal()">
+        <span>+</span>新增采收计划
+      </button>
+    </div>
+  </div>
+  <div class="snzg-panel">
+    <div class="snzg-panel-header">
+      <div class="snzg-panel-title"><span class="pt-icon">📋</span>采收计划列表</div>
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="搜索计划名称..." id="searchInput">
+        <select class="search-select" id="statusSelect">
+          <option value="">全部状态</option>
+          <option value="planned">待执行</option>
+          <option value="in_progress">执行中</option>
+          <option value="completed">已完成</option>
+        </select>
+        <button class="jg-btn" onclick="doSearch()">搜索</button>
+      </div>
+    </div>
+    <div class="snzg-panel-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>计划编号</th>
+            <th>计划名称</th>
+            <th>产品类型</th>
+            <th>计划采收量</th>
+            <th>基地/地块</th>
+            <th>采收时段</th>
+            <th>采收班组</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>HS-2024-001</strong></td>
+            <td>栖霞红富士第一批</td>
+            <td><span class="type-tag apple">鲜果</span></td>
+            <td class="text-right">5,000 kg</td>
+            <td>烟台栖霞基地 - A1地块</td>
+            <td>05-20 08:00~17:00</td>
+            <td>采收一班</td>
+            <td><span class="status-tag in_progress">执行中</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('HS-2024-001')">详情</button>
+                <button class="action-btn edit">编辑</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HS-2024-002</strong></td>
+            <td>招远黄金苹果第一批</td>
+            <td><span class="type-tag apple">鲜果</span></td>
+            <td class="text-right">3,000 kg</td>
+            <td>招远基地 - B2地块</td>
+            <td>05-22 07:00~16:00</td>
+            <td>采收二班</td>
+            <td><span class="status-tag planned">待执行</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('HS-2024-002')">详情</button>
+                <button class="action-btn edit">编辑</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HS-2024-003</strong></td>
+            <td>荣成苹果汁原料采收</td>
+            <td><span class="type-tag juice">果汁原料</span></td>
+            <td class="text-right">8,000 kg</td>
+            <td>威海荣成基地 - C1地块</td>
+            <td>05-25 06:00~15:00</td>
+            <td>采收三班</td>
+            <td><span class="status-tag planned">待执行</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('HS-2024-003')">详情</button>
+                <button class="action-btn edit">编辑</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HS-2024-004</strong></td>
+            <td>蓬莱礼盒装精选果</td>
+            <td><span class="type-tag apple">鲜果</span></td>
+            <td class="text-right">2,000 kg</td>
+            <td>蓬莱阁基地 - 中心区域</td>
+            <td>05-18 08:00~16:00</td>
+            <td>采收一班</td>
+            <td><span class="status-tag completed">已完成</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('HS-2024-004')">详情</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HS-2024-005</strong></td>
+            <td>南山苹果干原料采收</td>
+            <td><span class="type-tag dried">果干原料</span></td>
+            <td class="text-right">4,000 kg</td>
+            <td>龙口南山基地 - D1地块</td>
+            <td>05-15 07:00~17:00</td>
+            <td>机动班</td>
+            <td><span class="status-tag completed">已完成</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('HS-2024-005')">详情</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button class="page-btn disabled">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="addModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">新增采收计划</div>
+      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">计划名称 *</label>
+        <input type="text" class="form-input" placeholder="如：栖霞红富士第一批">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">产品类型 *</label>
+          <select class="form-select">
+            <option value="">请选择类型</option>
+            <option value="apple">鲜果</option>
+            <option value="juice">果汁原料</option>
+            <option value="dried">果干原料</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">计划采收量(kg) *</label>
+          <input type="number" class="form-input" placeholder="请输入数量">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">采收基地 *</label>
+          <select class="form-select" id="baseSelect" onchange="loadPlots()">
+            <option value="">请选择基地</option>
+            <option value="qixia">烟台栖霞基地</option>
+            <option value="zhaoyuan">招远基地</option>
+            <option value="penglai">蓬莱阁基地</option>
+            <option value="rongcheng">威海荣成基地</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">地块 *</label>
+          <select class="form-select" id="plotSelect">
+            <option value="">请先选择基地</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">开始时间 *</label>
+          <input type="datetime-local" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">结束时间 *</label>
+          <input type="datetime-local" class="form-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">采收班组 *</label>
+        <select class="form-select">
+          <option value="">请选择班组</option>
+          <option value="team1">采收一班（8人）</option>
+          <option value="team2">采收二班（6人）</option>
+          <option value="team3">采收三班（7人）</option>
+          <option value="team4">机动班（4人）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">品质要求</label>
+        <select class="form-select">
+          <option value="">请选择等级</option>
+          <option value="premium">特级（85mm+）</option>
+          <option value="grade_a">一级（80-85mm）</option>
+          <option value="grade_b">二级（75-80mm）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">备注</label>
+        <textarea class="form-textarea" placeholder="请输入备注信息"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('addModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAdd()">确认创建</button>
+    </div>
+  </div>
+</div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-header">
+      <div class="modal-title">采收计划详情</div>
+      <div class="modal-close" onclick="closeModal('detailModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom: 16px; padding: 12px; background: #fff7e6; border-radius: 6px; border-left: 3px solid #fa8c16;">
+        <div style="font-weight: 600; margin-bottom: 8px;">计划编号：HS-2024-001 | 栖霞红富士第一批</div>
+        <div style="color: #666; font-size: 12px;">状态：执行中 | 基地：烟台栖霞基地 - A1地块 | 计划日期：2024-05-20</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px; text-align: center;">
+          <div style="font-size: 20px; font-weight: 700; color: #22a84a;">5,000 kg</div>
+          <div style="font-size: 12px; color: #888;">计划采收量</div>
+        </div>
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px; text-align: center;">
+          <div style="font-size: 20px; font-weight: 700; color: #fa8c16;">2,150 kg</div>
+          <div style="font-size: 12px; color: #888;">已采收量</div>
+        </div>
+      </div>
+      <div style="font-weight: 600; margin-bottom: 10px;">采收记录</div>
+      <table class="data-table" style="font-size: 12px;">
+        <thead>
+          <tr><th>采收时间</th><th>采收量</th><th>品质等级</th><th>采收人</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2024-05-20 08:00</td><td>1,200 kg</td><td>特级</td><td>张三</td></tr>
+          <tr><td>2024-05-20 14:00</td><td>950 kg</td><td>一级</td><td>李四</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('detailModal')">关闭</button>
+      <button class="jg-btn jg-btn-primary" onclick="showToast('采收记录已更新', 'success')">记录采收</button>
+    </div>
+  </div>
+</div>
+<div id="filterModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 400px;">
+    <div class="modal-header">
+      <div class="modal-title">筛选条件</div>
+      <div class="modal-close" onclick="closeModal('filterModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">执行状态</label>
+        <select class="form-select">
+          <option value="">全部</option>
+          <option value="planned">待执行</option>
+          <option value="in_progress">执行中</option>
+          <option value="completed">已完成</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">产品类型</label>
+        <select class="form-select">
+          <option value="">全部</option>
+          <option value="apple">鲜果</option>
+          <option value="juice">果汁原料</option>
+          <option value="dried">果干原料</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">采收基地</label>
+        <select class="form-select">
+          <option value="">全部</option>
+          <option value="qixia">烟台栖霞基地</option>
+          <option value="zhaoyuan">招远基地</option>
+          <option value="penglai">蓬莱阁基地</option>
+          <option value="rongcheng">威海荣成基地</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('filterModal')">重置</button>
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('filterModal')">确定</button>
+    </div>
+  </div>
+</div>
+<script>
+function scrollNav(direction) {
+  const menu = document.querySelector('.subnav-menu');
+  menu.scrollBy({ left: direction * 100, behavior: 'smooth' });
+}
+
+const plotData = {
+  qixia: [
+    {value: 'A1', label: 'A1地块'},
+    {value: 'A2', label: 'A2地块'},
+    {value: 'A3', label: 'A3地块'}
+  ],
+  zhaoyuan: [
+    {value: 'B1', label: 'B1地块'},
+    {value: 'B2', label: 'B2地块'},
+    {value: 'B3', label: 'B3地块'}
+  ],
+  penglai: [
+    {value: 'center', label: '中心区域'},
+    {value: 'east', label: '东区'},
+    {value: 'west', label: '西区'}
+  ],
+  rongcheng: [
+    {value: 'C1', label: 'C1地块'},
+    {value: 'C2', label: 'C2地块'},
+    {value: 'C3', label: 'C3地块'}
+  ]
+};
+
+function loadPlots() {
+  const base = document.getElementById('baseSelect').value;
+  const plotSelect = document.getElementById('plotSelect');
+  plotSelect.innerHTML = '<option value="">请选择地块</option>';
+  if (base && plotData[base]) {
+    plotData[base].forEach(function(p) {
+      const opt = document.createElement('option');
+      opt.value = p.value;
+      opt.textContent = p.label;
+      plotSelect.appendChild(opt);
+    });
+  }
+}
+
+function showAddModal() { document.getElementById('addModal').classList.add('show'); }
+function showFilterModal() { document.getElementById('filterModal').classList.add('show'); }
+function showDetail(id) { document.getElementById('detailModal').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function doSearch() { showToast('搜索功能开发中', 'info'); }
+function handleAdd() { closeModal('addModal'); showToast('采收计划创建成功', 'success'); }
+function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
+function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
+document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
+document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
+document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
+</script>
+</body>
+</html>

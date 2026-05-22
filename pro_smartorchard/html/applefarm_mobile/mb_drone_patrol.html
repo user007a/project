@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 无人机巡园</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a;
+      --primary-dark: #1e7e42;
+      --orange: #f39c12;
+      --blue: #3498db;
+      --red: #e74c3c;
+      --text: #333;
+      --text-secondary: #666;
+      --text-light: #999;
+      --border: #e8e8e8;
+      --border-light: #f0f0f0;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
+    
+    /* 顶部导航 */
+    .header {
+      background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; }
+    .header-title { font-size: 17px; font-weight: 600; color: #fff; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .more-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; }
+    
+    /* 当前任务状态 */
+    .task-status-card { background: #fff; margin: 12px; border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
+    .task-status-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .task-name { font-size: 15px; font-weight: 600; color: var(--text); }
+    .status-tag { font-size: 12px; padding: 4px 12px; border-radius: 16px; font-weight: 600; }
+    .status-tag.running { background: #e8f5ec; color: #22a84a; }
+    .status-tag.idle { background: #f5f5f5; color: #999; }
+    .task-progress-bar { height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; }
+    .task-progress-fill { height: 100%; background: linear-gradient(90deg, #22a84a, #52c41a); border-radius: 3px; transition: width 0.5s ease; }
+    .task-progress-text { font-size: 12px; color: var(--text-light); margin-top: 8px; text-align: right; }
+    
+    /* 实时监控区域 */
+    .monitor-section { padding: 0 12px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-dot { width: 4px; height: 16px; background: var(--primary); border-radius: 2px; }
+    
+    /* 地图区域 */
+    .map-container { background: linear-gradient(160deg, #1a2e1a 0%, #2d4a2d 30%, #3d5c3d 60%, #2a3a2a 100%); border-radius: 12px; height: 200px; position: relative; overflow: hidden; margin-bottom: 12px; }
+    .map-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(100,180,100,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(100,180,100,0.1) 1px, transparent 1px); background-size: 30px 30px; }
+    .drone-marker { position: absolute; width: 36px; height: 36px; background: #1890ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 2s infinite; }
+    .drone-marker svg { width: 18px; height: 18px; color: #fff; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(24,144,255,0.7); } 70% { box-shadow: 0 0 0 10px rgba(24,144,255,0); } 100% { box-shadow: 0 0 0 0 rgba(24,144,255,0); } }
+    .waypoint-marker { position: absolute; width: 24px; height: 24px; background: #22a84a; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .waypoint-marker svg { width: 12px; height: 12px; color: #fff; }
+    .waypoint-label { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); font-size: 10px; color: rgba(255,255,255,0.8); white-space: nowrap; margin-top: 4px; }
+    .flight-path { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .path-line { fill: none; stroke: rgba(34,168,74,0.6); stroke-width: 2; stroke-dasharray: 6 3; }
+    
+    /* 飞行参数 */
+    .flight-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .info-card { background: #fff; border-radius: 12px; padding: 14px; border: 1px solid var(--border); }
+    .info-label { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+    .info-value { font-size: 20px; font-weight: 700; color: var(--text); }
+    .info-unit { font-size: 12px; color: var(--text-light); font-weight: 400; }
+    .info-value.green { color: #22a84a; }
+    .info-value.orange { color: #fa8c16; }
+    .info-value.red { color: #ff4d4f; }
+    
+    /* 视频画面 */
+    .video-container { background: #1a1a1a; border-radius: 12px; padding: 12px; margin-top: 12px; }
+    .video-frame { background: #000; border-radius: 8px; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; }
+    .video-placeholder { text-align: center; color: #666; }
+    .video-placeholder svg { width: 40px; height: 40px; margin-bottom: 8px; }
+    .video-status { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.6); padding: 3px 8px; border-radius: 10px; font-size: 10px; color: #52c41a; }
+    .video-status svg { width: 8px; height: 8px; fill: #52c41a; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    
+    /* 控制按钮 */
+    .control-section { padding: 12px; }
+    .control-buttons { display: flex; gap: 12px; }
+    .control-btn { flex: 1; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .control-btn:active { transform: scale(0.98); }
+    .control-btn.pause { background: linear-gradient(135deg, #fa8c16, #d47500); color: #fff; }
+    .control-btn.return { background: linear-gradient(135deg, #ff4d4f, #cf1322); color: #fff; }
+    
+    /* 异常列表 */
+    .abnormal-section { padding: 0 12px; }
+    .abnormal-card { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+    .abnormal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .abnormal-title { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .abnormal-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .abnormal-dot.pest { background: #ff4d4f; }
+    .abnormal-dot.growth { background: #fa8c16; }
+    .abnormal-status { font-size: 11px; padding: 2px 8px; border-radius: 8px; background: #fff1f0; color: #ff4d4f; }
+    .abnormal-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-light); }
+    .abnormal-confidence { color: #52c41a; font-weight: 600; }
+    .abnormal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-light); }
+    .btn-confirm { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 14px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-ignore { background: #f5f5f5; color: var(--text-secondary); border: none; border-radius: 14px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    
+    /* 历史任务 */
+    .history-section { padding: 0 12px; }
+    .history-card { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+    .history-header { display: flex; align-items: center; justify-content: space-between; }
+    .history-task-id { font-size: 14px; font-weight: 600; color: var(--text); }
+    .history-status { font-size: 11px; padding: 2px 8px; border-radius: 8px; }
+    .history-status.completed { background: #e8f5ec; color: #22a84a; }
+    .history-date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+    .history-stats { display: flex; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--text-secondary); }
+    .history-stat-value { font-weight: 600; color: var(--text); }
+    
+    /* 底部导航 */
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color 0.2s; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部导航 -->
+    <div class="header">
+      <div class="header-left">
+        <div class="back-btn" onclick="goBack()">←</div>
+        <div class="header-title">无人机巡园</div>
+      </div>
+      <div class="header-right">
+        <div class="more-btn">⋮</div>
+      </div>
+    </div>
+    
+    <!-- 当前任务状态 -->
+    <div class="task-status-card">
+      <div class="task-status-header">
+        <div class="task-name">TASK-001 · 航线-A001</div>
+        <span class="status-tag running">进行中</span>
+      </div>
+      <div class="task-progress-bar">
+        <div class="task-progress-fill" style="width: 65%"></div>
+      </div>
+      <div class="task-progress-text">已完成 65% · 预计剩余 4分32秒</div>
+    </div>
+    
+    <!-- 实时监控 -->
+    <div class="monitor-section">
+      <div class="section-title">
+        <span class="section-dot"></span>
+        实时监控
+      </div>
+      
+      <!-- 地图展示 -->
+      <div class="map-container">
+        <div class="map-grid"></div>
+        <div class="flight-path">
+          <svg width="100%" height="100%">
+            <path class="path-line" d="M 50,100 Q 120,60 200,100 T 360,100" />
+          </svg>
+        </div>
+        <div class="waypoint-marker" style="top:100px;left:50px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+          <div class="waypoint-label">起点</div>
+        </div>
+        <div class="waypoint-marker" style="top:60px;left:120px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        </div>
+        <div class="waypoint-marker" style="top:100px;left:200px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        </div>
+        <div class="waypoint-marker" style="top:100px;left:360px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+          <div class="waypoint-label">终点</div>
+        </div>
+        <div class="drone-marker">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- 飞行参数 -->
+      <div class="flight-info-grid">
+        <div class="info-card">
+          <div class="info-label">飞行高度</div>
+          <div class="info-value">80<span class="info-unit">m</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">飞行速度</div>
+          <div class="info-value">10<span class="info-unit">m/s</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">电池电量</div>
+          <div class="info-value green">78<span class="info-unit">%</span></div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">信号强度</div>
+          <div class="info-value green">强</div>
+        </div>
+      </div>
+      
+      <!-- 视频画面 -->
+      <div class="video-container">
+        <div class="video-frame">
+          <div class="video-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <div>实时视频流</div>
+          </div>
+          <div class="video-status">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>直播中</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 控制按钮 -->
+    <div class="control-section">
+      <div class="control-buttons">
+        <button class="control-btn pause" onclick="pauseFlight()">⏸️ 暂停</button>
+        <button class="control-btn return" onclick="returnFlight()">🔙 返航</button>
+      </div>
+    </div>
+    
+    <!-- 异常列表 -->
+    <div class="abnormal-section">
+      <div class="section-title">
+        <span class="section-dot"></span>
+        识别异常 <span style="font-size:12px;font-weight:400;color:#999;">(2条待确认)</span>
+      </div>
+      
+      <div class="abnormal-card">
+        <div class="abnormal-header">
+          <div class="abnormal-title">
+            <span class="abnormal-dot pest"></span>
+            病虫害异常
+          </div>
+          <span class="abnormal-status">待确认</span>
+        </div>
+        <div class="abnormal-meta">
+          <span>地块A-003</span>
+          <span class="abnormal-confidence">置信度: 92%</span>
+        </div>
+        <div class="abnormal-footer">
+          <span style="font-size:12px;color:#666;">2024-04-15 09:32</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-ignore" onclick="ignoreAbnormal()">标记误报</button>
+            <button class="btn-confirm" onclick="confirmAbnormal()">确认异常</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="abnormal-card">
+        <div class="abnormal-header">
+          <div class="abnormal-title">
+            <span class="abnormal-dot pest"></span>
+            病虫害异常
+          </div>
+          <span class="abnormal-status">待确认</span>
+        </div>
+        <div class="abnormal-meta">
+          <span>地块A-005</span>
+          <span class="abnormal-confidence">置信度: 87%</span>
+        </div>
+        <div class="abnormal-footer">
+          <span style="font-size:12px;color:#666;">2024-04-15 09:45</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-ignore" onclick="ignoreAbnormal()">标记误报</button>
+            <button class="btn-confirm" onclick="confirmAbnormal()">确认异常</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 历史任务 -->
+    <div class="history-section">
+      <div class="section-title">
+        <span class="section-dot"></span>
+        历史任务
+      </div>
+      
+      <div class="history-card">
+        <div class="history-header">
+          <div class="history-task-id">TASK-004</div>
+          <span class="history-status completed">已完成</span>
+        </div>
+        <div class="history-date">2024-04-14 10:00</div>
+        <div class="history-stats">
+          <span>航线: <span class="history-stat-value">航线-A001</span></span>
+          <span>覆盖: <span class="history-stat-value">240亩</span></span>
+          <span>异常: <span class="history-stat-value">3条</span></span>
+        </div>
+      </div>
+      
+      <div class="history-card">
+        <div class="history-header">
+          <div class="history-task-id">TASK-003</div>
+          <span class="history-status completed">已完成</span>
+        </div>
+        <div class="history-date">2024-04-13 14:00</div>
+        <div class="history-stats">
+          <span>航线: <span class="history-stat-value">航线-B001</span></span>
+          <span>覆盖: <span class="history-stat-value">300亩</span></span>
+          <span>异常: <span class="history-stat-value">1条</span></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_patrol.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span>巡园</span>
+      </div>
+      <div class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>无人机</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+    
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    
+    function pauseFlight() {
+      alert('暂停飞行功能开发中');
+    }
+    
+    function returnFlight() {
+      if (confirm('确定要让无人机返航吗？')) {
+        alert('返航指令已发送');
+      }
+    }
+    
+    function ignoreAbnormal() {
+      alert('已标记为误报');
+    }
+    
+    function confirmAbnormal() {
+      alert('已确认异常，将生成处理任务');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 系统首页</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; animation: pageIn 0.25s ease; }
+
+  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ===== 顶部导航 ===== */
+  .header {
+    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-right: 30px;
+  }
+  .logo-icon.snzg-logo-icon {
+    width: 38px; height: 38px;
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item {
+    color: rgba(255,255,255,0.9);
+    padding: 0 14px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+
+  .jg-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: none;
+    border: none;
+  }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav {
+    display: none;
+    position: fixed;
+    top: 56px; left: 0; right: 0;
+    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+    padding: 12px;
+    z-index: 99;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item {
+    display: block;
+    padding: 12px 16px;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .jg-mobile-nav-item.active { background: rgba(255,255,255,0.2); font-weight: 600; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    position: relative;
+  }
+  .msg-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    color: #fff;
+    font-size: 18px;
+  }
+  .msg-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: #ff4d4f; color: #fff; font-size: 10px;
+    padding: 1px 4px; border-radius: 8px; font-weight: 600;
+    min-width: 16px; text-align: center;
+  }
+
+  .snzg-user-btn {
+    display: flex; align-items: center; gap: 6px;
+    color: #fff; cursor: pointer;
+    padding: 4px 8px; border-radius: 4px;
+    transition: background 0.2s; font-size: 13px;
+    background: none; border: none;
+  }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar {
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .snzg-user-menu {
+    position: absolute; top: 52px; right: 0;
+    background: #fff; border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    min-width: 200px; z-index: 200;
+    overflow: hidden; display: none;
+    animation: slideDown 0.2s ease;
+  }
+  .snzg-user-menu.show { display: block; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .snzg-user-info {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; background: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .snzg-user-info-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #1a7a3c, #22a84a);
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; font-weight: 600;
+  }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item {
+    display: block; padding: 10px 16px;
+    color: #333; font-size: 13px;
+    cursor: pointer; transition: background 0.2s;
+    text-decoration: none;
+  }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+
+  /* ===== 主体 ===== */
+  .main-wrap { margin-top: 56px; padding: 16px 20px 24px; min-height: calc(100vh - 56px); }
+
+  /* ===== A区 欢迎语 ===== */
+  .welcome-bar {
+    background: #fff; border-radius: 8px;
+    padding: 14px 20px; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .welcome-left { display: flex; align-items: center; gap: 12px; }
+  .welcome-avatar {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #ff6b35, #ff8c42);
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 20px; color: #fff;
+  }
+  .welcome-text h2 { font-size: 16px; font-weight: 600; color: #222; margin-bottom: 2px; }
+  .welcome-text p { font-size: 12px; color: #666; }
+  .welcome-actions { display: flex; gap: 10px; }
+  .jg-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 6px;
+    border: 1px solid #d9d9d9; background: #fff;
+    cursor: pointer; font-size: 12px; color: #333;
+    transition: all 0.2s; white-space: nowrap; font-family: inherit;
+  }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+
+  /* ===== B区 指标卡片 ===== */
+  .metrics-row {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 12px; margin-bottom: 16px;
+  }
+  .snzg-stat-card {
+    background: #fff; border-radius: 8px;
+    padding: 16px; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: relative; overflow: hidden;
+  }
+  .snzg-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .snzg-stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+  .snzg-stat-card.green::before { background: #22a84a; }
+  .snzg-stat-card.blue::before { background: #1890ff; }
+  .snzg-stat-card.orange::before { background: #fa8c16; }
+  .snzg-stat-card.red::before { background: #ff4d4f; }
+  .snzg-stat-card.purple::before { background: #722ed1; }
+  .snzg-stat-card.yellow::before { background: #faad14; }
+  .metric-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .metric-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .snzg-stat-card.green .metric-icon { background: #f0faf3; }
+  .snzg-stat-card.blue .metric-icon { background: #e6f4ff; }
+  .snzg-stat-card.orange .metric-icon { background: #fff7e6; }
+  .snzg-stat-card.red .metric-icon { background: #fff1f0; }
+  .snzg-stat-card.purple .metric-icon { background: #f5f0ff; }
+  .snzg-stat-card.yellow .metric-icon { background: #fffbe6; }
+  .metric-label { font-size: 12px; color: #666; }
+  .metric-value { font-size: 26px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+  .snzg-stat-card.green .metric-value { color: #22a84a; }
+  .snzg-stat-card.blue .metric-value { color: #1890ff; }
+  .snzg-stat-card.orange .metric-value { color: #fa8c16; }
+  .snzg-stat-card.red .metric-value { color: #ff4d4f; }
+  .snzg-stat-card.purple .metric-value { color: #722ed1; }
+  .snzg-stat-card.yellow .metric-value { color: #faad14; }
+  .metric-unit { font-size: 13px; font-weight: 400; }
+  .metric-footer { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+  .metric-trend { display: flex; align-items: center; gap: 2px; font-weight: 600; }
+  .metric-trend.up { color: #22a84a; }
+  .metric-trend.down { color: #ff4d4f; }
+  .metric-sub { color: #666; }
+
+  /* ===== C+D 双栏 ===== */
+  .main-grid {
+    display: grid; grid-template-columns: 60% 40%;
+    gap: 16px; margin-bottom: 16px;
+  }
+
+  /* ===== 通用面板 ===== */
+  .snzg-panel {
+    background: #fff; border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .snzg-panel-header {
+    padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .snzg-panel-title {
+    font-size: 14px; font-weight: 600; color: #222;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-badge {
+    display: inline-block; background: #ff4d4f; color: #fff;
+    font-size: 10px; padding: 1px 6px; border-radius: 8px;
+    font-weight: 600; min-width: 18px; text-align: center;
+  }
+  .snzg-panel-link {
+    font-size: 12px; color: #22a84a; cursor: pointer;
+    text-decoration: none; display: flex; align-items: center; gap: 2px;
+  }
+  .snzg-panel-link:hover { color: #1a9940; text-decoration: underline; }
+  .snzg-panel-body { padding: 14px 16px; }
+
+  /* ===== C区 地图 ===== */
+  .c-col { display: flex; flex-direction: column; gap: 16px; }
+  .map-container {
+    position: relative; height: 240px;
+    background: linear-gradient(160deg, #1a2e1a 0%, #2d4a2d 30%, #3d5c3d 60%, #2a3a2a 100%);
+    border-radius: 0 0 8px 8px; overflow: hidden;
+  }
+  .map-svg { width: 100%; height: 100%; }
+  .map-legend {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(20,30,20,0.85); border-radius: 6px;
+    padding: 8px 12px; font-size: 11px;
+    display: flex; flex-direction: column; gap: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    color: #ddd;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ===== C2 趋势图 ===== */
+  .trend-chart { height: 200px; padding: 6px 2px 8px 6px; }
+
+  /* ===== C3 对比图 ===== */
+  .compare-chart { padding: 10px 16px 14px; }
+  .snzg-tab-group { display: flex; gap: 6px; margin-bottom: 10px; }
+  .snzg-tab {
+    padding: 3px 10px; border-radius: 12px; font-size: 11px;
+    cursor: pointer; border: 1px solid #d9d9d9;
+    background: #fff; color: #555; transition: all 0.2s;
+  }
+  .snzg-tab.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .snzg-tab:hover:not(.active) { border-color: #22a84a; color: #22a84a; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+  .bar-label { width: 60px; text-align: right; color: #555; flex-shrink: 0; font-size: 11px; }
+  .bar-track { flex: 1; height: 18px; background: #f5f5f5; border-radius: 9px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 9px; transition: width 0.8s ease;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 6px; font-size: 10px; color: #fff; font-weight: 600;
+    min-width: 28px;
+  }
+  .bar-fill.green { background: linear-gradient(90deg, #22a84a, #52c41a); }
+  .bar-fill.yellow { background: linear-gradient(90deg, #faad14, #ffd666); color: #7a6000; }
+  .bar-fill.red { background: linear-gradient(90deg, #ff4d4f, #ff7875); }
+
+  /* ===== D区 右侧 ===== */
+  .d-col { display: flex; flex-direction: column; gap: 16px; }
+
+  /* 预警中心 */
+  .alert-levels {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin-bottom: 12px;
+  }
+  .alert-level-card {
+    padding: 8px; border-radius: 6px;
+    text-align: center; cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .alert-level-card:hover { transform: scale(1.05); }
+  .alert-level-card .al-count { font-size: 18px; font-weight: 700; }
+  .alert-level-card .al-label { font-size: 10px; margin-top: 2px; }
+  .alert-level-card.red { background: #fff1f0; color: #ff4d4f; }
+  .alert-level-card.orange { background: #fff7e6; color: #fa8c16; }
+  .alert-level-card.yellow { background: #fffbe6; color: #d4b106; }
+  .alert-level-card.blue { background: #e6f4ff; color: #1890ff; }
+  .alert-list { list-style: none; }
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid #f5f5f5;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .alert-item:hover { background: #fafafa; }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .alert-dot.red { background: #ff4d4f; }
+  .alert-dot.orange { background: #fa8c16; }
+  .alert-dot.yellow { background: #faad14; }
+  .alert-dot.blue { background: #1890ff; }
+  .alert-content { flex: 1; min-width: 0; }
+  .alert-title { font-size: 12px; color: #333; margin-bottom: 2px; line-height: 1.4; }
+  .alert-meta { font-size: 11px; color: #666; display: flex; gap: 8px; }
+
+  /* 待办 */
+  .todo-list { list-style: none; }
+  .todo-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid #f5f5f5;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .todo-item:hover { background: #fafafa; }
+  .todo-item:last-child { border-bottom: none; }
+  .todo-icon { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+  .todo-content { flex: 1; min-width: 0; }
+  .todo-title { font-size: 12px; color: #333; margin-bottom: 2px; }
+  .todo-meta { font-size: 11px; color: #666; display: flex; align-items: center; gap: 8px; }
+  .todo-status {
+    display: inline-block; padding: 1px 6px; border-radius: 8px;
+    font-size: 10px; font-weight: 600;
+  }
+  .todo-status.urgent { background: #fff1f0; color: #ff4d4f; }
+  .todo-status.normal { background: #e6f4ff; color: #1890ff; }
+  .todo-status.low { background: #f5f5f5; color: #8c8c8c; }
+
+  /* 通知 */
+  .notice-list { list-style: none; }
+  .notice-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid #f5f5f5;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .notice-item:hover { background: #fafafa; }
+  .notice-item:last-child { border-bottom: none; }
+  .notice-dot { width: 6px; height: 6px; border-radius: 50%; background: #22a84a; margin-top: 5px; flex-shrink: 0; }
+  .notice-dot.read { background: #d9d9d9; }
+  .notice-content { flex: 1; min-width: 0; }
+  .notice-title { font-size: 12px; color: #333; margin-bottom: 2px; line-height: 1.4; }
+  .notice-title.urgent { color: #ff4d4f; font-weight: 600; }
+  .notice-time { font-size: 11px; color: #666; }
+
+  /* ===== E区 模块入口 ===== */
+  .module-row {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  .module-card {
+    background: #fff; border-radius: 8px;
+    padding: 20px 16px; text-align: center;
+    cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: relative; overflow: hidden;
+  }
+  .module-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .module-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .module-card.enterprise::after { background: #22a84a; }
+  .module-card.farming::after { background: #1890ff; }
+  .module-card.material::after { background: #722ed1; }
+  .module-card.device::after { background: #fa8c16; }
+  .module-card.admin::after { background: #8c8c8c; }
+  .module-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    margin: 0 auto 10px; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .module-card.enterprise .module-icon { background: #f0faf3; }
+  .module-card.farming .module-icon { background: #e6f4ff; }
+  .module-card.material .module-icon { background: #f5f0ff; }
+  .module-card.device .module-icon { background: #fff7e6; }
+  .module-card.admin .module-icon { background: #f5f5f5; }
+  .module-name { font-size: 14px; font-weight: 600; color: #222; margin-bottom: 4px; }
+  .module-desc { font-size: 11px; color: #999; margin-bottom: 8px; line-height: 1.4; }
+  .module-stats { font-size: 12px; color: #555; margin-bottom: 10px; }
+  .module-stats b { color: #22a84a; }
+  .module-enter {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 14px; border-radius: 12px;
+    font-size: 12px; border: 1px solid #d9d9d9;
+    color: #333; transition: all 0.2s; background: #fff;
+  }
+  .module-card:hover .module-enter { border-color: #22a84a; color: #22a84a; }
+
+  /* ===== 骨架屏 ===== */
+  .snzg-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes skeletonShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skeleton-card { height: 140px; }
+  .skeleton-list-item { height: 48px; margin-bottom: 8px; }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f5f5f5; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+  /* ===== 模态框 ===== */
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-content { background: #fff; border-radius: 8px; width: 90%; max-width: 480px; overflow: hidden; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: #222; }
+  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+  .modal-close:hover { background: #f5f5f5; }
+  .modal-body { padding: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .form-input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: #22a84a; }
+  .modal-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+  .jg-toast { position: fixed; top: 70px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; font-size: 13px; z-index: 2000; animation: toastIn 0.3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .jg-toast-success { background: #52c41a; }
+  .jg-toast-error { background: #ff4d4f; }
+  .jg-toast-info { background: #1890ff; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 1344px) {
+    .nav-menu { display: none; }
+    .jg-hamburger { display: flex; }
+    .metrics-row { grid-template-columns: repeat(3, 1fr); }
+    .module-row { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+    .module-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .welcome-bar { flex-direction: column; gap: 12px; align-items: flex-start; }
+    .welcome-actions { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="38" height="38" viewBox="0 0 38 38">
+        <rect width="38" height="38" fill="#fff" rx="4"/>
+        <circle cx="19" cy="18" r="12" fill="#ff6b35"/>
+        <circle cx="15" cy="15" r="2" fill="#fff" opacity="0.6"/>
+        <circle cx="23" cy="15" r="1.5" fill="#fff" opacity="0.4"/>
+        <path d="M12 28 Q19 34 26 28" fill="none" stroke="#22a84a" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="14" y="30" width="10" height="4" rx="2" fill="#22a84a"/>
+      </svg>
+    </div>
+    <span style="margin-left:48px;">数农智果</span>
+  </div>
+  <nav class="nav-menu" id="navMenu">
+    <a class="snzg-nav-item active" href="home.html" tabindex="0">
+      <span class="nav-icon">🏠</span> 系统首页
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="enterprise_base.html" tabindex="0">
+      <span class="nav-icon">🏢</span> 企业管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="farming_plan.html" tabindex="0">
+      <span class="nav-icon">🌾</span> 农事管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="material_info.html" tabindex="0">
+      <span class="nav-icon">📦</span> 农资管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="device_monitor.html" tabindex="0">
+      <span class="nav-icon">📡</span> 设备管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="alert_device.html" tabindex="0">
+      <span class="nav-icon">🔔</span> 预警管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="trace_code.html" tabindex="0">
+      <span class="nav-icon">🏷️</span> 产品追溯
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="harvest_plan.html" tabindex="0">
+      <span class="nav-icon">🍎</span> 采收管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="model_growth.html" tabindex="0">
+      <span class="nav-icon">🧠</span> 模型预测中心
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="vr_panorama.html" tabindex="0">
+      <span class="nav-icon">🥽</span> VR全景
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="system_settings.html" tabindex="0">
+      <span class="nav-icon">⚙</span> 系统设置
+    </a>
+  </nav>
+  <button class="jg-hamburger" id="hamburgerBtn" aria-label="打开菜单">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-right">
+    <div class="msg-btn" onclick="showToast('您有6条未读消息', 'info')">
+      ✉
+      <span class="msg-badge">6</span>
+    </div>
+    <button class="snzg-user-btn" id="userBtn">
+      <div class="snzg-user-avatar">👤</div>
+      <span id="displayName">用户</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </button>
+    <div class="snzg-user-menu" id="userMenu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">用</div>
+        <div>
+          <div class="snzg-user-info-name" id="displayName2">用户</div>
+          <div class="snzg-user-info-role">基地管理员</div>
+        </div>
+      </div>
+      <a class="snzg-user-menu-item" href="user_settings.html">⚙ 个人设置</a>
+      <a class="snzg-user-menu-item" href="#" onclick="showChangePwdModal()">🔑 修改密码</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a class="snzg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+</header>
+
+<!-- 移动端导航 -->
+<div class="jg-mobile-nav" id="mobileNav">
+  <a class="jg-mobile-nav-item active" href="home.html">🏠 系统首页</a>
+  <a class="jg-mobile-nav-item" href="enterprise_base.html">🏢 企业管理</a>
+  <a class="jg-mobile-nav-item" href="farming_plan.html">🌾 农事管理</a>
+  <a class="jg-mobile-nav-item" href="material_info.html">📦 农资管理</a>
+  <a class="jg-mobile-nav-item" href="device_monitor.html">📡 设备管理</a>
+  <a class="jg-mobile-nav-item" href="alert_device.html">🔔 预警管理</a>
+  <a class="jg-mobile-nav-item" href="trace_code.html">🏷️ 产品追溯</a>
+  <a class="jg-mobile-nav-item" href="harvest_plan.html">🍎 采收管理</a>
+  <a class="jg-mobile-nav-item" href="model_growth.html">🧠 模型预测中心</a>
+  <a class="jg-mobile-nav-item" href="vr_panorama.html">🥽 VR全景</a>
+  <a class="jg-mobile-nav-item" href="system_settings.html">⚙ 系统设置</a>
+</div>
+
+<!-- 主体 -->
+<div class="main-wrap">
+
+  <!-- ===== A区 欢迎语 ===== -->
+  <div class="welcome-bar">
+    <div class="welcome-left">
+      <div class="welcome-avatar">👋</div>
+      <div class="welcome-text">
+        <h2>您好，<span id="displayName3">基地管理员</span>！</h2>
+        <p id="welcomeDate">今天是 2026年5月20日 星期二</p>
+      </div>
+    </div>
+    <div class="welcome-actions">
+      <button class="jg-btn jg-btn-primary" onclick="showToast('新建生产计划功能开发中', 'info')">
+        <span>📅</span> 新建计划
+      </button>
+      <button class="jg-btn" onclick="showToast('发布通知功能开发中', 'info')">
+        <span>📢</span> 发布通知
+      </button>
+      <button class="jg-btn" onclick="showToast('查看简报功能开发中', 'info')">
+        <span>📊</span> 查看简报
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== B区 模型快讯 ===== -->
+  <div class="snzg-panel" style="margin-bottom:16px; border-left:4px solid #22a84a;">
+    <div class="snzg-panel-header" style="background:#f0faf3;">
+      <div class="snzg-panel-title"><span class="pt-icon">🧠</span>模型预测快讯</div>
+      <a href="model_growth.html" style="font-size:12px;color:#22a84a;text-decoration:none;">查看全部 →</a>
+    </div>
+    <div class="snzg-panel-body" style="padding:12px 16px;">
+      <div style="display:flex;gap:12px;overflow-x:auto;">
+        <div style="min-width:200px;background:#fff;padding:12px;border-radius:8px;border:1px solid #e8e8e8;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size:16px;">🌱</span>
+            <span style="font-size:11px;color:#666;">生长模型</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#333;">5块地块生长迟缓</div>
+          <div style="font-size:11px;color:#ff4d4f;margin-top:2px;">需关注处理</div>
+        </div>
+        <div style="min-width:200px;background:#fff;padding:12px;border-radius:8px;border:1px solid #e8e8e8;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size:16px;">🐛</span>
+            <span style="font-size:11px;color:#666;">病虫害模型</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#333;">轮纹病风险上升</div>
+          <div style="font-size:11px;color:#fa8c16;margin-top:2px;">建议3天内防治</div>
+        </div>
+        <div style="min-width:200px;background:#fff;padding:12px;border-radius:8px;border:1px solid #e8e8e8;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size:16px;">📊</span>
+            <span style="font-size:11px;color:#666;">产量预估</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#333;">预估产量126.8吨</div>
+          <div style="font-size:11px;color:#22a84a;margin-top:2px;">↑ 12.5% 较上年</div>
+        </div>
+        <div style="min-width:200px;background:#fff;padding:12px;border-radius:8px;border:1px solid #e8e8e8;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size:16px;">💰</span>
+            <span style="font-size:11px;color:#666;">价格预测</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#333;">10月价格看涨</div>
+          <div style="font-size:11px;color:#22a84a;margin-top:2px;">最佳销售窗口</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== C区 6个核心指标 ===== -->
+  <div class="metrics-row" id="metricsRow">
+    <div class="snzg-stat-card green">
+      <div class="metric-header">
+        <span class="metric-icon">🍎</span>
+        <span class="metric-label">苹果总产量</span>
+      </div>
+      <div class="metric-value">126.8<span class="metric-unit">吨</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend up">↑ 12.5%</span>
+        <span class="metric-sub">较上月</span>
+      </div>
+    </div>
+    <div class="snzg-stat-card blue" onclick="window.location.href='enterprise_base.html'">
+      <div class="metric-header">
+        <span class="metric-icon">🏡</span>
+        <span class="metric-label">基地数量</span>
+      </div>
+      <div class="metric-value">8<span class="metric-unit">个</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend up">↑ 1</span>
+        <span class="metric-sub">较上月</span>
+      </div>
+    </div>
+    <div class="snzg-stat-card orange" onclick="window.location.href='farming_plan.html'">
+      <div class="metric-header">
+        <span class="metric-icon">🌾</span>
+        <span class="metric-label">今日农事</span>
+      </div>
+      <div class="metric-value">23<span class="metric-unit">项</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend down">↓ 3</span>
+        <span class="metric-sub">较昨日</span>
+      </div>
+    </div>
+    <div class="snzg-stat-card red" onclick="window.location.href='alert_device.html'">
+      <div class="metric-header">
+        <span class="metric-icon">🔔</span>
+        <span class="metric-label">待处理预警</span>
+      </div>
+      <div class="metric-value">5<span class="metric-unit">条</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend up">↑ 2</span>
+        <span class="metric-sub">较昨日</span>
+      </div>
+    </div>
+    <div class="snzg-stat-card purple" onclick="window.location.href='material_inventory.html'">
+      <div class="metric-header">
+        <span class="metric-icon">📦</span>
+        <span class="metric-label">农资库存</span>
+      </div>
+      <div class="metric-value">1286<span class="metric-unit">件</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend down">↓ 8.3%</span>
+        <span class="metric-sub">较上月</span>
+      </div>
+    </div>
+    <div class="snzg-stat-card yellow">
+      <div class="metric-header">
+        <span class="metric-icon">👤</span>
+        <span class="metric-label">在岗人数</span>
+      </div>
+      <div class="metric-value">126<span class="metric-unit">人</span></div>
+      <div class="metric-footer">
+        <span class="metric-trend up">↑ 5</span>
+        <span class="metric-sub">较上月</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== C+D 双栏 ===== -->
+  <div class="main-grid">
+
+    <!-- ===== C区 左侧 ===== -->
+    <div class="c-col">
+
+      <!-- C1 基地分布概览 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">🗺️</span> 基地分布概览 · 8个基地</div>
+          <a class="snzg-panel-link" href="enterprise_base.html">查看完整地图 →</a>
+        </div>
+        <div class="map-container">
+          <svg class="map-svg" viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" role="img">
+            <title>基地分布地图</title>
+            <desc>显示各基地位置和状态的分布图</desc>
+            <path d="M80,60 L140,30 L220,20 L300,25 L380,35 L440,50 L500,65 L530,95 L520,130 L500,160 L460,180 L400,200 L340,210 L260,215 L190,205 L130,185 L90,155 L70,120 L75,85 Z"
+              fill="rgba(30,50,30,0.5)" stroke="rgba(100,180,100,0.5)" stroke-width="1.5" opacity="0.7"/>
+            <g id="cityDots">
+              <circle cx="310" cy="90" r="14" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="烟台基地" data-count="268亩" data-normal="98%" aria-label="烟台基地" tabindex="0" role="button"/>
+              <circle cx="260" cy="155" r="11" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="栖霞基地" data-count="186亩" data-normal="96%" aria-label="栖霞基地" tabindex="0" role="button"/>
+              <circle cx="330" cy="155" r="10" fill="#ffc940" opacity="0.85" class="city-dot" data-city="蓬莱基地" data-count="152亩" data-normal="92%" aria-label="蓬莱基地" tabindex="0" role="button"/>
+              <circle cx="230" cy="85" r="9" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="威海基地" data-count="145亩" data-normal="97%" aria-label="威海基地" tabindex="0" role="button"/>
+              <circle cx="370" cy="110" r="10" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="龙口基地" data-count="138亩" data-normal="95%" aria-label="龙口基地" tabindex="0" role="button"/>
+              <circle cx="190" cy="110" r="8" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="青岛基地" data-count="120亩" data-normal="99%" aria-label="青岛基地" tabindex="0" role="button"/>
+              <circle cx="350" cy="70" r="8" fill="#ffaa33" opacity="0.85" class="city-dot" data-city="招远基地" data-count="98亩" data-normal="90%" aria-label="招远基地" tabindex="0" role="button"/>
+              <circle cx="290" cy="175" r="7" fill="#4cdf7a" opacity="0.85" class="city-dot" data-city="莱阳基地" data-count="86亩" data-normal="96%" aria-label="莱阳基地" tabindex="0" role="button"/>
+            </g>
+            <g font-size="9" fill="rgba(255,255,255,0.85)" text-anchor="middle">
+              <text x="310" y="74">烟台</text>
+              <text x="260" y="143">栖霞</text>
+              <text x="330" y="145">蓬莱</text>
+              <text x="230" y="73">威海</text>
+              <text x="370" y="100">龙口</text>
+              <text x="190" y="98">青岛</text>
+              <text x="350" y="62">招远</text>
+              <text x="290" y="167">莱阳</text>
+            </g>
+          </svg>
+          <div class="map-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#4cdf7a;"></span> 正常</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ffc940;"></span> 维护中</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ffaa33;"></span> 待整改</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C2 农事趋势 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">📈</span> 农事任务趋势 · 近10天</div>
+          <a class="snzg-panel-link" href="farming_record.html">查看详情 →</a>
+        </div>
+        <div class="trend-chart">
+          <svg viewBox="0 0 680 170" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
+            <line x1="30" y1="10" x2="650" y2="10" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="30" y1="45" x2="650" y2="45" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="30" y1="80" x2="650" y2="80" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="30" y1="115" x2="650" y2="115" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="30" y1="150" x2="650" y2="150" stroke="#e8e8e8" stroke-width="1"/>
+            <text x="24" y="14" font-size="10" fill="#999" text-anchor="end">40</text>
+            <text x="24" y="49" font-size="10" fill="#999" text-anchor="end">30</text>
+            <text x="24" y="84" font-size="10" fill="#999" text-anchor="end">20</text>
+            <text x="24" y="119" font-size="10" fill="#999" text-anchor="end">10</text>
+            <text x="24" y="154" font-size="10" fill="#999" text-anchor="end">0</text>
+            <text x="30" y="165" font-size="9" fill="#999" text-anchor="middle">5/11</text>
+            <text x="99" y="165" font-size="9" fill="#999" text-anchor="middle">5/12</text>
+            <text x="168" y="165" font-size="9" fill="#999" text-anchor="middle">5/13</text>
+            <text x="237" y="165" font-size="9" fill="#999" text-anchor="middle">5/14</text>
+            <text x="306" y="165" font-size="9" fill="#999" text-anchor="middle">5/15</text>
+            <text x="374" y="165" font-size="9" fill="#999" text-anchor="middle">5/16</text>
+            <text x="443" y="165" font-size="9" fill="#999" text-anchor="middle">5/17</text>
+            <text x="512" y="165" font-size="9" fill="#999" text-anchor="middle">5/18</text>
+            <text x="581" y="165" font-size="9" fill="#999" text-anchor="middle">5/19</text>
+            <text x="650" y="165" font-size="9" fill="#999" text-anchor="middle">5/20</text>
+            <defs><linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1890ff" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#1890ff" stop-opacity="0.01"/>
+            </linearGradient></defs>
+            <path d="M30,87 L99,80 L168,62.5 L237,73 L306,52 L374,66 L443,45 L512,59 L581,38 L650,48.5 L650,150 L30,150 Z" fill="url(#blueGrad)"/>
+            <polyline points="30,87 99,80 168,62.5 237,73 306,52 374,66 443,45 512,59 581,38 650,48.5"
+              fill="none" stroke="#1890ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="30" cy="87" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="99" cy="80" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="168" cy="62.5" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="237" cy="73" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="306" cy="52" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="374" cy="66" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="443" cy="45" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="512" cy="59" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="581" cy="38" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <circle cx="650" cy="48.5" r="3.5" fill="#fff" stroke="#1890ff" stroke-width="2"/>
+            <polyline points="30,108 99,97.5 168,83.5 237,94 306,80 374,87 443,69.5 512,76.5 581,62.5 650,73"
+              fill="none" stroke="#52c41a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="30" cy="108" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="99" cy="97.5" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="168" cy="83.5" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="237" cy="94" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="306" cy="80" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="374" cy="87" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="443" cy="69.5" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="512" cy="76.5" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="581" cy="62.5" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <circle cx="650" cy="73" r="3.5" fill="#fff" stroke="#52c41a" stroke-width="2"/>
+            <line x1="430" y1="8" x2="450" y2="8" stroke="#1890ff" stroke-width="2.5"/>
+            <text x="454" y="12" font-size="9" fill="#555">新建任务</text>
+            <line x1="500" y1="8" x2="520" y2="8" stroke="#52c41a" stroke-width="2.5"/>
+            <text x="524" y="12" font-size="9" fill="#555">已完成</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- C3 基地对比 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">📊</span> 各基地产量对比</div>
+          <div class="snzg-tab-group">
+            <span class="snzg-tab active" onclick="switchCompare(this, 'yield')">产量</span>
+            <span class="snzg-tab" onclick="switchCompare(this, 'quality')">品质率</span>
+            <span class="snzg-tab" onclick="switchCompare(this, 'efficiency')">效率</span>
+          </div>
+        </div>
+        <div class="compare-chart" id="compareChart">
+          <div class="bar-row"><span class="bar-label">烟台</span><div class="bar-track"><div class="bar-fill green" style="width:100%">100%</div></div></div>
+          <div class="bar-row"><span class="bar-label">栖霞</span><div class="bar-track"><div class="bar-fill green" style="width:85%">85%</div></div></div>
+          <div class="bar-row"><span class="bar-label">威海</span><div class="bar-track"><div class="bar-fill green" style="width:78%">78%</div></div></div>
+          <div class="bar-row"><span class="bar-label">龙口</span><div class="bar-track"><div class="bar-fill green" style="width:72%">72%</div></div></div>
+          <div class="bar-row"><span class="bar-label">青岛</span><div class="bar-track"><div class="bar-fill green" style="width:68%">68%</div></div></div>
+          <div class="bar-row"><span class="bar-label">蓬莱</span><div class="bar-track"><div class="bar-fill yellow" style="width:58%">58%</div></div></div>
+          <div class="bar-row"><span class="bar-label">招远</span><div class="bar-track"><div class="bar-fill yellow" style="width:52%">52%</div></div></div>
+          <div class="bar-row"><span class="bar-label">莱阳</span><div class="bar-track"><div class="bar-fill green" style="width:65%">65%</div></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== D区 右侧 ===== -->
+    <div class="d-col">
+
+      <!-- 预警中心 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">🔔</span> 预警中心 <span class="snzg-panel-badge">5</span></div>
+          <a class="snzg-panel-link" href="alert_device.html">查看全部 →</a>
+        </div>
+        <div class="snzg-panel-body">
+          <div class="alert-levels">
+            <div class="alert-level-card red" onclick="window.location.href='alert_device.html'"><div class="al-count">2</div><div class="al-label">紧急</div></div>
+            <div class="alert-level-card orange" onclick="window.location.href='alert_device.html'"><div class="al-count">1</div><div class="al-label">重要</div></div>
+            <div class="alert-level-card yellow" onclick="window.location.href='alert_farming.html'"><div class="al-count">1</div><div class="al-label">提醒</div></div>
+            <div class="alert-level-card blue" onclick="window.location.href='alert_internal_report.html'"><div class="al-count">1</div><div class="al-label">通知</div></div>
+          </div>
+          <ul class="alert-list">
+            <li class="alert-item" onclick="window.location.href='alert_device.html'">
+              <span class="alert-dot red"></span>
+              <div class="alert-content">
+                <div class="alert-title">蓬莱基地低温预警：未来24小时气温将降至5℃以下</div>
+                <div class="alert-meta"><span>5分钟前</span><span>蓬莱基地</span></div>
+              </div>
+            </li>
+            <li class="alert-item" onclick="window.location.href='alert_device.html'">
+              <span class="alert-dot red"></span>
+              <div class="alert-content">
+                <div class="alert-title">招远基地水肥设备异常：施肥泵压力偏低</div>
+                <div class="alert-meta"><span>12分钟前</span><span>招远基地</span></div>
+              </div>
+            </li>
+            <li class="alert-item" onclick="window.location.href='alert_farming.html'">
+              <span class="alert-dot orange"></span>
+              <div class="alert-content">
+                <div class="alert-title">农资库存预警：农药"多菌灵"库存不足</div>
+                <div class="alert-meta"><span>1小时前</span><span>系统</span></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 待办事项 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">📝</span> 今日待办 <span class="snzg-panel-badge">3</span></div>
+          <a class="snzg-panel-link" href="farming_plan.html">查看全部 →</a>
+        </div>
+        <div class="snzg-panel-body">
+          <ul class="todo-list">
+            <li class="todo-item" onclick="window.location.href='farming_record.html'">
+              <span class="todo-icon">🌾</span>
+              <div class="todo-content">
+                <div class="todo-title">审核烟台基地农事记录</div>
+                <div class="todo-meta"><span>12条待审核</span><span class="todo-status urgent">紧急</span></div>
+              </div>
+            </li>
+            <li class="todo-item" onclick="window.location.href='material_io.html'">
+              <span class="todo-icon">📦</span>
+              <div class="todo-content">
+                <div class="todo-title">确认农资采购入库</div>
+                <div class="todo-meta"><span>3批物资</span><span class="todo-status normal">正常</span></div>
+              </div>
+            </li>
+            <li class="todo-item" onclick="window.location.href='farming_plan.html'">
+              <span class="todo-icon">🍎</span>
+              <div class="todo-content">
+                <div class="todo-title">制定下周采收计划</div>
+                <div class="todo-meta"><span>预计2小时</span><span class="todo-status low">低</span></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 系统通知 -->
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon">📄</span> 系统通知</div>
+          <a class="snzg-panel-link" href="alert_internal_report.html">查看全部 →</a>
+        </div>
+        <div class="snzg-panel-body">
+          <ul class="notice-list">
+            <li class="notice-item" onclick="window.location.href='alert_internal_report.html'">
+              <span class="notice-dot"></span>
+              <div class="notice-content">
+                <div class="notice-title urgent">【重要】5月21日系统维护通知</div>
+                <div class="notice-time">30分钟前</div>
+              </div>
+            </li>
+            <li class="notice-item" onclick="window.location.href='farming_record.html'">
+              <span class="notice-dot"></span>
+              <div class="notice-content">
+                <div class="notice-title">烟台基地完成本周农事计划</div>
+                <div class="notice-time">2小时前</div>
+              </div>
+            </li>
+            <li class="notice-item" onclick="window.location.href='farming_patrol.html'">
+              <span class="notice-dot read"></span>
+              <div class="notice-content">
+                <div class="notice-title">苹果物候期提醒：烟台基地进入幼果期</div>
+                <div class="notice-time">昨天 14:30</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== E区 模块入口 ===== -->
+  <div class="module-row">
+    <div class="module-card enterprise" onclick="window.location.href='enterprise_base.html'">
+      <div class="module-icon">🏢</div>
+      <div class="module-name">企业管理</div>
+      <div class="module-desc">基地信息、地块管理</div>
+      <div class="module-stats"><b>8</b> 基地 · 126 地块</div>
+      <span class="module-enter">进入 →</span>
+    </div>
+    <div class="module-card farming" onclick="window.location.href='farming_plan.html'">
+      <div class="module-icon">🌾</div>
+      <div class="module-name">农事管理</div>
+      <div class="module-desc">生产计划、农事记录、巡园</div>
+      <div class="module-stats"><b>23</b> 今日任务 · 87% 完成</div>
+      <span class="module-enter">进入 →</span>
+    </div>
+    <div class="module-card material" onclick="window.location.href='material_info.html'">
+      <div class="module-icon">📦</div>
+      <div class="module-name">农资管理</div>
+      <div class="module-desc">采购、库存、使用记录</div>
+      <div class="module-stats"><b>1286</b> 件库存 · 5 项预警</div>
+      <span class="module-enter">进入 →</span>
+    </div>
+    <div class="module-card device" onclick="window.location.href='device_monitor.html'">
+      <div class="module-icon">📡</div>
+      <div class="module-name">设备管理</div>
+      <div class="module-desc">IoT设备、监控、水肥</div>
+      <div class="module-stats"><b>45</b> 设备 · 95% 在线</div>
+      <span class="module-enter">进入 →</span>
+    </div>
+    <div class="module-card admin" onclick="window.location.href='system_settings.html'">
+      <div class="module-icon">⚙</div>
+      <div class="module-name">系统管理</div>
+      <div class="module-desc">用户、权限、配置</div>
+      <div class="module-stats"><b>126</b> 用户 · 8 角色</div>
+      <span class="module-enter">进入 →</span>
+    </div>
+    <div class="module-card" style="background: linear-gradient(135deg, #e6f4ff, #f0f8ff);" onclick="window.location.href='drone_patrol.html'">
+      <div class="module-icon" style="background: #bae7ff;">🚁</div>
+      <div class="module-name" style="color: #1890ff;">无人机巡园</div>
+      <div class="module-desc">路径规划、任务监控</div>
+      <div class="module-stats"><b>12</b> 航线 · 3 今日任务</div>
+      <span class="module-enter" style="border-color: #1890ff; color: #1890ff;">进入 →</span>
+    </div>
+    <div class="module-card" style="background: linear-gradient(135deg, #f5f0ff, #ede9fe);" onclick="window.location.href='vr_panorama.html'">
+      <div class="module-icon" style="background: #e9d5ff;">🥽</div>
+      <div class="module-name" style="color: #722ed1;">VR全景</div>
+      <div class="module-desc">360°全景浏览、热点交互</div>
+      <div class="module-stats"><b>3</b> 全景场景 · 实时联动</div>
+      <span class="module-enter" style="border-color: #722ed1; color: #722ed1;">进入 →</span>
+    </div>
+  </div>
+
+</div>
+
+<div id="changePwdModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">修改密码</div>
+      <div class="modal-close" onclick="closeModal('changePwdModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">原密码 <span style="color:#ff4d4f;">*</span></label>
+        <input type="password" class="form-input" id="oldPwd" placeholder="请输入原密码">
+      </div>
+      <div class="form-group">
+        <label class="form-label">新密码 <span style="color:#ff4d4f;">*</span></label>
+        <input type="password" class="form-input" id="newPwd" placeholder="请输入新密码（6-20位）">
+      </div>
+      <div class="form-group">
+        <label class="form-label">确认新密码 <span style="color:#ff4d4f;">*</span></label>
+        <input type="password" class="form-input" id="confirmPwd" placeholder="请再次输入新密码">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('changePwdModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="changePassword()">确认修改</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showChangePwdModal() {
+  document.getElementById('changePwdModal').classList.add('show');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+function changePassword() {
+  const oldPwd = document.getElementById('oldPwd').value;
+  const newPwd = document.getElementById('newPwd').value;
+  const confirmPwd = document.getElementById('confirmPwd').value;
+  if (!oldPwd || !newPwd || !confirmPwd) {
+    showToast('请填写所有字段', 'error');
+    return;
+  }
+  if (newPwd.length < 6 || newPwd.length > 20) {
+    showToast('密码长度需在6-20位之间', 'error');
+    return;
+  }
+  if (newPwd !== confirmPwd) {
+    showToast('两次输入的密码不一致', 'error');
+    return;
+  }
+  closeModal('changePwdModal');
+  showToast('密码修改成功，请重新登录', 'success');
+  setTimeout(function() { handleLogout(); }, 1500);
+}
+
+// ====== 日期显示 ======
+function updateDate() {
+  const now = new Date();
+  const weekDays = ['日','一','二','三','四','五','六'];
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 星期${weekDays[now.getDay()]}`;
+  document.getElementById('welcomeDate').textContent = '今天是 ' + dateStr;
+}
+updateDate();
+
+// ====== 汉堡菜单 ======
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+if (hamburgerBtn && mobileNav) {
+  hamburgerBtn.addEventListener('click', function() {
+    mobileNav.classList.toggle('show');
+  });
+}
+
+// ====== 用户菜单 ======
+const userBtn = document.getElementById('userBtn');
+const userMenu = document.getElementById('userMenu');
+if (userBtn && userMenu) {
+  userBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    userMenu.classList.toggle('show');
+  });
+  document.addEventListener('click', function(e) {
+    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+      userMenu.classList.remove('show');
+    }
+  });
+}
+
+// ====== 退出登录 ======
+function handleLogout() {
+  sessionStorage.removeItem('snzg_logged_in');
+  sessionStorage.removeItem('snzg_user');
+  window.location.href = 'login.html';
+}
+
+// ====== 区域对比图 ======
+const compareData = {
+  yield: [
+    { name: '烟台', value: 100, cls: 'green' },
+    { name: '栖霞', value: 85, cls: 'green' },
+    { name: '威海', value: 78, cls: 'green' },
+    { name: '龙口', value: 72, cls: 'green' },
+    { name: '青岛', value: 68, cls: 'green' },
+    { name: '蓬莱', value: 58, cls: 'yellow' },
+    { name: '招远', value: 52, cls: 'yellow' },
+    { name: '莱阳', value: 65, cls: 'green' },
+  ],
+  quality: [
+    { name: '烟台', value: 98, cls: 'green' },
+    { name: '青岛', value: 97, cls: 'green' },
+    { name: '威海', value: 95, cls: 'green' },
+    { name: '栖霞', value: 94, cls: 'green' },
+    { name: '龙口', value: 92, cls: 'green' },
+    { name: '莱阳', value: 91, cls: 'green' },
+    { name: '蓬莱', value: 88, cls: 'yellow' },
+    { name: '招远', value: 85, cls: 'yellow' },
+  ],
+  efficiency: [
+    { name: '青岛', value: 96, cls: 'green' },
+    { name: '烟台', value: 94, cls: 'green' },
+    { name: '威海', value: 92, cls: 'green' },
+    { name: '龙口', value: 89, cls: 'green' },
+    { name: '栖霞', value: 87, cls: 'green' },
+    { name: '莱阳', value: 85, cls: 'yellow' },
+    { name: '蓬莱', value: 82, cls: 'yellow' },
+    { name: '招远', value: 78, cls: 'yellow' },
+  ]
+};
+
+function renderCompare(type) {
+  const data = compareData[type];
+  const container = document.getElementById('compareChart');
+  if (!container) return;
+  container.innerHTML = data.map(item => {
+    const barCls = item.value >= 90 ? 'green' : item.value >= 85 ? 'yellow' : 'red';
+    return `
+      <div class="bar-row">
+        <span class="bar-label">${item.name}</span>
+        <div class="bar-track">
+          <div class="bar-fill ${barCls}" style="width:${item.value}%">${item.value}%</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchCompare(el, type) {
+  document.querySelectorAll('.snzg-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderCompare(type);
+}
+
+// ====== 统一 Toast ======
+function showToast(msg, type) {
+  type = type || 'info';
+  var toast = document.createElement('div');
+  toast.className = 'jg-toast jg-toast-' + type;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.remove(); }, 2600);
+}
+</script>
+</body>
+</html>

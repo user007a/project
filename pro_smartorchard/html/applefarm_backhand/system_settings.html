@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 系统设置</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+  .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
+  .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
+  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: #fff; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; font-size: 13px; background: none; border: none; }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
+  .snzg-user-menu.show { display: block; }
+  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .snzg-user-info-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #1a7a3c, #22a84a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 600; }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item { display: block; padding: 10px 16px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+  .main-wrap { margin-top: 56px; padding: 16px 20px 24px; min-height: calc(100vh - 56px); }
+  .page-header { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+  .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 10px; }
+  .page-title .title-icon { font-size: 22px; }
+  .page-desc { font-size: 13px; color: #666; margin-top: 4px; }
+  .page-actions { display: flex; gap: 10px; }
+  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 12px; color: #333; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+  .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 16px; }
+  .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .snzg-panel-title { font-size: 14px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-body { padding: 14px 16px; }
+  .search-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; width: 200px; transition: border-color 0.2s; }
+  .search-input:focus { outline: none; border-color: #22a84a; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+  .data-table th { background: #fafafa; font-weight: 600; color: #333; }
+  .data-table tr:hover { background: #fafafa; }
+  .data-table .text-center { text-align: center; }
+  .data-table .role-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .role-tag.admin { background: #fff1f0; color: #ff4d4f; }
+  .role-tag.manager { background: #fff7e6; color: #fa8c16; }
+  .role-tag.operator { background: #e6f4ff; color: #1890ff; }
+  .role-tag.viewer { background: #f5f0ff; color: #722ed1; }
+  .data-table .status-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .status-tag.active { background: #f6ffed; color: #52c41a; }
+  .status-tag.disabled { background: #f5f5f5; color: #999; }
+  .data-table .action-btns { display: flex; gap: 8px; }
+  .action-btn { padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; background: transparent; color: #666; transition: all 0.2s; }
+  .action-btn:hover { background: #f0f0f0; }
+  .action-btn.edit { color: #1890ff; }
+  .action-btn.edit:hover { background: #e6f4ff; }
+  .action-btn.delete { color: #ff4d4f; }
+  .action-btn.delete:hover { background: #fff1f0; }
+  .action-btn.reset { color: #fa8c16; }
+  .action-btn.reset:hover { background: #fff7e6; }
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; }
+  .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer; background: #fff; font-size: 12px; transition: all 0.2s; }
+  .page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .page-btn.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-content { background: #fff; border-radius: 8px; width: 90%; max-width: 600px; overflow: hidden; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: #222; }
+  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+  .modal-close:hover { background: #f5f5f5; }
+  .modal-body { padding: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .form-input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: #22a84a; }
+  .form-select { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .form-select:focus { outline: none; border-color: #22a84a; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+  .jg-toast { position: fixed; top: 70px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; font-size: 13px; z-index: 2000; animation: toastIn 0.3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .jg-toast-success { background: #52c41a; }
+  .jg-toast-error { background: #ff4d4f; }
+  .jg-toast-info { background: #1890ff; }
+  .config-section { margin-bottom: 20px; }
+  .config-section-title { font-size: 14px; font-weight: 600; color: #222; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+  .config-item:last-child { border-bottom: none; }
+  .config-label { font-size: 13px; color: #333; }
+  .config-desc { font-size: 12px; color: #888; margin-top: 2px; }
+  .config-value { font-size: 13px; color: #22a84a; font-weight: 500; }
+  .config-toggle { width: 40px; height: 22px; background: #d9d9d9; border-radius: 11px; position: relative; cursor: pointer; transition: background 0.2s; }
+  .config-toggle.on { background: #22a84a; }
+  .config-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: left 0.2s; }
+  .config-toggle.on::after { left: 20px; }
+  .tab-bar { display: flex; gap: 0; margin-bottom: 16px; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+  .tab-item { flex: 1; padding: 12px 16px; text-align: center; cursor: pointer; font-size: 13px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab-item:hover { color: #333; background: #fafafa; }
+  .tab-item.active { color: #22a84a; font-weight: 600; border-bottom-color: #22a84a; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  @media (max-width: 768px) { .main-wrap { padding: 12px; } .search-bar { flex-direction: column; align-items: stretch; } .page-header { flex-direction: column; gap: 12px; align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 8px 6px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
+        <circle cx="50" cy="55" r="35" fill="#e53935"/>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <div class="nav-menu">
+    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="device_monitor.html" class="snzg-nav-item"><span class="nav-icon">📡</span><span>设备管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="alert_device.html" class="snzg-nav-item"><span class="nav-icon">🔔</span><span>预警管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="harvest_plan.html" class="snzg-nav-item"><span class="nav-icon">🍎</span><span>采收管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="model_growth.html" class="snzg-nav-item"><span class="nav-icon">🧠</span><span>模型预测中心</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
+  </div>
+  <button id="hamburgerBtn" class="jg-hamburger">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-right">
+    <div class="msg-btn">
+      <span>🔔</span>
+      <span class="msg-badge">3</span>
+    </div>
+    <button id="userBtn" class="snzg-user-btn">
+      <span class="snzg-user-avatar">管</span>
+      <span>管理员</span>
+    </button>
+    <div id="userMenu" class="snzg-user-menu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">管</div>
+        <div>
+          <div class="snzg-user-info-name">系统管理员</div>
+          <div class="snzg-user-info-role">超级管理员</div>
+        </div>
+      </div>
+      <a href="user_settings.html" class="snzg-user-menu-item">⚙ 个人设置</a>
+      <a href="#" onclick="showChangePwdModal()" class="snzg-user-menu-item">🔑 修改密码</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+    </div>
+  </div>
+</div>
+<div id="mobileNav" class="jg-mobile-nav">
+  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
+  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
+  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
+  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
+  <a href="device_monitor.html" class="jg-mobile-nav-item">📡 设备管理</a>
+  <a href="alert_device.html" class="jg-mobile-nav-item">🔔 预警管理</a>
+  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
+  <a href="harvest_plan.html" class="jg-mobile-nav-item">🍎 采收管理</a>
+  <a href="model_growth.html" class="jg-mobile-nav-item">🧠 模型预测中心</a>
+  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
+</div>
+<div class="main-wrap">
+  <div class="page-header">
+    <div>
+      <div class="page-title"><span class="title-icon">⚙</span>系统设置</div>
+      <div class="page-desc">用户管理、系统配置、操作日志</div>
+    </div>
+    <div class="page-actions">
+      <button class="jg-btn jg-btn-primary" onclick="showAddUserModal()">
+        <span>+</span>新增用户
+      </button>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('users')">👤 用户管理</div>
+    <div class="tab-item" onclick="switchTab('roles')">🔑 角色权限</div>
+    <div class="tab-item" onclick="switchTab('dict')">📚 数据字典</div>
+    <div class="tab-item" onclick="switchTab('backup')">💾 数据备份</div>
+    <div class="tab-item" onclick="switchTab('config')">🔧 系统配置</div>
+    <div class="tab-item" onclick="switchTab('logs')">📜 操作日志</div>
+  </div>
+  <!-- 用户管理 -->
+  <div id="tab-users" class="tab-content active">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">👥</span>用户列表</div>
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="搜索用户名/手机号..." id="searchInput">
+          <button class="jg-btn" onclick="doSearch()">搜索</button>
+        </div>
+      </div>
+      <div class="snzg-panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>用户名</th>
+              <th>姓名</th>
+              <th>角色</th>
+              <th>手机号</th>
+              <th>所属基地</th>
+              <th>状态</th>
+              <th>最后登录</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>admin</strong></td>
+              <td>系统管理员</td>
+              <td><span class="role-tag admin">超级管理员</span></td>
+              <td>138****0001</td>
+              <td>全部基地</td>
+              <td><span class="status-tag active">正常</span></td>
+              <td>2024-05-20 10:30</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>zhangsan</strong></td>
+              <td>张三</td>
+              <td><span class="role-tag manager">基地管理员</span></td>
+              <td>139****0002</td>
+              <td>烟台栖霞基地</td>
+              <td><span class="status-tag active">正常</span></td>
+              <td>2024-05-20 09:15</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn reset" onclick="handleResetPwd('zhangsan')">重置密码</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>lisi</strong></td>
+              <td>李四</td>
+              <td><span class="role-tag operator">操作员</span></td>
+              <td>137****0003</td>
+              <td>招远基地</td>
+              <td><span class="status-tag active">正常</span></td>
+              <td>2024-05-19 16:45</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn reset" onclick="handleResetPwd('lisi')">重置密码</button>
+                  <button class="action-btn delete" onclick="handleDisable('lisi')">禁用</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>wangwu</strong></td>
+              <td>王五</td>
+              <td><span class="role-tag viewer">观察员</span></td>
+              <td>136****0004</td>
+              <td>蓬莱阁基地</td>
+              <td><span class="status-tag disabled">已禁用</span></td>
+              <td>2024-05-10 08:00</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn" onclick="handleEnable('wangwu')" style="color:#52c41a;">启用</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>zhaoliu</strong></td>
+              <td>赵六</td>
+              <td><span class="role-tag operator">操作员</span></td>
+              <td>135****0005</td>
+              <td>威海荣成基地</td>
+              <td><span class="status-tag active">正常</span></td>
+              <td>2024-05-20 11:20</td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn reset" onclick="handleResetPwd('zhaoliu')">重置密码</button>
+                  <button class="action-btn delete" onclick="handleDisable('zhaoliu')">禁用</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button class="page-btn disabled">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 角色权限 -->
+  <div id="tab-roles" class="tab-content">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">🔑</span>角色配置</div>
+        <button class="jg-btn jg-btn-primary" onclick="showAddRoleModal()"><span>+</span>新增角色</button>
+      </div>
+      <div class="snzg-panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>角色名称</th>
+              <th>角色代码</th>
+              <th>用户数</th>
+              <th>描述</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>超级管理员</strong></td>
+              <td>admin</td>
+              <td>1</td>
+              <td>系统最高权限，可管理所有功能</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td><button class="action-btn edit">编辑</button></td>
+            </tr>
+            <tr>
+              <td><strong>基地管理员</strong></td>
+              <td>manager</td>
+              <td>3</td>
+              <td>管理基地日常运营，可操作农事、采收等</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn" onclick="showPermissionModal('manager')">权限配置</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>操作员</strong></td>
+              <td>operator</td>
+              <td>5</td>
+              <td>执行具体农事操作，记录采集数据</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn" onclick="showPermissionModal('operator')">权限配置</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>观察员</strong></td>
+              <td>viewer</td>
+              <td>2</td>
+              <td>仅可查看数据，无操作权限</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn" onclick="showPermissionModal('viewer')">权限配置</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- 数据字典 -->
+  <div id="tab-dict" class="tab-content">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">📚</span>数据字典维护</div>
+        <button class="jg-btn jg-btn-primary" onclick="showAddDictModal()"><span>+</span>新增字典</button>
+      </div>
+      <div class="snzg-panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>字典类型</th>
+              <th>字典编码</th>
+              <th>字典名称</th>
+              <th>字典值</th>
+              <th>排序</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>产品等级</td>
+              <td>GRADE_TYPE</td>
+              <td>苹果等级分类</td>
+              <td>特级,一级,二级,等外</td>
+              <td>1</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn delete">删除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>产品类型</td>
+              <td>PRODUCT_TYPE</td>
+              <td>产品类型分类</td>
+              <td>鲜果,果汁原料,果干原料</td>
+              <td>2</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn delete">删除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>基地类型</td>
+              <td>BASE_TYPE</td>
+              <td>基地类型分类</td>
+              <td>自营基地,合作基地,示范基地</td>
+              <td>3</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn delete">删除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>预警类型</td>
+              <td>ALERT_TYPE</td>
+              <td>预警信息分类</td>
+              <td>低温预警,高温预警,旱情预警,虫情预警</td>
+              <td>4</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn delete">删除</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>设备状态</td>
+              <td>DEVICE_STATUS</td>
+              <td>设备运行状态</td>
+              <td>在线,离线,故障,维护中</td>
+              <td>5</td>
+              <td><span class="status-tag active">启用</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn edit">编辑</button>
+                  <button class="action-btn delete">删除</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- 数据备份 -->
+  <div id="tab-backup" class="tab-content">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">💾</span>数据备份与恢复</div>
+      </div>
+      <div class="snzg-panel-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+          <div style="padding: 20px; background: #f6ffed; border-radius: 8px; border: 1px solid #b7eb8f;">
+            <div style="font-size: 14px; font-weight: 600; color: #52c41a; margin-bottom: 12px;">📦 自动备份设置</div>
+            <div class="config-item" style="padding: 8px 0; border-bottom: none;">
+              <div class="config-label">自动备份开关</div>
+              <div class="config-toggle on" onclick="toggleSwitch(this)"></div>
+            </div>
+            <div style="font-size: 13px; color: #666; margin-top: 8px;">备份频率：每日凌晨2:00自动备份</div>
+          </div>
+          <div style="padding: 20px; background: #e6f4ff; border-radius: 8px; border: 1px solid #91d5ff;">
+            <div style="font-size: 14px; font-weight: 600; color: #1890ff; margin-bottom: 12px;">📊 备份统计</div>
+            <div style="display: flex; gap: 20px;">
+              <div style="text-align: center;">
+                <div style="font-size: 24px; font-weight: 600; color: #1890ff;">12</div>
+                <div style="font-size: 12px; color: #666;">备份次数</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="font-size: 24px; font-weight: 600; color: #1890ff;">256 MB</div>
+                <div style="font-size: 12px; color: #666;">占用空间</div>
+              </div>
+              <div style="text-align: center;">
+                <div style="font-size: 24px; font-weight: 600; color: #52c41a;">正常</div>
+                <div style="font-size: 12px; color: #666;">备份状态</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button class="jg-btn jg-btn-primary" onclick="handleBackup()"><span>💾</span>立即备份</button>
+          <button class="jg-btn" onclick="showRestoreModal()"><span>📥</span>从备份恢复</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>备份时间</th>
+              <th>备份类型</th>
+              <th>文件大小</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2024-05-20 02:00:00</td>
+              <td><span class="status-tag active">自动</span></td>
+              <td>25.6 MB</td>
+              <td><span style="color:#52c41a;">✓ 成功</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn" onclick="handleDownload()">下载</button>
+                  <button class="action-btn" onclick="showRestoreConfirm()">恢复</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-05-19 02:00:00</td>
+              <td><span class="status-tag active">自动</span></td>
+              <td>25.4 MB</td>
+              <td><span style="color:#52c41a;">✓ 成功</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn" onclick="handleDownload()">下载</button>
+                  <button class="action-btn" onclick="showRestoreConfirm()">恢复</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-05-18 14:30:00</td>
+              <td><span style="background:#fff7e6;color:#fa8c16;padding:2px 8px;border-radius:12px;font-size:11px;">手动</span></td>
+              <td>25.2 MB</td>
+              <td><span style="color:#52c41a;">✓ 成功</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn" onclick="handleDownload()">下载</button>
+                  <button class="action-btn" onclick="showRestoreConfirm()">恢复</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2024-05-17 02:00:00</td>
+              <td><span class="status-tag active">自动</span></td>
+              <td>25.1 MB</td>
+              <td><span style="color:#52c41a;">✓ 成功</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn" onclick="handleDownload()">下载</button>
+                  <button class="action-btn" onclick="showRestoreConfirm()">恢复</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- 系统配置 -->
+  <div id="tab-config" class="tab-content">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">🔧</span>系统参数配置</div>
+      </div>
+      <div class="snzg-panel-body">
+        <div class="config-section">
+          <div class="config-section-title">📊 数据采集</div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">数据采集频率</div>
+              <div class="config-desc">IoT设备数据上报间隔</div>
+            </div>
+            <div class="config-value">5分钟/次</div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">离线判断阈值</div>
+              <div class="config-desc">超过该时间未上报视为离线</div>
+            </div>
+            <div class="config-value">30分钟</div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">自动采集开关</div>
+              <div class="config-desc">是否自动采集IoT设备数据</div>
+            </div>
+            <div class="config-toggle on" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+        <div class="config-section">
+          <div class="config-section-title">🔔 预警设置</div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">低温预警阈值</div>
+              <div class="config-desc">气温低于此值触发低温预警</div>
+            </div>
+            <div class="config-value">5℃</div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">库存预警开关</div>
+              <div class="config-desc">农资库存低于安全值时自动预警</div>
+            </div>
+            <div class="config-toggle on" onclick="toggleSwitch(this)"></div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">短信通知开关</div>
+              <div class="config-desc">紧急预警是否发送短信通知</div>
+            </div>
+            <div class="config-toggle on" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+        <div class="config-section">
+          <div class="config-section-title">🔐 安全设置</div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">登录失败锁定次数</div>
+              <div class="config-desc">连续登录失败超过该次数后锁定账户</div>
+            </div>
+            <div class="config-value">5次</div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">会话超时时间</div>
+              <div class="config-desc">无操作自动退出登录时间</div>
+            </div>
+            <div class="config-value">30分钟</div>
+          </div>
+          <div class="config-item">
+            <div>
+              <div class="config-label">操作日志记录</div>
+              <div class="config-desc">记录用户的关键操作行为</div>
+            </div>
+            <div class="config-toggle on" onclick="toggleSwitch(this)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 操作日志 -->
+  <div id="tab-logs" class="tab-content">
+    <div class="snzg-panel">
+      <div class="snzg-panel-header">
+        <div class="snzg-panel-title"><span class="pt-icon">📜</span>操作日志</div>
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="搜索操作内容..." id="logSearchInput">
+          <button class="jg-btn" onclick="doSearch()">搜索</button>
+        </div>
+      </div>
+      <div class="snzg-panel-body">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>操作时间</th>
+              <th>操作人</th>
+              <th>操作模块</th>
+              <th>操作类型</th>
+              <th>操作内容</th>
+              <th>IP地址</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2024-05-20 10:30:15</td>
+              <td>admin</td>
+              <td>系统登录</td>
+              <td><span class="status-tag active">登录</span></td>
+              <td>管理员登录系统</td>
+              <td>192.168.1.100</td>
+            </tr>
+            <tr>
+              <td>2024-05-20 10:35:22</td>
+              <td>zhangsan</td>
+              <td>农事管理</td>
+              <td><span class="status-tag active">新增</span></td>
+              <td>新增农事计划：栖霞基地5月施肥计划</td>
+              <td>192.168.1.101</td>
+            </tr>
+            <tr>
+              <td>2024-05-20 09:45:10</td>
+              <td>lisi</td>
+              <td>农资管理</td>
+              <td><span class="status-tag active">编辑</span></td>
+              <td>修改农资信息：NPK复合肥库存数量</td>
+              <td>192.168.1.102</td>
+            </tr>
+            <tr>
+              <td>2024-05-20 08:20:05</td>
+              <td>admin</td>
+              <td>系统配置</td>
+              <td><span class="role-tag manager">修改</span></td>
+              <td>修改预警阈值：低温预警阈值 3℃→5℃</td>
+              <td>192.168.1.100</td>
+            </tr>
+            <tr>
+              <td>2024-05-19 17:00:30</td>
+              <td>zhangsan</td>
+              <td>设备管理</td>
+              <td><span class="role-tag admin">删除</span></td>
+              <td>删除设备维护记录：摄像头C03维护记录</td>
+              <td>192.168.1.101</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button class="page-btn disabled">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">4</button>
+          <button class="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="addUserModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">新增用户</div>
+      <div class="modal-close" onclick="closeModal('addUserModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">用户名 *</label>
+          <input type="text" class="form-input" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+          <label class="form-label">姓名 *</label>
+          <input type="text" class="form-input" placeholder="请输入姓名">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">手机号 *</label>
+          <input type="text" class="form-input" placeholder="请输入手机号">
+        </div>
+        <div class="form-group">
+          <label class="form-label">角色 *</label>
+          <select class="form-select">
+            <option value="">请选择角色</option>
+            <option value="admin">超级管理员</option>
+            <option value="manager">基地管理员</option>
+            <option value="operator">操作员</option>
+            <option value="viewer">观察员</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">所属基地 *</label>
+        <select class="form-select">
+          <option value="">请选择基地</option>
+          <option value="all">全部基地</option>
+          <option value="qixia">烟台栖霞基地</option>
+          <option value="zhaoyuan">招远基地</option>
+          <option value="penglai">蓬莱阁基地</option>
+          <option value="rongcheng">威海荣成基地</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">初始密码</label>
+        <input type="text" class="form-input" value="123456" readonly style="background: #fafafa;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('addUserModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAddUser()">确认创建</button>
+    </div>
+  </div>
+</div>
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-item').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+  showToast(el.classList.contains('on') ? '设置已开启' : '设置已关闭', 'success');
+}
+function showAddUserModal() { document.getElementById('addUserModal').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function doSearch() { showToast('搜索功能开发中', 'info'); }
+function handleAddUser() { closeModal('addUserModal'); showToast('用户创建成功', 'success'); }
+function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
+function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
+document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
+document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
+document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
+
+function handleResetPwd(username) {
+  if (confirm('确定要重置用户"' + username + '"的密码吗？\n重置后密码将恢复为默认密码：123456')) {
+    showToast('密码已重置为123456', 'success');
+  }
+}
+
+function handleDisable(username) {
+  if (confirm('确定要禁用用户"' + username + '"吗？')) {
+    showToast('用户已禁用', 'success');
+  }
+}
+
+function handleEnable(username) {
+  showToast('用户已启用', 'success');
+}
+
+function showAddRoleModal() {
+  showToast('新增角色功能开发中', 'info');
+}
+
+function showPermissionModal(role) {
+  showToast('权限配置功能开发中', 'info');
+}
+
+function showAddDictModal() {
+  showToast('新增字典功能开发中', 'info');
+}
+
+function handleBackup() {
+  showToast('正在执行数据备份...', 'info');
+  setTimeout(function() {
+    showToast('数据备份成功！', 'success');
+  }, 2000);
+}
+
+function showRestoreModal() {
+  showToast('请从备份列表选择要恢复的版本', 'info');
+}
+
+function handleDownload() {
+  showToast('正在下载备份文件...', 'info');
+}
+
+function showRestoreConfirm() {
+  if (confirm('确定要从该备份恢复数据吗？\n恢复操作将覆盖当前数据，请谨慎操作！')) {
+    showToast('正在恢复数据...', 'info');
+    setTimeout(function() {
+      showToast('数据恢复成功！', 'success');
+    }, 2000);
+  }
+}
+</script>
+</body>
+</html>

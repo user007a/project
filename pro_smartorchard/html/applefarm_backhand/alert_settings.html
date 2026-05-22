@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 预警设置</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+  .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
+  .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
+  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: #fff; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; font-size: 13px; background: none; border: none; }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
+  .snzg-user-menu.show { display: block; }
+  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .snzg-user-info-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #1a7a3c, #22a84a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 600; }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item { display: block; padding: 10px 16px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+  .main-wrap { margin-top: 104px; padding: 16px 20px 24px; min-height: calc(100vh - 104px); }
+  .subnav-bar { position: fixed; top: 56px; left: 0; right: 0; height: 48px; background: #fff; border-bottom: 1px solid #f0f0f0; z-index: 90; display: flex; align-items: center; }
+  .nav-arrow { width: 36px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #999; font-size: 20px; user-select: none; transition: all 0.2s; }
+  .nav-arrow:hover { background: #f5f5f5; color: #333; }
+  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .subnav-menu::-webkit-scrollbar { display: none; }
+  .subnav-item { flex-shrink: 0; padding: 14px 20px; text-decoration: none; font-size: 13px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .subnav-item:hover { color: #22a84a; }
+  .subnav-item.active { color: #22a84a; border-bottom-color: #22a84a; font-weight: 500; }
+  .page-header { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+  .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 10px; }
+  .page-title .title-icon { font-size: 22px; }
+  .page-desc { font-size: 13px; color: #666; margin-top: 4px; }
+  .page-actions { display: flex; gap: 10px; }
+  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 12px; color: #333; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+  .jg-btn.jg-btn-danger { background: #fff; color: #ff4d4f; border-color: #ff4d4f; }
+  .jg-btn.jg-btn-danger:hover { background: #fff1f0; }
+  .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 16px; }
+  .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .snzg-panel-title { font-size: 14px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-body { padding: 14px 16px; }
+  .search-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; width: 200px; transition: border-color 0.2s; }
+  .search-input:focus { outline: none; border-color: #22a84a; }
+  .search-select { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .search-select:focus { outline: none; border-color: #22a84a; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+  .data-table th { background: #fafafa; font-weight: 600; color: #333; }
+  .data-table tr:hover { background: #fafafa; }
+  .data-table .text-center { text-align: center; }
+  .data-table .text-right { text-align: right; }
+  .data-table .status-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .status-tag.active { background: #f6ffed; color: #52c41a; }
+  .status-tag.inactive { background: #fff2e8; color: #fa8c16; }
+  .data-table .action-btns { display: flex; gap: 8px; }
+  .action-btn { padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; background: transparent; color: #666; transition: all 0.2s; }
+  .action-btn:hover { background: #f0f0f0; }
+  .action-btn.edit { color: #1890ff; }
+  .action-btn.edit:hover { background: #e6f4ff; }
+  .action-btn.delete { color: #ff4d4f; }
+  .action-btn.delete:hover { background: #fff1f0; }
+  .action-btn.detail { color: #22a84a; }
+  .action-btn.detail:hover { background: #f6ffed; }
+  .action-btn.toggle { color: #fa8c16; }
+  .action-btn.toggle:hover { background: #fff7e6; }
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; }
+  .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer; background: #fff; font-size: 12px; transition: all 0.2s; }
+  .page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .page-btn.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-content { background: #fff; border-radius: 8px; width: 90%; max-width: 600px; overflow: hidden; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: #222; }
+  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+  .modal-close:hover { background: #f5f5f5; }
+  .modal-body { padding: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .form-input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: #22a84a; }
+  .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; resize: vertical; min-height: 80px; }
+  .form-textarea:focus { outline: none; border-color: #22a84a; }
+  .form-select { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .form-select:focus { outline: none; border-color: #22a84a; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .form-check input { cursor: pointer; }
+  .form-check label { cursor: pointer; font-size: 13px; }
+  .modal-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+  .jg-toast { position: fixed; top: 70px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; font-size: 13px; z-index: 2000; animation: toastIn 0.3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .jg-toast-success { background: #52c41a; }
+  .jg-toast-error { background: #ff4d4f; }
+  .jg-toast-info { background: #1890ff; }
+  @media (max-width: 768px) { .main-wrap { padding: 12px; } .search-bar { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .page-header { flex-direction: column; gap: 12px; align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 8px 6px; } .data-table .action-btns { flex-direction: column; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
+        <circle cx="50" cy="55" r="35" fill="#e53935"/>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <div class="nav-menu">
+    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="device_info.html" class="snzg-nav-item"><span class="nav-icon">📡</span><span>设备管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="alert_settings.html" class="snzg-nav-item active"><span class="nav-icon">🔔</span><span>预警管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="harvest_plan.html" class="snzg-nav-item"><span class="nav-icon">🍎</span><span>采收管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="model_growth.html">
+      <span class="nav-icon">🧠</span> 模型预测中心
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
+  </div>
+  <button id="hamburgerBtn" class="jg-hamburger">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-right">
+    <div class="msg-btn">
+      <span>🔔</span>
+      <span class="msg-badge">3</span>
+    </div>
+    <button id="userBtn" class="snzg-user-btn">
+      <span class="snzg-user-avatar">管</span>
+      <span>管理员</span>
+    </button>
+    <div id="userMenu" class="snzg-user-menu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">管</div>
+        <div>
+          <div class="snzg-user-info-name">系统管理员</div>
+          <div class="snzg-user-info-role">超级管理员</div>
+        </div>
+      </div>
+      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
+      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+    </div>
+  </div>
+</div>
+<div id="mobileNav" class="jg-mobile-nav">
+  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
+  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
+  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
+  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
+  <a href="device_info.html" class="jg-mobile-nav-item">📡 设备管理</a>
+  <a href="alert_settings.html" class="jg-mobile-nav-item active">🔔 预警管理</a>
+  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
+  <a href="harvest_plan.html" class="jg-mobile-nav-item">🍎 采收管理</a>
+  <a class="jg-mobile-nav-item" href="model_growth.html">🧠 模型预测中心</a>
+  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
+</div>
+<div class="subnav-bar">
+  <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
+  <div class="subnav-menu">
+    <a href="alert_settings.html" class="subnav-item active">预警设置</a>
+    <a href="alert_internal_report.html" class="subnav-item">企业内报</a>
+    <a href="alert_farming.html" class="subnav-item">农事预警</a>
+    <a href="alert_device.html" class="subnav-item">设备预警</a>
+  </div>
+  <div class="nav-arrow" onclick="scrollNav(1)">›</div>
+</div>
+<div class="main-wrap">
+  <div class="page-header">
+    <div>
+      <div class="page-title"><span class="title-icon">🔔</span>预警设置</div>
+      <div class="page-desc">配置各类预警的触发规则、通知对象和通知方式</div>
+    </div>
+    <div class="page-actions">
+      <button class="jg-btn" onclick="showFilterModal()">
+        <span>⚙</span>筛选
+      </button>
+      <button class="jg-btn jg-btn-primary" onclick="showAddModal()">
+        <span>+</span>新增规则
+      </button>
+    </div>
+  </div>
+  <div class="snzg-panel">
+    <div class="snzg-panel-header">
+      <div class="snzg-panel-title"><span class="pt-icon">📋</span>预警规则列表</div>
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="搜索规则名称..." id="searchInput">
+        <select class="search-select" id="typeSelect">
+          <option value="">全部类型</option>
+          <option value="farming">农事预警</option>
+          <option value="device">设备预警</option>
+          <option value="inventory">库存预警</option>
+          <option value="weather">气象预警</option>
+        </select>
+        <button class="jg-btn" onclick="doSearch()">搜索</button>
+      </div>
+    </div>
+    <div class="snzg-panel-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>规则名称</th>
+            <th>预警类型</th>
+            <th>触发条件</th>
+            <th>通知方式</th>
+            <th>通知对象</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>低温霜冻预警</strong></td>
+            <td>气象预警</td>
+            <td>温度 < 5°C</td>
+            <td>站内+短信</td>
+            <td>基地管理者</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>2024-03-15</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('低温霜冻预警')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('低温霜冻预警')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('低温霜冻预警')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>设备离线预警</strong></td>
+            <td>设备预警</td>
+            <td>离线 > 10分钟</td>
+            <td>站内+推送</td>
+            <td>设备管理员</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>2024-03-10</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('设备离线预警')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('设备离线预警')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('设备离线预警')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>农资库存告急</strong></td>
+            <td>库存预警</td>
+            <td>库存 < 安全线</td>
+            <td>站内</td>
+            <td>基地管理者</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>2024-03-08</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('农资库存告急')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('农资库存告急')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('农资库存告急')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>农事任务逾期</strong></td>
+            <td>农事预警</td>
+            <td>超时 > 24小时</td>
+            <td>站内+短信</td>
+            <td>地块负责人</td>
+            <td><span class="status-tag inactive">停用</span></td>
+            <td>2024-02-28</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('农事任务逾期')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('农事任务逾期')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('农事任务逾期')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>病虫害风险预警</strong></td>
+            <td>农事预警</td>
+            <td>虫情数量 > 阈值</td>
+            <td>站内+推送</td>
+            <td>基地管理者</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>2024-02-20</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('病虫害风险预警')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('病虫害风险预警')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('病虫害风险预警')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>土壤湿度异常</strong></td>
+            <td>设备预警</td>
+            <td>湿度 < 20%</td>
+            <td>站内</td>
+            <td>基地管理者</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>2024-02-15</td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('土壤湿度异常')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('土壤湿度异常')">编辑</button>
+                <button class="action-btn delete" onclick="handleDelete('土壤湿度异常')">删除</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button class="page-btn disabled">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+  </div>
+  <div class="snzg-panel">
+    <div class="snzg-panel-header">
+      <div class="snzg-panel-title"><span class="pt-icon">🧠</span>模型预警规则</div>
+      <button class="jg-btn jg-btn-primary" onclick="showModelAddModal()"><span>+</span>新增模型规则</button>
+    </div>
+    <div class="snzg-panel-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>规则名称</th>
+            <th>关联模型</th>
+            <th>触发条件</th>
+            <th>通知方式</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>产量偏差预警</strong></td>
+            <td>产量预估模型</td>
+            <td>预估偏差 > 15%</td>
+            <td>站内+短信</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="showModelEditModal('产量偏差预警')">编辑</button>
+                <button class="action-btn toggle" onclick="toggleModelRule('产量偏差预警')">停用</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>病虫害高风险预警</strong></td>
+            <td>病虫害模型</td>
+            <td>风险概率 > 70%</td>
+            <td>站内+推送</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="showModelEditModal('病虫害高风险预警')">编辑</button>
+                <button class="action-btn toggle" onclick="toggleModelRule('病虫害高风险预警')">停用</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>物候期偏移预警</strong></td>
+            <td>物候期模型</td>
+            <td>偏移天数 > 5天</td>
+            <td>站内</td>
+            <td><span class="status-tag active">启用</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="showModelEditModal('物候期偏移预警')">编辑</button>
+                <button class="action-btn toggle" onclick="toggleModelRule('物候期偏移预警')">停用</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>积温偏差预警</strong></td>
+            <td>生长模型</td>
+            <td>积温偏差 > 15%</td>
+            <td>站内</td>
+            <td><span class="status-tag inactive">停用</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="showModelEditModal('积温偏差预警')">编辑</button>
+                <button class="action-btn toggle" onclick="toggleModelRule('积温偏差预警')">启用</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="addModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">新增预警规则</div>
+      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">规则名称 *</label>
+        <input type="text" class="form-input" placeholder="请输入规则名称">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">预警类型 *</label>
+          <select class="form-select">
+            <option value="">请选择类型</option>
+            <option value="farming">农事预警</option>
+            <option value="device">设备预警</option>
+            <option value="inventory">库存预警</option>
+            <option value="weather">气象预警</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">预警级别 *</label>
+          <select class="form-select">
+            <option value="red">紧急</option>
+            <option value="orange">重要</option>
+            <option value="yellow">提醒</option>
+            <option value="blue">通知</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">触发条件 *</label>
+        <textarea class="form-textarea" placeholder="请输入触发条件描述"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">通知方式</label>
+        <div class="form-check"><input type="checkbox" checked><label>站内消息</label></div>
+        <div class="form-check"><input type="checkbox"><label>短信通知</label></div>
+        <div class="form-check"><input type="checkbox"><label>APP推送</label></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">通知对象 *</label>
+        <select class="form-select">
+          <option value="">请选择</option>
+          <option value="admin">系统管理员</option>
+          <option value="base">基地管理者</option>
+          <option value="device">设备管理员</option>
+          <option value="field">地块负责人</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('addModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAdd()">确认添加</button>
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">编辑预警规则</div>
+      <div class="modal-close" onclick="closeModal('editModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">规则名称</label>
+        <input type="text" class="form-input" value="低温霜冻预警">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">预警类型</label>
+          <select class="form-select">
+            <option value="weather" selected>气象预警</option>
+            <option value="farming">农事预警</option>
+            <option value="device">设备预警</option>
+            <option value="inventory">库存预警</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">预警级别</label>
+          <select class="form-select">
+            <option value="red" selected>紧急</option>
+            <option value="orange">重要</option>
+            <option value="yellow">提醒</option>
+            <option value="blue">通知</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">触发条件</label>
+        <textarea class="form-textarea">当气象站检测到温度低于5°C时触发预警</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">通知方式</label>
+        <div class="form-check"><input type="checkbox" checked><label>站内消息</label></div>
+        <div class="form-check"><input type="checkbox" checked><label>短信通知</label></div>
+        <div class="form-check"><input type="checkbox"><label>APP推送</label></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">通知对象</label>
+        <select class="form-select">
+          <option value="base" selected>基地管理者</option>
+          <option value="admin">系统管理员</option>
+          <option value="device">设备管理员</option>
+          <option value="field">地块负责人</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">状态</label>
+        <select class="form-select">
+          <option value="active" selected>启用</option>
+          <option value="inactive">停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('editModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleEdit()">确认修改</button>
+    </div>
+  </div>
+</div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-header">
+      <div class="modal-title">预警规则详情</div>
+      <div class="modal-close" onclick="closeModal('detailModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="padding: 10px; background: linear-gradient(135deg, #fff7e6, #fff1f0); border-radius: 8px; margin-bottom: 16px;">
+        <div style="font-size: 20px; font-weight: 600; color: #fa8c16;">低温霜冻预警</div>
+        <div style="font-size: 12px; color: #666; margin-top: 4px;">气象预警 · 紧急级别</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">触发条件</div>
+          <div style="font-size: 13px; color: #333;">温度 < 5°C</div>
+        </div>
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">通知方式</div>
+          <div style="font-size: 13px; color: #333;">站内 + 短信</div>
+        </div>
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">通知对象</div>
+          <div style="font-size: 13px; color: #333;">基地管理者</div>
+        </div>
+        <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+          <div style="font-size: 11px; color: #888; margin-bottom: 4px;">状态</div>
+          <div style="font-size: 13px; font-weight: 600; color: #52c41a;">已启用</div>
+        </div>
+      </div>
+      <div style="margin-top: 16px;">
+        <div style="font-size: 12px; color: #888; margin-bottom: 6px;">规则描述</div>
+        <div style="font-size: 13px; color: #666; line-height: 1.6;">当气象站检测到温度低于5°C时触发预警，自动通知基地管理者及时采取防寒措施。</div>
+      </div>
+      <div style="margin-top: 12px;">
+        <div style="font-size: 12px; color: #888; margin-bottom: 6px;">创建时间</div>
+        <div style="font-size: 13px; color: #333;">2024-03-15 14:30:00</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="showEditModal('低温霜冻预警')">编辑规则</button>
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('detailModal')">关闭</button>
+    </div>
+  </div>
+</div>
+<div id="filterModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 400px;">
+    <div class="modal-header">
+      <div class="modal-title">筛选条件</div>
+      <div class="modal-close" onclick="closeModal('filterModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">预警类型</label>
+        <select class="form-select">
+          <option value="">全部</option>
+          <option value="farming">农事预警</option>
+          <option value="device">设备预警</option>
+          <option value="inventory">库存预警</option>
+          <option value="weather">气象预警</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">状态</label>
+        <select class="form-select">
+          <option value="">全部</option>
+          <option value="active">启用</option>
+          <option value="inactive">停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('filterModal')">重置</button>
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('filterModal')">确定</button>
+    </div>
+  </div>
+</div>
+<script>
+function scrollNav(direction) { document.querySelector('.subnav-menu').scrollBy({ left: direction * 150, behavior: 'smooth' }); }
+function showAddModal() { document.getElementById('addModal').classList.add('show'); }
+function showEditModal(name) { document.getElementById('editModal').classList.add('show'); }
+function showDetail(name) { document.getElementById('detailModal').classList.add('show'); }
+function showFilterModal() { document.getElementById('filterModal').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function doSearch() { showToast('搜索功能开发中', 'info'); }
+function handleAdd() { closeModal('addModal'); showToast('预警规则添加成功', 'success'); }
+function handleEdit() { closeModal('editModal'); showToast('预警规则更新成功', 'success'); }
+function handleDelete(name) { if (confirm(`确定删除规则"${name}"吗？`)) { showToast('预警规则删除成功', 'success'); } }
+function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
+function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
+document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
+document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
+document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
+</script>
+</body>
+</html>

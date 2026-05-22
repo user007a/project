@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 生长阶段</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 66px; }
+    
+    .header-bg { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding-bottom: 16px; }
+    .header { display: flex; align-items: center; padding: 16px; padding-top: 44px; }
+    .back-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; cursor: pointer; }
+    .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: 700; color: #fff; margin-right: 32px; }
+    
+    .content { padding: 16px; }
+    
+    .overview-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .overview-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .overview-title { font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .overview-badge { background: var(--primary-light); color: var(--primary); font-size: 11px; padding: 4px 10px; border-radius: 10px; font-weight: 600; }
+    .stage-info { text-align: center; padding: 16px 0; }
+    .stage-name { font-size: 28px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+    .stage-desc { font-size: 13px; color: var(--text-secondary); }
+    .progress-bar { height: 12px; background: #f0f0f0; border-radius: 6px; overflow: hidden; margin: 16px 0; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #4cd964); border-radius: 6px; transition: width .5s ease; }
+    .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light); }
+    
+    .plot-list { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .plot-header { padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .plot-item { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .plot-item:last-child { border-bottom: none; }
+    .plot-color { width: 4px; height: 40px; border-radius: 2px; }
+    .plot-color.green { background: var(--primary); }
+    .plot-color.orange { background: var(--orange); }
+    .plot-color.blue { background: var(--blue); }
+    .plot-info { flex: 1; }
+    .plot-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .plot-stage { font-size: 12px; color: var(--text-secondary); }
+    .plot-progress { text-align: right; }
+    .plot-percent { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .plot-days { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+    
+    .suggestion-card { background: #fff; border-radius: 16px; padding: 16px; margin-top: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .suggestion-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .suggestion-icon { font-size: 18px; }
+    .suggestion-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--primary-light); border-radius: 10px; margin-bottom: 10px; }
+    .suggestion-item:last-child { margin-bottom: 0; }
+    .suggestion-text { flex: 1; font-size: 13px; color: var(--text); }
+    .suggestion-btn { background: var(--primary); color: #fff; font-size: 12px; padding: 6px 14px; border-radius: 14px; cursor: pointer; white-space: nowrap; }
+    
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header-bg">
+      <div class="header">
+        <div class="back-btn" onclick="history.back()">←</div>
+        <div class="header-title">生长阶段</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="overview-card">
+        <div class="overview-header">
+          <div class="overview-title">
+            <span>🌱</span>
+            <span>当前生长阶段</span>
+          </div>
+          <div class="overview-badge">膨大期</div>
+        </div>
+        <div class="stage-info">
+          <div class="stage-name">果实膨大期</div>
+          <div class="stage-desc">红富士正处于果实快速膨大阶段，需加强水肥管理</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 65%;"></div>
+        </div>
+        <div class="progress-info">
+          <span>萌芽期 3月15日</span>
+          <span>成熟期 10月15日</span>
+        </div>
+      </div>
+      
+      <div class="plot-list">
+        <div class="plot-header">
+          <span>📍</span>
+          <span>各地块生长进度</span>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color green"></div>
+          <div class="plot-info">
+            <div class="plot-name">A区 - 红富士</div>
+            <div class="plot-stage">膨大期 · 预计剩余45天</div>
+          </div>
+          <div class="plot-progress">
+            <div class="plot-percent">65%</div>
+            <div class="plot-days">剩余45天</div>
+          </div>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color orange"></div>
+          <div class="plot-info">
+            <div class="plot-name">B区 - 嘎啦</div>
+            <div class="plot-stage">成熟期 · 预计剩余15天</div>
+          </div>
+          <div class="plot-progress">
+            <div class="plot-percent">90%</div>
+            <div class="plot-days">剩余15天</div>
+          </div>
+        </div>
+        <div class="plot-item">
+          <div class="plot-color blue"></div>
+          <div class="plot-info">
+            <div class="plot-name">C区 - 乔纳金</div>
+            <div class="plot-stage">膨大期 · 预计剩余50天</div>
+          </div>
+          <div class="plot-progress">
+            <div class="plot-percent">55%</div>
+            <div class="plot-days">剩余50天</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="suggestion-card">
+        <div class="suggestion-title">
+          <span class="suggestion-icon">💡</span>
+          <span>模型推荐农事</span>
+        </div>
+        <div class="suggestion-item">
+          <div class="suggestion-text">膨大期建议追施高钾肥，每亩施用量15-20公斤</div>
+          <div class="suggestion-btn" onclick="navigateTo('mb_record_task.html')">记农事</div>
+        </div>
+        <div class="suggestion-item">
+          <div class="suggestion-text">及时补充钙肥，预防苦痘病发生</div>
+          <div class="suggestion-btn" onclick="navigateTo('mb_record_task.html')">记农事</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_model.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function navigateTo(page) { window.location.href = page; }
+  </script>
+</body>
+</html>

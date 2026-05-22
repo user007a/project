@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>苹果数字履历 - 产品溯源</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; }
+        :root {
+            --primary: #2e9e5a;
+            --primary-dark: #1e7e42;
+            --orange: #f39c12;
+            --blue: #3498db;
+            --red: #e74c3c;
+            --text: #333;
+            --text-secondary: #666;
+            --text-light: #999;
+            --border: #e8e8e8;
+            --border-light: #f0f0f0;
+        }
+        .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 70px; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 52px; background: linear-gradient(135deg, var(--primary-dark), var(--primary)); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; transition: background 0.2s; }
+        .header-btn:active { background: rgba(255,255,255,0.3); }
+        .header-title { color: #fff; font-size: 17px; font-weight: 600; }
+        
+        .main-content { margin-top: 52px; }
+        
+        .product-header { background: linear-gradient(135deg, rgba(245, 238, 230, 0.95), #fff); padding: 20px; display: flex; gap: 16px; }
+        .product-img { width: 100px; height: 100px; border-radius: 12px; background: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=fresh%20red%20fuji%20apple%20on%20white%20background%20professional%20product%20photo%20high%20quality&image_size=square') center/cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .product-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .product-name { font-size: 18px; font-weight: 700; color: #222; margin-bottom: 4px; }
+        .product-spec { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+        .product-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { padding: 2px 10px; background: #f0fdf4; color: var(--primary); border-radius: 12px; font-size: 11px; font-weight: 500; }
+        
+        .blockchain-badge { margin: 12px 16px; padding: 14px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 12px; display: flex; align-items: center; gap: 12px; }
+        .bc-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; }
+        .bc-info { flex: 1; }
+        .bc-title { font-size: 14px; font-weight: 600; color: var(--primary-dark); }
+        .bc-hash { font-size: 11px; color: var(--text-secondary); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .tab-bar { position: sticky; top: 52px; background: #fff; padding: 12px 16px; display: flex; gap: 8px; overflow-x: auto; z-index: 90; border-bottom: 1px solid var(--border); }
+        .tab-bar::-webkit-scrollbar { display: none; }
+        .tab-item { flex-shrink: 0; padding: 8px 16px; background: #f5f5f5; border-radius: 20px; font-size: 13px; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; }
+        .tab-item.active { background: var(--primary); color: #fff; }
+        
+        .content-section { background: #fff; margin: 12px 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .section-title { padding: 14px 16px; font-size: 14px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; }
+        .section-body { padding: 16px; }
+        
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .info-item { display: flex; flex-direction: column; padding: 10px; background: #fafafa; border-radius: 8px; }
+        .info-label { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+        .info-value { font-size: 15px; font-weight: 600; color: var(--text); }
+        
+        .timeline { display: flex; flex-direction: column; gap: 16px; }
+        .timeline-item { display: flex; gap: 12px; }
+        .timeline-dot-wrap { display: flex; flex-direction: column; align-items: center; width: 20px; }
+        .timeline-dot { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; flex-shrink: 0; margin-top: 4px; box-shadow: 0 0 0 4px rgba(46, 158, 90, 0.15); }
+        .timeline-line { width: 2px; background: #e5e7eb; flex: 1; margin-top: 6px; }
+        .timeline-content { flex: 1; background: #fafafa; padding: 14px; border-radius: 10px; }
+        .timeline-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .timeline-title { font-size: 14px; font-weight: 600; color: var(--text); }
+        .timeline-time { font-size: 11px; color: var(--text-light); }
+        .timeline-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+        
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .gallery-item { aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #f5f5f5; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .cert-list { display: flex; flex-direction: column; gap: 10px; }
+        .cert-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #fafafa; border-radius: 10px; }
+        .cert-icon { width: 36px; height: 36px; background: #e8f5ec; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 16px; }
+        .cert-info { flex: 1; }
+        .cert-name { font-size: 13px; font-weight: 600; color: var(--text); }
+        .cert-date { font-size: 11px; color: var(--text-light); }
+        
+        .env-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .env-card { display: flex; flex-direction: column; align-items: center; padding: 16px 10px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; }
+        .env-icon { font-size: 28px; margin-bottom: 8px; }
+        .env-value { font-size: 17px; font-weight: 700; color: var(--text); }
+        .env-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+        
+        .enterprise-section { padding: 16px; }
+        .enterprise-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .enterprise-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+        .story-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+        .story-content { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+        
+        .contact-card { display: flex; align-items: center; gap: 14px; padding: 16px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 12px; margin-top: 16px; }
+        .contact-icon { width: 44px; height: 44px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; }
+        .contact-info { flex: 1; }
+        .contact-label { font-size: 12px; color: var(--text-secondary); }
+        .contact-value { font-size: 16px; font-weight: 700; color: var(--text); }
+        
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: #fff; display: flex; align-items: center; justify-content: space-around; padding: 0 16px; border-top: 1px solid var(--border); z-index: 100; }
+        .footer-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; color: var(--text-secondary); border-radius: 10px; transition: all 0.2s; }
+        .footer-btn:active { background: #f5f5f5; }
+        .footer-btn-icon { font-size: 24px; }
+        .footer-btn-text { font-size: 11px; }
+        .footer-btn.primary { color: var(--primary); }
+        
+        .update-time { font-size: 11px; color: var(--text-light); text-align: center; margin-top: 12px; }
+        
+        .quick-action { display: flex; gap: 12px; margin-top: 16px; }
+        .quick-btn { flex: 1; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .quick-btn:active { background: var(--primary-dark); }
+        
+        @media (max-width: 320px) { 
+            .tab-item { padding: 6px 12px; font-size: 12px; }
+            .env-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="header">
+            <div class="header-btn" onclick="goBack()">‹</div>
+            <div class="header-title">苹果数字履历</div>
+            <div class="header-btn" onclick="sharePage()">↗</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="product-header">
+                <div class="product-img"></div>
+                <div class="product-info">
+                    <div class="product-name">烟台红富士苹果</div>
+                    <div class="product-spec">特级 · 80mm+ · 5kg/箱</div>
+                    <div class="product-tags">
+                        <span class="tag">有机认证</span>
+                        <span class="tag">绿色食品</span>
+                        <span class="tag">可溯源</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="blockchain-badge">
+                <div class="bc-icon">⛓️</div>
+                <div class="bc-info">
+                    <div class="bc-title">✓ 数据已上链 · 不可篡改</div>
+                    <div class="bc-hash">交易哈希：0x7a3f9d2e8b4c1a6e5f2b8d4a9c3e...</div>
+                </div>
+            </div>
+            
+            <div class="tab-bar">
+                <div class="tab-item active" onclick="switchTab('product')">产品信息</div>
+                <div class="tab-item" onclick="switchTab('production')">生产档案</div>
+                <div class="tab-item" onclick="switchTab('base')">基地信息</div>
+                <div class="tab-item" onclick="switchTab('environment')">实时环境</div>
+                <div class="tab-item" onclick="switchTab('enterprise')">企业展示</div>
+            </div>
+            
+            <div id="productTab" class="content-section" style="display: block;">
+                <div class="section-title">📦 产品详情</div>
+                <div class="section-body">
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">品种</div><div class="info-value">烟台红富士</div></div>
+                        <div class="info-item"><div class="info-label">等级</div><div class="info-value">特级</div></div>
+                        <div class="info-item"><div class="info-label">净重</div><div class="info-value">5kg</div></div>
+                        <div class="info-item"><div class="info-label">规格</div><div class="info-value">80mm+</div></div>
+                        <div class="info-item"><div class="info-label">采收日期</div><div class="info-value">2026-05-20</div></div>
+                        <div class="info-item"><div class="info-label">包装日期</div><div class="info-value">2026-05-21</div></div>
+                        <div class="info-item"><div class="info-label">保质期</div><div class="info-value">90天</div></div>
+                        <div class="info-item"><div class="info-label">追溯码</div><div class="info-value">SNZG-2026-0001</div></div>
+                    </div>
+                    
+                    <div style="margin-top: 16px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px;">📋 质检报告</div>
+                        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                <span style="font-size: 20px;">✅</span>
+                                <span style="font-size: 14px; font-weight: 600; color: var(--primary-dark);">检测合格</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                农药残留：未检出 | 甜度：12.8°Bx | 水分：85.2% | 等级：特级
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="productionTab" class="content-section" style="display: none;">
+                <div class="section-title">🌾 农事记录</div>
+                <div class="section-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot-wrap">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header"><span class="timeline-title">春季施肥</span><span class="timeline-time">2026-04-15</span></div>
+                                <div class="timeline-desc">有机肥 50kg/亩 · 操作人员：张三 · 肥料来源：本地有机肥料厂</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot-wrap">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header"><span class="timeline-title">病虫害防治</span><span class="timeline-time">2026-04-28</span></div>
+                                <div class="timeline-desc">生物农药喷洒 · 安全间隔期：21天 · 药剂：苦参碱</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot-wrap">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header"><span class="timeline-title">疏花疏果</span><span class="timeline-time">2026-05-05</span></div>
+                                <div class="timeline-desc">人工疏果 · 留果量：200-250个/株 · 疏果率：40%</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot-wrap">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-line"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header"><span class="timeline-title">灌溉</span><span class="timeline-time">2026-05-12</span></div>
+                                <div class="timeline-desc">滴灌系统运行 · 灌溉量：30m³/亩 · 水源：地下水</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot-wrap">
+                                <div class="timeline-dot"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header"><span class="timeline-title">采摘</span><span class="timeline-time">2026-05-20</span></div>
+                                <div class="timeline-desc">人工采摘 · 采摘量：2000kg/亩 · 采摘人员：20人</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="baseTab" class="content-section" style="display: none;">
+                <div class="section-title">🏡 基地信息</div>
+                <div class="section-body">
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">基地名称</div><div class="info-value">智慧果园示范基地</div></div>
+                        <div class="info-item"><div class="info-label">地理位置</div><div class="info-value">山东省烟台市栖霞市</div></div>
+                        <div class="info-item"><div class="info-label">种植面积</div><div class="info-value">500亩</div></div>
+                        <div class="info-item"><div class="info-label">成立时间</div><div class="info-value">2015年</div></div>
+                        <div class="info-item"><div class="info-label">主要品种</div><div class="info-value">红富士、嘎啦</div></div>
+                        <div class="info-item"><div class="info-label">树龄</div><div class="info-value">8-10年</div></div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px;">📷 基地实景</div>
+                        <div class="gallery">
+                            <div class="gallery-item"><img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beautiful%20apple%20orchard%20aerial%20view%20green%20trees%20mountains%20blue%20sky%20professional%20photography&image_size=square" alt="基地全景"></div>
+                            <div class="gallery-item"><img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=red%20fuji%20apple%20tree%20branches%20with%20ripe%20apples%20sunlight%20close%20up&image_size=square" alt="果树特写"></div>
+                            <div class="gallery-item"><img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20fruit%20packaging%20facility%20clean%20bright%20professional%20apple%20processing&image_size=square" alt="包装车间"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px;">🏆 认证资质</div>
+                        <div class="cert-list">
+                            <div class="cert-item"><div class="cert-icon">🌿</div><div class="cert-info"><div class="cert-name">有机产品认证</div><div class="cert-date">有效期至2028年</div></div></div>
+                            <div class="cert-item"><div class="cert-icon">✓</div><div class="cert-info"><div class="cert-name">绿色食品认证</div><div class="cert-date">有效期至2027年</div></div></div>
+                            <div class="cert-item"><div class="cert-icon">🏅</div><div class="cert-info"><div class="cert-name">GAP良好农业规范</div><div class="cert-date">有效期至2027年</div></div></div>
+                            <div class="cert-item"><div class="cert-icon">🔒</div><div class="cert-info"><div class="cert-name">HACCP食品安全</div><div class="cert-date">有效期至2028年</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="environmentTab" class="content-section" style="display: none;">
+                <div class="section-title">🌤️ 实时环境</div>
+                <div class="section-body">
+                    <div class="env-grid">
+                        <div class="env-card"><span class="env-icon">🌡️</span><span class="env-value">22°C</span><span class="env-label">温度</span></div>
+                        <div class="env-card"><span class="env-icon">💧</span><span class="env-value">65%</span><span class="env-label">湿度</span></div>
+                        <div class="env-card"><span class="env-icon">☀️</span><span class="env-value">8000lux</span><span class="env-label">光照强度</span></div>
+                        <div class="env-card"><span class="env-icon">💨</span><span class="env-value">东北风 3级</span><span class="env-label">风力</span></div>
+                        <div class="env-card"><span class="env-icon">🌧️</span><span class="env-value">0mm</span><span class="env-label">今日雨量</span></div>
+                        <div class="env-card"><span class="env-icon">📊</span><span class="env-value">6.8</span><span class="env-label">土壤pH值</span></div>
+                    </div>
+                    <div class="update-time">数据更新时间：2026-05-22 14:30:00</div>
+                    
+                    <div style="margin-top: 20px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px;">📈 今日环境趋势</div>
+                        <div style="height: 140px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                            <svg width="100%" height="100%" viewBox="0 0 300 120" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:rgba(46,158,90,0.3)"/>
+                                        <stop offset="100%" style="stop-color:rgba(46,158,90,0)"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 0 80 Q 30 75 60 70 T 120 60 T 180 55 T 240 58 T 300 55 L 300 120 L 0 120 Z" fill="url(#chartGradient)"/>
+                                <path d="M 0 80 Q 30 75 60 70 T 120 60 T 180 55 T 240 58 T 300 55" stroke="#2e9e5a" stroke-width="2" fill="none"/>
+                                <text x="10" y="110" fill="#999" font-size="10">6:00</text>
+                                <text x="60" y="110" fill="#999" font-size="10">10:00</text>
+                                <text x="110" y="110" fill="#999" font-size="10">14:00</text>
+                                <text x="160" y="110" fill="#999" font-size="10">18:00</text>
+                                <text x="210" y="110" fill="#999" font-size="10">22:00</text>
+                                <text x="260" y="110" fill="#999" font-size="10">24:00</text>
+                            </svg>
+                            <div style="position: absolute; top: 10px; right: 10px; font-size: 11px; color: var(--text-light);">温度趋势 (°C)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="enterpriseTab" class="content-section" style="display: none;">
+                <div class="section-title">🏢 企业信息</div>
+                <div class="enterprise-section">
+                    <div class="enterprise-name">山东智慧农业科技有限公司</div>
+                    <div class="enterprise-desc">专注苹果种植20年，致力于打造现代化、智能化的农业生产体系，为消费者提供安全、优质的农产品。</div>
+                    
+                    <div class="story-title">📖 品牌故事</div>
+                    <div class="story-content">公司成立于2006年，总部位于山东省烟台市。我们坚持"品质为本、创新驱动"的理念，引进先进的种植技术和管理模式，建立了从种植到销售的全链条追溯体系，确保每一颗苹果都可溯源、可信赖。</div>
+                    
+                    <div style="margin-top: 16px;">
+                        <div style="font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px;">📊 企业数据</div>
+                        <div class="info-grid">
+                            <div class="info-item"><div class="info-label">种植面积</div><div class="info-value">500亩</div></div>
+                            <div class="info-item"><div class="info-label">年产量</div><div class="info-value">2000吨</div></div>
+                            <div class="info-item"><div class="info-label">员工人数</div><div class="info-value">120人</div></div>
+                            <div class="info-item"><div class="info-label">合作商超</div><div class="info-value">50+</div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-info">
+                            <div class="contact-label">服务热线</div>
+                            <div class="contact-value">400-888-8888</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bar">
+            <div class="footer-btn" onclick="copyTraceCode()">
+                <span class="footer-btn-icon">📋</span>
+                <span class="footer-btn-text">复制追溯码</span>
+            </div>
+            <div class="footer-btn primary" onclick="callEnterprise()">
+                <span class="footer-btn-icon">📞</span>
+                <span class="footer-btn-text">联系企业</span>
+            </div>
+            <div class="footer-btn" onclick="sharePage()">
+                <span class="footer-btn-icon">🔗</span>
+                <span class="footer-btn-text">分享</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
+            document.getElementById(tab + 'Tab').style.display = 'block';
+        }
+        
+        function goBack() {
+            if (history.length > 1) {
+                history.back();
+            } else {
+                alert('已到达首页');
+            }
+        }
+        
+        function sharePage() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '苹果数字履历',
+                    text: '扫码查看苹果溯源信息',
+                    url: window.location.href
+                });
+            } else {
+                copyUrl();
+            }
+        }
+        
+        function copyUrl() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('链接已复制，可分享给好友');
+        }
+        
+        function copyTraceCode() {
+            navigator.clipboard.writeText('SNZG-2026-0001');
+            alert('追溯码已复制');
+        }
+        
+        function callEnterprise() {
+            window.location.href = 'tel:400-888-8888';
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const traceCode = getUrlParam('code') || 'SNZG-2026-0001';
+            document.querySelector('.bc-hash').textContent = '交易哈希：0x7a3f9d2e8b4c1a6e5f2b8d4a9c3e...';
+        });
+        
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+    </script>
+</body>
+</html>

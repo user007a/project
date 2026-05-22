@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 我的</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; }
+    .profile-section { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 24px 16px 20px; color: #fff; }
+    .profile-header { display: flex; align-items: center; gap: 14px; }
+    .avatar { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .avatar svg { width: 32px; height: 32px; color: #fff; }
+    .profile-info { flex: 1; }
+    .profile-name { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .role-tag { font-size: 11px; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 10px; font-weight: 400; }
+    .profile-area { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    .profile-stats { display: flex; gap: 16px; margin-top: 16px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 20px; font-weight: 700; }
+    .stat-label { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+    .menu-list { background: #fff; margin: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .menu-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background .15s; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:active { background: #f8f8f8; }
+    .menu-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; }
+    .menu-icon svg { width: 18px; height: 18px; }
+    .menu-icon.orange { background: var(--orange-light); color: var(--orange); }
+    .menu-icon.blue { background: var(--blue-light); color: var(--blue); }
+    .menu-icon.red { background: var(--red-light); color: var(--red); }
+    .menu-icon.green { background: #e8f5ec; color: #22a84a; }
+    .menu-icon.gray { background: var(--gray-light); color: var(--gray); }
+    .menu-icon.cyan { background: #e8f8f5; color: #1abc9c; }
+    .menu-icon.purple { background: #f5eef8; color: #9b59b6; }
+    .menu-text { flex: 1; font-size: 14px; color: var(--text); }
+    .menu-arrow { color: var(--text-light); flex-shrink: 0; }
+    .menu-arrow svg { width: 16px; height: 16px; }
+    .menu-badge { min-width: 20px; height: 20px; background: var(--red); color: #fff; border-radius: 10px; font-size: 11px; display: flex; align-items: center; justify-content: center; padding: 0 5px; margin-left: 8px; }
+    .menu-badge-orange { min-width: 20px; height: 20px; background: var(--orange); color: #fff; border-radius: 10px; font-size: 11px; display: flex; align-items: center; justify-content: center; padding: 0 5px; margin-left: 8px; }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    .tab-badge { position: absolute; top: 4px; right: 50%; margin-right: -18px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+    .content { padding-bottom: 72px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 85%; max-width: 320px; }
+    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .modal-btn { width: 100%; height: 44px; background: var(--primary); color: #fff; border: none; border-radius: 22px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 0 14px; font-size: 14px; color: var(--text); background: #fff; transition: border-color .2s; }
+    .form-input:focus { border-color: var(--primary); }
+    .form-textarea { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--text); resize: vertical; }
+    .form-textarea:focus { border-color: var(--primary); }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .switch-row:last-child { border-bottom: none; }
+    .switch-label { font-size: 14px; color: var(--text); }
+    .switch { position: relative; width: 44px; height: 24px; cursor: pointer; }
+    .switch input { display: none; }
+    .switch-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; border-radius: 12px; transition: background .2s; }
+    .switch-slider::before { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .switch input:checked+.switch-slider { background: var(--primary); }
+    .switch input:checked+.switch-slider::before { transform: translateX(20px); }
+    .msg-list { padding: 0 16px; }
+    .msg-item { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); cursor: pointer; }
+    .msg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .msg-type { font-size: 11px; padding: 2px 8px; border-radius: 8px; }
+    .msg-type.warning { background: var(--orange-light); color: var(--orange); }
+    .msg-type.feedback { background: var(--blue-light); color: var(--blue); }
+    .msg-type.system { background: #f5f5f5; color: var(--gray); }
+    .msg-time { font-size: 11px; color: var(--text-light); }
+    .msg-content { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .msg-unread { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+    .material-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .material-item:last-child { border-bottom: none; }
+    .material-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+    .material-icon svg { width: 18px; height: 18px; color: var(--primary); }
+    .material-info { flex: 1; }
+    .material-name { font-size: 14px; color: var(--text); }
+    .material-meta { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+    .material-value { font-size: 14px; font-weight: 600; color: var(--text); }
+    .question-item { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+    .question-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .question-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .question-status { font-size: 11px; padding: 2px 8px; border-radius: 8px; }
+    .question-status.pending { background: var(--orange-light); color: var(--orange); }
+    .question-status.replied { background: #e8f5ec; color: #22a84a; }
+    .question-content { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .question-time { font-size: 11px; color: var(--text-light); margin-top: 8px; }
+    .btn-logout { width: calc(100% - 32px); margin: 16px; height: 44px; background: #fff; border: 1px solid var(--border); border-radius: 22px; font-size: 14px; color: var(--text-secondary); cursor: pointer; }
+    .btn-logout:active { background: #f5f5f5; }
+    .task-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .task-dot.pending { background: #f39c12; }
+    .task-dot.completed { background: #2e9e5a; }
+    .task-dot.overdue { background: #e74c3c; }
+    .task-dot.doing { background: #3498db; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="profile-section">
+      <div class="profile-header">
+        <div class="avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">
+            张三
+            <span class="role-tag">地块负责人</span>
+          </div>
+          <div class="profile-area">负责区域：A区 · 8块地块</div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <div class="stat-num">128</div>
+          <div class="stat-label">农事记录</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">8</div>
+          <div class="stat-label">管理地块</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">156</div>
+          <div class="stat-label">巡园次数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">待处理</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="menu-list">
+        <div class="menu-item" onclick="openMessages()">
+          <div class="menu-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的消息</div>
+          <span class="menu-badge">3</span>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openMyPlots()">
+          <div class="menu-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的地块</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openMyMaterials()">
+          <div class="menu-icon cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16v-2"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的农资</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openMyLabels()">
+          <div class="menu-icon yellow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <path d="M7 7h.01"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的标签</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openMyPlan()">
+          <div class="menu-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <path d="M16 2v4"/>
+              <path d="M8 2v4"/>
+              <path d="M3 10h18"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的计划</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openMyQuestions()">
+          <div class="menu-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+              <circle cx="12" cy="9" r="3"/>
+            </svg>
+          </div>
+          <div class="menu-text">我的提问</div>
+          <span class="menu-badge-orange">2</span>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-list">
+        <div class="menu-item" onclick="openProfile()">
+          <div class="menu-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="menu-text">个人信息</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openSettings()">
+          <div class="menu-icon gray">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <div class="menu-text">设置</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="menu-item" onclick="openHelp()">
+          <div class="menu-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </div>
+          <div class="menu-text">帮助与反馈</div>
+          <div class="menu-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-logout" onclick="confirmLogout()">退出登录</button>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle">操作提示</div>
+      <div style="font-size: 14px; color: var(--text-secondary); text-align: center; margin-bottom: 20px;" id="modalContent">确定要退出登录吗？</div>
+      <div style="display: flex; gap: 12px;">
+        <button style="flex: 1; height: 40px; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; color: var(--text-secondary); cursor: pointer;" onclick="closeModal()">取消</button>
+        <button style="flex: 1; height: 40px; background: var(--primary); color: #fff; border: none; border-radius: 20px; font-size: 14px; cursor: pointer;" onclick="doLogout()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detailModal">
+    <div style="width: 100%; max-width: 750px; height: 100%; background: #f5f5f5; overflow-y: auto;">
+      <div style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px; color: #fff; position: relative;">
+        <div style="position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="closeDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; color: #fff;">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <div style="padding-left: 40px;">
+          <div style="font-size: 18px; font-weight: 700;" id="detailTitle">我的消息</div>
+        </div>
+      </div>
+      <div id="detailContent" style="padding: 16px;"></div>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    function openModal(title, content) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalContent').textContent = content;
+      document.getElementById('modal').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+    function confirmLogout() {
+      openModal('退出登录', '确定要退出登录吗？');
+    }
+    function doLogout() {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('loginUser');
+      window.location.href = 'mb_login.html';
+    }
+    function openDetail(title, content) {
+      document.getElementById('detailTitle').textContent = title;
+      document.getElementById('detailContent').innerHTML = content;
+      document.getElementById('detailModal').classList.add('show');
+    }
+    function closeDetail() {
+      document.getElementById('detailModal').classList.remove('show');
+    }
+    function openMessages() {
+      var content = `
+        <div class="msg-list">
+          <div class="msg-item">
+            <div class="msg-header">
+              <span class="msg-type warning">预警通知</span>
+              <span class="msg-time">10分钟前</span>
+            </div>
+            <div class="msg-content">地块A2区灌溉任务已逾期，请及时处理</div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-header">
+              <span class="msg-type feedback">审核反馈</span>
+              <span class="msg-time">1小时前</span>
+            </div>
+            <div class="msg-content">您提交的5月19日农事记录已通过审核</div>
+          </div>
+          <div class="msg-item">
+            <div class="msg-header">
+              <span class="msg-type system">系统通知</span>
+              <span class="msg-time">3小时前</span>
+            </div>
+            <div class="msg-content">明日将有降雨，请做好果园排水准备</div>
+          </div>
+        </div>
+      `;
+      openDetail('我的消息', content);
+    }
+    function openMyPlots() {
+      var content = `
+        <div class="menu-list" style="margin-top: 0;">
+          <div class="menu-item" onclick="navigateTo('mb_plot.html')">
+            <div class="menu-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </div>
+            <div class="menu-text">地块A1区</div>
+            <span style="font-size: 12px; color: var(--orange);">2项待执行</span>
+          </div>
+          <div class="menu-item" onclick="navigateTo('mb_plot.html')">
+            <div class="menu-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </div>
+            <div class="menu-text">地块A2区</div>
+            <span style="font-size: 12px; color: var(--red);">1项已逾期</span>
+          </div>
+          <div class="menu-item" onclick="navigateTo('mb_plot.html')">
+            <div class="menu-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </div>
+            <div class="menu-text">地块B1区</div>
+            <span style="font-size: 12px; color: #22a84a;">暂无任务</span>
+          </div>
+        </div>
+      `;
+      openDetail('我的地块', content);
+    }
+    function openMyMaterials() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8;">
+          <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">近30天农资领用记录</div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">波尔多液（80%可湿性粉剂）</div>
+              <div class="material-meta">2026-05-21 · 审核中 · C1区防治</div>
+            </div>
+            <div class="material-value">-20kg</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">氮磷钾复合肥（15-15-15）</div>
+              <div class="material-meta">2026-05-20 · 已审核 · A1区追肥</div>
+            </div>
+            <div class="material-value">-80kg</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">阿维菌素（1.8%乳油）</div>
+              <div class="material-meta">2026-05-19 · 已审核 · 红蜘蛛防治</div>
+            </div>
+            <div class="material-value">-15L</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 12h8"/>
+                <path d="M12 8v8"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">生物有机肥（发酵羊粪）</div>
+              <div class="material-meta">2026-05-15 · 已审核 · B2区基肥</div>
+            </div>
+            <div class="material-value">-380kg</div>
+          </div>
+        </div>
+      `;
+      openDetail('我的农资', content);
+    }
+    function openMyLabels() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8;">
+          <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">标签领用记录</div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f39c12;">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <path d="M7 7h.01"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">红富士专用双层纸袋</div>
+              <div class="material-meta">2026-05-21 · 审核中 · A1区套袋</div>
+            </div>
+            <div class="material-value">-2000张</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f39c12;">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <path d="M7 7h.01"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">嘎啦专用透气膜袋</div>
+              <div class="material-meta">2026-05-20 · 已通过 · B1区套袋</div>
+            </div>
+            <div class="material-value">-1500张</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f39c12;">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <path d="M7 7h.01"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">红富士专用双层纸袋</div>
+              <div class="material-meta">2026-05-18 · 已通过 · A2区套袋</div>
+            </div>
+            <div class="material-value">-3000张</div>
+          </div>
+          <div class="material-item">
+            <div class="material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f39c12;">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <path d="M7 7h.01"/>
+              </svg>
+            </div>
+            <div class="material-info">
+              <div class="material-name">乔纳金专用三色袋</div>
+              <div class="material-meta">2026-05-15 · 已通过 · C区准备</div>
+            </div>
+            <div class="material-value">-1000张</div>
+          </div>
+        </div>
+      `;
+      openDetail('我的标签', content);
+    }
+    function openMyPlan() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8;">
+          <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">我的农事计划</div>
+          <div class="task-list">
+            <div class="task-item">
+              <div class="task-dot doing"></div>
+              <div class="task-info">
+                <div class="task-name">红富士套袋作业 - A1区</div>
+                <div class="task-meta">2026-05-21 · 执行中 · 2000张</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot pending"></div>
+              <div class="task-info">
+                <div class="task-name">第二次疏果 - A1/A2区</div>
+                <div class="task-meta">2026-05-22 · 待执行</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot pending"></div>
+              <div class="task-info">
+                <div class="task-name">夏季修剪 - B1/B2区嘎啦</div>
+                <div class="task-meta">2026-05-23 · 待执行</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot pending"></div>
+              <div class="task-info">
+                <div class="task-name">追施膨果肥 - 全园</div>
+                <div class="task-meta">2026-05-25 · 待执行</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot completed"></div>
+              <div class="task-info">
+                <div class="task-name">第一次疏果 - 全园</div>
+                <div class="task-meta">2026-05-20 · 已完成</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-dot completed"></div>
+              <div class="task-info">
+                <div class="task-name">波尔多液防治 - C1区</div>
+                <div class="task-meta">2026-05-19 · 已完成</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      openDetail('我的计划', content);
+    }
+    function openMyQuestions() {
+      var content = `
+        <div class="question-item">
+          <div class="question-header">
+            <div class="question-title">红富士套袋前用药方案</div>
+            <span class="question-status replied">已回复</span>
+          </div>
+          <div class="question-content">张老师您好，请问红富士苹果套袋前需要打哪些药？具体用药浓度和注意事项是什么？我家A1区今年计划6月1日开始套袋。</div>
+          <div class="question-time">提问时间：2026-05-20 16:45</div>
+          <div style="background: #f0faf4; border-radius: 8px; padding: 12px; margin-top: 8px;">
+            <div style="font-size: 12px; color: #2e9e5a; font-weight: 600; margin-bottom: 4px;">专家回复</div>
+            <div style="font-size: 13px; color: #333; line-height: 1.6;">
+              套袋前建议打三遍药：1. 谢花后7-10天：多抗霉素+糖醇钙；2. 谢花后20-25天：代森锰锌+噻虫嗪+氨基酸钙；3. 套袋前1-2天：苯醚甲环唑+溴氰菊酯+钙肥。重点防治轮纹病、斑点落叶病、红蜘蛛、蚜虫等。
+            </div>
+          </div>
+        </div>
+        <div class="question-item">
+          <div class="question-header">
+            <div class="question-title">嘎啦夏季修剪技术</div>
+            <span class="question-status replied">已回复</span>
+          </div>
+          <div class="question-content">李师傅您好，B2区嘎啦苹果今年挂果量不错，但是背上枝比较多，请问夏季修剪什么时候进行？主要剪哪些枝条？</div>
+          <div class="question-time">提问时间：2026-05-19 10:20</div>
+          <div style="background: #f0faf4; border-radius: 8px; padding: 12px; margin-top: 8px;">
+            <div style="font-size: 12px; color: #2e9e5a; font-weight: 600; margin-bottom: 4px;">专家回复</div>
+            <div style="font-size: 13px; color: #333; line-height: 1.6;">
+              嘎啦夏季修剪建议在5月中下旬至6月上旬进行。主要修剪：1. 疏除背上直立旺枝，间距20-25cm留一个；2. 疏除过密的新梢和竞争枝；3. 对过长的营养枝摘心或扭梢。注意不要剪得太重，以免影响果实生长。
+            </div>
+          </div>
+        </div>
+        <div class="question-item">
+          <div class="question-header">
+            <div class="question-title">土壤湿度不足怎么办</div>
+            <span class="question-status pending">待回复</span>
+          </div>
+          <div class="question-content">最近半个月没怎么下雨，C区土壤湿度只有55%左右，请问需要灌溉吗？每亩灌水量多少合适？现在正是幼果膨大期，会不会有影响？</div>
+          <div class="question-time">提问时间：2026-05-21 08:30</div>
+        </div>
+      `;
+      openDetail('我的提问', content);
+    }
+    function openProfile() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8; margin-bottom: 12px; text-align: center;">
+          <div style="position: relative; display: inline-block;">
+            <div style="width: 88px; height: 88px; border-radius: 50%; background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(46, 158, 90, 0.15);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 44px; height: 44px; color: #2e9e5a;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: #2e9e5a; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; color: #fff;">
+                <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </div>
+          </div>
+          <div style="margin-top: 12px;">
+            <div style="font-size: 18px; font-weight: 700; color: #333;">张三</div>
+            <div style="font-size: 12px; color: #999; margin-top: 4px;">点击头像可更换</div>
+          </div>
+        </div>
+
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8; margin-bottom: 12px;">
+          <div class="form-group">
+            <label class="form-label">昵称</label>
+            <div style="display: flex; align-items: center;">
+              <input class="form-input" type="text" value="果园能手" style="flex: 1;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; color: #2e9e5a; margin-left: -30px; z-index: 10; cursor: pointer;">
+                <path d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">性别</label>
+            <div style="display: flex; gap: 12px;">
+              <div style="flex: 1; height: 40px; border: 1px solid #2e9e5a; border-radius: 8px; background: #f0faf4; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2e9e5a;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span style="font-size: 14px; font-weight: 500;">男</span>
+              </div>
+              <div style="flex: 1; height: 40px; border: 1px solid #e8e8e8; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #999;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span style="font-size: 14px;">女</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">出生日期</label>
+            <input class="form-input" type="text" value="1988-06-15" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">手机号</label>
+            <input class="form-input" type="tel" value="138****8888" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">角色</label>
+            <input class="form-input" type="text" value="地块负责人" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">负责基地</label>
+            <input class="form-input" type="text" value="红富士基地" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">负责区域</label>
+            <input class="form-input" type="text" value="A区 · 8块地块" readonly>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; padding: 0 16px;">
+          <button style="flex: 1; height: 44px; background: #fff; border: 1px solid #e8e8e8; border-radius: 22px; font-size: 14px; color: #666; cursor: pointer;">修改密码</button>
+          <button style="flex: 1; height: 44px; background: linear-gradient(135deg, #2e9e5a, #1e7e42); color: #fff; border: none; border-radius: 22px; font-size: 14px; font-weight: 600; cursor: pointer;">保存修改</button>
+        </div>
+      `;
+      openDetail('个人信息', content);
+    }
+    function openSettings() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8;">
+          <div class="switch-row">
+            <div class="switch-label">预警通知</div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label">审核反馈</div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label">系统通知</div>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <div class="switch-row">
+            <div class="switch-label">离线数据自动同步</div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="menu-list" style="margin-top: 12px;">
+          <div class="menu-item" onclick="clearCache()">
+            <div class="menu-icon gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                <line x1="10" y1="11" x2="10" y2="17"/>
+                <line x1="14" y1="11" x2="14" y2="17"/>
+              </svg>
+            </div>
+            <div class="menu-text">清理缓存</div>
+            <div class="menu-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="menu-item" onclick="openAbout()">
+            <div class="menu-icon gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 15s1.5-2 4-2 4 2 4 2"/>
+                <circle cx="12" cy="9" r="3"/>
+              </svg>
+            </div>
+            <div class="menu-text">关于我们</div>
+            <div class="menu-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      `;
+      openDetail('设置', content);
+    }
+    function openHelp() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8;">
+          <div class="form-group">
+            <label class="form-label">问题描述</label>
+            <textarea class="form-textarea" placeholder="请描述您遇到的问题或建议..."></textarea>
+          </div>
+          <button class="btn-logout" style="margin-top: 0; background: var(--primary); color: #fff; border: none;">提交反馈</button>
+        </div>
+        <div style="background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8; margin-top: 12px;">
+          <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">帮助热线</div>
+          <div style="font-size: 13px; color: #666; line-height: 1.6;">
+            <div style="margin-bottom: 8px;">服务时间：周一至周日 8:00-20:00</div>
+            <div>客服电话：400-888-8888</div>
+          </div>
+        </div>
+      `;
+      openDetail('帮助与反馈', content);
+    }
+    function clearCache() {
+      localStorage.clear();
+      openModal('提示', '缓存清理成功');
+    }
+    function openAbout() {
+      var content = `
+        <div style="background: #fff; border-radius: 12px; padding: 24px; border: 1px solid #e8e8e8; text-align: center;">
+          <div style="width: 64px; height: 64px; margin: 0 auto 16px; background: #e8f5ec; border-radius: 16px; display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 40px; color: #2e9e5a;">
+              <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" fill="#2e9e5a" opacity="0.2"/>
+              <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" stroke="#2e9e5a" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="20" cy="24" r="2" fill="#2e9e5a"/>
+              <circle cx="28" cy="24" r="2" fill="#2e9e5a"/>
+              <path d="M18 30C18 30 21 34 24 34C27 34 30 30 30 30" stroke="#2e9e5a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div style="font-size: 18px; font-weight: 700; color: #333; margin-bottom: 8px;">数农智果</div>
+          <div style="font-size: 13px; color: #666; margin-bottom: 16px;">智慧果园 · 精准管理</div>
+          <div style="padding-top: 16px; border-top: 1px solid #f0f0f0;">
+            <div style="font-size: 12px; color: #999;">版本号：v1.0.0</div>
+            <div style="font-size: 12px; color: #999; margin-top: 4px;">© 2026 数农智果科技</div>
+          </div>
+        </div>
+      `;
+      openDetail('关于我们', content);
+    }
+  </script>
+</body>
+</html>
