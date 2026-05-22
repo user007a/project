@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>豫农田机井管护系统</title>
+<style>
+/* ========== Reset & Base ========== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+input,textarea,select,button{font-family:inherit;outline:none;border:none;background:none;font-size:inherit}
+ul,ol{list-style:none}
+
+/* ========== CSS Variables ========== */
+:root{
+  --primary:#22a84a;
+  --primary-dark:#1a7a3c;
+  --primary-light:#e8f5ec;
+  --orange:#f39c12;
+  --orange-light:#fef5e7;
+  --blue:#3498db;
+  --blue-light:#eaf2fa;
+  --red:#e74c3c;
+  --red-light:#fdecea;
+  --gray:#95a5a6;
+  --gray-light:#f0f0f0;
+  --bg:#f5f5f5;
+  --white:#fff;
+  --text:#333;
+  --text-secondary:#666;
+  --text-light:#999;
+  --border:#e8e8e8;
+  --radius:8px;
+  --radius-lg:12px;
+  --shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ========== App Shell ========== */
+.app{width:100%;max-width:750px;margin:0 auto;min-height:100vh;position:relative;overflow:hidden}
+.page{display:none;padding-bottom:60px;min-height:100vh}
+.page.active{display:block}
+
+/* ========== Bottom Tab Bar ========== */
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:750px;height:56px;background:#fff;display:flex;border-top:1px solid var(--border);z-index:100}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--text-light);transition:color .2s;position:relative;cursor:pointer}
+.tab-item.active{color:var(--primary)}
+.tab-item svg{width:22px;height:22px}
+.tab-item span{font-size:10px}
+.tab-badge{position:absolute;top:4px;right:50%;margin-right:-18px;min-width:16px;height:16px;background:var(--red);color:#fff;border-radius:8px;font-size:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+/* ========== Slide Panel ========== */
+.slide-panel{position:fixed;top:0;right:0;width:100%;max-width:750px;height:100%;background:var(--bg);z-index:200;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;overflow-x:hidden}
+.slide-panel.show{transform:translateX(0)}
+.slide-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:199;opacity:0;pointer-events:none;transition:opacity .3s}
+.slide-overlay.show{opacity:1;pointer-events:auto}
+
+/* ========== Panel Header ========== */
+.panel-header{display:flex;align-items:center;height:48px;padding:0 16px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.panel-back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:8px}
+.panel-back svg{width:20px;height:20px;color:var(--text)}
+.panel-title{flex:1;font-size:16px;font-weight:600;color:var(--text)}
+.panel-action{font-size:14px;color:var(--primary);cursor:pointer}
+
+/* ========== Status Tags ========== */
+.status-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.status-tag.normal{background:var(--primary-light);color:var(--primary)}
+.status-tag.repair{background:var(--orange-light);color:var(--orange)}
+.status-tag.repairing{background:var(--blue-light);color:var(--blue)}
+.status-tag.stopped{background:var(--gray-light);color:var(--gray)}
+.status-tag.scrapped{background:var(--red-light);color:var(--red)}
+.status-tag.pending{background:var(--orange-light);color:var(--orange)}
+.status-tag.processing{background:var(--blue-light);color:var(--blue)}
+.status-tag.closed{background:var(--primary-light);color:var(--primary)}
+.status-tag.overdue{background:var(--red-light);color:var(--red)}
+
+/* ========== Cards ========== */
+.card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden}
+.card.repair-border::before,.card.repairing-border::before,.card.overdue-border::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.card.repair-border::before{background:var(--orange)}
+.card.repairing-border::before{background:var(--blue)}
+.card.overdue-border::before{background:var(--red)}
+
+/* ========== Buttons ========== */
+.btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;border-radius:18px;font-size:13px;cursor:pointer;transition:opacity .2s}
+.btn:active{opacity:.7}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{border:1px solid var(--primary);color:var(--primary)}
+.btn-sm{height:28px;padding:0 10px;font-size:12px;border-radius:14px}
+.btn-block{width:100%;height:44px;border-radius:22px;font-size:15px;font-weight:600}
+
+/* ========== Input ========== */
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;color:var(--text-secondary);margin-bottom:6px;display:block}
+.form-input{width:100%;height:44px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:14px;color:var(--text);background:#fff;transition:border-color .2s}
+.form-input:focus{border-color:var(--primary)}
+.form-textarea{width:100%;min-height:80px;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);resize:vertical;transition:border-color .2s}
+.form-textarea:focus{border-color:var(--primary)}
+
+/* ========== Radio Group ========== */
+.radio-group{display:flex;flex-wrap:wrap;gap:8px}
+.radio-item{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+.radio-item input[type="radio"]{width:16px;height:16px;accent-color:var(--primary)}
+
+/* ========== Switch ========== */
+.switch{position:relative;width:44px;height:24px;cursor:pointer}
+.switch input{display:none}
+.switch-slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:12px;transition:background .2s}
+.switch-slider::before{content:'';position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.switch input:checked+.switch-slider{background:var(--primary)}
+.switch input:checked+.switch-slider::before{transform:translateX(20px)}
+
+/* ========== Scrollbar Hide ========== */
+.hide-scrollbar::-webkit-scrollbar{display:none}
+.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+
+/* ========== Pulse Animation ========== */
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.7}}
+.pulse{animation:pulse 1.5s ease-in-out infinite}
+
+/* ========== Blink Animation ========== */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.blink-3{animation:blink .6s ease-in-out 3}
+
+/* ========== Fade In ========== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+
+/* ========== Toast ========== */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;pointer-events:none;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+
+/* ========== Modal ========== */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:300;display:none;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:24px 20px;width:85%;max-width:320px;animation:fadeIn .25s ease}
+.modal-title{font-size:16px;font-weight:600;text-align:center;margin-bottom:12px}
+.modal-content{font-size:14px;color:var(--text-secondary);text-align:center;margin-bottom:20px;line-height:1.6}
+.modal-actions{display:flex;gap:12px}
+.modal-actions .btn{flex:1;height:40px;border-radius:20px;font-size:14px}
+.modal-actions .btn-cancel{border:1px solid var(--border);color:var(--text-secondary)}
+.modal-actions .btn-confirm{background:var(--primary);color:#fff}
+
+/* ================================================================ */
+/* ====================== PAGE: HOME ============================= */
+/* ================================================================ */
+.home-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff}
+.home-topbar .sys-name{font-size:16px;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-bell{position:relative;cursor:pointer}
+.topbar-bell svg{width:22px;height:22px;color:#fff}
+.topbar-bell .bell-badge{position:absolute;top:-4px;right:-6px;min-width:14px;height:14px;background:var(--red);border-radius:7px;font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.topbar-avatar svg{width:20px;height:20px;color:#fff}
+
+/* Greeting */
+.greeting{padding:16px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding-top:0}
+.greeting-text{font-size:18px;font-weight:600}
+.greeting-sub{font-size:12px;opacity:.8;margin-top:4px}
+
+/* A: Quick Functions */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 16px}
+.quick-item{background:#fff;border-radius:var(--radius);padding:16px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;border:1px solid var(--border);cursor:pointer;position:relative;transition:box-shadow .2s}
+.quick-item:active{box-shadow:0 0 0 1px var(--primary)}
+.quick-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.quick-icon svg{width:22px;height:22px}
+.quick-icon.green{background:var(--primary-light);color:var(--primary)}
+.quick-icon.orange{background:var(--orange-light);color:var(--orange)}
+.quick-icon.blue{background:var(--blue-light);color:var(--blue)}
+.quick-icon.red{background:var(--red-light);color:var(--red)}
+.quick-name{font-size:13px;color:var(--text)}
+.quick-badge{position:absolute;top:8px;right:8px;min-width:18px;height:18px;background:var(--red);color:#fff;border-radius:9px;font-size:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+/* B: Statistics */
+.section-title{font-size:15px;font-weight:600;padding:16px 16px 8px;color:var(--text)}
+.stat-card{background:#fff;border-radius:var(--radius);margin:0 16px 12px;padding:14px;border:1px solid var(--border)}
+.stat-card-title{font-size:13px;color:var(--text-secondary);margin-bottom:12px;font-weight:500}
+.ring-chart-wrap{display:flex;align-items:center;gap:20px}
+.ring-chart{flex-shrink:0}
+.ring-legend{flex:1;display:flex;flex-wrap:wrap;gap:8px 16px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.bar-chart-wrap{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{width:48px;font-size:12px;color:var(--text-secondary);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:16px;background:var(--gray-light);border-radius:8px;overflow:hidden}
+.bar-fill{height:100%;border-radius:8px;transition:width .6s ease;min-width:2px}
+.bar-value{width:28px;font-size:12px;color:var(--text-secondary);flex-shrink:0}
+
+/* Alert Cards */
+.alert-cards{display:flex;gap:10px;overflow-x:auto;padding:0 0 4px}
+.alert-cards::-webkit-scrollbar{display:none}
+.alert-card{flex-shrink:0;width:100px;padding:12px 10px;border-radius:var(--radius);text-align:center;position:relative}
+.alert-card.orange{background:var(--orange-light);border:1px solid #f5d5a0}
+.alert-card.red{background:var(--red-light);border:1px solid #f5a5a0}
+.alert-card.yellow{background:#fef9e7;border:1px solid #f0d58c}
+.alert-icon{font-size:22px;margin-bottom:4px}
+.alert-num{font-size:22px;font-weight:700}
+.alert-label{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.pulse-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.pulse-dot.pulse{animation:pulse 1.5s ease-in-out infinite}
+
+/* C: Work Feed */
+.feed-item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.feed-dot.urgent{background:var(--red)}
+.feed-dot.patrol{background:var(--primary)}
+.feed-dot.order{background:var(--blue)}
+.feed-dot.warn{background:var(--orange)}
+.feed-body{flex:1;min-width:0}
+.feed-text{font-size:13px;color:var(--text);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.feed-time{font-size:11px;color:var(--text-light);margin-top:4px}
+.feed-more{text-align:center;padding:12px;font-size:13px;color:var(--primary);cursor:pointer}
+
+/* ================================================================ */
+/* ====================== PAGE: WELLS ============================ */
+/* ================================================================ */
+.search-bar{display:flex;align-items:center;padding:10px 16px;background:#fff;gap:8px}
+.search-icon{cursor:pointer;flex-shrink:0}
+.search-icon svg{width:20px;height:20px;color:var(--text-light)}
+.search-input{flex:1;height:36px;border:1px solid var(--border);border-radius:18px;padding:0 14px;font-size:13px;display:none}
+.search-input.show{display:block}
+.search-input input{width:100%;height:100%;border:none;outline:none;font-size:13px;background:transparent}
+
+/* Filter Tabs */
+.filter-tabs{display:flex;gap:0;padding:8px 16px;background:#fff;overflow-x:auto;border-bottom:1px solid var(--border)}
+.filter-tabs::-webkit-scrollbar{display:none}
+.filter-tab{flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:12px;color:var(--text-secondary);cursor:pointer;position:relative;transition:all .2s;white-space:nowrap}
+.filter-tab.active{background:var(--primary);color:#fff}
+.filter-tab .tab-count{margin-left:2px;font-size:10px}
+.filter-tab.active .tab-count{color:rgba(255,255,255,.8)}
+
+/* Summary Bar */
+.summary-bar{padding:8px 16px;font-size:12px;color:var(--text-light);background:#fff}
+
+/* Well Card */
+.well-card{display:flex;gap:12px;align-items:flex-start}
+.well-thumb{width:72px;height:72px;border-radius:6px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.well-thumb svg{width:36px;height:36px;color:var(--primary)}
+.well-info{flex:1;min-width:0}
+.well-header{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.well-id{font-size:14px;font-weight:600}
+.well-type{font-size:11px;color:var(--text-light);background:var(--gray-light);padding:1px 6px;border-radius:4px}
+.well-meta{font-size:12px;color:var(--text-secondary);margin-bottom:8px}
+.well-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ================================================================ */
+/* ====================== PAGE: ORDERS =========================== */
+/* ================================================================ */
+.order-header{display:flex;align-items:center;padding:10px 16px;background:#fff;gap:8px}
+.order-search{flex:1;height:36px;border:1px solid var(--border);border-radius:18px;padding:0 14px;font-size:13px;display:flex;align-items:center}
+.order-search svg{width:16px;height:16px;color:var(--text-light);margin-right:6px}
+.order-search input{flex:1;border:none;outline:none;font-size:13px;background:transparent}
+.btn-new-order{height:36px;padding:0 14px;border-radius:18px;background:var(--primary);color:#fff;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.btn-new-order svg{width:16px;height:16px}
+
+/* Order Card */
+.order-card .order-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.order-id{font-size:14px;font-weight:600}
+.order-summary{font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
+.order-meta-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.order-meta-tag{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--gray-light);color:var(--text-secondary)}
+.order-meta-tag.source{background:var(--primary-light);color:var(--primary)}
+.order-bottom{display:flex;align-items:center;justify-content:space-between}
+.order-assignee{font-size:12px;color:var(--text-light)}
+.order-actions{display:flex;gap:6px}
+
+/* ================================================================ */
+/* ====================== PAGE: MINE ============================= */
+/* ================================================================ */
+.mine-profile{background:linear-gradient(135deg,var(--primary),var(--primary-dark));padding:24px 16px 20px;color:#fff;display:flex;align-items:center;gap:14px}
+.mine-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mine-avatar svg{width:32px;height:32px;color:#fff}
+.mine-info{flex:1}
+.mine-name{font-size:18px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.role-tag{font-size:11px;background:rgba(255,255,255,.25);padding:2px 8px;border-radius:10px;font-weight:400}
+.mine-area{font-size:12px;opacity:.8}
+.mine-stats{display:flex;gap:16px;margin-top:8px}
+.mine-stat{text-align:center}
+.mine-stat-num{font-size:18px;font-weight:700}
+.mine-stat-label{font-size:10px;opacity:.7}
+
+/* Menu List */
+.menu-list{background:#fff;margin:12px 16px;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.menu-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .15s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:#f8f8f8}
+.menu-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
+.menu-icon svg{width:18px;height:18px}
+.menu-icon.green{background:var(--primary-light);color:var(--primary)}
+.menu-icon.orange{background:var(--orange-light);color:var(--orange)}
+.menu-icon.blue{background:var(--blue-light);color:var(--blue)}
+.menu-icon.red{background:var(--red-light);color:var(--red)}
+.menu-icon.gray{background:var(--gray-light);color:var(--gray)}
+.menu-text{flex:1;font-size:14px;color:var(--text)}
+.menu-arrow{color:var(--text-light)}
+.menu-arrow svg{width:16px;height:16px}
+
+/* ================================================================ */
+/* ====================== WELL DETAIL ============================ */
+/* ================================================================ */
+.detail-swiper{width:100%;height:200px;background:var(--gray-light);position:relative;overflow:hidden}
+.detail-swiper-inner{display:flex;transition:transform .3s ease;height:100%}
+.detail-swiper-item{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--primary-light)}
+.detail-swiper-item svg{width:80px;height:80px;color:var(--primary);opacity:.3}
+.detail-swiper-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.detail-swiper-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.5);transition:all .2s}
+.detail-swiper-dot.active{width:16px;background:#fff}
+.detail-info-bar{background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.detail-well-id{font-size:16px;font-weight:700}
+.detail-well-type{font-size:12px;color:var(--text-light);margin-top:2px}
+
+/* Detail Tabs */
+.detail-tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);position:relative}
+.detail-tab{flex:1;text-align:center;padding:10px 0;font-size:13px;color:var(--text-secondary);cursor:pointer;position:relative;transition:color .2s}
+.detail-tab.active{color:var(--primary);font-weight:600}
+.detail-tab-indicator{position:absolute;bottom:0;height:2px;background:var(--primary);border-radius:1px;transition:left .3s ease,width .3s ease}
+.detail-panel{display:none;padding:14px 16px}
+.detail-panel.active{display:block}
+
+/* Info Row */
+.info-row{display:flex;padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{width:80px;color:var(--text-light);flex-shrink:0}
+.info-value{flex:1;color:var(--text)}
+
+/* Detail Bottom Bar */
+.detail-bottom{position:sticky;bottom:0;background:#fff;padding:10px 16px;display:flex;gap:10px;border-top:1px solid var(--border)}
+
+/* ================================================================ */
+/* ====================== INSPECTION FORM ======================== */
+/* ================================================================ */
+.form-section{padding:14px 16px}
+.form-section .form-group{margin-bottom:16px}
+.photo-upload{display:flex;gap:10px;flex-wrap:wrap}
+.photo-item{width:80px;height:80px;border:1px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--gray-light)}
+.photo-item svg{width:28px;height:28px;color:var(--text-light)}
+.gps-row{display:flex;align-items:center;gap:8px}
+.gps-row .form-input{flex:1}
+.btn-gps{height:44px;padding:0 12px;border:1px solid var(--primary);border-radius:8px;color:var(--primary);font-size:12px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.btn-gps svg{width:16px;height:16px}
+
+/* ================================================================ */
+/* ====================== DISPATCH FORM ========================== */
+/* ================================================================ */
+.worker-list{display:flex;flex-direction:column;gap:10px}
+.worker-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--gray-light);border-radius:var(--radius);cursor:pointer;border:2px solid transparent;transition:border-color .2s}
+.worker-item.selected{border-color:var(--primary);background:var(--primary-light)}
+.worker-avatar{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+.worker-name{font-size:14px;font-weight:500}
+.worker-role{font-size:12px;color:var(--text-light)}
+
+/* ================================================================ */
+/* ====================== TIMELINE =============================== */
+/* ================================================================ */
+.timeline{padding:0 0 0 20px;position:relative}
+.timeline::before{content:'';position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:var(--border)}
+.timeline-item{position:relative;padding:0 0 20px 20px}
+.timeline-dot{position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid #fff;z-index:1}
+.timeline-dot.pending{background:var(--orange)}
+.timeline-dot.processing{background:var(--blue)}
+.timeline-dot.closed{background:var(--primary)}
+.timeline-time{font-size:11px;color:var(--text-light);margin-bottom:4px}
+.timeline-content{font-size:13px;color:var(--text);line-height:1.5}
+.timeline-sub{font-size:12px;color:var(--text-secondary);margin-top:2px}
+
+/* ================================================================ */
+/* ====================== SETTINGS =============================== */
+/* ================================================================ */
+.setting-group{margin:12px 16px;background:#fff;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+.setting-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f5f5f5}
+.setting-item:last-child{border-bottom:none}
+.setting-label{font-size:14px;color:var(--text)}
+.setting-value{font-size:13px;color:var(--text-light)}
+.setting-danger{color:var(--red)}
+
+/* ================================================================ */
+/* ====================== PROFILE ================================ */
+/* ================================================================ */
+.profile-header{text-align:center;padding:24px 16px;background:#fff}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:var(--primary-light);margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.profile-avatar svg{width:40px;height:40px;color:var(--primary)}
+.profile-name{font-size:18px;font-weight:700}
+.profile-role{font-size:13px;color:var(--primary);margin-top:4px}
+.cert-list{display:flex;gap:8px;flex-wrap:wrap}
+.cert-item{padding:4px 10px;background:var(--primary-light);color:var(--primary);border-radius:4px;font-size:12px}
+
+/* ================================================================ */
+/* ====================== CAMERA ================================ */
+/* ================================================================ */
+.camera-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.camera-stat {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.stat-num {
+  font-size: 18px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+.stat-num.online { color: var(--primary); }
+.stat-num.offline { color: var(--gray); }
+
+.camera-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px 16px;
+}
+.camera-card {
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.camera-thumb {
+  position: relative;
+  aspect-ratio: 4/3;
+  background: #1a1a1a;
+}
+.camera-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.camera-status {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #95a5a6;
+}
+.camera-status.online {
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary);
+}
+.camera-live {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 6px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  animation: blink 1s infinite;
+}
+.camera-info {
+  padding: 8px;
+}
+.camera-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+.camera-location {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.video-player {
+  position: relative;
+  width: 100%;
+  background: #000;
+}
+.video-player video {
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+}
+.video-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+.live-badge {
+  padding: 4px 10px;
+  background: rgba(231, 76, 60, 0.9);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+.video-controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: #fff;
+}
+.control-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.control-btn:active {
+  background: var(--gray-light);
+}
+.control-btn.recording {
+  background: #e74c3c !important;
+  border-color: #e74c3c !important;
+  color: #fff !important;
+}
+
+/* ===== Camera Filter ===== */
+.camera-filter {
+  background: #fff;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.filter-row:last-child {
+  margin-bottom: 0;
+}
+.filter-select {
+  flex: 1;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 24px 0 8px;
+  font-size: 12px;
+  color: var(--text);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 8px center;
+  appearance: none;
+  cursor: pointer;
+}
+.filter-select:focus {
+  border-color: var(--primary);
+}
+.filter-select.has-value {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2322a84a'/%3E%3C/svg%3E");
+}
+.filter-reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  width: 50px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  color: var(--text-light);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.filter-reset-btn:active {
+  background: var(--gray-light);
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+<!-- ===================== TOAST ===================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===================== HOME PAGE ===================== -->
+<div class="page active" id="pageHome">
+  <div class="home-topbar">
+    <span class="sys-name">豫农田机井管护系统</span>
+    <div class="topbar-right">
+      <span class="topbar-bell" onclick="openPanel('panelWorkFeed','feed-tab-notify')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="bell-badge">3</span>
+      </span>
+      <span class="topbar-avatar" onclick="switchTab(3)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span>
+    </div>
+  </div>
+  <div class="greeting">
+    <div class="greeting-text" id="greetingText">您好，张三</div>
+    <div class="greeting-sub" id="greetingSub"></div>
+  </div>
+
+  <!-- A: Quick Functions -->
+  <div class="section-title">常用功能</div>
+  <div class="quick-grid">
+    <div class="quick-item" onclick="switchTab(1)">
+      <div class="quick-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6 2 10c0 2.5 1.5 5 4 6.5V21l3.5-2H12c5.52 0 10-4 10-8S17.52 2 12 2z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="16" cy="10" r="1"/></svg></div>
+      <span class="quick-name">机井管理</span>
+      <span class="quick-badge">86</span>
+    </div>
+    <div class="quick-item" onclick="switchTab(2)">
+      <div class="quick-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <span class="quick-name">工单管理</span>
+      <span class="quick-badge">5</span>
+    </div>
+    <div class="quick-item" onclick="openPanel('panelWellCamera')">
+      <div class="quick-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4.5a2.5 2.5 0 0 0-3.71-2.21L14.5 5a2.5 2.5 0 0 0-1.86 4.25L13 10a2.5 2.5 0 0 0 2.25 3.75l.5 1.5a2.5 2.5 0 0 0 4.25-1.86l1.5-1.5A2.5 2.5 0 0 0 20 4.5z"/><path d="M14 17h6"/><path d="M8 4H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/></svg></div>
+      <span class="quick-name">机井实景</span>
+      <span class="quick-badge" id="cameraBadge">5</span>
+    </div>
+    <div class="quick-item" onclick="openPanel('panelWorkFeed')">
+      <div class="quick-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <span class="quick-name">工作动态</span>
+      <span class="quick-badge">5</span>
+    </div>
+  </div>
+
+  <!-- B: Statistics -->
+  <div class="section-title">辖区状态统计</div>
+  <div class="stat-card">
+    <div class="stat-card-title">机井状态</div>
+    <div class="ring-chart-wrap">
+      <canvas class="ring-chart" id="ringChart" width="120" height="120"></canvas>
+      <div class="ring-legend" id="ringLegend"></div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-title">工单状态</div>
+    <div class="bar-chart-wrap" id="barChart"></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-title">预警统计</div>
+    <div class="alert-cards">
+      <div class="alert-card orange">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-num" style="color:var(--orange)">3</div>
+        <div class="alert-label">橙色预警</div>
+      </div>
+      <div class="alert-card red">
+        <div class="pulse-dot pulse"></div>
+        <div class="alert-icon">🚨</div>
+        <div class="alert-num" style="color:var(--red)">1</div>
+        <div class="alert-label">红色预警</div>
+      </div>
+      <div class="alert-card yellow">
+        <div class="alert-icon">👨‍🔧</div>
+        <div class="alert-num" style="color:#b7950b">2</div>
+        <div class="alert-label">缺员预警</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Work Feed -->
+  <div class="section-title">工作动态</div>
+  <div class="card" style="margin-top:0">
+    <div id="homeFeedList"></div>
+    <div class="feed-more" onclick="openPanel('panelWorkFeed')">查看更多 ›</div>
+  </div>
+</div>
+
+<!-- ===================== WELLS PAGE ===================== -->
+<div class="page" id="pageWells">
+  <div class="search-bar">
+    <span class="search-icon" id="wellSearchIcon" onclick="toggleWellSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <div class="search-input" id="wellSearchInput">
+      <input type="text" placeholder="搜索机井编号" id="wellSearchText" oninput="filterWells()">
+    </div>
+  </div>
+  <div class="filter-tabs hide-scrollbar" id="wellFilterTabs"></div>
+  <div class="summary-bar" id="wellSummary"></div>
+  <div id="wellList"></div>
+</div>
+
+<!-- ===================== ORDERS PAGE ===================== -->
+<div class="page" id="pageOrders">
+  <div class="order-header">
+    <div class="order-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="搜索工单" id="orderSearchText" oninput="filterOrders()">
+    </div>
+    <div class="btn-new-order" onclick="openPanel('panelNewOrder')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      新建
+    </div>
+  </div>
+  <div class="filter-tabs hide-scrollbar" id="orderFilterTabs"></div>
+  <div class="summary-bar" id="orderSummary"></div>
+  <div id="orderList"></div>
+</div>
+
+<!-- ===================== MINE PAGE ===================== -->
+<div class="page" id="pageMine">
+  <div class="mine-profile">
+    <div class="mine-avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="mine-info">
+      <div class="mine-name">张三 <span class="role-tag">井长</span></div>
+      <div class="mine-area">河南省许昌市鄢陵县辖区</div>
+      <div class="mine-stats">
+        <div class="mine-stat"><div class="mine-stat-num">86</div><div class="mine-stat-label">管辖机井</div></div>
+        <div class="mine-stat"><div class="mine-stat-num">57</div><div class="mine-stat-label">关联工单</div></div>
+        <div class="mine-stat"><div class="mine-stat-num">156</div><div class="mine-stat-label">巡查次数</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item" onclick="openPanel('panelWorkFeed')">
+      <div class="menu-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <span class="menu-text">工作动态</span>
+      <span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+    <div class="menu-item" onclick="openPanel('panelMyWells')">
+      <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6 2 10c0 2.5 1.5 5 4 6.5V21l3.5-2H12c5.52 0 10-4 10-8S17.52 2 12 2z"/></svg></div>
+      <span class="menu-text">我的机井</span>
+      <span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+    <div class="menu-item" onclick="openPanel('panelMyOrders')">
+      <div class="menu-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <span class="menu-text">我的工单</span>
+      <span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item" onclick="openPanel('panelProfile')">
+      <div class="menu-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="menu-text">个人信息</span>
+      <span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+    <div class="menu-item" onclick="openPanel('panelSettings')">
+      <div class="menu-icon gray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <span class="menu-text">设置</span>
+      <span class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== BOTTOM TAB BAR ===================== -->
+<div class="tab-bar">
+  <div class="tab-item active" data-tab="0" onclick="switchTab(0)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>首页</span>
+  </div>
+  <div class="tab-item" data-tab="1" onclick="switchTab(1)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6 2 10c0 2.5 1.5 5 4 6.5V21l3.5-2H12c5.52 0 10-4 10-8S17.52 2 12 2z"/></svg>
+    <span>机井</span>
+  </div>
+  <div class="tab-item" data-tab="2" onclick="switchTab(2)">
+    <span class="tab-badge">5</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span>工单</span>
+  </div>
+  <div class="tab-item" data-tab="3" onclick="switchTab(3)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>我的</span>
+  </div>
+</div>
+
+<!-- ===================== SLIDE OVERLAY ===================== -->
+<div class="slide-overlay" id="slideOverlay" onclick="closeAllPanels()"></div>
+
+<!-- ===================== PANEL: WELL DETAIL ===================== -->
+<div class="slide-panel" id="panelWellDetail">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelWellDetail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">机井详情</span>
+  </div>
+  <div class="detail-swiper" id="detailSwiper">
+    <div class="detail-swiper-inner" id="detailSwiperInner"></div>
+    <div class="detail-swiper-dots" id="detailSwiperDots"></div>
+  </div>
+  <div class="detail-info-bar">
+    <div>
+      <div class="detail-well-id" id="detailWellId"></div>
+      <div class="detail-well-type" id="detailWellType"></div>
+    </div>
+    <div id="detailWellStatus"></div>
+  </div>
+  <div class="detail-tabs" id="detailTabs">
+    <div class="detail-tab active" data-dtab="0" onclick="switchDetailTab(0)">基本信息</div>
+    <div class="detail-tab" data-dtab="1" onclick="switchDetailTab(1)">人员</div>
+    <div class="detail-tab" data-dtab="2" onclick="switchDetailTab(2)">巡查</div>
+    <div class="detail-tab" data-dtab="3" onclick="switchDetailTab(3)">工单</div>
+    <div class="detail-tab-indicator" id="detailTabIndicator"></div>
+  </div>
+  <div id="detailPanels"></div>
+  <div class="detail-bottom" id="detailBottom">
+    <button class="btn btn-outline" style="flex:1" onclick="showToast('正在打开导航...')">
+      <svg style="width:16px;height:16px;margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>导航
+    </button>
+    <button class="btn btn-primary" style="flex:1" onclick="openInspection()">
+      <svg style="width:16px;height:16px;margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>巡查
+    </button>
+    <button class="btn btn-outline" style="flex:1" onclick="openPanel('panelNewOrder');currentNewOrderWell=currentWellId">
+      <svg style="width:16px;height:16px;margin-right:4px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>上报
+    </button>
+  </div>
+</div>
+
+<!-- ===================== PANEL: INSPECTION FORM ===================== -->
+<div class="slide-panel" id="panelInspection">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelInspection')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">巡查上报</span>
+  </div>
+  <div class="form-section">
+    <div class="form-group">
+      <div class="form-label">机井编号</div>
+      <input class="form-input" id="inspectWellId" readonly style="background:#f5f5f5">
+    </div>
+    <div class="form-group">
+      <div class="form-label">巡查日期</div>
+      <input class="form-input" type="date" id="inspectDate">
+    </div>
+    <div class="form-group">
+      <div class="form-label">机井状态</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="wellStatus" value="正常" checked> 正常</label>
+        <label class="radio-item"><input type="radio" name="wellStatus" value="待维修"> 待维修</label>
+        <label class="radio-item"><input type="radio" name="wellStatus" value="维修中"> 维修中</label>
+        <label class="radio-item"><input type="radio" name="wellStatus" value="停用"> 停用</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">水泵状况</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="pumpStatus" value="正常" checked> 正常</label>
+        <label class="radio-item"><input type="radio" name="pumpStatus" value="异常"> 异常</label>
+        <label class="radio-item"><input type="radio" name="pumpStatus" value="损坏"> 损坏</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">供电状况</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="powerStatus" value="正常" checked> 正常</label>
+        <label class="radio-item"><input type="radio" name="powerStatus" value="异常"> 异常</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">井房状况</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="houseStatus" value="完好" checked> 完好</label>
+        <label class="radio-item"><input type="radio" name="houseStatus" value="破损"> 破损</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">管道状况</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="pipeStatus" value="正常" checked> 正常</label>
+        <label class="radio-item"><input type="radio" name="pipeStatus" value="渗漏"> 渗漏</label>
+        <label class="radio-item"><input type="radio" name="pipeStatus" value="破裂"> 破裂</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">问题描述</div>
+      <textarea class="form-textarea" id="inspectDesc" placeholder="请描述发现的问题..."></textarea>
+    </div>
+    <div class="form-group">
+      <div class="form-label">现场照片</div>
+      <div class="photo-upload">
+        <div class="photo-item" onclick="showToast('照片上传功能')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">GPS定位</div>
+      <div class="gps-row">
+        <input class="form-input" id="inspectGps" placeholder="点击获取定位" readonly>
+        <button class="btn-gps" onclick="getGpsLocation()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>定位
+        </button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="submitInspection()">提交巡查</button>
+  </div>
+</div>
+
+<!-- ===================== PANEL: ORDER DETAIL ===================== -->
+<div class="slide-panel" id="panelOrderDetail">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelOrderDetail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">工单详情</span>
+  </div>
+  <div id="orderDetailContent"></div>
+  <div class="detail-bottom" id="orderDetailBottom"></div>
+</div>
+
+<!-- ===================== PANEL: DISPATCH ===================== -->
+<div class="slide-panel" id="panelDispatch">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelDispatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">派单</span>
+  </div>
+  <div class="form-section">
+    <div class="form-group">
+      <div class="form-label">选择维修员</div>
+      <div class="worker-list" id="workerList"></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">备注</div>
+      <textarea class="form-textarea" id="dispatchNote" placeholder="请输入派单备注..."></textarea>
+    </div>
+    <div class="form-group">
+      <div class="form-label">期望完成时间</div>
+      <input class="form-input" type="datetime-local" id="dispatchDeadline">
+    </div>
+    <button class="btn btn-primary btn-block" onclick="submitDispatch()">确认派单</button>
+  </div>
+</div>
+
+<!-- ===================== PANEL: NEW ORDER ===================== -->
+<div class="slide-panel" id="panelNewOrder">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelNewOrder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">新建工单</span>
+  </div>
+  <div class="form-section">
+    <div class="form-group">
+      <div class="form-label">关联机井</div>
+      <select class="form-input" id="newOrderWell" style="appearance:auto"></select>
+    </div>
+    <div class="form-group">
+      <div class="form-label">问题类型</div>
+      <select class="form-input" id="newOrderType" style="appearance:auto">
+        <option value="设备故障">设备故障</option>
+        <option value="管道破损">管道破损</option>
+        <option value="电力异常">电力异常</option>
+        <option value="井房损坏">井房损坏</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <div class="form-label">来源</div>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="orderSource" value="巡查发现" checked> 巡查发现</label>
+        <label class="radio-item"><input type="radio" name="orderSource" value="群众上报"> 群众上报</label>
+        <label class="radio-item"><input type="radio" name="orderSource" value="系统预警"> 系统预警</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">问题描述</div>
+      <textarea class="form-textarea" id="newOrderDesc" placeholder="请详细描述问题..."></textarea>
+    </div>
+    <div class="form-group">
+      <div class="form-label">现场照片</div>
+      <div class="photo-upload">
+        <div class="photo-item" onclick="showToast('照片上传功能')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">GPS定位</div>
+      <div class="gps-row">
+        <input class="form-input" id="newOrderGps" placeholder="点击获取定位" readonly>
+        <button class="btn-gps" onclick="getGpsForOrder()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>定位</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="submitNewOrder()">提交工单</button>
+  </div>
+</div>
+
+<!-- ===================== PANEL: WORK FEED ===================== -->
+<div class="slide-panel" id="panelWorkFeed">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelWorkFeed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">工作动态</span>
+  </div>
+  <div class="detail-tabs" id="feedTabs" style="position:relative">
+    <div class="detail-tab active" data-ftab="0" onclick="switchFeedTab(0)">通知</div>
+    <div class="detail-tab" data-ftab="1" onclick="switchFeedTab(1)">动态</div>
+    <div class="detail-tab" data-ftab="2" onclick="switchFeedTab(2)">预警</div>
+    <div class="detail-tab-indicator" id="feedTabIndicator"></div>
+  </div>
+  <div id="feedPanels"></div>
+</div>
+
+<!-- ===================== PANEL: MY WELLS ===================== -->
+<div class="slide-panel" id="panelMyWells">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelMyWells')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">我的机井</span>
+  </div>
+  <div class="summary-bar" style="background:#fff;padding:12px 16px;font-size:13px">
+    共 <b>86</b> 口机井 · 正常 <b style="color:var(--primary)">68</b> · 待修 <b style="color:var(--orange)">8</b> · 维修中 <b style="color:var(--blue)">5</b>
+  </div>
+  <div class="filter-tabs hide-scrollbar" id="myWellFilterTabs"></div>
+  <div id="myWellList"></div>
+</div>
+
+<!-- ===================== PANEL: MY ORDERS ===================== -->
+<div class="slide-panel" id="panelMyOrders">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelMyOrders')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">我的工单</span>
+  </div>
+  <div class="detail-tabs" id="myOrderTabs" style="position:relative">
+    <div class="detail-tab active" data-motab="0" onclick="switchMyOrderTab(0)">待处理</div>
+    <div class="detail-tab" data-motab="1" onclick="switchMyOrderTab(1)">进行中</div>
+    <div class="detail-tab" data-motab="2" onclick="switchMyOrderTab(2)">已完成</div>
+    <div class="detail-tab" data-motab="3" onclick="switchMyOrderTab(3)">逾期</div>
+    <div class="detail-tab-indicator" id="myOrderTabIndicator"></div>
+  </div>
+  <div id="myOrderList"></div>
+</div>
+
+<!-- ===================== PANEL: PROFILE ===================== -->
+<div class="slide-panel" id="panelProfile">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelProfile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">个人信息</span>
+  </div>
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="profile-name">张三</div>
+    <div class="profile-role">井长 · 河南省许昌市鄢陵县</div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">基本信息</div>
+    <div class="info-row"><span class="info-label">姓名</span><span class="info-value">张三</span></div>
+    <div class="info-row"><span class="info-label">职务</span><span class="info-value">井长</span></div>
+    <div class="info-row"><span class="info-label">辖区</span><span class="info-value">河南省许昌市鄢陵县</span></div>
+    <div class="info-row"><span class="info-label">手机</span><span class="info-value">138****5678</span></div>
+    <div class="info-row"><span class="info-label">入职日期</span><span class="info-value">2023-03-15</span></div>
+  </div>
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">工作统计</div>
+    <div class="info-row"><span class="info-label">管辖机井</span><span class="info-value">86 口</span></div>
+    <div class="info-row"><span class="info-label">本月巡查</span><span class="info-value">23 次</span></div>
+    <div class="info-row"><span class="info-label">处置工单</span><span class="info-value">15 件</span></div>
+    <div class="info-row"><span class="info-label">在岗天数</span><span class="info-value">428 天</span></div>
+  </div>
+  <div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">资质证书</div>
+    <div class="cert-list">
+      <span class="cert-item">机井管理资格证</span>
+      <span class="cert-item">安全生产培训证</span>
+      <span class="cert-item">电工操作证</span>
+    </div>
+  </div>
+  <div style="padding:16px">
+    <button class="btn btn-block" style="border:1px solid var(--red);color:var(--red);background:#fff;border-radius:22px;height:44px" onclick="doLogout()">退出登录</button>
+  </div>
+</div>
+
+<!-- ===================== PANEL: SETTINGS ===================== -->
+<div class="slide-panel" id="panelSettings">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelSettings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
+    <span class="panel-title">设置</span>
+  </div>
+  <div class="setting-group">
+    <div class="setting-item">
+      <span class="setting-label">消息通知</span>
+      <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+    </div>
+    <div class="setting-item">
+      <span class="setting-label">预警提醒</span>
+      <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+    </div>
+    <div class="setting-item">
+      <span class="setting-label">巡查提醒</span>
+      <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+    </div>
+    <div class="setting-item">
+      <span class="setting-label">定位服务</span>
+      <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-item" onclick="showToast('缓存已清除')">
+      <span class="setting-label">清除缓存</span>
+      <span class="setting-value">12.3 MB ›</span>
+    </div>
+    <div class="setting-item" onclick="showToast('豫农田机井管护系统 v1.0.0')">
+      <span class="setting-label">关于系统</span>
+      <span class="setting-value">v1.0.0 ›</span>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-item" onclick="doLogout()">
+      <span class="setting-label setting-danger">退出登录</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: URGE ===================== -->
+<div class="modal-overlay" id="modalUrge">
+  <div class="modal-box">
+    <div class="modal-title">催办工单</div>
+    <div class="modal-content" style="text-align:left">
+      <div class="form-group">
+        <div class="form-label">催办内容</div>
+        <textarea class="form-textarea" id="urgeContent" placeholder="请输入催办内容..." style="min-height:60px">请尽快处理该工单，辖区群众急需用水。</textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal('modalUrge')">取消</button>
+      <button class="btn btn-confirm" onclick="submitUrge()">确认催办</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: TRANSFER ===================== -->
+<div class="modal-overlay" id="modalTransfer">
+  <div class="modal-box">
+    <div class="modal-title">工单流转</div>
+    <div class="modal-content" style="text-align:left">
+      <div class="form-group">
+        <div class="form-label">流转原因</div>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="transferReason" value="工作量饱和" checked> 工作量饱和</label>
+          <label class="radio-item"><input type="radio" name="transferReason" value="专业不对口"> 专业不对口</label>
+          <label class="radio-item"><input type="radio" name="transferReason" value="其他"> 其他</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">说明</div>
+        <textarea class="form-textarea" id="transferDesc" placeholder="请输入流转说明..." style="min-height:50px"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">新接单人</div>
+        <select class="form-input" id="transferTo" style="appearance:auto">
+          <option value="赵六">赵六（维修员）</option>
+          <option value="李四">李四（管护员）</option>
+          <option value="王五">王五（管护员）</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal('modalTransfer')">取消</button>
+      <button class="btn btn-confirm" onclick="submitTransfer()">确认流转</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANEL: WELL CAMERA ===================== -->
+<div class="slide-panel" id="panelWellCamera">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelWellCamera')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </span>
+    <span class="panel-title">机井实景</span>
+    <span class="panel-action" onclick="refreshCameras()">刷新</span>
+  </div>
+  <div class="camera-filter" id="cameraFilter">
+    <div class="filter-row">
+      <select class="filter-select" id="filterProvince" onchange="onRegionChange('city')">
+        <option value="">全省</option>
+      </select>
+      <select class="filter-select" id="filterCity" onchange="onRegionChange('county')">
+        <option value="">全市</option>
+      </select>
+      <select class="filter-select" id="filterCounty" onchange="onRegionChange('township')">
+        <option value="">全县</option>
+      </select>
+    </div>
+    <div class="filter-row">
+      <select class="filter-select" id="filterTownship" onchange="onRegionChange('village')">
+        <option value="">全乡</option>
+      </select>
+      <select class="filter-select" id="filterVillage" onchange="onRegionChange('chief')">
+        <option value="">全村</option>
+      </select>
+      <select class="filter-select" id="filterChief" onchange="applyCameraFilter()">
+        <option value="">全部井长</option>
+      </select>
+    </div>
+  </div>
+  <div class="camera-stats">
+    <div class="camera-stat">在线 <span class="stat-num online" id="onlineCount">0</span></div>
+    <div class="camera-stat">离线 <span class="stat-num offline" id="offlineCount">0</span></div>
+    <div class="camera-stat">共 <span class="stat-num" id="totalCount">0</span> 个</div>
+  </div>
+  <div class="camera-grid" id="cameraGrid"></div>
+</div>
+
+<!-- ===================== PANEL: CAMERA PLAY ===================== -->
+<div class="slide-panel" id="panelCameraPlay">
+  <div class="panel-header">
+    <span class="panel-back" onclick="closePanel('panelCameraPlay')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </span>
+    <span class="panel-title" id="cameraPlayTitle">实时监控</span>
+    <span class="panel-action" onclick="toggleFullscreen()">全屏</span>
+  </div>
+  <div class="video-player">
+    <video id="videoPlayer" autoplay playsinline controls></video>
+    <div class="video-overlay">
+      <span class="live-badge">🔴 LIVE</span>
+    </div>
+  </div>
+  <div class="video-controls">
+    <button class="control-btn" onclick="toggleMute()" id="muteBtn">🔊</button>
+    <button class="control-btn" onclick="toggleRecord()" id="recordBtn">⏺️</button>
+    <button class="control-btn" onclick="openPlayback()">📹</button>
+  </div>
+</div>
+
+</div><!-- end app -->
+
+<script>
+/* ================================================================
+   DATA
+   ================================================================ */
+var wellStatusMap = {
+  '正常': {cls:'normal',color:'#22a84a'},
+  '待维修': {cls:'repair',color:'#f39c12'},
+  '维修中': {cls:'repairing',color:'#3498db'},
+  '停用': {cls:'stopped',color:'#95a5a6'},
+  '报废': {cls:'scrapped',color:'#e74c3c'}
+};
+var orderStatusMap = {
+  '待处置': {cls:'pending',color:'#f39c12'},
+  '处置中': {cls:'processing',color:'#3498db'},
+  '已结案': {cls:'closed',color:'#22a84a'},
+  '逾期': {cls:'overdue',color:'#e74c3c'}
+};
+
+var wells = [
+  {id:'YJ-2024-0086',type:'深井',status:'正常',chief:'张三',area:'鄢陵县柏梁镇',lat:'34.12',lng:'114.18',depth:'120m',flow:'30m³/h',built:'2020-05',address:'柏梁镇东村001号'},
+  {id:'YJ-2024-0085',type:'浅井',status:'正常',chief:'张三',area:'鄢陵县柏梁镇',lat:'34.11',lng:'114.19',depth:'45m',flow:'15m³/h',built:'2019-08',address:'柏梁镇西村002号'},
+  {id:'YJ-2024-0084',type:'深井',status:'待维修',chief:'张三',area:'鄢陵县陈化店镇',lat:'34.13',lng:'114.15',depth:'110m',flow:'28m³/h',built:'2021-03',address:'陈化店镇东村003号'},
+  {id:'YJ-2024-0083',type:'浅井',status:'维修中',chief:'张三',area:'鄢陵县陈化店镇',lat:'34.10',lng:'114.20',depth:'50m',flow:'12m³/h',built:'2018-06',address:'陈化店镇南村004号'},
+  {id:'YJ-2024-0082',type:'深井',status:'正常',chief:'张三',area:'鄢陵县马栏镇',lat:'34.09',lng:'114.22',depth:'115m',flow:'32m³/h',built:'2020-11',address:'马栏镇北村005号'},
+  {id:'YJ-2024-0081',type:'浅井',status:'停用',chief:'张三',area:'鄢陵县马栏镇',lat:'34.08',lng:'114.16',depth:'40m',flow:'10m³/h',built:'2017-02',address:'马栏镇西村006号'},
+  {id:'YJ-2024-0080',type:'深井',status:'正常',chief:'张三',area:'鄢陵县张桥镇',lat:'34.14',lng:'114.21',depth:'125m',flow:'35m³/h',built:'2022-01',address:'张桥镇东村007号'},
+  {id:'YJ-2024-0079',type:'浅井',status:'待维修',chief:'张三',area:'鄢陵县张桥镇',lat:'34.07',lng:'114.17',depth:'38m',flow:'8m³/h',built:'2016-09',address:'张桥镇南村008号'},
+  {id:'YJ-2024-0078',type:'深井',status:'报废',chief:'张三',area:'鄢陵县大马镇',lat:'34.15',lng:'114.14',depth:'100m',flow:'0m³/h',built:'2015-04',address:'大马镇西村009号'},
+  {id:'YJ-2024-0077',type:'浅井',status:'维修中',chief:'张三',area:'鄢陵县大马镇',lat:'34.06',lng:'114.23',depth:'42m',flow:'11m³/h',built:'2019-12',address:'大马镇北村010号'}
+];
+
+var orders = [
+  {id:'#20260519001',status:'待处置',type:'设备故障',source:'巡查发现',wellId:'YJ-2024-0084',summary:'水泵运行异常，噪音较大，疑似轴承损坏',reporter:'李四',time:'2026-05-19 08:30',assignee:'—'},
+  {id:'#20260519002',status:'处置中',type:'管道破损',source:'群众上报',wellId:'YJ-2024-0083',summary:'出水管道接口处渗漏严重，影响正常灌溉',reporter:'王五',time:'2026-05-18 14:20',assignee:'赵六'},
+  {id:'#20260519003',status:'已结案',type:'电力异常',source:'系统预警',wellId:'YJ-2024-0086',summary:'供电电压不稳，造成水泵间歇性停机',reporter:'张三',time:'2026-05-17 09:15',assignee:'赵六'},
+  {id:'#20260519004',status:'逾期',type:'设备故障',source:'巡查发现',wellId:'YJ-2024-0079',summary:'井房门锁损坏，无法正常关闭，存在安全隐患',reporter:'李四',time:'2026-05-10 16:40',assignee:'赵六',overdueDays:5},
+  {id:'#20260519005',status:'待处置',type:'井房损坏',source:'群众上报',wellId:'YJ-2024-0084',summary:'井房屋顶出现裂缝，雨天漏水严重',reporter:'王五',time:'2026-05-19 10:05',assignee:'—'},
+  {id:'#20260519006',status:'处置中',type:'管道破损',source:'巡查发现',wellId:'YJ-2024-0077',summary:'地下管道老化破裂，大面积漏水',reporter:'李四',time:'2026-05-16 11:30',assignee:'赵六'},
+  {id:'#20260519007',status:'已结案',type:'电力异常',source:'系统预警',wellId:'YJ-2024-0082',summary:'配电箱进水导致短路，已更换配电箱',reporter:'张三',time:'2026-05-15 08:00',assignee:'赵六'},
+  {id:'#20260519008',status:'逾期',type:'设备故障',source:'群众上报',wellId:'YJ-2024-0079',summary:'水泵无法启动，电机烧毁需更换',reporter:'王五',time:'2026-05-08 09:20',assignee:'赵六',overdueDays:7},
+  {id:'#20260519009',status:'待处置',type:'其他',source:'系统预警',wellId:'YJ-2024-0081',summary:'机井周边围栏缺失，存在安全风险',reporter:'李四',time:'2026-05-19 07:45',assignee:'—'},
+  {id:'#20260519010',status:'处置中',type:'设备故障',source:'巡查发现',wellId:'YJ-2024-0083',summary:'控制柜指示灯异常，需检查线路',reporter:'张三',time:'2026-05-18 15:10',assignee:'赵六'}
+];
+
+var feeds = [
+  {type:'urgent',text:'紧急通知：因暴雨预警，请各井长加强巡查，确保井房排水通畅。',time:'2026-05-19 09:00'},
+  {type:'patrol',text:'李四完成了YJ-2024-0086号机井的日常巡查，状态正常。',time:'2026-05-19 08:30'},
+  {type:'order',text:'工单#20260519001已创建，待处置：水泵运行异常。',time:'2026-05-19 08:30'},
+  {type:'warn',text:'YJ-2024-0079号机井工单已逾期5天，请尽快处置。',time:'2026-05-19 08:00'},
+  {type:'patrol',text:'王五完成了YJ-2024-0085号机井的日常巡查，状态正常。',time:'2026-05-18 16:20'}
+];
+
+var alerts = [
+  {type:'orange',title:'YJ-2024-0084水泵异常',time:'2026-05-19 08:30'},
+  {type:'red',title:'YJ-2024-0079工单逾期7天',time:'2026-05-18 09:20'},
+  {type:'orange',title:'YJ-2024-0083管道渗漏',time:'2026-05-18 14:20'}
+];
+
+var inspections = [
+  {wellId:'YJ-2024-0086',date:'2026-05-19',inspector:'李四',result:'正常',note:'设备运行正常'},
+  {wellId:'YJ-2024-0086',date:'2026-05-18',inspector:'王五',result:'正常',note:'日常巡查正常'},
+  {wellId:'YJ-2024-0085',date:'2026-05-18',inspector:'王五',result:'正常',note:'日常巡查正常'},
+  {wellId:'YJ-2024-0084',date:'2026-05-17',inspector:'李四',result:'待维修',note:'水泵噪音异常，建议维修'}
+];
+
+var staff = [
+  {name:'张三',role:'井长',phone:'138****5678',area:'鄢陵县柏梁镇'},
+  {name:'李四',role:'管护员',phone:'139****1234',area:'鄢陵县柏梁镇'},
+  {name:'王五',role:'管护员',phone:'137****5678',area:'鄢陵县陈化店镇'},
+  {name:'赵六',role:'维修员',phone:'136****9012',area:'鄢陵县全域'}
+];
+
+var cameraList = [
+  {id:'cam001', wellId:'YJ-2024-0086', name:'YJ-2024-0086', location:'鄢陵县柏梁镇东村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'柏梁镇', village:'东村', chief:'张三', chiefPhone:'138****5678', status:'online', resolution:'1080p', lastUpdate:'2026-05-19 10:30'},
+  {id:'cam002', wellId:'YJ-2024-0085', name:'YJ-2024-0085', location:'鄢陵县柏梁镇西村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'柏梁镇', village:'西村', chief:'张三', chiefPhone:'138****5678', status:'online', resolution:'1080p', lastUpdate:'2026-05-19 10:28'},
+  {id:'cam003', wellId:'YJ-2024-0084', name:'YJ-2024-0084', location:'鄢陵县陈化店镇东村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'陈化店镇', village:'东村', chief:'李四', chiefPhone:'139****1234', status:'online', resolution:'720p', lastUpdate:'2026-05-19 10:25'},
+  {id:'cam004', wellId:'YJ-2024-0083', name:'YJ-2024-0083', location:'鄢陵县陈化店镇南村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'陈化店镇', village:'南村', chief:'李四', chiefPhone:'139****1234', status:'offline', resolution:'720p', lastUpdate:'2026-05-18 16:00'},
+  {id:'cam005', wellId:'YJ-2024-0082', name:'YJ-2024-0082', location:'鄢陵县马栏镇北村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'马栏镇', village:'北村', chief:'王五', chiefPhone:'137****5678', status:'online', resolution:'1080p', lastUpdate:'2026-05-19 10:29'},
+  {id:'cam006', wellId:'YJ-2024-0081', name:'YJ-2024-0081', location:'鄢陵县马栏镇西村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'马栏镇', village:'西村', chief:'王五', chiefPhone:'137****5678', status:'online', resolution:'1080p', lastUpdate:'2026-05-19 10:27'},
+  {id:'cam007', wellId:'YJ-2024-0080', name:'YJ-2024-0080', location:'鄢陵县张桥镇东村', province:'河南省', city:'许昌市', county:'鄢陵县', township:'张桥镇', village:'东村', chief:'赵六', chiefPhone:'136****9012', status:'offline', resolution:'720p', lastUpdate:'2026-05-17 09:00'}
+];
+
+/* ================================================================
+   STATE
+   ================================================================ */
+var currentTab = 0;
+var currentWellId = null;
+var currentOrderId = null;
+var currentNewOrderWell = null;
+var selectedWorker = null;
+var panelStack = [];
+
+/* ================================================================
+   INIT
+   ================================================================ */
+(function init() {
+  // Check login
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    window.location.href = 'jg_mobile_login.html';
+    return;
+  }
+  var loginUser = sessionStorage.getItem('loginUser') || '张三';
+  document.getElementById('greetingText').textContent = getGreeting() + '，' + loginUser;
+  // Set date
+  var now = new Date();
+  var weekDays = ['日','一','二','三','四','五','六'];
+  document.getElementById('greetingSub').textContent =
+    now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 周' + weekDays[now.getDay()] + ' · 鄢陵县辖区';
+  // Draw charts
+  drawRingChart();
+  drawBarChart();
+  // Render lists
+  renderHomeFeed();
+  renderWellList();
+  renderOrderList();
+  renderNewOrderWellSelect();
+  renderWorkerList();
+  initCameraFilter();
+  // Set inspection date
+  document.getElementById('inspectDate').value = now.toISOString().slice(0,10);
+})();
+
+function getGreeting() {
+  var h = new Date().getHours();
+  if (h < 6) return '凌晨好';
+  if (h < 9) return '早上好';
+  if (h < 12) return '上午好';
+  if (h < 14) return '中午好';
+  if (h < 18) return '下午好';
+  return '晚上好';
+}
+
+/* ================================================================
+   TAB SWITCHING
+   ================================================================ */
+function switchTab(idx) {
+  currentTab = idx;
+  var pages = [document.getElementById('pageHome'), document.getElementById('pageWells'), document.getElementById('pageOrders'), document.getElementById('pageMine')];
+  var tabs = document.querySelectorAll('.tab-bar .tab-item');
+  pages.forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+}
+
+/* ================================================================
+   SLIDE PANELS
+   ================================================================ */
+function openPanel(panelId, extra) {
+  var panel = document.getElementById(panelId);
+  panel.classList.add('show');
+  document.getElementById('slideOverlay').classList.add('show');
+  panelStack.push(panelId);
+  if (panelId === 'panelWellDetail' && currentWellId) renderWellDetail(currentWellId);
+  if (panelId === 'panelOrderDetail' && currentOrderId) renderOrderDetail(currentOrderId);
+  if (panelId === 'panelWorkFeed') renderWorkFeed();
+  if (panelId === 'panelMyWells') renderMyWells();
+  if (panelId === 'panelMyOrders') renderMyOrders();
+}
+function closePanel(panelId) {
+  document.getElementById(panelId).classList.remove('show');
+  panelStack = panelStack.filter(function(p){ return p !== panelId; });
+  if (panelStack.length === 0) document.getElementById('slideOverlay').classList.remove('show');
+}
+function closeAllPanels() {
+  document.querySelectorAll('.slide-panel.show').forEach(function(p){ p.classList.remove('show'); });
+  document.getElementById('slideOverlay').classList.remove('show');
+  panelStack = [];
+}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+/* ================================================================
+   RING CHART (Canvas)
+   ================================================================ */
+function drawRingChart() {
+  var canvas = document.getElementById('ringChart');
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = 120 * dpr;
+  canvas.height = 120 * dpr;
+  ctx.scale(dpr, dpr);
+
+  var data = [
+    {label:'正常',value:68,color:'#22a84a'},
+    {label:'待维修',value:8,color:'#f39c12'},
+    {label:'维修中',value:5,color:'#3498db'},
+    {label:'停用',value:3,color:'#95a5a6'},
+    {label:'报废',value:2,color:'#e74c3c'}
+  ];
+  var total = 86;
+  var cx = 60, cy = 60, r = 44, lw = 12;
+  var startAngle = -Math.PI / 2;
+
+  data.forEach(function(d) {
+    var slice = (d.value / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, startAngle + slice);
+    ctx.strokeStyle = d.color;
+    ctx.lineWidth = lw;
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+    startAngle += slice;
+  });
+
+  // Center text
+  ctx.fillStyle = '#333';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(total, cx, cy - 6);
+  ctx.fillStyle = '#999';
+  ctx.font = '10px sans-serif';
+  ctx.fillText('总数', cx, cy + 10);
+
+  // Legend
+  var legendHtml = '';
+  data.forEach(function(d) {
+    legendHtml += '<div class="legend-item"><span class="legend-dot" style="background:'+d.color+'"></span>'+d.label+' '+d.value+'</div>';
+  });
+  document.getElementById('ringLegend').innerHTML = legendHtml;
+}
+
+/* ================================================================
+   BAR CHART
+   ================================================================ */
+function drawBarChart() {
+  var data = [
+    {label:'待处置',value:5,color:'#f39c12'},
+    {label:'处置中',value:12,color:'#3498db'},
+    {label:'已结案',value:37,color:'#22a84a'},
+    {label:'逾期',value:3,color:'#e74c3c'}
+  ];
+  var maxVal = 40;
+  var html = '';
+  data.forEach(function(d) {
+    var pct = Math.round((d.value / maxVal) * 100);
+    html += '<div class="bar-row">';
+    html += '<span class="bar-label">'+d.label+'</span>';
+    html += '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+d.color+'"></div></div>';
+    html += '<span class="bar-value">'+d.value+'</span>';
+    html += '</div>';
+  });
+  document.getElementById('barChart').innerHTML = html;
+}
+
+/* ================================================================
+   HOME FEED
+   ================================================================ */
+function renderHomeFeed() {
+  var html = '';
+  feeds.forEach(function(f) {
+    html += '<div class="feed-item">';
+    html += '<span class="feed-dot '+f.type+'"></span>';
+    html += '<div class="feed-body"><div class="feed-text">'+f.text+'</div><div class="feed-time">'+f.time+'</div></div>';
+    html += '</div>';
+  });
+  document.getElementById('homeFeedList').innerHTML = html;
+}
+
+/* ================================================================
+   WELL LIST
+   ================================================================ */
+var wellFilter = '全部';
+var wellSearchVisible = false;
+
+function toggleWellSearch() {
+  wellSearchVisible = !wellSearchVisible;
+  document.getElementById('wellSearchInput').classList.toggle('show', wellSearchVisible);
+  if (wellSearchVisible) document.getElementById('wellSearchText').focus();
+}
+
+function renderWellFilterTabs() {
+  var statuses = ['全部','正常','待维修','维修中','停用','报废'];
+  var html = '';
+  statuses.forEach(function(s) {
+    var count = s === '全部' ? wells.length : wells.filter(function(w){return w.status===s}).length;
+    var active = wellFilter === s ? ' active' : '';
+    html += '<div class="filter-tab'+active+'" onclick="setWellFilter(\''+s+'\')">'+s+'<span class="tab-count">'+count+'</span></div>';
+  });
+  document.getElementById('wellFilterTabs').innerHTML = html;
+}
+
+function setWellFilter(f) {
+  wellFilter = f;
+  renderWellList();
+}
+
+function filterWells() {
+  renderWellList();
+}
+
+function renderWellList() {
+  renderWellFilterTabs();
+  var search = (document.getElementById('wellSearchText').value || '').toLowerCase();
+  var filtered = wells.filter(function(w) {
+    if (wellFilter !== '全部' && w.status !== wellFilter) return false;
+    if (search && w.id.toLowerCase().indexOf(search) === -1) return false;
+    return true;
+  });
+  var normalCount = wells.filter(function(w){return w.status==='正常'}).length;
+  var repairCount = wells.filter(function(w){return w.status==='待维修'}).length;
+  document.getElementById('wellSummary').textContent = wells.length + '口总数 · ' + normalCount + '正常 · ' + repairCount + '待修';
+
+  var html = '';
+  filtered.forEach(function(w) {
+    var borderCls = '';
+    if (w.status === '待维修') borderCls = ' repair-border';
+    else if (w.status === '维修中') borderCls = ' repairing-border';
+    var st = wellStatusMap[w.status] || {cls:'normal',color:'#22a84a'};
+    html += '<div class="card'+borderCls+'" onclick="openWellDetail(\''+w.id+'\')">';
+    html += '<div class="well-card">';
+    html += '<div class="well-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>';
+    html += '<div class="well-info">';
+    html += '<div class="well-header"><span class="well-id">'+w.id+'</span><span class="well-type">'+w.type+'</span><span class="status-tag '+st.cls+'">'+w.status+'</span></div>';
+    html += '<div class="well-meta">井长：'+w.chief+' · '+w.area+'</div>';
+    html += '<div class="well-actions" onclick="event.stopPropagation()">';
+    html += '<button class="btn btn-sm btn-outline" onclick="openWellDetail(\''+w.id+'\')">详情</button>';
+    html += '<button class="btn btn-sm btn-outline" onclick="showToast(\'正在导航...\')">导航</button>';
+    html += '<button class="btn btn-sm btn-primary" onclick="openInspectionFor(\''+w.id+'\')">巡查</button>';
+    html += '</div></div></div></div>';
+  });
+  if (!filtered.length) html = '<div style="text-align:center;padding:40px;color:#999">暂无机井数据</div>';
+  document.getElementById('wellList').innerHTML = html;
+}
+
+/* ================================================================
+   WELL DETAIL
+   ================================================================ */
+function openWellDetail(id) {
+  currentWellId = id;
+  openPanel('panelWellDetail');
+}
+
+function renderWellDetail(id) {
+  var w = wells.find(function(w){return w.id===id});
+  if (!w) return;
+  document.getElementById('detailWellId').textContent = w.id;
+  document.getElementById('detailWellType').textContent = w.type + ' · ' + w.area;
+  var st = wellStatusMap[w.status] || {cls:'normal',color:'#22a84a'};
+  document.getElementById('detailWellStatus').innerHTML = '<span class="status-tag '+st.cls+'" style="font-size:13px;padding:4px 12px">'+w.status+'</span>';
+
+  // Swiper
+  var innerHtml = '';
+  var dotsHtml = '';
+  for (var i = 0; i < 3; i++) {
+    innerHtml += '<div class="detail-swiper-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>';
+    dotsHtml += '<div class="detail-swiper-dot'+(i===0?' active':'')+'"></div>';
+  }
+  document.getElementById('detailSwiperInner').innerHTML = innerHtml;
+  document.getElementById('detailSwiperDots').innerHTML = dotsHtml;
+
+  // Tabs
+  switchDetailTab(0);
+}
+
+function switchDetailTab(idx) {
+  var tabs = document.querySelectorAll('#detailTabs .detail-tab');
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  // Move indicator
+  var indicator = document.getElementById('detailTabIndicator');
+  var tabEl = tabs[idx];
+  if (tabEl) {
+    indicator.style.left = tabEl.offsetLeft + 'px';
+    indicator.style.width = tabEl.offsetWidth + 'px';
+  }
+  // Render panel
+  renderDetailPanel(idx);
+}
+
+function renderDetailPanel(idx) {
+  var w = wells.find(function(w){return w.id===currentWellId});
+  if (!w) return;
+  var html = '';
+  if (idx === 0) {
+    // Basic info
+    html = '<div class="detail-panel active" style="padding:14px 16px">';
+    var fields = [
+      ['机井编号',w.id],['井型',w.type],['状态',w.status],
+      ['井长',w.chief],['辖区',w.area],['经度',w.lng],['纬度',w.lat],
+      ['深度',w.depth],['流量',w.flow],['建设日期',w.built],['地址',w.address]
+    ];
+    fields.forEach(function(f) {
+      html += '<div class="info-row"><span class="info-label">'+f[0]+'</span><span class="info-value">'+f[1]+'</span></div>';
+    });
+    html += '</div>';
+  } else if (idx === 1) {
+    // Personnel
+    html = '<div class="detail-panel active" style="padding:14px 16px">';
+    var relatedStaff = staff.filter(function(s){return s.role!=='维修员' || s.area==='鄢陵县全域'});
+    relatedStaff.forEach(function(s) {
+      html += '<div class="info-row"><span class="info-label">'+s.role+'</span><span class="info-value">'+s.name+' '+s.phone+'</span></div>';
+    });
+    html += '</div>';
+  } else if (idx === 2) {
+    // Inspections
+    html = '<div class="detail-panel active" style="padding:14px 16px">';
+    var relatedInspections = inspections.filter(function(ins){return ins.wellId===currentWellId});
+    if (relatedInspections.length) {
+      html += '<div class="timeline">';
+      relatedInspections.forEach(function(ins) {
+        var dotCls = ins.result === '正常' ? '' : 'pending';
+        html += '<div class="timeline-item"><div class="timeline-dot '+dotCls+'"></div>';
+        html += '<div class="timeline-time">'+ins.date+' '+ins.inspector+'</div>';
+        html += '<div class="timeline-content">巡查结果：'+ins.result+'</div>';
+        html += '<div class="timeline-sub">'+ins.note+'</div></div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div style="text-align:center;padding:40px;color:#999">暂无巡查记录</div>';
+    }
+    html += '</div>';
+  } else if (idx === 3) {
+    // Orders
+    html = '<div class="detail-panel active" style="padding:14px 16px">';
+    var relatedOrders = orders.filter(function(o){return o.wellId===currentWellId});
+    if (relatedOrders.length) {
+      relatedOrders.forEach(function(o) {
+        var st = orderStatusMap[o.status] || {cls:'pending',color:'#f39c12'};
+        html += '<div class="card" onclick="openOrderDetailFromWell(\''+o.id+'\')">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+        html += '<span style="font-size:13px;font-weight:600">'+o.id+'</span>';
+        html += '<span class="status-tag '+st.cls+'">'+o.status+'</span></div>';
+        html += '<div style="font-size:12px;color:#666;line-height:1.5">'+o.summary+'</div>';
+        html += '</div>';
+      });
+    } else {
+      html += '<div style="text-align:center;padding:40px;color:#999">暂无关联工单</div>';
+    }
+    html += '</div>';
+  }
+  document.getElementById('detailPanels').innerHTML = html;
+}
+
+function openOrderDetailFromWell(orderId) {
+  currentOrderId = orderId;
+  openPanel('panelOrderDetail');
+}
+
+/* ================================================================
+   INSPECTION
+   ================================================================ */
+function openInspection() {
+  if (currentWellId) document.getElementById('inspectWellId').value = currentWellId;
+  openPanel('panelInspection');
+}
+function openInspectionFor(wellId) {
+  currentWellId = wellId;
+  document.getElementById('inspectWellId').value = wellId;
+  openPanel('panelInspection');
+}
+function getGpsLocation() {
+  document.getElementById('inspectGps').value = '34.12°N, 114.18°E';
+  showToast('定位成功');
+}
+function submitInspection() {
+  showToast('巡查提交成功');
+  setTimeout(function(){ closePanel('panelInspection'); }, 800);
+}
+
+/* ================================================================
+   ORDER LIST
+   ================================================================ */
+var orderFilter = '全部';
+
+function renderOrderFilterTabs() {
+  var statuses = ['全部','待处置','处置中','已结案','逾期'];
+  var html = '';
+  statuses.forEach(function(s) {
+    var count = s === '全部' ? orders.length : orders.filter(function(o){return o.status===s}).length;
+    var active = orderFilter === s ? ' active' : '';
+    var badgeStyle = (s === '待处置' || s === '逾期') ? 'color:var(--red);font-weight:700' : '';
+    html += '<div class="filter-tab'+active+'" onclick="setOrderFilter(\''+s+'\')">'+s+'<span class="tab-count" style="'+badgeStyle+'">'+count+'</span></div>';
+  });
+  document.getElementById('orderFilterTabs').innerHTML = html;
+}
+
+function setOrderFilter(f) {
+  orderFilter = f;
+  renderOrderList();
+}
+
+function filterOrders() {
+  renderOrderList();
+}
+
+function renderOrderList() {
+  renderOrderFilterTabs();
+  var search = (document.getElementById('orderSearchText').value || '').toLowerCase();
+  var filtered = orders.filter(function(o) {
+    if (orderFilter !== '全部' && o.status !== orderFilter) return false;
+    if (search && o.id.toLowerCase().indexOf(search) === -1 && o.summary.toLowerCase().indexOf(search) === -1) return false;
+    return true;
+  });
+  var pendingCount = orders.filter(function(o){return o.status==='待处置'}).length;
+  var overdueCount = orders.filter(function(o){return o.status==='逾期'}).length;
+  document.getElementById('orderSummary').textContent = orders.length + '件 · ' + pendingCount + '待处置 · ' + overdueCount + '逾期';
+
+  var html = '';
+  filtered.forEach(function(o) {
+    var st = orderStatusMap[o.status] || {cls:'pending',color:'#f39c12'};
+    var borderCls = o.status === '逾期' ? ' overdue-border' : '';
+    var overdueTag = o.overdueDays ? ' <span class="blink-3" style="color:var(--red);font-size:11px;font-weight:700">逾期'+o.overdueDays+'天</span>' : '';
+    html += '<div class="card'+borderCls+'" onclick="openOrderDetail(\''+o.id+'\')">';
+    html += '<div class="order-card">';
+    html += '<div class="order-top"><span class="order-id">'+o.id+'</span><span class="status-tag '+st.cls+'">'+o.status+'</span>'+overdueTag+'</div>';
+    html += '<div class="order-summary">'+o.summary+'</div>';
+    html += '<div class="order-meta-row"><span class="order-meta-tag source">'+o.source+'</span><span class="order-meta-tag">'+o.type+'</span><span class="order-meta-tag">'+o.wellId+'</span></div>';
+    html += '<div class="order-bottom"><span class="order-assignee">'+o.reporter+' · '+o.time+'</span>';
+    html += '<div class="order-actions" onclick="event.stopPropagation()">';
+    if (o.status === '待处置') {
+      html += '<button class="btn btn-sm btn-primary" onclick="openDispatchFor(\''+o.id+'\')">派单</button>';
+    } else if (o.status === '处置中') {
+      html += '<button class="btn btn-sm btn-outline" onclick="openUrgeFor(\''+o.id+'\')">催办</button>';
+      html += '<button class="btn btn-sm btn-outline" onclick="openTransferFor(\''+o.id+'\')">流转</button>';
+    }
+    html += '</div></div></div></div>';
+  });
+  if (!filtered.length) html = '<div style="text-align:center;padding:40px;color:#999">暂无工单数据</div>';
+  document.getElementById('orderList').innerHTML = html;
+}
+
+/* ================================================================
+   ORDER DETAIL
+   ================================================================ */
+function openOrderDetail(id) {
+  currentOrderId = id;
+  openPanel('panelOrderDetail');
+}
+
+function renderOrderDetail(id) {
+  var o = orders.find(function(o){return o.id===id});
+  if (!o) return;
+  var st = orderStatusMap[o.status] || {cls:'pending',color:'#f39c12'};
+  var overdueTag = o.overdueDays ? ' <span class="blink-3" style="color:var(--red);font-size:13px;font-weight:700">逾期'+o.overdueDays+'天</span>' : '';
+
+  var html = '';
+  // Header
+  html += '<div style="background:#fff;padding:14px 16px;border-bottom:1px solid var(--border)">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+  html += '<span style="font-size:16px;font-weight:700">'+o.id+'</span>';
+  html += '<span class="status-tag '+st.cls+'" style="font-size:13px;padding:4px 12px">'+o.status+'</span></div>';
+  html += overdueTag;
+  html += '<div style="font-size:13px;color:#666;line-height:1.6">'+o.summary+'</div>';
+  html += '</div>';
+
+  // Tabs: info + timeline
+  html += '<div class="detail-tabs" id="orderDetailTabs" style="position:relative">';
+  html += '<div class="detail-tab active" data-odtab="0" onclick="switchOrderDetailTab(0)">工单信息</div>';
+  html += '<div class="detail-tab" data-odtab="1" onclick="switchOrderDetailTab(1)">处置记录</div>';
+  html += '<div class="detail-tab-indicator" id="orderDetailTabIndicator"></div>';
+  html += '</div>';
+  html += '<div id="orderDetailPanels"></div>';
+
+  document.getElementById('orderDetailContent').innerHTML = html;
+  switchOrderDetailTab(0);
+
+  // Bottom actions
+  var bottomHtml = '';
+  if (o.status === '待处置') {
+    bottomHtml += '<button class="btn btn-primary" style="flex:1" onclick="openDispatchFor(\''+o.id+'\')">派单</button>';
+  } else if (o.status === '处置中') {
+    bottomHtml += '<button class="btn btn-outline" style="flex:1" onclick="openUrgeFor(\''+o.id+'\')">催办</button>';
+    bottomHtml += '<button class="btn btn-outline" style="flex:1" onclick="openTransferFor(\''+o.id+'\')">流转</button>';
+  } else if (o.status === '逾期') {
+    bottomHtml += '<button class="btn btn-outline" style="flex:1;border-color:var(--red);color:var(--red)" onclick="openUrgeFor(\''+o.id+'\')">催办</button>';
+    bottomHtml += '<button class="btn btn-primary" style="flex:1" onclick="openDispatchFor(\''+o.id+'\')">重新派单</button>';
+  } else {
+    bottomHtml += '<div style="flex:1;text-align:center;font-size:13px;color:#999">工单已结案</div>';
+  }
+  document.getElementById('orderDetailBottom').innerHTML = bottomHtml;
+
+  // Init tab indicator
+  setTimeout(function() {
+    var tab0 = document.querySelector('#orderDetailTabs .detail-tab');
+    var indicator = document.getElementById('orderDetailTabIndicator');
+    if (tab0 && indicator) {
+      indicator.style.left = tab0.offsetLeft + 'px';
+      indicator.style.width = tab0.offsetWidth + 'px';
+    }
+  }, 50);
+}
+
+function switchOrderDetailTab(idx) {
+  var tabs = document.querySelectorAll('#orderDetailTabs .detail-tab');
+  if (!tabs.length) return;
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  var indicator = document.getElementById('orderDetailTabIndicator');
+  if (indicator && tabs[idx]) {
+    indicator.style.left = tabs[idx].offsetLeft + 'px';
+    indicator.style.width = tabs[idx].offsetWidth + 'px';
+  }
+
+  var o = orders.find(function(o){return o.id===currentOrderId});
+  if (!o) return;
+  var html = '';
+  if (idx === 0) {
+    html = '<div style="padding:14px 16px">';
+    var fields = [
+      ['工单编号',o.id],['状态',o.status],['问题类型',o.type],
+      ['来源',o.source],['关联机井',o.wellId],['上报人',o.reporter],
+      ['上报时间',o.time],['当前处理人',o.assignee]
+    ];
+    fields.forEach(function(f) {
+      html += '<div class="info-row"><span class="info-label">'+f[0]+'</span><span class="info-value">'+f[1]+'</span></div>';
+    });
+    html += '</div>';
+  } else {
+    html = '<div style="padding:14px 16px"><div class="timeline">';
+    html += '<div class="timeline-item"><div class="timeline-dot pending"></div>';
+    html += '<div class="timeline-time">'+o.time+'</div>';
+    html += '<div class="timeline-content">'+o.reporter+' 创建了工单</div>';
+    html += '<div class="timeline-sub">来源：'+o.source+'</div></div>';
+    if (o.status !== '待处置') {
+      html += '<div class="timeline-item"><div class="timeline-dot processing"></div>';
+      html += '<div class="timeline-time">'+o.time.replace(/\d{2}:\d{2}$/, function(m){var h=parseInt(m);return (h+1)+':30'})+'</div>';
+      html += '<div class="timeline-content">张三 派单给 '+o.assignee+'</div></div>';
+    }
+    if (o.status === '已结案') {
+      html += '<div class="timeline-item"><div class="timeline-dot closed"></div>';
+      html += '<div class="timeline-time">2026-05-19 16:00</div>';
+      html += '<div class="timeline-content">'+o.assignee+' 完成处置，工单结案</div></div>';
+    }
+    html += '</div></div>';
+  }
+  document.getElementById('orderDetailPanels').innerHTML = html;
+}
+
+/* ================================================================
+   DISPATCH
+   ================================================================ */
+function renderWorkerList() {
+  var workers = staff.filter(function(s){return s.role==='维修员' || s.role==='管护员'});
+  var html = '';
+  workers.forEach(function(w) {
+    html += '<div class="worker-item" onclick="selectWorker(this,\''+w.name+'\')">';
+    html += '<div class="worker-avatar">'+w.name.charAt(0)+'</div>';
+    html += '<div><div class="worker-name">'+w.name+'</div><div class="worker-role">'+w.role+' · '+w.area+'</div></div>';
+    html += '</div>';
+  });
+  document.getElementById('workerList').innerHTML = html;
+}
+function selectWorker(el, name) {
+  document.querySelectorAll('.worker-item').forEach(function(w){ w.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedWorker = name;
+}
+function openDispatchFor(orderId) {
+  currentOrderId = orderId;
+  selectedWorker = null;
+  document.querySelectorAll('.worker-item').forEach(function(w){ w.classList.remove('selected'); });
+  openPanel('panelDispatch');
+}
+function submitDispatch() {
+  if (!selectedWorker) { showToast('请选择维修员'); return; }
+  showToast('派单成功：已派给' + selectedWorker);
+  setTimeout(function(){ closePanel('panelDispatch'); }, 800);
+}
+
+/* ================================================================
+   URGE & TRANSFER
+   ================================================================ */
+function openUrgeFor(orderId) {
+  currentOrderId = orderId;
+  openModal('modalUrge');
+}
+function submitUrge() {
+  closeModal('modalUrge');
+  showToast('催办成功');
+}
+function openTransferFor(orderId) {
+  currentOrderId = orderId;
+  openModal('modalTransfer');
+}
+function submitTransfer() {
+  closeModal('modalTransfer');
+  showToast('流转成功');
+}
+
+/* ================================================================
+   NEW ORDER
+   ================================================================ */
+function renderNewOrderWellSelect() {
+  var html = '<option value="">请选择机井</option>';
+  wells.forEach(function(w) {
+    html += '<option value="'+w.id+'">'+w.id+' ('+w.status+')</option>';
+  });
+  document.getElementById('newOrderWell').innerHTML = html;
+  if (currentNewOrderWell) document.getElementById('newOrderWell').value = currentNewOrderWell;
+}
+function getGpsForOrder() {
+  document.getElementById('newOrderGps').value = '34.12°N, 114.18°E';
+  showToast('定位成功');
+}
+function submitNewOrder() {
+  var wellId = document.getElementById('newOrderWell').value;
+  if (!wellId) { showToast('请选择关联机井'); return; }
+  var desc = document.getElementById('newOrderDesc').value;
+  if (!desc) { showToast('请填写问题描述'); return; }
+  showToast('工单创建成功');
+  setTimeout(function(){ closePanel('panelNewOrder'); }, 800);
+}
+
+/* ================================================================
+   WORK FEED PANEL
+   ================================================================ */
+var feedTab = 0;
+function switchFeedTab(idx) {
+  feedTab = idx;
+  var tabs = document.querySelectorAll('#feedTabs .detail-tab');
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  var indicator = document.getElementById('feedTabIndicator');
+  if (indicator && tabs[idx]) {
+    indicator.style.left = tabs[idx].offsetLeft + 'px';
+    indicator.style.width = tabs[idx].offsetWidth + 'px';
+  }
+  renderWorkFeed();
+}
+
+function renderWorkFeed() {
+  var html = '';
+  if (feedTab === 0) {
+    // Notifications
+    html = '<div style="padding:14px 16px">';
+    feeds.filter(function(f){return f.type==='urgent'}).forEach(function(f) {
+      html += '<div class="feed-item"><span class="feed-dot urgent"></span><div class="feed-body"><div class="feed-text">'+f.text+'</div><div class="feed-time">'+f.time+'</div></div></div>';
+    });
+    html += '<div style="text-align:center;padding:16px;color:#999;font-size:12px">仅显示最近7天通知</div></div>';
+  } else if (feedTab === 1) {
+    // Activities
+    html = '<div style="padding:14px 16px">';
+    feeds.filter(function(f){return f.type==='patrol'||f.type==='order'}).forEach(function(f) {
+      html += '<div class="feed-item"><span class="feed-dot '+f.type+'"></span><div class="feed-body"><div class="feed-text">'+f.text+'</div><div class="feed-time">'+f.time+'</div></div></div>';
+    });
+    html += '</div>';
+  } else {
+    // Alerts
+    html = '<div style="padding:14px 16px">';
+    alerts.forEach(function(a) {
+      var dotColor = a.type === 'red' ? 'var(--red)' : 'var(--orange)';
+      html += '<div class="card" style="margin:0 0 10px;border-left:3px solid '+dotColor+'">';
+      html += '<div style="font-size:13px;font-weight:600">'+a.title+'</div>';
+      html += '<div style="font-size:11px;color:#999;margin-top:4px">'+a.time+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  document.getElementById('feedPanels').innerHTML = html;
+}
+
+/* ================================================================
+   MY WELLS
+   ================================================================ */
+var myWellFilter = '全部';
+function renderMyWells() {
+  var statuses = ['全部','正常','待维修','维修中','停用','报废'];
+  var html = '';
+  statuses.forEach(function(s) {
+    var count = s === '全部' ? wells.length : wells.filter(function(w){return w.status===s}).length;
+    var active = myWellFilter === s ? ' active' : '';
+    html += '<div class="filter-tab'+active+'" onclick="setMyWellFilter(\''+s+'\')">'+s+'<span class="tab-count">'+count+'</span></div>';
+  });
+  document.getElementById('myWellFilterTabs').innerHTML = html;
+
+  var filtered = wells.filter(function(w) {
+    return myWellFilter === '全部' || w.status === myWellFilter;
+  });
+  var listHtml = '';
+  filtered.forEach(function(w) {
+    var st = wellStatusMap[w.status] || {cls:'normal',color:'#22a84a'};
+    var borderCls = '';
+    if (w.status === '待维修') borderCls = ' repair-border';
+    else if (w.status === '维修中') borderCls = ' repairing-border';
+    listHtml += '<div class="card'+borderCls+'" onclick="closePanel(\'panelMyWells\');openWellDetail(\''+w.id+'\')">';
+    listHtml += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    listHtml += '<span style="font-size:14px;font-weight:600">'+w.id+'</span>';
+    listHtml += '<span class="status-tag '+st.cls+'">'+w.status+'</span></div>';
+    listHtml += '<div style="font-size:12px;color:#666;margin-top:4px">'+w.type+' · '+w.area+'</div>';
+    listHtml += '</div>';
+  });
+  document.getElementById('myWellList').innerHTML = listHtml;
+}
+function setMyWellFilter(f) {
+  myWellFilter = f;
+  renderMyWells();
+}
+
+/* ================================================================
+   MY ORDERS
+   ================================================================ */
+var myOrderTab = 0;
+function switchMyOrderTab(idx) {
+  myOrderTab = idx;
+  var tabs = document.querySelectorAll('#myOrderTabs .detail-tab');
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  var indicator = document.getElementById('myOrderTabIndicator');
+  if (indicator && tabs[idx]) {
+    indicator.style.left = tabs[idx].offsetLeft + 'px';
+    indicator.style.width = tabs[idx].offsetWidth + 'px';
+  }
+  renderMyOrders();
+}
+
+function renderMyOrders() {
+  var statusMap = ['待处置','处置中','已结案','逾期'];
+  var status = statusMap[myOrderTab] || '全部';
+  var filtered = orders.filter(function(o){ return o.status === status; });
+  var html = '';
+  filtered.forEach(function(o) {
+    var st = orderStatusMap[o.status] || {cls:'pending',color:'#f39c12'};
+    var borderCls = o.status === '逾期' ? ' overdue-border' : '';
+    html += '<div class="card'+borderCls+'" onclick="closePanel(\'panelMyOrders\');openOrderDetail(\''+o.id+'\')">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center">';
+    html += '<span style="font-size:14px;font-weight:600">'+o.id+'</span>';
+    html += '<span class="status-tag '+st.cls+'">'+o.status+'</span></div>';
+    html += '<div style="font-size:12px;color:#666;margin-top:6px;line-height:1.5">'+o.summary+'</div>';
+    html += '<div style="font-size:11px;color:#999;margin-top:4px">'+o.wellId+' · '+o.time+'</div>';
+    html += '</div>';
+  });
+  if (!filtered.length) html = '<div style="text-align:center;padding:40px;color:#999">暂无'+status+'工单</div>';
+  document.getElementById('myOrderList').innerHTML = html;
+}
+
+/* ================================================================
+   LOGOUT
+   ================================================================ */
+function doLogout() {
+  sessionStorage.removeItem('isLoggedIn');
+  sessionStorage.removeItem('loginUser');
+  window.location.href = 'jg_mobile_login.html';
+}
+
+/* ================================================================
+   CAMERA FUNCTIONS
+   ================================================================ */
+function initCameraFilter() {
+  var provinceSelect = document.getElementById('filterProvince');
+  var provinces = [];
+  cameraList.forEach(function(cam) {
+    if (provinces.indexOf(cam.province) === -1) {
+      provinces.push(cam.province);
+    }
+  });
+  provinces.forEach(function(p) {
+    var opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = p;
+    provinceSelect.appendChild(opt);
+  });
+  onRegionChange('city');
+}
+
+function onRegionChange(level) {
+  var province = document.getElementById('filterProvince').value;
+  var city = document.getElementById('filterCity').value;
+  var county = document.getElementById('filterCounty').value;
+  var township = document.getElementById('filterTownship').value;
+  var village = document.getElementById('filterVillage').value;
+  
+  var citySelect = document.getElementById('filterCity');
+  var countySelect = document.getElementById('filterCounty');
+  var townshipSelect = document.getElementById('filterTownship');
+  var villageSelect = document.getElementById('filterVillage');
+  var chiefSelect = document.getElementById('filterChief');
+  
+  if (level === 'city' || level === 'init') {
+    citySelect.innerHTML = '<option value="">全市</option>';
+    var cities = [];
+    cameraList.forEach(function(cam) {
+      if (!province || cam.province === province) {
+        if (cities.indexOf(cam.city) === -1) {
+          cities.push(cam.city);
+        }
+      }
+    });
+    cities.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      citySelect.appendChild(opt);
+    });
+    if (level !== 'init') city = '';
+  }
+  
+  if (level === 'county' || level === 'city' || level === 'init') {
+    countySelect.innerHTML = '<option value="">全县</option>';
+    var counties = [];
+    cameraList.forEach(function(cam) {
+      if ((!province || cam.province === province) && (!city || cam.city === city)) {
+        if (counties.indexOf(cam.county) === -1) {
+          counties.push(cam.county);
+        }
+      }
+    });
+    counties.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      countySelect.appendChild(opt);
+    });
+    if (level !== 'init') county = '';
+  }
+  
+  if (level === 'township' || level === 'county' || level === 'city' || level === 'init') {
+    townshipSelect.innerHTML = '<option value="">全乡</option>';
+    var townships = [];
+    cameraList.forEach(function(cam) {
+      if ((!province || cam.province === province) && (!city || cam.city === city) && (!county || cam.county === county)) {
+        if (townships.indexOf(cam.township) === -1) {
+          townships.push(cam.township);
+        }
+      }
+    });
+    townships.forEach(function(t) {
+      var opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      townshipSelect.appendChild(opt);
+    });
+    if (level !== 'init') township = '';
+  }
+  
+  if (level === 'village' || level === 'township' || level === 'county' || level === 'city' || level === 'init') {
+    villageSelect.innerHTML = '<option value="">全村</option>';
+    var villages = [];
+    cameraList.forEach(function(cam) {
+      if ((!province || cam.province === province) && (!city || cam.city === city) && (!county || cam.county === county) && (!township || cam.township === township)) {
+        if (villages.indexOf(cam.village) === -1) {
+          villages.push(cam.village);
+        }
+      }
+    });
+    villages.forEach(function(v) {
+      var opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      villageSelect.appendChild(opt);
+    });
+    if (level !== 'init') village = '';
+  }
+  
+  if (level === 'chief' || level === 'village' || level === 'township' || level === 'county' || level === 'city' || level === 'init') {
+    chiefSelect.innerHTML = '<option value="">全部井长</option>';
+    var chiefs = [];
+    cameraList.forEach(function(cam) {
+      if ((!province || cam.province === province) && (!city || cam.city === city) && (!county || cam.county === county) && (!township || cam.township === township) && (!village || cam.village === village)) {
+        if (chiefs.indexOf(cam.chief) === -1) {
+          chiefs.push(cam.chief);
+        }
+      }
+    });
+    chiefs.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      chiefSelect.appendChild(opt);
+    });
+  }
+  
+  updateFilterStyles();
+  applyCameraFilter();
+}
+
+function applyCameraFilter() {
+  var province = document.getElementById('filterProvince').value;
+  var city = document.getElementById('filterCity').value;
+  var county = document.getElementById('filterCounty').value;
+  var township = document.getElementById('filterTownship').value;
+  var village = document.getElementById('filterVillage').value;
+  var chief = document.getElementById('filterChief').value;
+  
+  var filtered = cameraList.filter(function(cam) {
+    if (province && cam.province !== province) return false;
+    if (city && cam.city !== city) return false;
+    if (county && cam.county !== county) return false;
+    if (township && cam.township !== township) return false;
+    if (village && cam.village !== village) return false;
+    if (chief && cam.chief !== chief) return false;
+    return true;
+  });
+  
+  var onlineCount = filtered.filter(function(c) { return c.status === 'online'; }).length;
+  var offlineCount = filtered.filter(function(c) { return c.status === 'offline'; }).length;
+  
+  document.getElementById('onlineCount').textContent = onlineCount;
+  document.getElementById('offlineCount').textContent = offlineCount;
+  document.getElementById('totalCount').textContent = filtered.length;
+  
+  var badge = document.getElementById('cameraBadge');
+  if (badge) badge.textContent = onlineCount;
+  
+  var grid = document.getElementById('cameraGrid');
+  var html = filtered.map(function(cam) {
+    return '<div class="camera-card" onclick="playCamera(\''+cam.id+'\')">' +
+      '<div class="camera-thumb">' +
+      '<img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=security%20camera%20view%20of%20agricultural%20water%20well%20station%20outdoor%20daytime%20surveillance&image_size=landscape_4_3" />' +
+      '<span class="camera-status '+cam.status+'"></span>' +
+      (cam.status === 'online' ? '<span class="camera-live">LIVE</span>' : '') +
+      '</div>' +
+      '<div class="camera-info">' +
+      '<div class="camera-name">'+cam.name+'</div>' +
+      '<div class="camera-location">'+cam.location+'</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+  
+  grid.innerHTML = html || '<div style="text-align:center;padding:40px;color:#999">暂无符合条件的摄像头</div>';
+  
+  updateFilterStyles();
+}
+
+function updateFilterStyles() {
+  var selects = ['filterProvince', 'filterCity', 'filterCounty', 'filterTownship', 'filterVillage', 'filterChief'];
+  selects.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      if (el.value) {
+        el.classList.add('has-value');
+      } else {
+        el.classList.remove('has-value');
+      }
+    }
+  });
+}
+
+function renderCameraList() {
+  var grid = document.getElementById('cameraGrid');
+  if (!grid) return;
+  
+  var filtered = getFilteredCameras();
+  var onlineCount = filtered.filter(function(c) { return c.status === 'online'; }).length;
+  var offlineCount = filtered.filter(function(c) { return c.status === 'offline'; }).length;
+  
+  document.getElementById('onlineCount').textContent = onlineCount;
+  document.getElementById('offlineCount').textContent = offlineCount;
+  document.getElementById('totalCount').textContent = filtered.length;
+  
+  var badge = document.getElementById('cameraBadge');
+  if (badge) badge.textContent = onlineCount;
+  
+  var html = filtered.map(function(cam) {
+    return '<div class="camera-card" onclick="playCamera(\''+cam.id+'\')">' +
+      '<div class="camera-thumb">' +
+      '<img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=security%20camera%20view%20of%20agricultural%20water%20well%20station%20outdoor%20daytime%20surveillance&image_size=landscape_4_3" />' +
+      '<span class="camera-status '+cam.status+'"></span>' +
+      (cam.status === 'online' ? '<span class="camera-live">LIVE</span>' : '') +
+      '</div>' +
+      '<div class="camera-info">' +
+      '<div class="camera-name">'+cam.name+'</div>' +
+      '<div class="camera-location">'+cam.location+'</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+  
+  grid.innerHTML = html || '<div style="text-align:center;padding:40px;color:#999">暂无符合条件的摄像头</div>';
+}
+
+function getFilteredCameras() {
+  var province = document.getElementById('filterProvince') ? document.getElementById('filterProvince').value : '';
+  var city = document.getElementById('filterCity') ? document.getElementById('filterCity').value : '';
+  var county = document.getElementById('filterCounty') ? document.getElementById('filterCounty').value : '';
+  var township = document.getElementById('filterTownship') ? document.getElementById('filterTownship').value : '';
+  var village = document.getElementById('filterVillage') ? document.getElementById('filterVillage').value : '';
+  var chief = document.getElementById('filterChief') ? document.getElementById('filterChief').value : '';
+  
+  return cameraList.filter(function(cam) {
+    if (province && cam.province !== province) return false;
+    if (city && cam.city !== city) return false;
+    if (county && cam.county !== county) return false;
+    if (township && cam.township !== township) return false;
+    if (village && cam.village !== village) return false;
+    if (chief && cam.chief !== chief) return false;
+    return true;
+  });
+}
+
+function playCamera(camId) {
+  var cam = cameraList.find(function(c) { return c.id === camId; });
+  if (!cam) return;
+  
+  document.getElementById('cameraPlayTitle').textContent = cam.name;
+  
+  closePanel('panelWellCamera');
+  setTimeout(function() { openPanel('panelCameraPlay'); }, 100);
+  
+  showToast(cam.status === 'online' ? '正在连接摄像头...' : '摄像头离线，无法观看', cam.status === 'online' ? 'info' : 'warning');
+}
+
+function refreshCameras() {
+  showToast('正在刷新...');
+  setTimeout(function() {
+    renderCameraList();
+    showToast('刷新完成', 'success');
+  }, 800);
+}
+
+function toggleMute() {
+  var video = document.getElementById('videoPlayer');
+  var btn = document.getElementById('muteBtn');
+  if (video && btn) {
+    video.muted = !video.muted;
+    btn.textContent = video.muted ? '🔇' : '🔊';
+  }
+}
+
+function toggleRecord() {
+  var btn = document.getElementById('recordBtn');
+  if (!btn) return;
+  
+  if (btn.classList.contains('recording')) {
+    btn.classList.remove('recording');
+    showToast('录制已停止', 'success');
+  } else {
+    btn.classList.add('recording');
+    showToast('开始录制...');
+  }
+}
+
+function openPlayback() {
+  showToast('录像回放功能开发中', 'info');
+}
+
+function toggleFullscreen() {
+  var video = document.getElementById('videoPlayer');
+  if (!video) return;
+  
+  if (video.requestFullscreen) {
+    video.requestFullscreen();
+  } else if (video.webkitRequestFullscreen) {
+    video.webkitRequestFullscreen();
+  } else if (video.mozRequestFullScreen) {
+    video.mozRequestFullScreen();
+  }
+}
+
+/* ================================================================
+   SWIPER TOUCH
+   ================================================================ */
+(function() {
+  var swiper = document.getElementById('detailSwiper');
+  var startX = 0, currentSlide = 0, totalSlides = 3;
+  swiper.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+  });
+  swiper.addEventListener('touchend', function(e) {
+    var diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0 && currentSlide < totalSlides - 1) currentSlide++;
+      else if (diff > 0 && currentSlide > 0) currentSlide--;
+      document.getElementById('detailSwiperInner').style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      var dots = document.querySelectorAll('.detail-swiper-dot');
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === currentSlide); });
+    }
+  });
+})();
+</script>
+</body>
+</html>

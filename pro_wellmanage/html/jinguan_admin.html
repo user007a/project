@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豫农田机井管护系统 - 系统管理</title>
+<link rel="stylesheet" href="jinguan_common.css">
+<style>
+  /* ===== 统计卡片升级 ===== */
+  .jg-kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .jg-stat-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+    cursor: default;
+  }
+  .jg-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .jg-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .jg-stat-card.blue::before { background: #1890ff; }
+  .jg-stat-card.green::before { background: #22a84a; }
+  .jg-stat-card.gold::before { background: #f5a623; }
+  .jg-stat-card.purple::before { background: #722ed1; }
+  .jg-stat-card.cyan::before { background: #13c2c2; }
+  .jg-stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .jg-stat-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jg-stat-card.blue .jg-stat-icon { background: #e6f4ff; }
+  .jg-stat-card.green .jg-stat-icon { background: #f0faf3; }
+  .jg-stat-card.gold .jg-stat-icon { background: #fff7e6; }
+  .jg-stat-card.purple .jg-stat-icon { background: #f5f0ff; }
+  .jg-stat-card.cyan .jg-stat-icon { background: #e6fffb; }
+  .jg-stat-icon svg { width: 20px; height: 20px; }
+  .jg-stat-card.blue .jg-stat-icon svg { color: #1890ff; }
+  .jg-stat-card.green .jg-stat-icon svg { color: #22a84a; }
+  .jg-stat-card.gold .jg-stat-icon svg { color: #f5a623; }
+  .jg-stat-card.purple .jg-stat-icon svg { color: #722ed1; }
+  .jg-stat-card.cyan .jg-stat-icon svg { color: #13c2c2; }
+  .jg-stat-label { font-size: 12px; color: #666; }
+  .jg-stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .jg-stat-card.blue .jg-stat-value { color: #1890ff; }
+  .jg-stat-card.green .jg-stat-value { color: #22a84a; }
+  .jg-stat-card.gold .jg-stat-value { color: #f5a623; }
+  .jg-stat-card.purple .jg-stat-value { color: #722ed1; }
+  .jg-stat-card.cyan .jg-stat-value { color: #13c2c2; }
+  .jg-stat-footer {
+    font-size: 11px;
+    color: #999;
+  }
+
+  /* ===== 侧边栏分区与标题 ===== */
+  .jg-sidebar-section {
+    margin-bottom: 4px;
+  }
+  .jg-sidebar-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 10px 14px 6px;
+    line-height: 1.4;
+  }
+  .jg-sidebar-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+    margin: 6px 12px;
+  }
+
+  /* ===== 侧边栏菜单项 SVG 图标 ===== */
+  .jg-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    color: var(--text-regular);
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    position: relative;
+  }
+  .jg-sidebar-item:hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+  .jg-sidebar-item.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+  .jg-sidebar-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px; bottom: 4px;
+    width: 3px;
+    background: var(--color-primary);
+    border-radius: 0 2px 2px 0;
+  }
+  .jg-sidebar-item svg {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    color: #999;
+    transition: color var(--transition-fast);
+  }
+  .jg-sidebar-item:hover svg,
+  .jg-sidebar-item.active svg {
+    color: var(--color-primary);
+  }
+  .jg-sidebar-item.static {
+    cursor: default;
+    font-size: 12px;
+    color: #888;
+    padding: 6px 14px;
+  }
+  .jg-sidebar-item.static:hover {
+    background: transparent;
+    color: #888;
+  }
+
+  /* ===== 系统信息标签 ===== */
+  .jg-sys-info-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #666;
+    margin: 2px 4px 2px 0;
+  }
+  .jg-sys-info-tag svg {
+    width: 12px; height: 12px;
+    color: #999;
+  }
+
+  /* ===== Tab 栏药丸美化 ===== */
+  .jg-tabs {
+    display: flex;
+    background: #fff;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: 2px solid var(--border-light);
+    position: relative;
+    gap: 0;
+    padding: 4px 4px 0;
+  }
+  .jg-tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #888;
+    border: none;
+    margin-bottom: -2px;
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    font-family: inherit;
+  }
+  .jg-tab:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+  }
+  .jg-tab.active {
+    color: #fff;
+    font-weight: 600;
+    background: var(--color-primary);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+  .jg-tab svg {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+  .jg-tab.active svg { color: #fff; }
+  .jg-tab:not(.active) svg { color: #aaa; }
+  .jg-tab:not(.active):hover svg { color: var(--color-primary); }
+  .jg-tab-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background: var(--color-primary-dark);
+    border-radius: 2px 2px 0 0;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+  }
+  .jg-tab-content {
+    background: #fff;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    min-height: 400px;
+  }
+  .jg-tab-panel { display: none; opacity: 0; transition: opacity 0.2s; }
+  .jg-tab-panel.active { display: block; opacity: 1; }
+
+  /* ===== 配置组美化 ===== */
+  .jg-config-group {
+    background: #fff;
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .jg-config-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-left: 4px solid var(--color-primary);
+    background: linear-gradient(90deg, var(--color-primary-light) 0%, #fff 40%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .jg-config-group-title svg {
+    width: 16px; height: 16px;
+    color: var(--color-primary);
+  }
+  .jg-config-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 12px;
+    border-top: 1px solid var(--border-light);
+    transition: background var(--transition-fast);
+  }
+  .jg-config-item:nth-child(even) {
+    background: #fafafa;
+  }
+  .jg-config-item:hover {
+    background: var(--bg-hover);
+  }
+  .jg-config-key {
+    width: 180px;
+    font-size: 13px;
+    color: var(--text-regular);
+    flex-shrink: 0;
+  }
+  .jg-config-value {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .jg-config-desc {
+    font-size: 11px;
+    color: #999;
+    margin-left: auto;
+  }
+  .jg-config-input {
+    width: 80px;
+    height: 28px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-size: 13px;
+    outline: none;
+    transition: border-color var(--transition-normal);
+  }
+  .jg-config-input:focus { border-color: var(--color-primary); }
+
+  /* ===== Toggle 开关精致版 ===== */
+  .jg-toggle {
+    width: 38px; height: 20px;
+    background: #ccc;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background var(--transition-normal);
+    flex-shrink: 0;
+  }
+  .jg-toggle.on { background: var(--color-primary); }
+  .jg-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform var(--transition-normal);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .jg-toggle.on::after { transform: translateX(18px); }
+
+  /* ===== 配置保存按钮固定右上角 ===== */
+  .jg-config-save-float {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+    padding: 8px 0;
+  }
+
+  /* ===== 备份卡片样式 ===== */
+  .jg-backup-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-lg);
+    margin-bottom: 10px;
+    transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  }
+  .jg-backup-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .jg-backup-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-lg);
+    background: #f0faf3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .jg-backup-icon svg { width: 20px; height: 20px; color: var(--color-primary); }
+  .jg-backup-info { flex: 1; min-width: 0; }
+  .jg-backup-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .jg-backup-meta { font-size: 12px; color: #999; margin-top: 2px; }
+  .jg-backup-size {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .jg-backup-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--color-success);
+    box-shadow: 0 0 6px rgba(82,196,26,0.4);
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+  .jg-backup-status.recent { background: var(--color-success); }
+  .jg-backup-status:not(.recent) { background: #d9d9d9; box-shadow: none; }
+
+  /* ===== 字典列表美化 ===== */
+  .jg-dict-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, #fafafa 0%, #fff 100%);
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-lg);
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .jg-dict-header:hover {
+    background: var(--color-primary-light);
+    box-shadow: var(--shadow-sm);
+  }
+  .jg-dict-arrow {
+    font-size: 10px;
+    color: #999;
+    transition: transform var(--transition-normal);
+    flex-shrink: 0;
+  }
+  .jg-dict-arrow.open { transform: rotate(90deg); color: var(--color-primary); }
+  .jg-dict-name { font-weight: 600; font-size: 13px; color: var(--text-primary); }
+  .jg-dict-code { font-size: 11px; color: #999; margin-left: 4px; }
+  .jg-dict-badge {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .jg-dict-items {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-left: 16px;
+  }
+  .jg-dict-items.open { max-height: 600px; }
+
+  /* ===== 区域详情面板 ===== */
+  .jg-region-detail {
+    background: #fff;
+    border: 1px solid var(--border-base);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .jg-region-detail-header {
+    padding: 12px 16px;
+    background: linear-gradient(90deg, var(--color-primary-light) 0%, #fff 40%);
+    border-bottom: 1px solid var(--border-light);
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-left: 4px solid var(--color-primary);
+  }
+  .jg-region-detail-header svg {
+    width: 16px; height: 16px;
+    color: var(--color-primary);
+  }
+  .jg-region-detail-body {
+    padding: 16px;
+  }
+  .jg-detail-row {
+    display: flex;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-light);
+    align-items: baseline;
+  }
+  .jg-detail-row:last-child { border-bottom: none; }
+  .jg-detail-label {
+    width: 80px;
+    font-size: 12px;
+    color: #999;
+    flex-shrink: 0;
+  }
+  .jg-detail-val {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* ===== 区域树选中高亮 ===== */
+  .jg-region-row {
+    padding: 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+  }
+  .jg-region-row:hover { background: var(--color-primary-light); }
+  .jg-region-row.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: var(--radius-md);
+  }
+  .jg-region-row.active .jg-region-count { color: rgba(255,255,255,0.8); }
+  .jg-region-arrow {
+    font-size: 10px;
+    transition: transform var(--transition-normal);
+    color: #999;
+    flex-shrink: 0;
+  }
+  .jg-region-arrow.open { transform: rotate(90deg); color: var(--color-primary); }
+  .jg-region-row.active .jg-region-arrow.open { color: #fff; }
+  .jg-region-name { font-size: 13px; }
+  .jg-region-count { font-size: 11px; color: #999; }
+  .jg-region-children {
+    padding-left: 20px;
+    display: none;
+  }
+  .jg-region-children.open { display: block; }
+
+  /* ===== 侧边栏搜索放大镜 ===== */
+  .jg-sidebar-search {
+    padding: 0 14px 10px;
+  }
+  .jg-sidebar-search input {
+    width: 100%;
+    height: 30px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 0 8px 0 28px;
+    font-size: 12px;
+    outline: none;
+    background: var(--bg-subtle) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat 8px center;
+    transition: border-color var(--transition-normal), background-color var(--transition-normal);
+  }
+  .jg-sidebar-search input:focus { border-color: var(--color-primary); background-color: #fff; }
+
+  /* ===== 弹窗头部绿色边条 ===== */
+  .jg-modal-header {
+    background: #fff;
+    color: var(--text-primary);
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .jg-modal-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 4px;
+    background: var(--color-primary);
+    border-radius: 0 2px 2px 0;
+  }
+  .jg-modal-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #999;
+    transition: all var(--transition-normal);
+    background: none;
+    border: none;
+  }
+  .jg-modal-close:hover { background: #f5f5f5; color: #333; }
+  .jg-modal-close:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+  /* ===== 按钮系统 ===== */
+  .jg-btn {
+    height: 32px;
+    padding: 0 14px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff;
+    color: var(--text-regular);
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .jg-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .jg-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  .jg-btn-primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .jg-btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; box-shadow: 0 2px 6px rgba(34,168,74,0.25); }
+  .jg-btn-danger { background: #fff; color: var(--color-danger); border-color: #ffa39e; }
+  .jg-btn-danger:hover { background: #fff1f0; border-color: var(--color-danger); }
+  .jg-btn-warning { background: #fff; color: var(--color-warning); border-color: #ffd591; }
+  .jg-btn-warning:hover { background: #fff7e6; border-color: var(--color-warning); }
+  .jg-btn-sm { height: 26px; padding: 0 10px; font-size: 11px; }
+
+  /* ===== 表格 ===== */
+  .jg-table { width: 100%; border-collapse: collapse; }
+  .jg-table thead th {
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-align: left;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-base);
+    white-space: nowrap;
+  }
+  .jg-table tbody tr {
+    border-bottom: 1px solid var(--border-light);
+    transition: background var(--transition-fast);
+  }
+  .jg-table tbody tr:hover td { background: var(--bg-hover); }
+  .jg-table tbody td {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text-regular);
+    vertical-align: middle;
+  }
+
+  /* ===== 分页器 ===== */
+  .jg-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 12px 0;
+  }
+  .jg-page-info { color: #666; font-size: 12px; margin-right: 8px; }
+  .jg-page-btn {
+    height: 28px; min-width: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-normal);
+    color: var(--text-regular);
+    font-family: inherit;
+  }
+  .jg-page-btn:hover:not(:disabled) { border-color: var(--color-primary); color: var(--color-primary); }
+  .jg-page-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+  .jg-page-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .jg-page-btn:disabled { cursor: not-allowed; color: #ccc; background: #f5f5f5; }
+  .jg-page-jump {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+  .jg-page-jump input {
+    width: 40px; height: 28px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-size: 12px;
+    outline: none;
+    transition: border-color var(--transition-normal);
+  }
+  .jg-page-jump input:focus { border-color: var(--color-primary); }
+
+  /* ===== 操作链接 ===== */
+  .jg-op-link {
+    color: var(--color-primary);
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .jg-op-link:hover { color: var(--color-primary-dark); text-decoration: underline; }
+  .jg-op-danger { color: var(--color-danger); }
+  .jg-op-danger:hover { color: #d9363e; }
+
+  /* ===== 状态标签 ===== */
+  .jg-status-tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .jg-status-normal { background: #f6ffed; color: #52c41a; }
+  .jg-status-disabled { background: #fff1f0; color: #ff4d4f; }
+  .jg-status-locked { background: #fff7e6; color: #fa8c16; }
+
+  /* ===== 角色标签 ===== */
+  .jg-role-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .jg-role-admin { background: #e6f4ff; color: #1890ff; }
+  .jg-role-city { background: #f0faf3; color: #22a84a; }
+  .jg-role-county { background: #fff7e6; color: #fa8c16; }
+  .jg-role-head { background: #f5f0ff; color: #722ed1; }
+  .jg-role-guard { background: #e6fffb; color: #13c2c2; }
+  .jg-role-repair { background: #fff1f0; color: #ff4d4f; }
+
+  /* ===== 筛选栏 ===== */
+  .jg-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .jg-search-input {
+    height: 30px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 0 10px;
+    font-size: 12px;
+    outline: none;
+    width: 200px;
+    transition: border-color var(--transition-normal);
+  }
+  .jg-search-input:focus { border-color: var(--color-primary); }
+  .jg-select {
+    height: 30px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 0 8px;
+    font-size: 12px;
+    outline: none;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color var(--transition-normal);
+  }
+  .jg-select:focus { border-color: var(--color-primary); }
+
+  /* ===== 弹窗表单 ===== */
+  .jg-form-row { display: flex; gap: 16px; margin-bottom: 12px; }
+  .jg-form-group { flex: 1; }
+  .jg-form-label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }
+  .jg-required { color: var(--color-danger); }
+  .jg-form-input {
+    width: 100%;
+    height: 32px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 0 10px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color var(--transition-normal);
+  }
+  .jg-form-input:focus { border-color: var(--color-primary); }
+  .jg-form-select {
+    width: 100%;
+    height: 32px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-md);
+    padding: 0 8px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* ===== 权限树 ===== */
+  .jg-perm-group { margin-bottom: 8px; }
+  .jg-perm-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 6px 0;
+  }
+  .jg-perm-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 4px 0 4px 22px;
+  }
+  .jg-perm-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* ===== 备份状态栏 ===== */
+  .jg-backup-status-bar {
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, #f6ffed 0%, #fff 100%);
+    border: 1px solid #b7eb8f;
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--color-success);
+  }
+  .jg-backup-status-bar-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .jg-backup-status-bar-title svg { width: 16px; height: 16px; color: var(--color-success); }
+  .jg-backup-status-bar-detail { font-size: 12px; color: #666; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 900px) {
+    .jg-kpi-strip { grid-template-columns: repeat(3, 1fr); }
+    .jg-region-wrap { flex-direction: column; }
+  }
+  @media (max-width: 600px) {
+    .jg-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ===== 面包屑导航条 ===== */
+  .jg-breadcrumb-bar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: rgba(26,122,60,0.9);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    z-index: 99;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .jg-breadcrumb-bar a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+  }
+  .jg-breadcrumb-bar a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  /* ===== 右侧内容区适配 ===== */
+  .jg-content {
+    margin-top: 88px;
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="jg-header">
+  <a href="jinguan_home.html" class="jg-logo">
+    <svg width="38" height="38" viewBox="0 0 38 38">
+      <rect width="38" height="38" fill="#fff" rx="4"/>
+      <polygon points="19,4 10,20 28,20" fill="#22a84a"/>
+      <circle cx="19" cy="13" r="3" fill="#fff" opacity="0.9"/>
+      <rect x="8" y="22" width="22" height="3" rx="1.5" fill="#f5a623"/>
+      <rect x="11" y="27" width="16" height="6" rx="1" fill="#22a84a" opacity="0.6"/>
+    </svg>
+    <span>豫农田机井管护系统</span>
+  </a>
+  <nav class="jg-nav">
+    <a class="jg-nav-item" href="jinguan_home.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      系统首页
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_well.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
+      机井管理
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      工单管理
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_staff.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      一长两员
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_news.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2v7"/></svg>
+      工作动态
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      系统管理
+    </a>
+  </nav>
+  <div class="jg-hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="jg-header-right">
+    <div class="jg-msg-btn" onclick="showToast('您有6条未读消息')">✉<span class="jg-msg-badge">6</span></div>
+    <div class="jg-user-btn" id="userBtn" onclick="toggleUserMenu()">
+      <div class="jg-user-avatar">👤</div>
+      <span id="displayName">用户</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </div>
+    <div class="jg-user-menu" id="userMenu">
+      <div class="jg-user-info">
+        <div class="jg-user-info-avatar">用</div>
+        <div>
+          <div class="jg-user-info-name" id="displayName2">用户</div>
+          <div class="jg-user-info-role">系统管理员</div>
+        </div>
+      </div>
+      <a class="jg-user-menu-item" href="jinguan_profile.html">⚙ 个人设置</a>
+      <a class="jg-user-menu-item" onclick="showToast('修改密码功能开发中','info')">🔑 修改密码</a>
+      <div class="jg-user-menu-sep"></div>
+      <a class="jg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+
+  <!-- 面包屑导航条 -->
+  <div class="jg-breadcrumb-bar">
+    <span class="jg-breadcrumb-pin">📍</span>
+    当前位置：
+    <a href="jinguan_home.html">首页</a>
+    <span style="color:rgba(255,255,255,0.5);">›</span>
+    <span style="color:#fff;font-weight:600;">系统管理</span>
+  </div>
+</header>
+
+
+
+  <!-- 右侧内容区 -->
+  <main class="jg-content">
+    <!-- 关键指标统计卡片 -->
+    <div class="jg-kpi-strip">
+      <div class="jg-stat-card blue">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">用户总数</span>
+          <div class="jg-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div class="jg-stat-value" data-number="24">3562</div>
+        <div class="jg-stat-footer">含6种角色类型</div>
+      </div>
+      <div class="jg-stat-card green">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">角色类型</span>
+          <div class="jg-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+        </div>
+        <div class="jg-stat-value" data-number="6">5</div>
+        <div class="jg-stat-footer">权限分级管理</div>
+      </div>
+      <div class="jg-stat-card gold">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">市/区数量</span>
+          <div class="jg-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          </div>
+        </div>
+        <div class="jg-stat-value" data-number="18">14/136</div>
+        <div class="jg-stat-footer">覆盖全省地市</div>
+      </div>
+      <div class="jg-stat-card purple">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">配置项</span>
+          <div class="jg-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
+        </div>
+        <div class="jg-stat-value" data-number="9">34228</div>
+        <div class="jg-stat-footer">工单/巡查/考核/预警</div>
+      </div>
+      <div class="jg-stat-card cyan">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">备份保留</span>
+          <div class="jg-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+        </div>
+        <div class="jg-stat-value" data-number="30">10</div>
+        <div class="jg-stat-footer">每日自动备份</div>
+      </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="jg-tabs" id="tabBar" role="tablist">
+      <div class="jg-tab active" data-tab="user" onclick="switchTab('user', this)" role="tab" tabindex="0" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        用户管理
+      </div>
+      <div class="jg-tab" data-tab="role" onclick="switchTab('role', this)" role="tab" tabindex="-1" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        角色权限
+      </div>
+      <div class="jg-tab" data-tab="region" onclick="switchTab('region', this)" role="tab" tabindex="-1" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        区域管理
+      </div>
+      <div class="jg-tab" data-tab="config" onclick="switchTab('config', this)" role="tab" tabindex="-1" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        系统配置
+      </div>
+      <div class="jg-tab" data-tab="dict" onclick="switchTab('dict', this)" role="tab" tabindex="-1" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        数据字典
+      </div>
+      <div class="jg-tab" data-tab="backup" onclick="switchTab('backup', this)" role="tab" tabindex="-1" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        数据备份
+      </div>
+      <div class="jg-tab-indicator" id="tabIndicator"></div>
+    </div>
+
+    <div class="jg-tab-content">
+      <!-- ===== Tab1: 用户管理 ===== -->
+      <div class="jg-tab-panel active" id="panel-user" role="tabpanel">
+        <div class="jg-filter-bar">
+          <input class="jg-search-input" placeholder="搜索用户名/姓名/手机号" aria-label="搜索用户" />
+          <select class="jg-select"><option value="">全部角色</option><option>省级管理员</option><option>市级管理员</option><option>县级管理员</option><option>井长</option><option>管护员</option><option>维修员</option></select>
+          <select class="jg-select"><option value="">全部状态</option><option>正常</option><option>停用</option><option>锁定</option></select>
+          <div style="flex:1;"></div>
+          <button class="jg-btn" onclick="showToast('导出用户')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            导出
+          </button>
+          <button class="jg-btn jg-btn-primary" onclick="showUserModal()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新增用户
+          </button>
+        </div>
+        <table class="jg-table">
+          <thead><tr><th>用户名</th><th>姓名</th><th>角色</th><th>数据范围</th><th>手机号</th><th>状态</th><th>最后登录</th><th>操作</th></tr></thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+        <div class="jg-pagination">
+          <span class="jg-page-info">共 24 条</span>
+          <button class="jg-page-btn" disabled>&lt;</button>
+          <button class="jg-page-btn active">1</button>
+          <button class="jg-page-btn" onclick="goToPage(2)">2</button>
+          <button class="jg-page-btn">&gt;</button>
+          <div class="jg-page-jump">
+            跳至 <input type="number" min="1" max="2" value="1" id="userPageInput" onkeydown="if(event.key==='Enter')jumpToPage('user')" aria-label="跳转页码" /> 页
+            <button class="jg-page-btn" onclick="jumpToPage('user')">确定</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab2: 角色权限 ===== -->
+      <div class="jg-tab-panel" id="panel-role" role="tabpanel">
+        <div class="jg-filter-bar">
+          <input class="jg-search-input" placeholder="搜索角色名称" aria-label="搜索角色" />
+          <div style="flex:1;"></div>
+          <button class="jg-btn jg-btn-primary" onclick="showToast('新增角色')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新增角色
+          </button>
+        </div>
+        <table class="jg-table">
+          <thead><tr><th>角色编码</th><th>角色名称</th><th>数据范围</th><th>用户数</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>admin</td>
+              <td>省级管理员</td>
+              <td>全省</td>
+              <td>5</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('省级管理员')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+            <tr>
+              <td>city_admin</td>
+              <td>市级管理员</td>
+              <td>本市</td>
+              <td>18</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('市级管理员')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+            <tr>
+              <td>county_admin</td>
+              <td>县级管理员</td>
+              <td>本县</td>
+              <td>42</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('县级管理员')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+            <tr>
+              <td>headman</td>
+              <td>井长</td>
+              <td>本村</td>
+              <td>256</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('井长')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+            <tr>
+              <td>guard</td>
+              <td>管护员</td>
+              <td>本片区</td>
+              <td>412</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('管护员')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+            <tr>
+              <td>repair</td>
+              <td>维修员</td>
+              <td>本区域</td>
+              <td>189</td>
+              <td><span class="jg-status-tag jg-status-normal">启用</span></td>
+              <td><a class="jg-op-link" onclick="showRolePermModal('维修员')">权限</a><a class="jg-op-link" onclick="showToast('编辑角色')">编辑</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== Tab3: 区域管理 ===== -->
+      <div class="jg-tab-panel" id="panel-region" role="tabpanel">
+        <div class="jg-filter-bar">
+          <input class="jg-search-input" placeholder="搜索区域名称" aria-label="搜索区域" />
+          <div style="flex:1;"></div>
+          <button class="jg-btn" onclick="showToast('导入区域')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            导入
+          </button>
+          <button class="jg-btn jg-btn-primary" onclick="showToast('新增区域')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新增区域
+          </button>
+        </div>
+        <div style="display:flex;gap:16px;" class="jg-region-wrap">
+          <div style="flex:1;">
+            <div class="jg-region-tree" id="regionTree"></div>
+          </div>
+          <div style="flex:1;">
+            <div class="jg-region-detail">
+              <div class="jg-region-detail-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                区域详情
+              </div>
+              <div class="jg-region-detail-body" id="regionDetail">
+                <div style="text-align:center;padding:20px;color:#999;font-size:13px;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5" style="margin-bottom:8px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                  <div>点击左侧区域查看详情</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab4: 系统配置 ===== -->
+      <div class="jg-tab-panel" id="panel-config" role="tabpanel">
+        <div class="jg-filter-bar">
+          <input class="jg-search-input" placeholder="搜索配置项" aria-label="搜索配置" />
+          <div style="flex:1;"></div>
+          <button class="jg-btn jg-btn-primary" onclick="saveConfig()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            保存配置
+          </button>
+        </div>
+
+        <div class="jg-config-group">
+          <div class="jg-config-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            工单配置
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">工单逾期1天提醒（小时）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="24" type="number" /></div>
+            <div class="jg-config-desc">超过此时间触发蓝色预警</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">工单逾期3天提醒（小时）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="72" type="number" /></div>
+            <div class="jg-config-desc">超过此时间触发黄色预警</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">工单逾期7天提醒（小时）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="168" type="number" /></div>
+            <div class="jg-config-desc">超过此时间触发橙色预警</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">工单逾期10天提醒（小时）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="240" type="number" /></div>
+            <div class="jg-config-desc">超过此时间触发红色预警</div>
+          </div>
+        </div>
+
+        <div class="jg-config-group">
+          <div class="jg-config-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            巡查配置
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">巡查周期（天）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="7" type="number" /></div>
+            <div class="jg-config-desc">管护员巡查间隔天数</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">巡查超时提醒（小时）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="24" type="number" /></div>
+            <div class="jg-config-desc">超时未巡查触发预警</div>
+          </div>
+        </div>
+
+        <div class="jg-config-group">
+          <div class="jg-config-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            考核配置
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">巡查绩效权重（%）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="30" type="number" /></div>
+            <div class="jg-config-desc">四维考核之一</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">工单处置权重（%）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="30" type="number" /></div>
+            <div class="jg-config-desc">四维考核之二</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">辖区健康权重（%）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="25" type="number" /></div>
+            <div class="jg-config-desc">四维考核之三</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">资质合规权重（%）</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="15" type="number" /></div>
+            <div class="jg-config-desc">四维考核之四</div>
+          </div>
+        </div>
+
+        <div class="jg-config-group">
+          <div class="jg-config-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            预警配置
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">资质到期90天提醒</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="90" type="number" /> 天</div>
+            <div class="jg-config-desc">到期前90天标黄提醒</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">资质到期30天提醒</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="30" type="number" /> 天</div>
+            <div class="jg-config-desc">到期前30天标橙通知</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">资质到期7天提醒</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="7" type="number" /> 天</div>
+            <div class="jg-config-desc">到期前7天标红紧急通知</div>
+          </div>
+        </div>
+
+        <div class="jg-config-group">
+          <div class="jg-config-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            系统配置
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">数据备份周期</div>
+            <div class="jg-config-value">
+              <select class="jg-select" style="width:120px;"><option>每日</option><option>每周</option><option>每月</option></select>
+            </div>
+            <div class="jg-config-desc">自动备份执行频率</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">日志保留天数</div>
+            <div class="jg-config-value"><input class="jg-config-input" value="180" type="number" /> 天</div>
+            <div class="jg-config-desc">操作日志保留期限</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">短信通知</div>
+            <div class="jg-config-value"><div class="jg-toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div></div>
+            <div class="jg-config-desc">预警短信推送开关</div>
+          </div>
+          <div class="jg-config-item">
+            <div class="jg-config-key">自动创建工单</div>
+            <div class="jg-config-value"><div class="jg-toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div></div>
+            <div class="jg-config-desc">巡查异常自动创建工单</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Tab5: 数据字典 ===== -->
+      <div class="jg-tab-panel" id="panel-dict" role="tabpanel">
+        <div class="jg-filter-bar">
+          <input class="jg-search-input" placeholder="搜索字典名称/编码" aria-label="搜索字典" />
+          <div style="flex:1;"></div>
+          <button class="jg-btn jg-btn-primary" onclick="showToast('新增字典')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新增字典
+          </button>
+        </div>
+        <div id="dictList"></div>
+      </div>
+
+      <!-- ===== Tab6: 数据备份 ===== -->
+      <div class="jg-tab-panel" id="panel-backup" role="tabpanel">
+        <div class="jg-filter-bar">
+          <div style="flex:1;"></div>
+          <button class="jg-btn" onclick="showToast('导入数据')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            导入数据
+          </button>
+          <button class="jg-btn" onclick="showToast('导出数据')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            导出数据
+          </button>
+          <button class="jg-btn jg-btn-primary" onclick="createBackup()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            手动备份
+          </button>
+        </div>
+
+        <div class="jg-backup-status-bar">
+          <div class="jg-backup-status-bar-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            自动备份状态
+          </div>
+          <div class="jg-backup-status-bar-detail">上次备份：2026-05-19 02:00:00 | 下次备份：2026-05-20 02:00:00 | 备份周期：每日 | 保留份数：30</div>
+        </div>
+
+        <div id="backupList"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 新增/编辑用户弹窗 -->
+<div class="jg-modal-overlay" id="userModal" tabindex="-1" aria-modal="true" role="dialog" aria-label="用户管理">
+  <div class="jg-modal">
+    <div class="jg-modal-header">
+      <span id="userModalTitle">新增用户</span>
+      <button class="jg-modal-close" onclick="closeModal('userModal')" aria-label="关闭">×</button>
+    </div>
+    <div class="jg-modal-body">
+      <input type="hidden" id="userId">
+      <div class="jg-form-row">
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 用户名</label><input class="jg-form-input" id="userForm-username" placeholder="登录账号" /></div>
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 真实姓名</label><input class="jg-form-input" id="userForm-name" placeholder="真实姓名" /></div>
+      </div>
+      <div class="jg-form-row">
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 角色分配</label>
+          <select class="jg-form-select" id="userForm-role"><option value="省级管理员">省级管理员</option><option value="市级管理员">市级管理员</option><option value="县级管理员">县级管理员</option><option value="井长">井长</option><option value="管护员">管护员</option><option value="维修员">维修员</option></select>
+        </div>
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 数据范围</label>
+          <select class="jg-form-select" id="userForm-scope"><option value="全省">全省</option><option value="郑州市">郑州市</option><option value="驻马店市">驻马店市</option><option value="许昌市">许昌市</option><option value="开封市">开封市</option><option value="洛阳市">洛阳市</option><option value="南阳市">南阳市</option></select>
+        </div>
+      </div>
+      <div class="jg-form-row">
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 手机号</label><input class="jg-form-input" id="userForm-phone" placeholder="手机号" /></div>
+        <div class="jg-form-group"><label class="jg-form-label">邮箱</label><input class="jg-form-input" id="userForm-email" placeholder="邮箱（选填）" /></div>
+      </div>
+      <div class="jg-form-row" id="passwordFields">
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 初始密码</label><input class="jg-form-input" type="password" id="userForm-password" placeholder="请设置初始密码" /></div>
+        <div class="jg-form-group"><label class="jg-form-label"><span class="jg-required">*</span> 确认密码</label><input class="jg-form-input" type="password" id="userForm-confirmPassword" placeholder="请确认密码" /></div>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn" onclick="closeModal('userModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="saveUser()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 角色权限弹窗 -->
+<div class="jg-modal-overlay" id="rolePermModal" tabindex="-1" aria-modal="true" role="dialog" aria-label="角色权限配置">
+  <div class="jg-modal">
+    <div class="jg-modal-header">
+      <span>角色权限配置</span>
+      <button class="jg-modal-close" onclick="closeModal('rolePermModal')" aria-label="关闭">×</button>
+    </div>
+    <div class="jg-modal-body">
+      <div style="margin-bottom:12px;font-weight:600;font-size:14px;" id="rolePermTitle">—</div>
+      <div class="jg-perm-tree" id="permTree"></div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn" onclick="closeModal('rolePermModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('rolePermModal');showToast('权限保存成功')">保存权限</button>
+    </div>
+  </div>
+</div>
+
+<!-- 移动端导航 -->
+<nav class="jg-nav-mobile" id="mobileNav">
+  <a href="jinguan_home.html">系统首页</a>
+  <a href="jinguan_well.html">机井管理</a>
+  <a href="jinguan.html">工单管理</a>
+  <a href="jinguan_staff.html">一长两员</a>
+  <a href="jinguan_news.html">工作动态</a>
+  <a class="active" href="jinguan_admin.html">系统管理</a>
+</nav>
+
+<script src="jinguan_common.js"></script>
+<script>
+// ===== 弹窗焦点管理 =====
+function openModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.add('show');
+  modal.focus();
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.jg-modal-overlay').forEach(modal => {
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) closeModal(this.id);
+  });
+  modal.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal(this.id);
+  });
+});
+
+// ===== 移动端导航 =====
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  const hamburger = document.getElementById('hamburger');
+  nav.classList.toggle('show');
+  hamburger.classList.toggle('open');
+}
+
+// ===== 侧边栏搜索 =====
+function filterSidebar(keyword) {
+  const items = document.querySelectorAll('.jg-sidebar-item[data-key]');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const key = item.dataset.key.toLowerCase();
+    if (text.includes(keyword.toLowerCase()) || key.includes(keyword.toLowerCase())) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+// ===== Tab指示条动画 =====
+function updateTabIndicator(tabEl) {
+  const indicator = document.getElementById('tabIndicator');
+  if (indicator && tabEl) {
+    indicator.style.left = tabEl.offsetLeft + 'px';
+    indicator.style.width = tabEl.offsetWidth + 'px';
+  }
+}
+
+function switchTab(tab, el) {
+  const tabNames = ['user','role','region','config','dict','backup'];
+  const idx = tabNames.indexOf(tab);
+
+  // 同步tab指示条
+  if (el && el.classList.contains('jg-tab')) {
+    updateTabIndicator(el);
+  } else {
+    const tabBar = document.getElementById('tabBar');
+    const tabs = tabBar.querySelectorAll('.jg-tab');
+    updateTabIndicator(tabs[idx]);
+  }
+
+  // 同步左侧栏
+  const sidebarItems = document.querySelectorAll('.jg-sidebar-item[data-key]');
+  sidebarItems.forEach(s => s.classList.remove('active'));
+  const tabToKey = {user:'用户',role:'角色',region:'区域',config:'配置',dict:'字典',backup:'备份'};
+  sidebarItems.forEach(s => {
+    if (s.dataset.key === tabToKey[tab]) s.classList.add('active');
+  });
+
+  // 切换tab面板
+  document.querySelectorAll('.jg-tab').forEach((t,i) => {
+    t.classList.toggle('active', i === idx);
+    t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    t.setAttribute('tabindex', i === idx ? '0' : '-1');
+  });
+  document.querySelectorAll('.jg-tab-panel').forEach(p => {
+    p.classList.remove('active');
+  });
+  const panel = document.getElementById('panel-' + tab);
+  setTimeout(() => panel.classList.add('active'), 10);
+
+  // 更新面包屑
+  const bc = document.querySelector('.jg-breadcrumb-current');
+  const base = bc.getAttribute('data-base');
+  const nameMap = {user:'用户管理',role:'角色权限',region:'区域管理',config:'系统配置',dict:'数据字典',backup:'数据备份'};
+  bc.textContent = base + ' > ' + (nameMap[tab] || '');
+}
+
+// ===== 分页跳转 =====
+function goToPage(page) {
+  document.querySelectorAll('.jg-page-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function jumpToPage(tab) {
+  const input = document.getElementById(tab + 'PageInput');
+  if (input) {
+    const page = parseInt(input.value);
+    if (page >= 1 && page <= 2) {
+      document.querySelectorAll('.jg-page-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.jg-page-btn')[page].classList.add('active');
+      showToast('跳至第 ' + page + ' 页');
+    }
+  }
+}
+
+// ===== 数据 =====
+const users = [
+  { username:'admin001', name:'王建国', role:'省级管理员', roleClass:'jg-role-admin', scope:'全省', phone:'138****1234', status:'normal', lastLogin:'2026-05-19 09:15' },
+  { username:'admin002', name:'李慧敏', role:'省级管理员', roleClass:'jg-role-admin', scope:'全省', phone:'139****5678', status:'normal', lastLogin:'2026-05-19 08:30' },
+  { username:'zz_admin', name:'赵志强', role:'市级管理员', roleClass:'jg-role-city', scope:'郑州市', phone:'136****2345', status:'normal', lastLogin:'2026-05-19 07:45' },
+  { username:'zmd_admin', name:'孙丽华', role:'市级管理员', roleClass:'jg-role-city', scope:'驻马店市', phone:'137****3456', status:'normal', lastLogin:'2026-05-18 17:30' },
+  { username:'xc_admin', name:'刘大伟', role:'市级管理员', roleClass:'jg-role-city', scope:'许昌市', phone:'135****4567', status:'normal', lastLogin:'2026-05-19 09:00' },
+  { username:'kf_admin', name:'陈明辉', role:'市级管理员', roleClass:'jg-role-city', scope:'开封市', phone:'133****5678', status:'disabled', lastLogin:'2026-05-10 14:20' },
+  { username:'ly_admin', name:'张晓燕', role:'市级管理员', roleClass:'jg-role-city', scope:'洛阳市', phone:'131****6789', status:'normal', lastLogin:'2026-05-19 08:15' },
+  { username:'head001', name:'张伟', role:'井长', roleClass:'jg-role-head', scope:'驻马店市平舆县东和店镇', phone:'158****7890', status:'normal', lastLogin:'2026-05-19 10:28' },
+  { username:'head002', name:'李建国', role:'井长', roleClass:'jg-role-head', scope:'郑州市中牟县雁鸣湖镇', phone:'159****8901', status:'normal', lastLogin:'2026-05-19 10:15' },
+  { username:'guard001', name:'赵丽', role:'管护员', roleClass:'jg-role-guard', scope:'郑州市中牟县', phone:'186****9012', status:'normal', lastLogin:'2026-05-19 09:45' },
+  { username:'guard002', name:'马秀英', role:'管护员', roleClass:'jg-role-guard', scope:'开封市兰考县', phone:'187****0123', status:'normal', lastLogin:'2026-05-19 08:30' },
+  { username:'repair001', name:'王明', role:'维修员', roleClass:'jg-role-repair', scope:'郑州市', phone:'152****1234', status:'normal', lastLogin:'2026-05-19 10:15' },
+  { username:'repair002', name:'陈建军', role:'维修员', roleClass:'jg-role-repair', scope:'驻马店市', phone:'153****2345', status:'normal', lastLogin:'2026-05-18 17:45' },
+  { username:'test001', name:'测试账号', role:'县级管理员', roleClass:'jg-role-county', scope:'郑州市新郑市', phone:'188****3456', status:'locked', lastLogin:'2026-05-18 15:10' }
+];
+
+const dictData = [
+  { code:'well_status', name:'机井状态', items:[{value:'normal',label:'正常',sort:1,on:true},{value:'repair',label:'待维修',sort:2,on:true},{value:'repairing',label:'维修中',sort:3,on:true},{value:'stopped',label:'停用',sort:4,on:true},{value:'scrapped',label:'报废',sort:5,on:true}] },
+  { code:'order_type', name:'工单来源', items:[{value:'citizen',label:'群众上报',sort:1,on:true},{value:'inspect',label:'机井巡查',sort:2,on:true},{value:'supervise',label:'监督检查',sort:3,on:true}] },
+  { code:'order_status', name:'工单状态', items:[{value:'pending',label:'待处置',sort:1,on:true},{value:'processing',label:'处置中',sort:2,on:true},{value:'done',label:'已处置',sort:3,on:true},{value:'noexist',label:'问题不存在',sort:4,on:true}] },
+  { code:'staff_role', name:'人员角色', items:[{value:'headman',label:'井长',sort:1,on:true},{value:'guard',label:'管护员',sort:2,on:true},{value:'repair',label:'维修员',sort:3,on:true}] },
+  { code:'staff_status', name:'人员状态', items:[{value:'active',label:'在职',sort:1,on:true},{value:'resigned',label:'离职',sort:2,on:true},{value:'suspended',label:'停职',sort:3,on:true}] },
+  { code:'assess_grade', name:'考核等级', items:[{value:'excellent',label:'优秀',sort:1,on:true},{value:'good',label:'良好',sort:2,on:true},{value:'pass',label:'合格',sort:3,on:true},{value:'improve',label:'待改进',sort:4,on:true}] },
+  { code:'cert_type', name:'证书类型', items:[{value:'electrician',label:'电工证',sort:1,on:true},{value:'pump',label:'泵工证',sort:2,on:true},{value:'safety',label:'安全操作证',sort:3,on:true},{value:'training',label:'培训结业证',sort:4,on:true}] },
+  { code:'alert_level', name:'预警级别', items:[{value:'blue',label:'蓝色',sort:1,on:true},{value:'yellow',label:'黄色',sort:2,on:true},{value:'orange',label:'橙色',sort:3,on:true},{value:'red',label:'红色',sort:4,on:true}] },
+  { code:'notice_type', name:'通知类型', items:[{value:'urgent',label:'紧急通知',sort:1,on:true},{value:'policy',label:'政策文件',sort:2,on:true},{value:'work',label:'工作部署',sort:3,on:true},{value:'meeting',label:'会议通知',sort:4,on:true},{value:'normal',label:'普通公告',sort:5,on:true}] }
+];
+
+const permModules = [
+  { name:'机井管理', perms:['查看','新增','编辑','删除','导出'] },
+  { name:'工单管理', perms:['查看','新增','编辑','删除','审批','催办','导出'] },
+  { name:'一长两员', perms:['查看','新增','编辑','删除','考核','导出'] },
+  { name:'工作动态', perms:['查看','发布通知','处理预警','导出'] },
+  { name:'系统管理', perms:['查看','用户管理','角色管理','配置管理','数据备份','导出'] }
+];
+
+const regionData = {
+  name:'河南省', code:'410000', count:21873, children:[
+    { name:'郑州市', code:'410100', count:2683, children:[
+      { name:'中牟县', code:'410122', count:456, children:[] },
+      { name:'新郑市', code:'410184', count:312, children:[] },
+      { name:'荥阳市', code:'410182', count:278, children:[] }
+    ]},
+    { name:'驻马店市', code:'411700', count:2036, children:[
+      { name:'平舆县', code:'411723', count:286, children:[] },
+      { name:'确山县', code:'411725', count:234, children:[] },
+      { name:'遂平县', code:'411721', count:198, children:[] }
+    ]},
+    { name:'许昌市', code:'411000', count:1536, children:[
+      { name:'鄢陵县', code:'411024', count:267, children:[] },
+      { name:'襄城县', code:'411025', count:223, children:[] }
+    ]},
+    { name:'开封市', code:'410200', count:2311, children:[
+      { name:'兰考县', code:'410225', count:345, children:[] },
+      { name:'尉氏县', code:'410223', count:289, children:[] }
+    ]},
+    { name:'洛阳市', code:'410300', count:1987, children:[] },
+    { name:'南阳市', code:'411300', count:2458, children:[] },
+    { name:'平顶山市', code:'410400', count:1762, children:[] },
+    { name:'安阳市', code:'410500', count:1650, children:[] },
+    { name:'鹤壁市', code:'410600', count:824, children:[] },
+    { name:'新乡市', code:'410700', count:1842, children:[] }
+  ]
+};
+
+const backups = [
+  { name:'自动备份 2026-05-19', time:'2026-05-19 02:00:00', size:'128 MB', type:'全量', recent: true },
+  { name:'自动备份 2026-05-18', time:'2026-05-18 02:00:00', size:'127 MB', type:'全量', recent: true },
+  { name:'手动备份 2026-05-17', time:'2026-05-17 15:30:00', size:'126 MB', type:'全量', recent: false },
+  { name:'自动备份 2026-05-17', time:'2026-05-17 02:00:00', size:'126 MB', type:'全量', recent: false },
+  { name:'自动备份 2026-05-16', time:'2026-05-16 02:00:00', size:'125 MB', type:'全量', recent: false },
+  { name:'升级前备份 2026-05-15', time:'2026-05-15 23:50:00', size:'125 MB', type:'全量', recent: false }
+];
+
+// ===== 渲染函数 =====
+function renderUsers() {
+  const el = document.getElementById('userTableBody');
+  el.innerHTML = users.map((u, index) => `
+    <tr>
+      <td>${u.username}</td>
+      <td>${u.name}</td>
+      <td><span class="jg-role-tag ${u.roleClass}">${u.role}</span></td>
+      <td>${u.scope}</td>
+      <td>${u.phone}</td>
+      <td><span class="jg-status-tag jg-status-${u.status}">${u.status==='normal'?'正常':u.status==='disabled'?'停用':'锁定'}</span></td>
+      <td>${u.lastLogin}</td>
+      <td>
+        <a class="jg-op-link" onclick="editUser(${index})">编辑</a>
+        <a class="jg-op-link" onclick="resetPassword('${u.username}')">重置密码</a>
+        ${u.status==='normal'?`<a class="jg-op-link jg-op-danger" onclick="toggleUserStatus(${index}, 'disabled')">停用</a>`:`<a class="jg-op-link" onclick="toggleUserStatus(${index}, 'normal')">启用</a>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderDicts() {
+  const el = document.getElementById('dictList');
+  el.innerHTML = dictData.map((d,i) => `
+    <div>
+      <div class="jg-dict-header" onclick="toggleDict(${i})">
+        <span class="jg-dict-arrow" id="dict-arrow-${i}">▶</span>
+        <span class="jg-dict-name">${d.name}</span>
+        <span class="jg-dict-code">${d.code}</span>
+        <span class="jg-dict-badge">${d.items.length} 项</span>
+        <button class="jg-btn jg-btn-sm" onclick="event.stopPropagation();showToast('新增字典项')" style="margin-left:auto;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新增项
+        </button>
+      </div>
+      <div class="jg-dict-items" id="dict-items-${i}">
+        <table class="jg-table" style="margin:0;">
+          <thead><tr><th>值</th><th>标签</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+            ${d.items.map(item => `
+              <tr>
+                <td>${item.value}</td>
+                <td>${item.label}</td>
+                <td>${item.sort}</td>
+                <td><span class="jg-status-tag ${item.on?'jg-status-normal':'jg-status-disabled'}">${item.on?'启用':'停用'}</span></td>
+                <td><a class="jg-op-link" onclick="showToast('编辑字典项')">编辑</a>${item.on?`<a class="jg-op-link jg-op-danger" onclick="showToast('停用字典项')">停用</a>`:`<a class="jg-op-link" onclick="showToast('启用字典项')">启用</a>`}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRegionTree(node, depth) {
+  depth = depth || 0;
+  const hasChildren = node.children && node.children.length > 0;
+  const html = `
+    <div class="jg-region-node">
+      <div class="jg-region-row" onclick="toggleRegion(this);selectRegion('${node.name}',${node.count},'${node.code}')">
+        ${hasChildren ? `<span class="jg-region-arrow ${depth<1?'open':''}">▶</span>` : '<span style="width:12px;"></span>'}
+        <span class="jg-region-name">${node.name}</span>
+        <span class="jg-region-count">(${node.count})</span>
+      </div>
+      ${hasChildren ? `<div class="jg-region-children ${depth<1?'open':''}">${node.children.map(c => renderRegionTree(c, depth+1)).join('')}</div>` : ''}
+    </div>
+  `;
+  return html;
+}
+
+function renderBackups() {
+  const el = document.getElementById('backupList');
+  el.innerHTML = backups.map(b => `
+    <div class="jg-backup-item">
+      <div class="jg-backup-status ${b.recent ? 'recent' : ''}" title="${b.recent ? '最近成功' : '历史备份'}"></div>
+      <div class="jg-backup-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      </div>
+      <div class="jg-backup-info">
+        <div class="jg-backup-name">${b.name}</div>
+        <div class="jg-backup-meta">${b.time} · ${b.type}备份</div>
+      </div>
+      <div class="jg-backup-size">${b.size}</div>
+      <button class="jg-btn jg-btn-sm" onclick="showToast('下载备份文件')">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载
+      </button>
+      <button class="jg-btn jg-btn-sm jg-btn-warning" onclick="showToast('恢复操作需二次确认')">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        恢复
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderPermTree(roleName) {
+  const isProvince = roleName === '省级管理员';
+  const isCity = roleName === '市级管理员';
+  const el = document.getElementById('permTree');
+  el.innerHTML = permModules.map(m => `
+    <div class="jg-perm-group">
+      <div class="jg-perm-group-header">
+        <input type="checkbox" checked onchange="toggleGroupPerms(this)" />
+        ${m.name}
+      </div>
+      <div class="jg-perm-items">
+        ${m.perms.map(p => {
+          let checked = isProvince ? true : (isCity ? (p!=='删除' && m.name!=='系统管理' || p==='查看') : p==='查看');
+          return `<div class="jg-perm-item"><input type="checkbox" ${checked?'checked':''} />${p}</div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== 交互函数 =====
+function toggleDict(i) {
+  const arrow = document.getElementById('dict-arrow-' + i);
+  const items = document.getElementById('dict-items-' + i);
+  arrow.classList.toggle('open');
+  items.classList.toggle('open');
+}
+
+function toggleRegion(el) {
+  const arrow = el.querySelector('.jg-region-arrow');
+  const children = el.nextElementSibling;
+  if (arrow && children) {
+    arrow.classList.toggle('open');
+    children.classList.toggle('open');
+  }
+}
+
+function selectRegion(name, count, code) {
+  document.querySelectorAll('.jg-region-row').forEach(r => r.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('regionDetail').innerHTML = `
+    <div class="jg-detail-row"><div class="jg-detail-label">区域名称：</div><div class="jg-detail-val">${name}</div></div>
+    <div class="jg-detail-row"><div class="jg-detail-label">区域编码：</div><div class="jg-detail-val">${code}</div></div>
+    <div class="jg-detail-row"><div class="jg-detail-label">机井数量：</div><div class="jg-detail-val">${count} 口</div></div>
+    <div style="margin-top:12px;display:flex;gap:8px;">
+      <button class="jg-btn jg-btn-sm" onclick="showToast('编辑区域')">编辑</button>
+      <button class="jg-btn jg-btn-sm jg-btn-danger" onclick="showToast('确认删除区域？')">删除</button>
+    </div>
+  `;
+}
+
+function toggleGroupPerms(checkbox) {
+  const items = checkbox.closest('.jg-perm-group').querySelectorAll('.jg-perm-items input');
+  items.forEach(i => i.checked = checkbox.checked);
+}
+
+function showUserModal() {
+  // 重置表单为新增模式
+  document.getElementById('userModalTitle').textContent = '新增用户';
+  document.getElementById('userId').value = '';
+  document.getElementById('passwordFields').style.display = 'flex';
+  
+  // 清空表单
+  document.getElementById('userForm-username').value = '';
+  document.getElementById('userForm-name').value = '';
+  document.getElementById('userForm-role').value = '省级管理员';
+  document.getElementById('userForm-scope').value = '全省';
+  document.getElementById('userForm-phone').value = '';
+  document.getElementById('userForm-email').value = '';
+  document.getElementById('userForm-password').value = '';
+  document.getElementById('userForm-confirmPassword').value = '';
+  
+  // 用户名可编辑
+  document.getElementById('userForm-username').disabled = false;
+  
+  openModal('userModal');
+}
+
+function editUser(index) {
+  const user = users[index];
+  
+  // 设置为编辑模式
+  document.getElementById('userModalTitle').textContent = '编辑用户';
+  document.getElementById('userId').value = index;
+  document.getElementById('passwordFields').style.display = 'none';
+  
+  // 填充表单数据
+  document.getElementById('userForm-username').value = user.username;
+  document.getElementById('userForm-name').value = user.name;
+  document.getElementById('userForm-role').value = user.role;
+  document.getElementById('userForm-scope').value = user.scope;
+  document.getElementById('userForm-phone').value = user.phone.replace(/\*/g, '0');
+  document.getElementById('userForm-email').value = '';
+  
+  // 用户名不可编辑
+  document.getElementById('userForm-username').disabled = true;
+  
+  openModal('userModal');
+}
+
+function saveUser() {
+  const userId = document.getElementById('userId').value;
+  const username = document.getElementById('userForm-username').value.trim();
+  const name = document.getElementById('userForm-name').value.trim();
+  const role = document.getElementById('userForm-role').value;
+  const scope = document.getElementById('userForm-scope').value;
+  const phone = document.getElementById('userForm-phone').value.trim();
+  
+  // 验证必填项
+  if (!username) {
+    showToast('请输入用户名', 'warning');
+    return;
+  }
+  
+  if (!name) {
+    showToast('请输入真实姓名', 'warning');
+    return;
+  }
+  
+  if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+    showToast('请输入正确的手机号', 'warning');
+    return;
+  }
+  
+  // 如果是新增用户，验证密码
+  if (!userId) {
+    const password = document.getElementById('userForm-password').value;
+    const confirmPassword = document.getElementById('userForm-confirmPassword').value;
+    
+    if (!password) {
+      showToast('请设置初始密码', 'warning');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showToast('两次输入的密码不一致', 'warning');
+      return;
+    }
+    
+    // 创建新用户
+    const roleClassMap = {
+      '省级管理员': 'jg-role-admin',
+      '市级管理员': 'jg-role-city',
+      '县级管理员': 'jg-role-county',
+      '井长': 'jg-role-head',
+      '管护员': 'jg-role-guard',
+      '维修员': 'jg-role-repair'
+    };
+    
+    users.push({
+      username: username,
+      name: name,
+      role: role,
+      roleClass: roleClassMap[role],
+      scope: scope,
+      phone: phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3'),
+      status: 'normal',
+      lastLogin: '从未登录'
+    });
+    
+    showToast('用户创建成功', 'success');
+  } else {
+    // 更新现有用户
+    const index = parseInt(userId);
+    users[index].name = name;
+    users[index].role = role;
+    users[index].roleClass = {
+      '省级管理员': 'jg-role-admin',
+      '市级管理员': 'jg-role-city',
+      '县级管理员': 'jg-role-county',
+      '井长': 'jg-role-head',
+      '管护员': 'jg-role-guard',
+      '维修员': 'jg-role-repair'
+    }[role];
+    users[index].scope = scope;
+    users[index].phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3');
+    
+    showToast('用户信息更新成功', 'success');
+  }
+  
+  closeModal('userModal');
+  renderUsers();
+}
+
+function resetPassword(username) {
+  const confirmModal = confirm(`确定要重置用户 "${username}" 的密码吗？\n\n新密码将发送到该用户的手机。`);
+  if (confirmModal) {
+    showToast('密码重置成功，新密码已发送至用户手机', 'success');
+  }
+}
+
+function toggleUserStatus(index, newStatus) {
+  const user = users[index];
+  const statusText = newStatus === 'normal' ? '启用' : '停用';
+  
+  const confirmModal = confirm(`确定要${statusText}用户 "${user.username}" 吗？`);
+  if (confirmModal) {
+    users[index].status = newStatus;
+    renderUsers();
+    showToast(`用户已${statusText}`, 'success');
+  }
+}
+
+function saveConfig() {
+  showToast('配置保存成功');
+}
+
+function createBackup() {
+  showToast('正在创建备份...');
+  setTimeout(() => showToast('备份创建成功'), 1500);
+}
+
+// ===== 初始化 =====
+renderUsers();
+renderDicts();
+document.getElementById('regionTree').innerHTML = renderRegionTree(regionData);
+renderBackups();
+setupNumberAnimation();
+
+// 初始化Tab指示条位置
+window.addEventListener('load', () => {
+  const activeTab = document.querySelector('.jg-tab.active');
+  updateTabIndicator(activeTab);
+});
+window.addEventListener('resize', () => {
+  const activeTab = document.querySelector('.jg-tab.active');
+  updateTabIndicator(activeTab);
+});
+</script>
+</body>
+</html>

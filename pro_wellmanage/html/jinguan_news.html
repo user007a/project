@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豫农田机井管护系统 - 工作动态</title>
+<link rel="stylesheet" href="jinguan_common.css">
+<style>
+  /* ===== 页面专属样式 ===== */
+
+  /* ===== 主体布局 ===== */
+  .main-wrap { margin-top: var(--header-height); display: flex; min-height: calc(100vh - var(--header-height)); }
+
+  /* ===== 右侧内容 ===== */
+  .content { flex: 1; padding: var(--space-md) var(--space-lg) var(--space-xl); overflow-x: auto; }
+
+  /* ===== 侧边栏分组标题 ===== */
+  .jg-sidebar-title { padding: var(--space-sm) var(--space-md) 6px; font-size: var(--font-xs); color: var(--text-placeholder); font-weight: 600; letter-spacing: 1px; }
+
+  /* ===== 侧边栏项目(复用 jg-tree-node 样式) ===== */
+  .side-item { padding: 6px var(--space-md); cursor: pointer; display: flex; align-items: center; gap: var(--space-sm); transition: background var(--transition-fast); color: var(--text-regular); font-size: var(--font-base); }
+  .side-item:hover { background: var(--color-primary-light); color: var(--color-primary); }
+  .side-item.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: 600; }
+  .side-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .side-count { margin-left: auto; font-size: var(--font-xs); color: var(--text-placeholder); background: var(--bg-subtle); padding: 1px 6px; border-radius: 8px; }
+  .side-divider { height: 1px; background: var(--border-light); margin: var(--space-sm) var(--space-md); }
+
+  /* ===== 统计卡片行 ===== */
+  .stats-row { display: flex; gap: var(--space-md); margin-bottom: var(--space-md); flex-wrap: wrap; }
+  .stats-row .jg-stat-card { min-width: 140px; flex: 1; }
+
+  /* ===== Tab 面板 ===== */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: tabFadeIn 0.3s ease; }
+
+  /* ===== 筛选栏 ===== */
+  .filter-bar { display: flex; gap: var(--space-sm); margin-bottom: var(--space-md); flex-wrap: wrap; align-items: center; }
+  .search-input { height: 32px; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 0 10px; font-size: var(--font-sm); outline: none; width: 220px; transition: border-color var(--transition-normal); }
+  .search-input:focus { border-color: var(--color-primary); }
+  .filter-select { height: 32px; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 0 24px 0 var(--space-sm); font-size: var(--font-sm); outline: none; cursor: pointer; appearance: none; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 8px center; width: 130px; }
+
+  /* ===== 通知公告列表 ===== */
+  .notice-list { display: flex; flex-direction: column; gap: 0; }
+  .notice-item { padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light); display: flex; gap: var(--space-md); cursor: pointer; transition: background var(--transition-fast); }
+  .notice-item:hover { background: var(--bg-subtle); }
+  .notice-item:last-child { border-bottom: none; }
+  .notice-type-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--font-lg); flex-shrink: 0; }
+  .notice-type-icon.urgent { background: #fff1f0; }
+  .notice-type-icon.policy { background: #e6f4ff; }
+  .notice-type-icon.work { background: #f6ffed; }
+  .notice-type-icon.meeting { background: #fff7e6; }
+  .notice-type-icon.normal { background: var(--bg-subtle); }
+  .notice-body { flex: 1; min-width: 0; }
+  .notice-title-row { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 4px; }
+  .notice-title { font-size: var(--font-md); color: var(--text-regular); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .notice-title.unread { font-weight: 700; }
+  .notice-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .tag-urgent { background: #ff4d4f; color: #fff; }
+  .tag-policy { background: #e6f4ff; color: #0958d9; }
+  .tag-work { background: #f6ffed; color: #389e0d; }
+  .tag-meeting { background: #fff7e6; color: #d46b08; }
+  .tag-normal { background: var(--bg-subtle); color: var(--text-secondary); }
+  .notice-meta { display: flex; gap: var(--space-lg); font-size: var(--font-sm); color: var(--text-secondary); }
+  .notice-summary { font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .read-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); flex-shrink: 0; margin-top: 6px; }
+  .read-dot.unread { background: var(--color-danger); }
+
+  /* ===== Tab 徽章 ===== */
+  .jg-tab-badge { background: var(--color-danger); color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 8px; margin-left: 4px; font-weight: 600; }
+
+  /* ===== 动态时间线 ===== */
+  .timeline { position: relative; padding-left: var(--space-xl); }
+  .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border-base); }
+  .timeline-item { position: relative; padding: var(--space-md) 0 var(--space-md) var(--space-lg); }
+  .timeline-dot { position: absolute; left: -20px; top: 16px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--color-primary); background: #fff; z-index: 1; }
+  .timeline-dot.inspect { border-color: var(--color-info); }
+  .timeline-dot.order { border-color: var(--color-primary); }
+  .timeline-dot.alert { border-color: var(--color-danger); }
+  .timeline-dot.system { border-color: var(--text-placeholder); }
+  .timeline-card { background: var(--bg-subtle); border-radius: var(--radius-md); padding: 10px var(--space-md); border: 1px solid var(--border-light); }
+  .timeline-card:hover { border-color: var(--border-input); background: var(--bg-page); }
+  .timeline-head { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 6px; }
+  .timeline-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--color-primary-light); display: flex; align-items: center; justify-content: center; font-size: var(--font-sm); color: var(--color-primary); font-weight: 600; }
+  .timeline-name { font-weight: 600; font-size: var(--font-base); }
+  .timeline-action { color: var(--text-secondary); font-size: var(--font-sm); }
+  .timeline-time { margin-left: auto; font-size: var(--font-xs); color: var(--text-secondary); }
+  .timeline-detail { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.6; }
+  .timeline-link { color: var(--color-primary); cursor: pointer; text-decoration: none; font-size: var(--font-sm); }
+  .timeline-link:hover { text-decoration: underline; }
+  .timeline-tags { display: flex; gap: 4px; margin-top: 6px; }
+  .timeline-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; background: var(--border-light); color: var(--text-secondary); }
+  .timeline-tag.inspect { background: #e6f4ff; color: #0958d9; }
+  .timeline-tag.order { background: #f6ffed; color: #389e0d; }
+  .timeline-tag.alert { background: #fff1f0; color: #cf1322; }
+
+  /* ===== 预警中心 ===== */
+  .alert-stats { display: flex; gap: 10px; margin-bottom: var(--space-md); }
+  .alert-stat { flex: 1; padding: 10px var(--space-md); border-radius: var(--radius-md); text-align: center; }
+  .alert-stat .level-label { font-size: var(--font-sm); margin-bottom: 2px; }
+  .alert-stat .level-num { font-size: var(--font-2xl); font-weight: 700; }
+  .alert-stat.blue { background: #e6f4ff; color: #0958d9; }
+  .alert-stat.yellow { background: #fffbe6; color: #d46b08; }
+  .alert-stat.orange { background: #fff7e6; color: #fa8c16; }
+  .alert-stat.red { background: #fff1f0; color: #cf1322; }
+  .alert-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .alert-item { display: flex; align-items: center; gap: 10px; padding: 10px var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-light); background: #fff; }
+  .alert-item:hover { border-color: var(--border-input); }
+  .alert-level-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .alert-level-dot.blue { background: var(--color-info); }
+  .alert-level-dot.yellow { background: #fadb14; }
+  .alert-level-dot.orange { background: var(--color-warning); }
+  .alert-level-dot.red { background: var(--color-danger); }
+  .alert-type-icon { font-size: var(--font-lg); flex-shrink: 0; }
+  .alert-body { flex: 1; min-width: 0; }
+  .alert-title { font-size: var(--font-base); font-weight: 500; margin-bottom: 2px; }
+  .alert-desc { font-size: var(--font-sm); color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .alert-time { font-size: var(--font-xs); color: var(--text-placeholder); white-space: nowrap; }
+  .alert-ops { display: flex; gap: 6px; }
+
+  /* ===== 工作简报 ===== */
+  .brief-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: var(--space-md); }
+  .brief-card { background: #fff; border-radius: var(--radius-md); padding: var(--space-md); border: 1px solid var(--border-light); }
+  .brief-card-title { font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 4px; }
+  .brief-card-value { font-size: var(--font-2xl); font-weight: 700; color: var(--text-regular); }
+  .brief-card-sub { font-size: var(--font-xs); color: var(--text-secondary); margin-top: 2px; }
+  .brief-card-sub .up { color: #f5222d; }
+  .brief-card-sub .down { color: #52c41a; }
+  .brief-section { margin-bottom: var(--space-lg); }
+  .brief-section-title { font-size: var(--font-md); font-weight: 600; margin-bottom: var(--space-sm); padding-left: var(--space-sm); border-left: 3px solid var(--color-primary); }
+  .brief-table { width: 100%; border-collapse: collapse; }
+  .brief-table th { background: var(--bg-subtle); padding: var(--space-sm) var(--space-md); text-align: left; font-weight: 600; font-size: var(--font-sm); color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
+  .brief-table td { padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--border-light); font-size: var(--font-sm); }
+  .brief-table tr:hover td { background: var(--bg-hover); }
+  .brief-bar-wrap { height: 16px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+  .brief-bar { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+  /* ===== 操作日志表格 ===== */
+  .log-table { width: 100%; border-collapse: collapse; }
+  .log-table th { background: var(--bg-subtle); padding: 10px var(--space-md); text-align: left; font-weight: 600; font-size: var(--font-sm); color: var(--text-secondary); border-bottom: 2px solid var(--border-light); white-space: nowrap; }
+  .log-table td { padding: 9px var(--space-md); border-bottom: 1px solid var(--border-light); font-size: var(--font-sm); }
+  .log-table tr:hover td { background: var(--bg-hover); }
+  .log-type-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+  .log-type-login { background: #e6f4ff; color: #0958d9; }
+  .log-type-add { background: #f6ffed; color: #389e0d; }
+  .log-type-edit { background: #fff7e6; color: #d46b08; }
+  .log-type-delete { background: #fff1f0; color: #cf1322; }
+  .log-type-approve { background: #f9f0ff; color: #722ed1; }
+  .log-type-export { background: #e6fffb; color: #13c2c2; }
+  .log-result { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+  .log-result.success { background: var(--color-success); }
+  .log-result.fail { background: var(--color-danger); }
+
+  /* ===== 分页 ===== */
+  .pagination { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-sm); padding: var(--space-md) 0; flex-wrap: wrap; }
+  .page-info { color: var(--text-secondary); font-size: var(--font-sm); }
+
+  /* ===== 弹窗内部表单 ===== */
+  .detail-row { display: flex; margin-bottom: 10px; gap: var(--space-sm); }
+  .detail-label { min-width: 80px; color: var(--text-secondary); font-size: var(--font-base); flex-shrink: 0; }
+  .detail-val { color: var(--text-regular); font-size: var(--font-base); flex: 1; }
+  .form-group { margin-bottom: var(--space-md); }
+  .form-label { display: block; font-size: var(--font-sm); color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
+  .form-label .required { color: var(--color-danger); }
+  .form-input, .form-select, .form-textarea { width: 100%; height: 32px; border: 1px solid var(--border-input); border-radius: var(--radius-sm); padding: 0 10px; font-size: var(--font-sm); outline: none; transition: border-color var(--transition-normal); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--color-primary); }
+  .form-textarea { height: 80px; padding: var(--space-sm) 10px; resize: vertical; }
+
+  /* ===== 弹窗最大宽度覆盖 ===== */
+  .jg-modal.wide { max-width: 620px; }
+  .jg-modal.medium { max-width: 520px; }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="jg-header">
+  <a class="jg-logo" href="jinguan_home.html">
+    <div class="jg-logo-icon"></div>
+    <span>豫农田机井管护系统</span>
+  </a>
+  <nav class="jg-nav">
+    <a class="jg-nav-item" href="jinguan_home.html"><span class="jg-nav-icon">🏠</span> 系统首页</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_well.html"><span class="jg-nav-icon">🪣</span> 机井管理</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan.html"><span class="jg-nav-icon">📋</span> 工单管理</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_staff.html"><span class="jg-nav-icon">👷</span> 一长两员</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item active"><span class="jg-nav-icon">📄</span> 工作动态</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_admin.html"><span class="jg-nav-icon">⚙</span> 系统管理</a>
+  </nav>
+  <button class="jg-hamburger" onclick="toggleMobileMenu()">☰</button>
+  <div class="jg-header-right">
+    <button class="jg-msg-btn" onclick="showToast('您有6条未读消息', 'info')">✉<span class="jg-msg-badge">6</span></button>
+    <button class="jg-user-btn" id="userBtn" onclick="toggleUserMenu()">
+      <div class="jg-user-avatar">👤</div>
+      <span id="displayName" class="jg-user-name">省级监督员</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </button>
+    <div id="userMenu" class="jg-user-menu">
+      <div class="jg-user-info">
+        <div class="jg-user-info-avatar">省</div>
+        <div>
+          <div class="jg-user-info-name jg-user-name">省级监督员</div>
+          <div class="jg-user-info-role">省级管理员</div>
+        </div>
+      </div>
+      <a class="jg-user-menu-item" href="javascript:void(0)" onclick="showToast('个人中心')">👤 个人中心</a>
+      <a class="jg-user-menu-item" href="javascript:void(0)" onclick="showToast('修改密码')">🔑 修改密码</a>
+      <a class="jg-user-menu-item" href="javascript:void(0)" onclick="showToast('系统设置')">⚙ 系统设置</a>
+      <div class="jg-user-menu-sep"></div>
+      <a class="jg-user-menu-item" href="javascript:void(0)" onclick="showToast('操作日志')">📋 操作日志</a>
+      <a class="jg-user-menu-item" href="javascript:void(0)" onclick="showToast('帮助文档')">📖 帮助文档</a>
+      <div class="jg-user-menu-sep"></div>
+      <a class="jg-user-menu-item danger" href="javascript:void(0)" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+</header>
+
+<!-- 主体 -->
+<div class="main-wrap">
+  <!-- 左侧栏 -->
+  <aside class="jg-sidebar">
+    <div class="jg-sidebar-search">
+      <input placeholder="搜索动态类型" />
+    </div>
+    <div class="jg-sidebar-tree">
+      <div class="jg-sidebar-title">动态类型</div>
+      <div class="side-item active" onclick="filterSide(this, 'all')">
+        <span class="side-dot" style="background:#22a84a;"></span> 全部动态
+        <span class="side-count" id="countAll">126</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'notice')">
+        <span class="side-dot" style="background:#1890ff;"></span> 通知公告
+        <span class="side-count" id="countNotice">8</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'inspect')">
+        <span class="side-dot" style="background:#722ed1;"></span> 巡查动态
+        <span class="side-count" id="countInspect">42</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'order')">
+        <span class="side-dot" style="background:#22a84a;"></span> 工单动态
+        <span class="side-count" id="countOrder">51</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'alert')">
+        <span class="side-dot" style="background:#ff4d4f;"></span> 预警信息
+        <span class="side-count" id="countAlert">15</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'brief')">
+        <span class="side-dot" style="background:#f5a623;"></span> 工作简报
+        <span class="side-count">3</span>
+      </div>
+      <div class="side-item" onclick="filterSide(this, 'log')">
+        <span class="side-dot" style="background:#8c8c8c;"></span> 操作日志
+        <span class="side-count">7</span>
+      </div>
+      <div class="side-divider"></div>
+      <div class="jg-sidebar-title">时间范围</div>
+      <div class="side-item" onclick="filterTime(this, 'today')">
+        📅 今日
+      </div>
+      <div class="side-item" onclick="filterTime(this, 'week')">
+        📆 本周
+      </div>
+      <div class="side-item" onclick="filterTime(this, 'month')">
+        🗓️ 本月
+      </div>
+    </div>
+  </aside>
+
+  <!-- 右侧内容区 -->
+  <div class="content">
+    <!-- 面包屑 -->
+    <div class="jg-breadcrumb">
+      <span class="jg-breadcrumb-pin">📍</span>
+      当前位置：
+      <a href="jinguan_home.html">首页</a>
+      <span class="jg-breadcrumb-sep">›</span>
+      <span class="jg-breadcrumb-current" data-base="工作动态">工作动态</span>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="stats-row">
+      <div class="jg-stat-card green">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">今日动态</span>
+          <div class="jg-stat-icon">📊</div>
+        </div>
+        <div class="jg-stat-value animate-num" data-target="126">0</div>
+        <div class="jg-stat-footer">
+          <span class="jg-stat-trend up">↑ 8%</span>
+          <span class="jg-stat-sub">较昨日</span>
+        </div>
+      </div>
+      <div class="jg-stat-card blue">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">未读通知</span>
+          <div class="jg-stat-icon">📨</div>
+        </div>
+        <div class="jg-stat-value animate-num" data-target="8">0</div>
+        <div class="jg-stat-footer">
+          <span class="jg-stat-trend down">↓ 2</span>
+          <span class="jg-stat-sub">较昨日</span>
+        </div>
+      </div>
+      <div class="jg-stat-card red">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">活跃预警</span>
+          <div class="jg-stat-icon">🚨</div>
+        </div>
+        <div class="jg-stat-value animate-num" data-target="15">0</div>
+        <div class="jg-stat-footer">
+          <span class="jg-stat-trend up">↑ 3</span>
+          <span class="jg-stat-sub">较昨日</span>
+        </div>
+      </div>
+      <div class="jg-stat-card orange">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">待处理</span>
+          <div class="jg-stat-icon">⏳</div>
+        </div>
+        <div class="jg-stat-value animate-num" data-target="23">0</div>
+        <div class="jg-stat-footer">
+          <span class="jg-stat-trend down">↓ 5</span>
+          <span class="jg-stat-sub">较昨日</span>
+        </div>
+      </div>
+      <div class="jg-stat-card green">
+        <div class="jg-stat-header">
+          <span class="jg-stat-label">今日已处理</span>
+          <div class="jg-stat-icon">✅</div>
+        </div>
+        <div class="jg-stat-value animate-num" data-target="89">0</div>
+        <div class="jg-stat-footer">
+          <span class="jg-stat-trend up">↑ 12</span>
+          <span class="jg-stat-sub">较昨日</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="jg-panel">
+      <div class="jg-tabs" id="tabBar">
+        <button class="jg-tab active" onclick="switchTab('notice', this)">通知公告<span class="jg-tab-badge">8</span></button>
+        <button class="jg-tab" onclick="switchTab('timeline', this)">动态时间线</button>
+        <button class="jg-tab" onclick="switchTab('alert', this)">预警中心<span class="jg-tab-badge">15</span></button>
+        <button class="jg-tab" onclick="switchTab('brief', this)">工作简报</button>
+        <button class="jg-tab" onclick="switchTab('log', this)">操作日志</button>
+      </div>
+
+      <div class="jg-tab-content" style="padding: var(--space-md) var(--space-lg);">
+        <!-- ===== Tab1: 通知公告 ===== -->
+        <div class="tab-panel active" id="panel-notice">
+          <div class="filter-bar">
+            <input class="search-input" placeholder="搜索通知标题/内容" id="noticeSearch" oninput="onNoticeFilterChange()" />
+            <select class="filter-select" id="noticeTypeFilter" onchange="onNoticeFilterChange()"><option value="">全部类型</option><option>紧急通知</option><option>政策文件</option><option>工作部署</option><option>会议通知</option><option>普通公告</option></select>
+            <select class="filter-select" id="noticeStatusFilter" onchange="onNoticeFilterChange()"><option value="">全部状态</option><option value="unread">未读</option><option value="read">已读</option></select>
+            <div style="flex:1;"></div>
+            <button class="jg-btn jg-btn-primary" onclick="showNoticeModal()">📌 发布通知</button>
+          </div>
+          <div class="jg-filter-tags"></div>
+          <div class="notice-list" id="noticeList"></div>
+          <div class="pagination">
+            <span class="page-info">共 8 条</span>
+            <button class="jg-page-btn" disabled>&lt;</button>
+            <button class="jg-page-btn active">1</button>
+            <button class="jg-page-btn" disabled>&gt;</button>
+            <div class="jg-page-jump">跳至 <input class="jg-page-jump-input" value="1" /> 页</div>
+          </div>
+        </div>
+
+        <!-- ===== Tab2: 动态时间线 ===== -->
+        <div class="tab-panel" id="panel-timeline">
+          <div class="filter-bar">
+            <input class="search-input" placeholder="搜索人员/区域/内容" />
+            <select class="filter-select" id="timelineType" onchange="renderTimeline()"><option value="">全部类型</option><option value="inspect">巡查动态</option><option value="order">工单动态</option></select>
+            <select class="filter-select"><option value="">全部区域</option><option>郑州市</option><option>驻马店市</option><option>许昌市</option><option>开封市</option></select>
+            <div style="flex:1;"></div>
+            <span style="font-size:var(--font-sm);color:var(--text-secondary);">实时更新中</span>
+          </div>
+          <div class="timeline" id="timelineList"></div>
+          <div class="pagination">
+            <span class="page-info">共 93 条</span>
+            <button class="jg-page-btn" disabled>&lt;</button>
+            <button class="jg-page-btn active">1</button>
+            <button class="jg-page-btn">2</button>
+            <button class="jg-page-btn">3</button>
+            <button class="jg-page-btn">4</button>
+            <button class="jg-page-btn">5</button>
+            <button class="jg-page-btn">&gt;</button>
+            <div class="jg-page-jump">跳至 <input class="jg-page-jump-input" value="1" /> 页</div>
+          </div>
+        </div>
+
+        <!-- ===== Tab3: 预警中心 ===== -->
+        <div class="tab-panel" id="panel-alert">
+          <div class="alert-stats">
+            <div class="alert-stat blue"><div class="level-label">🔵 蓝色预警</div><div class="level-num">6</div></div>
+            <div class="alert-stat yellow"><div class="level-label">🟡 黄色预警</div><div class="level-num">4</div></div>
+            <div class="alert-stat orange"><div class="level-label">🟠 橙色预警</div><div class="level-num">3</div></div>
+            <div class="alert-stat red"><div class="level-label">🔴 红色预警</div><div class="level-num">2</div></div>
+          </div>
+          <div class="filter-bar">
+            <input class="search-input" placeholder="搜索预警内容" />
+            <select class="filter-select" id="alertTypeFilter" onchange="onAlertFilterChange()"><option value="">全部类型</option><option>工单逾期</option><option>缺员预警</option><option>资质到期</option><option>设备异常</option><option>巡查逾期</option></select>
+            <select class="filter-select" id="alertLevelFilter" onchange="onAlertFilterChange()"><option value="">全部级别</option><option>蓝色</option><option>黄色</option><option>橙色</option><option>红色</option></select>
+            <select class="filter-select" id="alertStatusFilter" onchange="onAlertFilterChange()"><option value="">全部状态</option><option>未处理</option><option>已处理</option><option>已转工单</option></select>
+          </div>
+          <div class="jg-filter-tags"></div>
+          <div class="alert-list" id="alertList"></div>
+          <div class="pagination">
+            <span class="page-info">共 15 条</span>
+            <button class="jg-page-btn" disabled>&lt;</button>
+            <button class="jg-page-btn active">1</button>
+            <button class="jg-page-btn" disabled>&gt;</button>
+            <div class="jg-page-jump">跳至 <input class="jg-page-jump-input" value="1" /> 页</div>
+          </div>
+        </div>
+
+        <!-- ===== Tab4: 工作简报 ===== -->
+        <div class="tab-panel" id="panel-brief">
+          <div class="filter-bar">
+            <select class="filter-select" id="briefPeriod" onchange="renderBrief()"><option value="daily">日报 (2026-05-19)</option><option value="weekly">周报 (第20周)</option><option value="monthly">月报 (2026年5月)</option></select>
+            <div style="flex:1;"></div>
+            <button class="jg-btn jg-btn-default" onclick="showToast('导出简报', 'info')">📥 导出简报</button>
+          </div>
+
+          <div class="brief-cards">
+            <div class="brief-card"><div class="brief-card-title">今日新增工单</div><div class="brief-card-value" style="color:#22a84a;">47</div><div class="brief-card-sub"><span class="up">↑ 12%</span> 较昨日</div></div>
+            <div class="brief-card"><div class="brief-card-title">今日结案工单</div><div class="brief-card-value" style="color:#1890ff;">39</div><div class="brief-card-sub">结案率 83%</div></div>
+            <div class="brief-card"><div class="brief-card-title">巡查覆盖率</div><div class="brief-card-value" style="color:#722ed1;">94.2%</div><div class="brief-card-sub"><span class="up">↑ 1.5%</span> 较昨日</div></div>
+            <div class="brief-card"><div class="brief-card-title">机井正常率</div><div class="brief-card-value" style="color:#f5a623;">97.8%</div><div class="brief-card-sub"><span class="down">↓ 0.2%</span> 较昨日</div></div>
+          </div>
+
+          <div class="brief-section">
+            <div class="brief-section-title">各市工单情况</div>
+            <table class="brief-table">
+              <thead><tr><th>地市</th><th>新增</th><th>处置中</th><th>结案</th><th>逾期</th><th>结案率</th></tr></thead>
+              <tbody>
+                <tr><td>郑州市</td><td>8</td><td>12</td><td>7</td><td>1</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:87.5%;background:#22a84a;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">87.5%</span></td></tr>
+                <tr><td>驻马店市</td><td>6</td><td>9</td><td>5</td><td>2</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:83.3%;background:#22a84a;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">83.3%</span></td></tr>
+                <tr><td>许昌市</td><td>5</td><td>7</td><td>5</td><td>0</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:100%;background:#22a84a;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">100%</span></td></tr>
+                <tr><td>开封市</td><td>7</td><td>11</td><td>6</td><td>3</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:75%;background:#f5a623;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">75%</span></td></tr>
+                <tr><td>洛阳市</td><td>4</td><td>6</td><td>4</td><td>1</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:80%;background:#22a84a;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">80%</span></td></tr>
+                <tr><td>南阳市</td><td>9</td><td>14</td><td>7</td><td>4</td><td><div class="brief-bar-wrap"><div class="brief-bar" style="width:70%;background:#ff4d4f;"></div></div><span style="font-size:var(--font-xs);color:var(--text-secondary);margin-left:4px;">70%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="brief-section">
+            <div class="brief-section-title">人员效能概况</div>
+            <table class="brief-table">
+              <thead><tr><th>角色</th><th>出勤率</th><th>巡查完成率</th><th>工单结案率</th><th>考核均分</th></tr></thead>
+              <tbody>
+                <tr><td>井长</td><td>98.5%</td><td>96.3%</td><td>91.2%</td><td>87.6</td></tr>
+                <tr><td>管护员</td><td>97.2%</td><td>94.8%</td><td>85.7%</td><td>82.3</td></tr>
+                <tr><td>维修员</td><td>96.8%</td><td>—</td><td>88.4%</td><td>84.1</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== Tab5: 操作日志 ===== -->
+        <div class="tab-panel" id="panel-log">
+          <div class="filter-bar">
+            <input class="search-input" placeholder="搜索操作人/操作内容" />
+            <select class="filter-select" id="logTypeFilter" onchange="onLogFilterChange()"><option value="">操作类型</option><option>登录</option><option>新增</option><option>修改</option><option>删除</option><option>审批</option><option>导出</option></select>
+            <select class="filter-select" id="logModuleFilter" onchange="onLogFilterChange()"><option value="">操作模块</option><option>机井管理</option><option>工单管理</option><option>一长两员</option><option>工作动态</option><option>系统管理</option></select>
+            <div style="flex:1;"></div>
+            <button class="jg-btn jg-btn-default" onclick="showToast('导出日志', 'info')">📥 导出</button>
+          </div>
+          <div class="jg-filter-tags"></div>
+          <table class="log-table">
+            <thead><tr><th>时间</th><th>操作人</th><th>类型</th><th>模块</th><th>操作内容</th><th>IP</th><th>结果</th></tr></thead>
+            <tbody id="logTableBody"></tbody>
+          </table>
+          <div class="pagination">
+            <span class="page-info">共 156 条</span>
+            <button class="jg-page-btn" disabled>&lt;</button>
+            <button class="jg-page-btn active">1</button>
+            <button class="jg-page-btn">2</button>
+            <button class="jg-page-btn">3</button>
+            <button class="jg-page-btn">4</button>
+            <button class="jg-page-btn">&gt;</button>
+            <div class="jg-page-jump">跳至 <input class="jg-page-jump-input" value="1" /> 页</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 发布通知弹窗 -->
+<div class="jg-modal-overlay" id="noticeModal">
+  <div class="jg-modal wide">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title">📌 发布通知</span>
+      <button class="jg-modal-close" onclick="closeModal('noticeModal')">×</button>
+    </div>
+    <div class="jg-modal-body">
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> 通知标题</label>
+        <input class="form-input" id="noticeTitle" placeholder="请输入通知标题" />
+      </div>
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> 通知类型</label>
+        <select class="form-select" id="noticeType"><option>紧急通知</option><option>政策文件</option><option>工作部署</option><option>会议通知</option><option>普通公告</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">接收范围</label>
+        <select class="form-select"><option>全省</option><option>郑州市</option><option>驻马店市</option><option>许昌市</option><option>开封市</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> 通知内容</label>
+        <textarea class="form-textarea" id="noticeContent" placeholder="请输入通知内容"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">是否紧急</label>
+        <select class="form-select"><option>否</option><option>是</option></select>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('noticeModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="publishNotice()">发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- 通知详情弹窗 -->
+<div class="jg-modal-overlay" id="noticeDetailModal">
+  <div class="jg-modal wide">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title" id="noticeDetailHeader">通知详情</span>
+      <button class="jg-modal-close" onclick="closeModal('noticeDetailModal')">×</button>
+    </div>
+    <div class="jg-modal-body" id="noticeDetailBody"></div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('noticeDetailModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 预警处理弹窗 -->
+<div class="jg-modal-overlay" id="alertHandleModal">
+  <div class="jg-modal medium">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title">处理预警</span>
+      <button class="jg-modal-close" onclick="closeModal('alertHandleModal')">×</button>
+    </div>
+    <div class="jg-modal-body">
+      <div class="detail-row"><div class="detail-label">预警内容：</div><div class="detail-val" id="alertHandleContent">—</div></div>
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> 处理方式</label>
+        <select class="form-select"><option>标记已处理</option><option>转工单处理</option><option>升级预警</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">处理说明</label>
+        <textarea class="form-textarea" placeholder="请输入处理说明"></textarea>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('alertHandleModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAlert()">确认处理</button>
+    </div>
+  </div>
+</div>
+
+<script src="jinguan_common.js"></script>
+<script>
+// ===== 数据 =====
+var notices = [
+  { id:1, title:'关于开展2026年度全省农田机井专项排查的通知', type:'紧急通知', tag:'tag-urgent', icon:'🔴', iconClass:'urgent', publisher:'省水利厅', time:'2026-05-19 09:30', read:false, summary:'即日起至6月30日，全省范围内开展农田机井专项排查，重点检查机井运行状态、安全防护措施等。', readCount:128, totalCount:256 },
+  { id:2, title:'河南省农田水利设施管护管理办法（修订版）', type:'政策文件', tag:'tag-policy', icon:'📄', iconClass:'policy', publisher:'省农业农村厅', time:'2026-05-18 16:00', read:true, summary:'新修订的《河南省农田水利设施管护管理办法》已正式发布，请各地认真学习并贯彻执行。', readCount:230, totalCount:256 },
+  { id:3, title:'关于做好夏季防汛期间机井安全防护的工作部署', type:'工作部署', tag:'tag-work', icon:'📋', iconClass:'work', publisher:'省机井管护中心', time:'2026-05-17 10:00', read:false, summary:'根据气象预报，近期我省将迎来强降雨天气，请各地做好机井防汛安全防护工作。', readCount:89, totalCount:256 },
+  { id:4, title:'2026年第二季度全省管护人员培训会议通知', type:'会议通知', tag:'tag-meeting', icon:'📅', iconClass:'meeting', publisher:'省机井管护中心', time:'2026-05-16 14:30', read:true, summary:'定于2026年6月15日-16日在郑州举办第二季度全省管护人员培训，请各县市推荐参训人员。', readCount:201, totalCount:256 },
+  { id:5, title:'关于机井管护系统功能升级的公告', type:'普通公告', tag:'tag-normal', icon:'📢', iconClass:'normal', publisher:'系统管理员', time:'2026-05-15 09:00', read:true, summary:'系统将于5月20日凌晨2:00-6:00进行升级维护，届时系统将暂停服务，请提前做好相关工作安排。', readCount:245, totalCount:256 },
+  { id:6, title:'驻马店市一长两员考核标准调整通知', type:'工作部署', tag:'tag-work', icon:'📋', iconClass:'work', publisher:'驻马店市水利局', time:'2026-05-14 11:00', read:false, summary:'自2026年6月起，驻马店市一长两员考核标准调整，巡查绩效权重由30%提升至35%。', readCount:45, totalCount:78 },
+  { id:7, title:'关于规范工单处置流程的补充通知', type:'政策文件', tag:'tag-policy', icon:'📄', iconClass:'policy', publisher:'省机井管护中心', time:'2026-05-12 15:00', read:true, summary:'为进一步规范工单处置流程，现对工单超时处理规则进行补充说明。', readCount:198, totalCount:256 },
+  { id:8, title:'许昌市农田机井管护工作先进集体表彰通知', type:'普通公告', tag:'tag-normal', icon:'📢', iconClass:'normal', publisher:'许昌市农业农村局', time:'2026-05-10 10:00', read:true, summary:'经综合评定，以下单位和个人在2025年度农田机井管护工作中表现突出，予以表彰。', readCount:156, totalCount:180 }
+];
+
+var timelineData = [
+  { type:'inspect', name:'张伟', role:'管护员', action:'完成了巡查', detail:'驻马店市平舆县东和店镇 12口机井巡查，发现1处异常', time:'10分钟前', region:'驻马店市', related:'#W421023' },
+  { type:'order', name:'李建国', role:'井长', action:'审核确认了工单', detail:'工单 #GD20260519003 已审核，指派维修员王明处置', time:'25分钟前', region:'郑州市', related:'#GD20260519003' },
+  { type:'inspect', name:'赵丽', role:'管护员', action:'发现异常', detail:'⚠️ 郑州市中牟县雁鸣湖镇 YML-028号机井出水浑浊', time:'42分钟前', region:'郑州市', related:'#W410122' },
+  { type:'order', name:'王明', role:'维修员', action:'已接单', detail:'工单 #GD20260519003 泵体异响，计划下午到场处置', time:'1小时前', region:'郑州市', related:'#GD20260519003' },
+  { type:'order', name:'系统', role:'系统', action:'自动创建工单', detail:'巡查异常自动创建工单 #GD20260519005，出水浑浊', time:'1小时前', region:'郑州市', related:'#GD20260519005' },
+  { type:'inspect', name:'刘大勇', role:'井长', action:'完成了专项巡查', detail:'许昌市鄢陵县只乐镇 8口机井专项巡查，全部正常', time:'2小时前', region:'许昌市', related:'#W411024' },
+  { type:'order', name:'陈建军', role:'维修员', action:'完成维修', detail:'工单 #GD20260518012 阀门更换完成，等待井长验收', time:'2小时前', region:'驻马店市', related:'#GD20260518012' },
+  { type:'inspect', name:'马秀英', role:'管护员', action:'完成了巡查', detail:'开封市兰考县仪封镇 6口机井巡查，全部正常', time:'3小时前', region:'开封市', related:'#W410225' },
+  { type:'order', name:'周国强', role:'井长', action:'催办工单', detail:'工单 #GD20260517008 已逾期2天，催办维修员赵刚', time:'3小时前', region:'洛阳市', related:'#GD20260517008' },
+  { type:'order', name:'赵刚', role:'维修员', action:'到场处置', detail:'工单 #GD20260517008 正在检查电机故障原因', time:'4小时前', region:'洛阳市', related:'#GD20260517008' },
+  { type:'inspect', name:'孙丽芳', role:'管护员', action:'发现异常', detail:'⚠️ 南阳市方城县独树镇 FC-156号机井控制柜门损坏', time:'4小时前', region:'南阳市', related:'#W411322' },
+  { type:'order', name:'系统', role:'系统', action:'工单结案', detail:'工单 #GD20260517005 经井长验收通过，已结案，耗时36小时', time:'5小时前', region:'许昌市', related:'#GD20260517005' },
+  { type:'inspect', name:'张伟', role:'管护员', action:'完成了巡查', detail:'驻马店市平舆县万金店镇 9口机井巡查，全部正常', time:'6小时前', region:'驻马店市', related:'#W411723' },
+  { type:'order', name:'李建成', role:'井长', action:'审核确认了工单', detail:'工单 #GD20260519001 确认问题属实，指派管护员赵丽初查', time:'7小时前', region:'郑州市', related:'#GD20260519001' },
+  { type:'inspect', name:'吴德福', role:'管护员', action:'完成了巡查', detail:'洛阳市伊川县平等乡 11口机井巡查，发现2处轻微问题', time:'8小时前', region:'洛阳市', related:'#W410329' }
+];
+
+var alertData = [
+  { id:1, type:'工单逾期', level:'red', levelName:'红色', icon:'🚨', title:'南阳市方城县 工单逾期10天', desc:'工单 #GD20260509012 已逾期10天，维修员未到场处置', time:'2026-05-19 08:00', status:'未处理' },
+  { id:2, type:'工单逾期', level:'red', levelName:'红色', icon:'🚨', title:'开封市兰考县 工单逾期10天', desc:'工单 #GD20260509008 已逾期10天，问题严重需紧急处理', time:'2026-05-19 08:00', status:'未处理' },
+  { id:3, type:'缺员预警', level:'orange', levelName:'橙色', icon:'⚠️', title:'三门峡市卢氏县 无管护员', desc:'卢氏县3个乡镇共47口机井无管护员绑定，巡查空白', time:'2026-05-19 07:30', status:'未处理' },
+  { id:4, type:'工单逾期', level:'orange', levelName:'橙色', icon:'🚨', title:'洛阳市伊川县 工单逾期7天', desc:'工单 #GD20260512005 已逾期7天，维修进度停滞', time:'2026-05-19 07:00', status:'未处理' },
+  { id:5, type:'资质到期', level:'orange', levelName:'橙色', icon:'📛', title:'驻马店市平舆县 3人证书7天内到期', desc:'赵强等3人安全操作证将于5月25日前到期', time:'2026-05-18 16:00', status:'未处理' },
+  { id:6, type:'设备异常', level:'yellow', levelName:'黄色', icon:'🔧', title:'郑州市中牟县 雁鸣湖镇机井出水浑浊', desc:'YML-028号机井出水浑浊，已创建工单但未接单', time:'2026-05-19 09:30', status:'已转工单' },
+  { id:7, type:'工单逾期', level:'yellow', levelName:'黄色', icon:'🚨', title:'驻马店市确山县 工单逾期3天', desc:'工单 #GD20260516003 已逾期3天，需关注', time:'2026-05-19 06:00', status:'未处理' },
+  { id:8, type:'巡查逾期', level:'yellow', levelName:'黄色', icon:'⏰', title:'许昌市襄城县 巡查超时', desc:'襄城县茨沟乡有6口机井超过7天未巡查', time:'2026-05-18 18:00', status:'未处理' },
+  { id:9, type:'缺员预警', level:'yellow', levelName:'黄色', icon:'⚠️', title:'鹤壁市淇县 无井长', desc:'淇县2个村共18口机井无井长绑定', time:'2026-05-18 15:00', status:'已处理' },
+  { id:10, type:'资质到期', level:'blue', levelName:'蓝色', icon:'📛', title:'郑州市 电工证30天内到期', desc:'郑州市新郑市2名维修员电工证将于6月18日前到期', time:'2026-05-18 10:00', status:'未处理' },
+  { id:11, type:'工单逾期', level:'blue', levelName:'蓝色', icon:'🚨', title:'许昌市禹州市 工单逾期1天', desc:'工单 #GD20260518007 已逾期1天，提醒接单人尽快处理', time:'2026-05-19 09:00', status:'未处理' },
+  { id:12, type:'巡查逾期', level:'blue', levelName:'蓝色', icon:'⏰', title:'信阳市固始县 部分机井巡查超时', desc:'固始县3个村有9口机井超过3天未巡查', time:'2026-05-18 14:00', status:'已处理' },
+  { id:13, type:'资质到期', level:'blue', levelName:'蓝色', icon:'📛', title:'洛阳市 证书90天内到期', desc:'洛阳市5名人员各类证书将于8月前到期', time:'2026-05-17 10:00', status:'未处理' },
+  { id:14, type:'设备异常', level:'blue', levelName:'蓝色', icon:'🔧', title:'南阳市方城县 控制柜门损坏', desc:'FC-156号机井控制柜门损坏，已创建工单', time:'2026-05-19 08:30', status:'已转工单' },
+  { id:15, type:'工单逾期', level:'blue', levelName:'蓝色', icon:'🚨', title:'安阳市林州市 工单逾期1天', desc:'工单 #GD20260518015 刚满1天，提醒维修员', time:'2026-05-19 08:30', status:'未处理' }
+];
+
+var logData = [
+  { time:'2026-05-19 10:32:15', operator:'张伟', role:'管护员', type:'login', typeLabel:'登录', typeClass:'log-type-login', module:'工单管理', detail:'登录系统', ip:'120.52.**.**', result:'success' },
+  { time:'2026-05-19 10:28:47', operator:'李建国', role:'井长', type:'approve', typeLabel:'审批', typeClass:'log-type-approve', module:'工单管理', detail:'审核通过工单 #GD20260519003', ip:'115.28.**.**', result:'success' },
+  { time:'2026-05-19 10:15:33', operator:'王明', role:'维修员', type:'edit', typeLabel:'修改', typeClass:'log-type-edit', module:'工单管理', detail:'接单工单 #GD20260519003', ip:'117.136.**.**', result:'success' },
+  { time:'2026-05-19 09:58:12', operator:'系统', role:'系统', type:'add', typeLabel:'新增', typeClass:'log-type-add', module:'工单管理', detail:'自动创建工单 #GD20260519005', ip:'—', result:'success' },
+  { time:'2026-05-19 09:45:20', operator:'赵丽', role:'管护员', type:'add', typeLabel:'新增', typeClass:'log-type-add', module:'机井管理', detail:'上报巡查异常 YML-028 出水浑浊', ip:'120.52.**.**', result:'success' },
+  { time:'2026-05-19 09:30:00', operator:'省水利厅', role:'省级管理员', type:'add', typeLabel:'新增', typeClass:'log-type-add', module:'工作动态', detail:'发布通知：关于开展2026年度全省农田机井专项排查', ip:'10.0.**.**', result:'success' },
+  { time:'2026-05-19 08:30:15', operator:'系统', role:'系统', type:'edit', typeLabel:'修改', typeClass:'log-type-edit', module:'一长两员', detail:'自动更新逾期工单预警状态', ip:'—', result:'success' },
+  { time:'2026-05-19 08:15:00', operator:'周国强', role:'井长', type:'edit', typeLabel:'修改', typeClass:'log-type-edit', module:'工单管理', detail:'催办工单 #GD20260517008', ip:'114.245.**.**', result:'success' },
+  { time:'2026-05-19 08:00:05', operator:'系统', role:'系统', type:'add', typeLabel:'新增', typeClass:'log-type-add', module:'工作动态', detail:'生成2026-05-18日工作简报', ip:'—', result:'success' },
+  { time:'2026-05-19 07:30:00', operator:'系统管理员', role:'省级管理员', type:'export', typeLabel:'导出', typeClass:'log-type-export', module:'工单管理', detail:'导出5月工单数据 Excel', ip:'10.0.**.**', result:'success' },
+  { time:'2026-05-18 17:45:33', operator:'陈建军', role:'维修员', type:'edit', typeLabel:'修改', typeClass:'log-type-edit', module:'工单管理', detail:'完成维修 #GD20260518012', ip:'117.136.**.**', result:'success' },
+  { time:'2026-05-18 16:20:10', operator:'省级管理员', role:'省级管理员', type:'edit', typeLabel:'修改', typeClass:'log-type-edit', module:'系统管理', detail:'修改工单逾期提醒配置：1天→24小时', ip:'10.0.**.**', result:'success' },
+  { time:'2026-05-18 15:10:45', operator:'未知', role:'—', type:'login', typeLabel:'登录', typeClass:'log-type-login', module:'系统', detail:'登录失败，密码错误3次，账号已锁定', ip:'103.45.**.**', result:'fail' }
+];
+
+// ===== 渲染函数 =====
+function renderNotices() {
+  var el = document.getElementById('noticeList');
+  if (notices.length === 0) {
+    el.innerHTML = renderEmpty('暂无通知', '当前筛选条件下没有找到通知');
+    return;
+  }
+  el.innerHTML = notices.map(function(n) {
+    return '<div class="notice-item" onclick="showNoticeDetail(' + n.id + ')">' +
+      '<div class="notice-type-icon ' + n.iconClass + '">' + n.icon + '</div>' +
+      '<div class="notice-body">' +
+        '<div class="notice-title-row">' +
+          '<span class="notice-title ' + (n.read ? '' : 'unread') + '">' + n.title + '</span>' +
+          '<span class="notice-tag ' + n.tag + '">' + n.type + '</span>' +
+        '</div>' +
+        '<div class="notice-summary">' + n.summary + '</div>' +
+        '<div class="notice-meta">' +
+          '<span>👤 ' + n.publisher + '</span>' +
+          '<span>🕐 ' + n.time + '</span>' +
+          '<span>👁 ' + n.readCount + '/' + n.totalCount + ' 已读</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="read-dot ' + (n.read ? '' : 'unread') + '"></div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderTimeline() {
+  var filterType = document.getElementById('timelineType') ? document.getElementById('timelineType').value : '';
+  var data = filterType ? timelineData.filter(function(d) { return d.type === filterType; }) : timelineData;
+  var el = document.getElementById('timelineList');
+  if (data.length === 0) {
+    el.innerHTML = renderEmpty('暂无动态', '当前筛选条件下没有找到动态数据');
+    return;
+  }
+  el.innerHTML = data.map(function(d) {
+    return '<div class="timeline-item">' +
+      '<div class="timeline-dot ' + d.type + '"></div>' +
+      '<div class="timeline-card">' +
+        '<div class="timeline-head">' +
+          '<div class="timeline-avatar">' + d.name[0] + '</div>' +
+          '<span class="timeline-name">' + d.name + '</span>' +
+          '<span class="timeline-action">' + d.action + '</span>' +
+          '<span class="timeline-time">' + d.time + '</span>' +
+        '</div>' +
+        '<div class="timeline-detail">' + d.detail + '</div>' +
+        '<div class="timeline-tags">' +
+          '<span class="timeline-tag ' + d.type + '">' + (d.type === 'inspect' ? '巡查' : '工单') + '</span>' +
+          '<span class="timeline-tag">' + d.region + '</span>' +
+          '<a class="timeline-link" onclick="showToast(\'查看关联: ' + d.related + '\')">' + d.related + '</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderAlerts() {
+  var el = document.getElementById('alertList');
+  if (alertData.length === 0) {
+    el.innerHTML = renderEmpty('暂无预警', '当前没有活跃的预警信息');
+    return;
+  }
+  el.innerHTML = alertData.map(function(a) {
+    var flashClass = (a.level === 'red' && a.status === '未处理') ? ' jg-alert-flash' : '';
+    return '<div class="alert-item' + flashClass + '">' +
+      '<div class="alert-level-dot ' + a.level + '"></div>' +
+      '<div class="alert-type-icon">' + a.icon + '</div>' +
+      '<div class="alert-body">' +
+        '<div class="alert-title">' + a.title + '</div>' +
+        '<div class="alert-desc">' + a.desc + '</div>' +
+      '</div>' +
+      '<span class="alert-time">' + a.time + '</span>' +
+      '<div class="alert-ops">' +
+        (a.status === '未处理'
+          ? '<button class="jg-btn jg-btn-sm jg-btn-primary" onclick="showAlertHandle(' + a.id + ')">处理</button>'
+          : '<span class="notice-tag tag-work">' + a.status + '</span>') +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderLogs() {
+  var el = document.getElementById('logTableBody');
+  if (logData.length === 0) {
+    el.innerHTML = '<tr><td colspan="7">' + renderEmpty('暂无日志', '当前筛选条件下没有找到操作日志') + '</td></tr>';
+    return;
+  }
+  el.innerHTML = logData.map(function(l) {
+    return '<tr>' +
+      '<td>' + l.time + '</td>' +
+      '<td>' + l.operator + '</td>' +
+      '<td><span class="log-type-tag ' + l.typeClass + '">' + l.typeLabel + '</span></td>' +
+      '<td>' + l.module + '</td>' +
+      '<td>' + l.detail + '</td>' +
+      '<td>' + l.ip + '</td>' +
+      '<td><span class="log-result ' + l.result + '"></span>' + (l.result === 'success' ? '成功' : '失败') + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+// ===== 交互函数 =====
+function switchTab(tab, el) {
+  document.querySelectorAll('.jg-tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + tab);
+  panel.classList.add('active');
+}
+
+function filterSide(el, type) {
+  el.parentElement.querySelectorAll('.side-item').forEach(function(s) { s.classList.remove('active'); });
+  el.classList.add('active');
+  var tabMap = { all:'timeline', notice:'notice', inspect:'timeline', order:'timeline', alert:'alert', brief:'brief', log:'log' };
+  var tab = tabMap[type] || 'timeline';
+  var tabNames = ['notice','timeline','alert','brief','log'];
+  var idx = tabNames.indexOf(tab);
+  if (idx >= 0) {
+    var tabBtns = document.querySelectorAll('.jg-tab');
+    tabBtns.forEach(function(t) { t.classList.remove('active'); });
+    if (tabBtns[idx]) tabBtns[idx].classList.add('active');
+  }
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+function filterTime(el, period) {
+  el.parentElement.querySelectorAll('.side-item').forEach(function(s) { s.classList.remove('active'); });
+  el.classList.add('active');
+  var label = period === 'today' ? '今日' : period === 'week' ? '本周' : '本月';
+  showToast('筛选：' + label, 'info');
+  addFilterTag('time', '时间: ' + label, function() {
+    el.parentElement.querySelectorAll('.side-item').forEach(function(s) {
+      if (s.textContent.trim().indexOf(label) >= 0) s.classList.remove('active');
+    });
+  });
+}
+
+function onNoticeFilterChange() {
+  var type = document.getElementById('noticeTypeFilter').value;
+  var status = document.getElementById('noticeStatusFilter').value;
+  // 更新筛选标签
+  clearFilterTags();
+  if (type) addFilterTag('noticeType', '类型: ' + type, function() { document.getElementById('noticeTypeFilter').value = ''; onNoticeFilterChange(); });
+  if (status) addFilterTag('noticeStatus', '状态: ' + (status === 'unread' ? '未读' : '已读'), function() { document.getElementById('noticeStatusFilter').value = ''; onNoticeFilterChange(); });
+}
+
+function onAlertFilterChange() {
+  var type = document.getElementById('alertTypeFilter').value;
+  var level = document.getElementById('alertLevelFilter').value;
+  var status = document.getElementById('alertStatusFilter').value;
+  clearFilterTags();
+  if (type) addFilterTag('alertType', '类型: ' + type, function() { document.getElementById('alertTypeFilter').value = ''; onAlertFilterChange(); });
+  if (level) addFilterTag('alertLevel', '级别: ' + level, function() { document.getElementById('alertLevelFilter').value = ''; onAlertFilterChange(); });
+  if (status) addFilterTag('alertStatus', '状态: ' + status, function() { document.getElementById('alertStatusFilter').value = ''; onAlertFilterChange(); });
+}
+
+function onLogFilterChange() {
+  var type = document.getElementById('logTypeFilter').value;
+  var module = document.getElementById('logModuleFilter').value;
+  clearFilterTags();
+  if (type) addFilterTag('logType', '类型: ' + type, function() { document.getElementById('logTypeFilter').value = ''; onLogFilterChange(); });
+  if (module) addFilterTag('logModule', '模块: ' + module, function() { document.getElementById('logModuleFilter').value = ''; onLogFilterChange(); });
+}
+
+function showNoticeModal() {
+  openModal('noticeModal');
+}
+
+function showNoticeDetail(id) {
+  var n = notices.find(function(x) { return x.id === id; });
+  if (!n) return;
+  n.read = true;
+  document.getElementById('noticeDetailHeader').innerHTML = n.icon + ' ' + n.title;
+  document.getElementById('noticeDetailBody').innerHTML =
+    '<div class="detail-row"><div class="detail-label">通知类型：</div><div class="detail-val"><span class="notice-tag ' + n.tag + '">' + n.type + '</span></div></div>' +
+    '<div class="detail-row"><div class="detail-label">发布单位：</div><div class="detail-val">' + n.publisher + '</div></div>' +
+    '<div class="detail-row"><div class="detail-label">发布时间：</div><div class="detail-val">' + n.time + '</div></div>' +
+    '<div class="detail-row"><div class="detail-label">阅读状态：</div><div class="detail-val">' + n.readCount + '/' + n.totalCount + ' 已读 (' + Math.round(n.readCount / n.totalCount * 100) + '%)</div></div>' +
+    '<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-light);">' +
+      '<p style="line-height:1.8;font-size:var(--font-base);">' + n.summary + '</p>' +
+      '<p style="line-height:1.8;font-size:var(--font-base);margin-top:8px;color:var(--text-secondary);">详细内容请查阅附件或联系发布单位获取完整文件。</p>' +
+    '</div>';
+  openModal('noticeDetailModal');
+  renderNotices();
+}
+
+function showAlertHandle(id) {
+  var a = alertData.find(function(x) { return x.id === id; });
+  if (!a) return;
+  document.getElementById('alertHandleContent').textContent = a.title + '：' + a.desc;
+  openModal('alertHandleModal');
+}
+
+function handleAlert() {
+  closeModal('alertHandleModal');
+  showToast('预警已处理', 'success');
+}
+
+function publishNotice() {
+  var title = document.getElementById('noticeTitle').value;
+  var content = document.getElementById('noticeContent').value;
+  if (!title || !content) { showToast('请填写完整信息', 'warning'); return; }
+  closeModal('noticeModal');
+  showToast('通知发布成功', 'success');
+}
+
+// ===== 初始化 =====
+renderNotices();
+renderTimeline();
+renderAlerts();
+renderLogs();
+</script>
+</body>
+</html>

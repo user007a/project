@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>豫农田机井管护系统 - 登录</title>
+  <style>
+    /* ========== 重置与基础 ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #0d4a25 0%, #22a84a 50%, #2ecc5e 100%);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ========== 背景装饰 ========== */
+    .bg-decor {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .bg-circle {
+      position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06);
+    }
+    .bg-circle-1 { width: 280px; height: 280px; top: -60px; right: -80px; }
+    .bg-circle-2 { width: 200px; height: 200px; bottom: 120px; left: -60px; background: rgba(255,255,255,0.04); }
+    .bg-circle-3 { width: 140px; height: 140px; top: 40%; right: 10%; background: rgba(255,255,255,0.05); }
+    /* 网格纹理 */
+    .bg-grid {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ========== 主内容区 ========== */
+    .container {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; padding: 60px 7.5% 40px;
+    }
+
+    /* ========== 顶部Logo区域 ========== */
+    .header { text-align: center; margin-bottom: 32px; }
+    .logo-wrap {
+      width: 72px; height: 72px; margin: 0 auto 16px;
+      background: rgba(255,255,255,0.95); border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .logo-wrap svg { width: 44px; height: 44px; }
+    .sys-name {
+      font-size: 18px; font-weight: 700; color: #fff;
+      letter-spacing: 1px; margin-bottom: 6px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .sys-sub { font-size: 12px; color: rgba(255,255,255,0.7); letter-spacing: 2px; }
+
+    /* ========== 登录卡片 ========== */
+    .login-card {
+      width: 100%; background: #fff; border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      padding: 24px 20px; overflow: hidden;
+    }
+
+    /* Tab 切换 */
+    .tab-bar {
+      display: flex; background: #f5f5f5; border-radius: 22px;
+      padding: 3px; margin-bottom: 24px; position: relative;
+    }
+    .tab-item {
+      flex: 1; text-align: center; padding: 8px 0;
+      font-size: 13px; color: #999; cursor: pointer;
+      border-radius: 20px; transition: all 0.3s ease;
+      position: relative; z-index: 1; user-select: none;
+    }
+    .tab-item.active { color: #fff; font-weight: 600; }
+    .tab-slider {
+      position: absolute; top: 3px; left: 3px;
+      width: calc(33.333% - 2px); height: calc(100% - 6px);
+      background: linear-gradient(135deg, #22a84a, #1a7a3c);
+      border-radius: 20px; transition: transform 0.3s ease;
+      z-index: 0;
+    }
+    .tab-slider[data-index="1"] { transform: translateX(100%); }
+    .tab-slider[data-index="2"] { transform: translateX(200%); }
+
+    /* 表单面板 */
+    .tab-panels { position: relative; overflow: hidden; }
+    .tab-panel {
+      display: none; animation: fadeSlideIn 0.3s ease;
+    }
+    .tab-panel.active { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* 输入框组 */
+    .input-group {
+      position: relative; margin-bottom: 16px;
+    }
+    .input-group .input-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; color: #bbb;
+    }
+    .input-group input {
+      width: 100%; height: 44px; border: 1px solid #e8e8e8;
+      border-radius: 8px; padding: 0 14px 0 42px;
+      font-size: 14px; color: #333; outline: none;
+      transition: border-color 0.2s;
+      background: #fafafa;
+    }
+    .input-group input::placeholder { color: #bbb; }
+    .input-group input:focus { border-color: #22a84a; background: #fff; }
+    .input-group .toggle-pwd {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; cursor: pointer; color: #bbb;
+      transition: color 0.2s;
+    }
+    .input-group .toggle-pwd:hover { color: #22a84a; }
+    .input-group .error-msg {
+      display: none; font-size: 11px; color: #e74c3c;
+      margin-top: 4px; padding-left: 4px;
+    }
+    .input-group.has-error input { border-color: #e74c3c; }
+    .input-group.has-error .error-msg { display: block; }
+
+    /* 验证码行 */
+    .code-row { display: flex; gap: 10px; }
+    .code-row .input-group { flex: 1; margin-bottom: 0; }
+    .code-row input { padding-right: 14px; }
+    .btn-get-code {
+      flex-shrink: 0; height: 44px; padding: 0 14px;
+      border: 1px solid #22a84a; border-radius: 8px;
+      background: transparent; color: #22a84a; font-size: 12px;
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
+    }
+    .btn-get-code:disabled { border-color: #ccc; color: #999; cursor: not-allowed; }
+
+    /* 记住密码 & 忘记密码 */
+    .form-extra {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; font-size: 12px;
+    }
+    .remember-me {
+      display: flex; align-items: center; gap: 6px; cursor: pointer; color: #666;
+      user-select: none;
+    }
+    .remember-me input[type="checkbox"] { display: none; }
+    .checkbox-custom {
+      width: 16px; height: 16px; border: 1.5px solid #ccc;
+      border-radius: 3px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .remember-me input:checked + .checkbox-custom {
+      background: #22a84a; border-color: #22a84a;
+    }
+    .checkbox-custom svg { width: 10px; height: 10px; color: #fff; opacity: 0; transition: opacity 0.2s; }
+    .remember-me input:checked + .checkbox-custom svg { opacity: 1; }
+    .forgot-pwd { color: #22a84a; text-decoration: none; }
+
+    /* 登录按钮 */
+    .btn-login {
+      width: 100%; height: 44px; border: none; border-radius: 22px;
+      background: linear-gradient(135deg, #22a84a, #1a7a3c);
+      color: #fff; font-size: 16px; font-weight: 600;
+      letter-spacing: 4px; cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      position: relative; overflow: hidden;
+    }
+    .btn-login:active { transform: scale(0.98); }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+    .btn-login .spinner {
+      display: none; width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      position: absolute; top: 50%; left: 50%;
+      margin: -10px 0 0 -10px;
+    }
+    .btn-login.loading .btn-text { opacity: 0; }
+    .btn-login.loading .spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 微信登录面板 */
+    .wechat-panel { text-align: center; padding: 20px 0 10px; }
+    .wechat-icon-wrap {
+      width: 80px; height: 80px; margin: 0 auto 16px;
+      background: #f0faf3; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wechat-icon-wrap svg { width: 48px; height: 48px; }
+    .wechat-desc { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .btn-wechat {
+      width: 100%; height: 44px; border: none; border-radius: 22px;
+      background: #07c160; color: #fff; font-size: 16px; font-weight: 600;
+      letter-spacing: 2px; cursor: pointer; position: relative; overflow: hidden;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-wechat:active { transform: scale(0.98); }
+    .btn-wechat:disabled { opacity: 0.7; cursor: not-allowed; }
+    .btn-wechat .spinner {
+      display: none; width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      position: absolute; top: 50%; left: 50%;
+      margin: -10px 0 0 -10px;
+    }
+    .btn-wechat.loading .btn-text { opacity: 0; }
+    .btn-wechat.loading .spinner { display: block; }
+    .wechat-tip { font-size: 11px; color: #999; margin-top: 14px; }
+
+    /* 底部协议 */
+    .agreement {
+      text-align: center; font-size: 11px; color: rgba(255,255,255,0.65);
+      margin-top: 24px; line-height: 1.6;
+    }
+    .agreement a { color: #fff; text-decoration: underline; }
+
+    /* 成功弹层 */
+    .success-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 1000;
+      justify-content: center; align-items: center;
+    }
+    .success-overlay.show { display: flex; }
+    .success-modal {
+      background: #fff; border-radius: 16px; padding: 36px 32px;
+      text-align: center; width: 260px;
+      animation: scaleIn 0.3s ease;
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .success-icon {
+      width: 56px; height: 56px; margin: 0 auto 16px;
+      background: #e8f5ec; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .success-icon svg { width: 32px; height: 32px; color: #22a84a; }
+    .success-title { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .success-countdown { font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+
+  <!-- 背景装饰 -->
+  <div class="bg-decor">
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+    <div class="bg-circle bg-circle-3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="container">
+    <!-- 顶部 Logo -->
+    <div class="header">
+      <div class="logo-wrap">
+        <!-- Logo: 简化水井/水滴图标 -->
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 水滴 -->
+          <path d="M24 6C24 6 12 20 12 28C12 34.627 17.373 40 24 40C30.627 40 36 34.627 36 28C36 20 24 6 24 6Z" fill="#22a84a" opacity="0.2"/>
+          <path d="M24 6C24 6 12 20 12 28C12 34.627 17.373 40 24 40C30.627 40 36 34.627 36 28C36 20 24 6 24 6Z" stroke="#22a84a" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- 水波纹 -->
+          <path d="M18 28C18 28 20 32 24 32C28 32 30 28 30 28" stroke="#22a84a" stroke-width="2" stroke-linecap="round"/>
+          <!-- 井架结构 -->
+          <line x1="24" y1="40" x2="24" y2="44" stroke="#1a7a3c" stroke-width="2" stroke-linecap="round"/>
+          <line x1="18" y1="44" x2="30" y2="44" stroke="#1a7a3c" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sys-name">豫农田机井管护系统</div>
+      <div class="sys-sub">智慧管护 · 便民服务</div>
+    </div>
+
+    <!-- 登录卡片 -->
+    <div class="login-card">
+      <!-- Tab 切换 -->
+      <div class="tab-bar" id="tabBar">
+        <div class="tab-slider" data-index="0" id="tabSlider"></div>
+        <div class="tab-item active" data-tab="0">密码登录</div>
+        <div class="tab-item" data-tab="1">微信登录</div>
+        <div class="tab-item" data-tab="2">验证码登录</div>
+      </div>
+
+      <!-- 表单面板 -->
+      <div class="tab-panels">
+
+        <!-- Tab 1: 密码登录 -->
+        <div class="tab-panel active" id="panel0">
+          <div class="input-group" id="usernameGroup">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="username" placeholder="请输入用户名" autocomplete="username">
+            <div class="error-msg" id="usernameError">请输入用户名</div>
+          </div>
+          <div class="input-group" id="passwordGroup">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+            <!-- 眼睛切换图标 -->
+            <svg class="toggle-pwd" id="togglePwd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <div class="error-msg" id="passwordError">请输入密码</div>
+          </div>
+          <div class="form-extra">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe">
+              <span class="checkbox-custom">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              记住密码
+            </label>
+            <a href="javascript:void(0)" class="forgot-pwd">忘记密码</a>
+          </div>
+          <button class="btn-login" id="btnLogin" type="button">
+            <span class="btn-text">登 录</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+
+        <!-- Tab 2: 微信登录 -->
+        <div class="tab-panel" id="panel1">
+          <div class="wechat-panel">
+            <div class="wechat-icon-wrap">
+              <!-- 微信图标 -->
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32.5 18.5C32.5 12.149 26.234 7 18.5 7C10.766 7 4.5 12.149 4.5 18.5C4.5 22.14 6.56 25.41 9.78 27.6L8.3 31.9L13.2 29.5C14.88 30.12 16.64 30.47 18.5 30.47C18.84 30.47 19.17 30.46 19.5 30.43C19.17 29.5 19 28.52 19 27.5C19 22.53 23.03 18.5 28 18.5C29.58 18.5 31.07 18.88 32.39 19.55C32.46 19.2 32.5 18.85 32.5 18.5Z" fill="#07c160"/>
+                <path d="M43.5 27.5C43.5 22.81 38.35 19 32 19C25.65 19 20.5 22.81 20.5 27.5C20.5 32.19 25.65 36 32 36C33.44 36 34.82 35.78 36.08 35.38L40 37.5L38.78 34C41.1 32.28 43.5 30.04 43.5 27.5Z" fill="#07c160"/>
+                <circle cx="14" cy="17" r="1.5" fill="#fff"/>
+                <circle cx="23" cy="17" r="1.5" fill="#fff"/>
+                <circle cx="28" cy="26.5" r="1.3" fill="#fff"/>
+                <circle cx="36" cy="26.5" r="1.3" fill="#fff"/>
+              </svg>
+            </div>
+            <div class="wechat-desc">使用微信账号快速登录</div>
+            <button class="btn-wechat" id="btnWechat" type="button">
+              <span class="btn-text">微信一键登录</span>
+              <span class="spinner"></span>
+            </button>
+            <div class="wechat-tip">首次登录将自动创建账号</div>
+          </div>
+        </div>
+
+        <!-- Tab 3: 验证码登录 -->
+        <div class="tab-panel" id="panel2">
+          <div class="input-group" id="phoneGroup">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+              <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            <input type="tel" id="phone" placeholder="请输入手机号" maxlength="11">
+            <div class="error-msg" id="phoneError">请输入正确的11位手机号</div>
+          </div>
+          <div class="code-row" style="margin-bottom:16px;">
+            <div class="input-group" id="codeGroup">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+              <input type="tel" id="code" placeholder="请输入验证码" maxlength="6">
+              <div class="error-msg" id="codeError">请输入6位数字验证码</div>
+            </div>
+            <button class="btn-get-code" id="btnGetCode" type="button">获取验证码</button>
+          </div>
+          <button class="btn-login" id="btnCodeLogin" type="button">
+            <span class="btn-text">登 录</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部协议 -->
+    <div class="agreement">
+      登录即代表同意<a href="javascript:void(0)">《用户协议》</a>和<a href="javascript:void(0)">《隐私政策》</a>
+    </div>
+  </div>
+
+  <!-- 成功弹层 -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="success-title">登录成功</div>
+      <div class="success-countdown" id="successCountdown">2秒后自动跳转...</div>
+    </div>
+  </div>
+
+  <script>
+    /* ========== 检查登录状态 ========== */
+    (function checkLogin() {
+      if (sessionStorage.getItem('isLoggedIn')) {
+        window.location.href = 'jg_mobile_app.html';
+      }
+    })();
+
+    /* ========== 恢复记住的用户名 ========== */
+    (function restoreRemembered() {
+      var saved = localStorage.getItem('rememberedUser');
+      if (saved) {
+        document.getElementById('username').value = saved;
+        document.getElementById('rememberMe').checked = true;
+      }
+    })();
+
+    /* ========== Tab 切换 ========== */
+    var tabs = document.querySelectorAll('.tab-item');
+    var slider = document.getElementById('tabSlider');
+    var panels = document.querySelectorAll('.tab-panel');
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-tab'));
+        // 更新 tab 激活状态
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        // 滑动指示器
+        slider.setAttribute('data-index', idx);
+        // 切换面板
+        panels.forEach(function(p) { p.classList.remove('active'); });
+        document.getElementById('panel' + idx).classList.add('active');
+        // 清除所有校验状态
+        clearErrors();
+      });
+    });
+
+    /* ========== 密码明暗文切换 ========== */
+    var togglePwd = document.getElementById('togglePwd');
+    var pwdInput = document.getElementById('password');
+    var pwdVisible = false;
+
+    togglePwd.addEventListener('click', function() {
+      pwdVisible = !pwdVisible;
+      pwdInput.type = pwdVisible ? 'text' : 'password';
+      // 切换图标
+      if (pwdVisible) {
+        // 闭眼图标
+        this.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        // 睁眼图标
+        this.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    });
+
+    /* ========== 验证码倒计时 ========== */
+    var btnGetCode = document.getElementById('btnGetCode');
+    var codeTimer = null;
+
+    btnGetCode.addEventListener('click', function() {
+      // 先校验手机号
+      var phone = document.getElementById('phone').value.trim();
+      if (!/^1\d{10}$/.test(phone)) {
+        setError('phoneGroup', 'phoneError', '请输入正确的11位手机号');
+        return;
+      }
+      clearError('phoneGroup');
+
+      // 开始倒计时
+      var seconds = 60;
+      btnGetCode.disabled = true;
+      btnGetCode.textContent = seconds + 's后重试';
+
+      codeTimer = setInterval(function() {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(codeTimer);
+          btnGetCode.disabled = false;
+          btnGetCode.textContent = '获取验证码';
+        } else {
+          btnGetCode.textContent = seconds + 's后重试';
+        }
+      }, 1000);
+    });
+
+    /* ========== 表单校验辅助 ========== */
+    function setError(groupId, errorId, msg) {
+      var group = document.getElementById(groupId);
+      var errorEl = document.getElementById(errorId);
+      group.classList.add('has-error');
+      if (msg) errorEl.textContent = msg;
+    }
+    function clearError(groupId) {
+      var group = document.getElementById(groupId);
+      group.classList.remove('has-error');
+    }
+    function clearErrors() {
+      document.querySelectorAll('.input-group').forEach(function(g) {
+        g.classList.remove('has-error');
+      });
+    }
+
+    /* ========== 密码登录 ========== */
+    document.getElementById('btnLogin').addEventListener('click', function() {
+      clearErrors();
+      var user = document.getElementById('username').value.trim();
+      var pass = document.getElementById('password').value.trim();
+      var valid = true;
+
+      if (!user) {
+        setError('usernameGroup', 'usernameError', '请输入用户名');
+        valid = false;
+      }
+      if (!pass) {
+        setError('passwordGroup', 'passwordError', '请输入密码');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // 记住密码
+      if (document.getElementById('rememberMe').checked) {
+        localStorage.setItem('rememberedUser', user);
+      } else {
+        localStorage.removeItem('rememberedUser');
+      }
+
+      doLogin(this, user);
+    });
+
+    /* ========== 验证码登录 ========== */
+    document.getElementById('btnCodeLogin').addEventListener('click', function() {
+      clearErrors();
+      var phone = document.getElementById('phone').value.trim();
+      var code = document.getElementById('code').value.trim();
+      var valid = true;
+
+      if (!/^1\d{10}$/.test(phone)) {
+        setError('phoneGroup', 'phoneError', '请输入正确的11位手机号');
+        valid = false;
+      }
+      if (!/^\d{6}$/.test(code)) {
+        setError('codeGroup', 'codeError', '请输入6位数字验证码');
+        valid = false;
+      }
+      if (!valid) return;
+
+      doLogin(this, phone);
+    });
+
+    /* ========== 微信登录 ========== */
+    document.getElementById('btnWechat').addEventListener('click', function() {
+      doLogin(this, '微信用户');
+    });
+
+    /* ========== 通用登录逻辑 ========== */
+    function doLogin(btn, username) {
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        // 存储登录状态
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('loginUser', username);
+
+        // 显示成功弹层
+        var overlay = document.getElementById('successOverlay');
+        overlay.classList.add('show');
+        var countdown = 2;
+        document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
+
+        var timer = setInterval(function() {
+          countdown--;
+          if (countdown <= 0) {
+            clearInterval(timer);
+            window.location.href = 'jg_mobile_app.html';
+          } else {
+            document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
+          }
+        }, 1000);
+      }, 1200);
+    }
+
+    /* ========== 输入时清除错误 ========== */
+    document.getElementById('username').addEventListener('input', function() {
+      clearError('usernameGroup');
+    });
+    document.getElementById('password').addEventListener('input', function() {
+      clearError('passwordGroup');
+    });
+    document.getElementById('phone').addEventListener('input', function() {
+      clearError('phoneGroup');
+    });
+    document.getElementById('code').addEventListener('input', function() {
+      clearError('codeGroup');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豫农田机井管护系统 - 机井管理</title>
+<link rel="stylesheet" href="jinguan_common.css">
+<style>
+  /* ===== 主体布局 ===== */
+  .jg-main { margin-top: 56px; display: flex; min-height: calc(100vh - 56px); }
+
+  /* ===== 筛选栏 ===== */
+  .jg-filter-wrap {
+    background: #fff; border-radius: 6px; padding: 12px 14px;
+    margin-bottom: 10px; border: 1px solid #eee;
+  }
+  .jg-filter-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .jg-view-btns { display: flex; border: 1px solid #d9d9d9; border-radius: 4px; overflow: hidden; margin-right: 8px; }
+  .jg-view-btn {
+    padding: 5px 12px; cursor: pointer; background: #fff; color: #555;
+    font-size: 12px; display: flex; align-items: center; gap: 4px;
+    border: none; outline: none; transition: all 0.15s;
+  }
+  .jg-view-btn:not(:last-child) { border-right: 1px solid #d9d9d9; }
+  .jg-view-btn.active { background: #22a84a; color: #fff; }
+  .jg-view-btn:hover:not(.active) { background: #f5f5f5; }
+  .jg-search-wrap { position: relative; flex: 1; max-width: 300px; }
+  .jg-search-wrap input {
+    width: 100%; padding: 5px 30px 5px 10px;
+    border: 1px solid #d9d9d9; border-radius: 4px; font-size: 12px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .jg-search-wrap input:focus { border-color: #22a84a; }
+  .jg-search-wrap .jg-search-icon {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    color: #999; font-size: 13px; cursor: pointer;
+  }
+  .jg-filter-select {
+    padding: 5px 8px; border: 1px solid #d9d9d9; border-radius: 4px;
+    font-size: 12px; color: #555; cursor: pointer; outline: none;
+    background: #fff; min-width: 100px;
+  }
+  .jg-filter-select:focus { border-color: #22a84a; }
+
+  .jg-more-panel {
+    margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee;
+    display: none; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+  .jg-more-panel.open { display: flex; }
+  .jg-filter-group { display: flex; align-items: center; gap: 6px; }
+  .jg-filter-label { font-size: 12px; color: #666; white-space: nowrap; }
+
+  /* ===== 操作行 ===== */
+  .jg-action-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+  }
+  .jg-action-left { display: flex; align-items: center; gap: 8px; }
+  .jg-action-right { display: flex; align-items: center; gap: 8px; }
+  .jg-total-label { font-size: 12px; color: #666; }
+  .jg-total-label strong { color: #22a84a; }
+
+  /* ===== 列表视图 ===== */
+  .jg-table-wrap { background: #fff; border-radius: 6px; overflow: hidden; border: 1px solid #eee; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead tr { background: #f7faf8; }
+  th {
+    padding: 10px 10px; font-size: 12px; font-weight: 600; color: #666;
+    text-align: left; border-bottom: 1px solid #eee; white-space: nowrap;
+  }
+  td {
+    padding: 10px 10px; font-size: 12px; color: #333;
+    border-bottom: 1px solid #f0f0f0; vertical-align: middle;
+  }
+  tbody tr:hover td { background: #f6ffed; }
+  input[type="checkbox"] { cursor: pointer; accent-color: #22a84a; }
+
+  .jg-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .jg-tag-normal { background: #f0fff4; color: #22a84a; border: 1px solid #b7ebc7; }
+  .jg-tag-repair { background: #fff7e6; color: #fa8c16; border: 1px solid #ffd591; }
+  .jg-tag-repairing { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+  .jg-tag-stop { background: #f5f5f5; color: #666; border: 1px solid #d9d9d9; }
+  .jg-tag-scrap { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+  .jg-tag-pump { background: #f9f0ff; color: #722ed1; border: 1px solid #d3adf7; }
+  .jg-tag-motor { background: #e6fffb; color: #13c2c2; border: 1px solid #87e8de; }
+  .jg-tag-diesel { background: #fff2e8; color: #d4380d; border: 1px solid #ffbb96; }
+  .jg-tag-inspect { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+
+  .jg-link-btn {
+    color: #22a84a; cursor: pointer; text-decoration: none;
+    font-size: 12px; transition: color 0.15s;
+  }
+  .jg-link-btn:hover { color: #1a6f36; text-decoration: underline; }
+  .jg-link-btn + .jg-link-btn { margin-left: 8px; }
+  .jg-link-btn.danger { color: #ff4d4f; }
+  .jg-link-btn.danger:hover { color: #cf1322; }
+
+  /* ===== 分页 ===== */
+  .jg-pagination {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 6px; padding: 12px 14px; background: #fff;
+    border-top: 1px solid #f0f0f0; border-radius: 0 0 6px 6px;
+  }
+  .jg-page-info { font-size: 12px; color: #666; margin-right: 8px; }
+  .jg-page-btn {
+    width: 28px; height: 28px; border: 1px solid #d9d9d9; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; background: #fff; font-size: 12px; color: #555;
+    transition: all 0.15s;
+  }
+  .jg-page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .jg-page-btn.active { background: #22a84a; border-color: #22a84a; color: #fff; }
+  .jg-page-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+  .jg-page-jump { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #666; margin-left: 8px; }
+  .jg-page-jump input {
+    width: 44px; height: 28px; border: 1px solid #d9d9d9; border-radius: 4px;
+    text-align: center; font-size: 12px; outline: none;
+  }
+  .jg-page-jump input:focus { border-color: #22a84a; }
+  .jg-page-size {
+    height: 28px; border: 1px solid #d9d9d9; border-radius: 4px;
+    font-size: 12px; padding: 0 6px; color: #555; outline: none; cursor: pointer;
+  }
+
+  /* ===== 地图视图 ===== */
+  .jg-map-container { background: #fff; border-radius: 6px; border: 1px solid #eee; overflow: hidden; position: relative; }
+  .jg-map-bg {
+    width: 100%; height: 520px;
+    background:
+      radial-gradient(ellipse at 30% 40%, #3d5c3d 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, #4a6b4a 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 30%, #2d4a2d 0%, transparent 60%),
+      linear-gradient(160deg, #1a2e1a 0%, #2d4a2d 30%, #3d5c3d 60%, #2a3a2a 100%);
+    position: relative; overflow: hidden;
+  }
+  .jg-map-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .jg-map-river { position: absolute; border-radius: 999px; background: rgba(30,100,180,0.4); }
+  .jg-map-road { position: absolute; background: rgba(200,200,200,0.3); }
+  .jg-map-marker {
+    position: absolute; transform: translate(-50%, -100%);
+    cursor: pointer; transition: transform 0.15s;
+  }
+  .jg-map-marker:hover { transform: translate(-50%, -100%) scale(1.2); z-index: 10; }
+  .jg-map-pin {
+    width: 22px; height: 28px; position: relative;
+    display: flex; align-items: flex-start; justify-content: center;
+  }
+  .jg-map-pin-head {
+    width: 20px; height: 20px; border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg); position: absolute; top: 0;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .jg-map-pin-head::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.8); transform: rotate(45deg); position: absolute;
+  }
+  .jg-pin-normal .jg-map-pin-head { background: #22a84a; }
+  .jg-pin-repair .jg-map-pin-head { background: #fa8c16; }
+  .jg-pin-repairing .jg-map-pin-head { background: #1890ff; }
+  .jg-pin-stop .jg-map-pin-head { background: #999; }
+  .jg-pin-scrap .jg-map-pin-head { background: #ff4d4f; }
+  .jg-map-label {
+    position: absolute; top: -8px; left: 24px;
+    background: rgba(255,255,255,0.92); border: 1px solid #ddd;
+    border-radius: 4px; padding: 2px 6px; font-size: 11px; white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2); display: none; color: #333;
+  }
+  .jg-map-marker:hover .jg-map-label { display: block; }
+  .jg-map-legend {
+    position: absolute; bottom: 16px; left: 16px;
+    background: rgba(20,30,20,0.85); border-radius: 6px; padding: 8px 12px;
+    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .jg-legend-title { font-size: 11px; font-weight: 600; color: #ddd; margin-bottom: 6px; }
+  .jg-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #ddd; margin-bottom: 4px; }
+  .jg-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .jg-map-stats {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(20,30,20,0.85); border-radius: 6px; padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.3); min-width: 160px;
+  }
+  .jg-map-stat-item {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 6px; font-size: 12px;
+  }
+  .jg-map-stat-item:last-child { margin-bottom: 0; }
+  .jg-map-stat-name { color: #bbb; }
+  .jg-map-stat-val { font-weight: 700; }
+  .jg-map-zoom {
+    position: absolute; bottom: 16px; right: 16px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .jg-map-zoom-btn {
+    width: 28px; height: 28px; background: rgba(20,30,20,0.85); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: #ddd;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3); transition: all 0.15s;
+  }
+  .jg-map-zoom-btn:hover { background: rgba(34,168,74,0.8); color: #fff; border-color: #22a84a; }
+
+  /* ===== 弹窗 ===== */
+  .jg-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    z-index: 300; display: none; align-items: flex-start; justify-content: center;
+    padding-top: 60px;
+  }
+  .jg-modal-overlay.show { display: flex; }
+  .jg-modal {
+    background: #fff; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    width: 760px; max-height: calc(100vh - 100px);
+    display: flex; flex-direction: column;
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .jg-modal-header {
+    padding: 16px 20px; border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; flex-shrink: 0;
+    position: relative;
+  }
+  .jg-modal-header::before {
+    content: ''; position: absolute; left: 0; top: 10px; bottom: 10px;
+    width: 3px; background: #22a84a; border-radius: 0 2px 2px 0;
+  }
+  .jg-modal-title {
+    font-size: 16px; font-weight: 700; color: #222; padding-left: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .jg-modal-close {
+    width: 28px; height: 28px; border-radius: 50%; background: #f5f5f5;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: #666; transition: all 0.15s; border: none;
+  }
+  .jg-modal-close:hover { background: #ffe7e7; color: #ff4d4f; }
+  .jg-modal-body { flex: 1; overflow-y: auto; padding: 0; }
+  .jg-modal-footer {
+    padding: 12px 20px; border-top: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+  }
+
+  .jg-detail-bar {
+    padding: 14px 20px; background: #f9fafb; border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .jg-detail-bar .jg-well-id { font-size: 14px; font-weight: 700; color: #1a7a3c; }
+  .jg-detail-bar .jg-well-addr { font-size: 12px; color: #666; }
+  .jg-detail-bar .jg-well-status { margin-left: auto; }
+
+  .jg-tab-nav {
+    display: flex; border-bottom: 1px solid #f0f0f0; background: #fff; padding: 0 20px; flex-shrink: 0;
+  }
+  .jg-tab-item {
+    padding: 12px 16px; cursor: pointer; font-size: 13px; color: #666;
+    border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap;
+  }
+  .jg-tab-item:hover { color: #22a84a; }
+  .jg-tab-item.active { color: #22a84a; border-bottom-color: #22a84a; font-weight: 600; }
+  .jg-tab-pane { display: none; padding: 16px 20px; }
+  .jg-tab-pane.active { display: block; }
+
+  .jg-info-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; border: 1px solid #f0f0f0; border-radius: 6px; overflow: hidden; margin-bottom: 16px;
+  }
+  .jg-info-cell { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; }
+  .jg-info-cell:nth-child(3n) { border-right: none; }
+  .jg-info-cell:nth-last-child(-n+3) { border-bottom: none; }
+  .jg-info-cell-label { font-size: 11px; color: #666; margin-bottom: 3px; }
+  .jg-info-cell-value { font-size: 13px; color: #222; font-weight: 500; }
+
+  .jg-person-cards { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .jg-person-card {
+    background: #f9fafb; border: 1px solid #eee; border-radius: 8px;
+    padding: 14px 16px; min-width: 200px; flex: 1;
+  }
+  .jg-person-role {
+    font-size: 11px; color: #22a84a; font-weight: 600;
+    background: #e8f5ec; padding: 2px 8px; border-radius: 10px;
+    display: inline-block; margin-bottom: 8px;
+  }
+  .jg-person-name { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 4px; }
+  .jg-person-info { font-size: 12px; color: #666; line-height: 1.8; }
+  .jg-person-phone { color: #22a84a; cursor: pointer; }
+
+  .jg-timeline { position: relative; padding-left: 20px; }
+  .jg-timeline::before {
+    content: ''; position: absolute; left: 5px; top: 8px; bottom: 8px;
+    width: 2px; background: #e8e8e8; border-radius: 2px;
+  }
+  .jg-timeline-item { position: relative; margin-bottom: 16px; }
+  .jg-timeline-dot {
+    position: absolute; left: -17px; top: 4px;
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid #22a84a; background: #fff;
+  }
+  .jg-timeline-dot.bad { border-color: #ff4d4f; }
+  .jg-timeline-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .jg-timeline-date { font-size: 12px; color: #666; }
+  .jg-timeline-result { font-size: 12px; font-weight: 600; }
+  .jg-timeline-result.ok { color: #22a84a; }
+  .jg-timeline-result.bad { color: #ff4d4f; }
+  .jg-timeline-inspector { font-size: 12px; color: #666; }
+  .jg-timeline-desc { font-size: 12px; color: #555; background: #fafafa; padding: 8px 10px; border-radius: 4px; }
+  .jg-timeline-pics { display: flex; gap: 6px; margin-top: 6px; }
+  .jg-timeline-pic {
+    width: 60px; height: 60px; background: #e8f5ec; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; border: 1px solid #c8e6c9; transition: transform 0.15s;
+  }
+  .jg-timeline-pic:hover { transform: scale(1.05); }
+
+  .jg-related-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .jg-related-table th {
+    background: #f7faf8; padding: 8px 10px; color: #666; font-weight: 600;
+    border-bottom: 1px solid #eee; text-align: left;
+  }
+  .jg-related-table td { padding: 8px 10px; border-bottom: 1px solid #f5f5f5; color: #333; }
+  .jg-related-table tr:last-child td { border-bottom: none; }
+  .jg-related-table tr:hover td { background: #f6ffed; }
+
+  .jg-modal-sm { width: 400px; }
+
+  @media (max-width: 1100px) {
+    .jg-stats-grid { flex-wrap: wrap; }
+    .jg-stat-card { min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="jg-header">
+  <a href="jinguan_home.html" class="jg-logo">
+    <div class="jg-logo-icon jg-logo-icon"></div>
+    豫农田机井管护系统
+  </a>
+  <nav class="jg-nav">
+    <a class="jg-nav-item" href="jinguan_home.html"><span class="jg-nav-icon">🏠</span> 系统首页</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item active"><span class="jg-nav-icon">🪣</span> 机井管理</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan.html"><span class="jg-nav-icon">📋</span> 工单管理</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_staff.html"><span class="jg-nav-icon">👷</span> 一长两员</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_news.html"><span class="jg-nav-icon">📰</span> 工作动态</a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_admin.html"><span class="jg-nav-icon">⚙</span> 系统管理</a>
+  </nav>
+  <button class="jg-hamburger" onclick="toggleMobileMenu()" aria-label="打开菜单">☰</button>
+  <div class="jg-header-right">
+    <button class="jg-msg-btn" onclick="showToast('您有3条未读消息','info')" aria-label="消息通知">🔔<span class="jg-msg-badge">3</span></button>
+    <div class="jg-user-btn" id="userBtn" onclick="toggleUserMenu()">
+      <div class="jg-user-avatar">👤</div>
+      <span id="displayName">用户</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </div>
+    <div class="jg-user-menu" id="userMenu">
+      <div class="jg-user-info">
+        <div class="jg-user-info-avatar">用</div>
+        <div>
+          <div class="jg-user-info-name" id="displayName2">用户</div>
+          <div class="jg-user-info-role">省级监督员</div>
+        </div>
+      </div>
+      <a class="jg-user-menu-item" href="jinguan_profile.html">⚙ 个人设置</a>
+      <a class="jg-user-menu-item" onclick="showToast('修改密码功能开发中','info')">🔑 修改密码</a>
+      <div class="jg-user-menu-sep"></div>
+      <a class="jg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 主体 ===== -->
+<div class="jg-main">
+  <!-- 左侧地区树 -->
+  <aside class="jg-sidebar">
+    <div class="jg-sidebar-search">
+      <input type="text" id="sidebarSearch" placeholder="搜索地区..." aria-label="搜索地区">
+    </div>
+    <div class="jg-sidebar-tree">
+      <div class="jg-tree-node jg-tree-root active" onclick="toggleTree('all', this)">
+        <span class="jg-tree-arrow open" id="arrow-all">▶</span>🌐 全部地区 <span class="jg-tree-count">(2845)</span>
+      </div>
+      <div class="jg-tree-children open" id="tree-all">
+        <div class="jg-tree-node child" onclick="toggleTree('zz', this)">
+          <span class="jg-tree-arrow">▶</span>郑州市 <span class="jg-tree-count">(312)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-zz">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('中牟县')">中牟县 <span class="jg-tree-count">(89)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('新郑市')">新郑市 <span class="jg-tree-count">(76)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('登封市')">登封市 <span class="jg-tree-count">(147)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('kf', this)">
+          <span class="jg-tree-arrow">▶</span>开封市 <span class="jg-tree-count">(198)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-kf">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('兰考县')">兰考县 <span class="jg-tree-count">(112)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('杞县')">杞县 <span class="jg-tree-count">(86)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('ly', this)">
+          <span class="jg-tree-arrow">▶</span>洛阳市 <span class="jg-tree-count">(287)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-ly">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('孟津区')">孟津区 <span class="jg-tree-count">(98)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('伊川县')">伊川县 <span class="jg-tree-count">(189)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('py', this)">
+          <span class="jg-tree-arrow">▶</span>平顶山市 <span class="jg-tree-count">(234)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-py">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('叶县')">叶县 <span class="jg-tree-count">(156)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('鲁山县')">鲁山县 <span class="jg-tree-count">(78)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('ay', this)">
+          <span class="jg-tree-arrow">▶</span>安阳市 <span class="jg-tree-count">(321)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-ay">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('汤阴县')">汤阴县 <span class="jg-tree-count">(178)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('内黄县')">内黄县 <span class="jg-tree-count">(143)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('hb', this)">
+          <span class="jg-tree-arrow">▶</span>鹤壁市 <span class="jg-tree-count">(143)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-hb">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('浚县')">浚县 <span class="jg-tree-count">(98)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('淇县')">淇县 <span class="jg-tree-count">(45)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('xx', this)">
+          <span class="jg-tree-arrow">▶</span>新乡市 <span class="jg-tree-count">(267)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-xx">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('原阳县')">原阳县 <span class="jg-tree-count">(167)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('封丘县')">封丘县 <span class="jg-tree-count">(100)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="toggleTree('jz', this)">
+          <span class="jg-tree-arrow">▶</span>焦作市 <span class="jg-tree-count">(189)</span>
+        </div>
+        <div class="jg-tree-children" id="tree-jz">
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('温县')">温县 <span class="jg-tree-count">(112)</span></div>
+          <div class="jg-tree-node child" style="padding-left:36px" onclick="filterArea('武陟县')">武陟县 <span class="jg-tree-count">(77)</span></div>
+        </div>
+        <div class="jg-tree-node child" onclick="filterArea('濮阳市')">濮阳市 <span class="jg-tree-count">(156)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('许昌市')">许昌市 <span class="jg-tree-count">(213)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('漯河市')">漯河市 <span class="jg-tree-count">(98)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('三门峡市')">三门峡市 <span class="jg-tree-count">(76)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('南阳市')">南阳市 <span class="jg-tree-count">(342)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('商丘市')">商丘市 <span class="jg-tree-count">(256)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('信阳市')">信阳市 <span class="jg-tree-count">(134)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('周口市')">周口市 <span class="jg-tree-count">(312)</span></div>
+        <div class="jg-tree-node child" onclick="filterArea('驻马店市')">驻马店市 <span class="jg-tree-count">(103)</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 右侧内容 -->
+  <main style="flex:1;padding:12px 16px 20px;overflow-x:auto">
+    <!-- 面包屑 -->
+    <div class="jg-breadcrumb">
+      <span class="jg-breadcrumb-pin">📍</span>
+      当前位置：
+      <a href="jinguan_home.html">首页</a>
+      <span class="jg-breadcrumb-sep">›</span>
+      <span class="jg-breadcrumb-current" data-base="机井管理">机井管理</span>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="jg-stats-grid" style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:nowrap;align-items:stretch">
+      <div class="jg-stat-card green" onclick="filterStatus('')" style="flex:1;min-width:0">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon">🪣</div>
+          <span class="jg-stat-label">机井总数</span>
+        </div>
+        <div class="jg-stat-value">2,845<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card green" onclick="filterStatus('正常运行')" style="flex:1;min-width:0">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#f0fff4">🟢</div>
+          <span class="jg-stat-label">正常运行</span>
+        </div>
+        <div class="jg-stat-value">2,341<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card orange" onclick="filterStatus('待维修')" style="flex:1;min-width:0">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#fff7e6">🟡</div>
+          <span class="jg-stat-label">待维修</span>
+        </div>
+        <div class="jg-stat-value">187<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card blue" onclick="filterStatus('维修中')" style="flex:1;min-width:0">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#e6f4ff">🔵</div>
+          <span class="jg-stat-label">维修中</span>
+        </div>
+        <div class="jg-stat-value">98<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card" onclick="filterStatus('已停用')" style="flex:1;min-width:0;border-left:3px solid #999">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#f5f5f5">⚫</div>
+          <span class="jg-stat-label">已停用</span>
+        </div>
+        <div class="jg-stat-value" style="color:#666">156<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card red" onclick="filterStatus('已报废')" style="flex:1;min-width:0">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#fff1f0">🔴</div>
+          <span class="jg-stat-label">已报废</span>
+        </div>
+        <div class="jg-stat-value">63<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('查看有未结工单机井','info')" style="flex:1;min-width:0;border-left:3px solid #fa8c16">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#fff7e6">📋</div>
+          <span class="jg-stat-label">有未结工单</span>
+        </div>
+        <div class="jg-stat-value" style="color:#fa8c16">142<span class="jg-stat-unit">口</span></div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('查看本月已巡查机井','info')" style="flex:1;min-width:0;border-left:3px solid #1890ff">
+        <div class="jg-stat-header">
+          <div class="jg-stat-icon" style="background:#e6f4ff">🔍</div>
+          <span class="jg-stat-label">本月已巡查</span>
+        </div>
+        <div class="jg-stat-value" style="color:#1890ff">1,876<span class="jg-stat-unit">口</span></div>
+      </div>
+    </div>
+
+    <!-- 筛选栏 -->
+    <div class="jg-filter-wrap">
+      <div class="jg-filter-top">
+        <div class="jg-view-btns">
+          <button class="jg-view-btn active" id="btn-list" onclick="switchView('list')">☰ 列表视图</button>
+          <button class="jg-view-btn" id="btn-map" onclick="switchView('map')">🗺 地图视图</button>
+        </div>
+        <div class="jg-search-wrap">
+          <input type="text" id="searchInput" placeholder="搜索机井编号/村庄/负责人..." oninput="doSearch()">
+          <span class="jg-search-icon">🔍</span>
+        </div>
+        <select class="jg-filter-select" id="statusFilter" onchange="doSearch()">
+          <option value="">全部状态</option>
+          <option>正常运行</option><option>待维修</option><option>维修中</option><option>已停用</option><option>已报废</option>
+        </select>
+        <select class="jg-filter-select" id="typeFilter" onchange="doSearch()">
+          <option value="">全部类型</option><option>潜水泵</option><option>电动机泵</option><option>柴油机泵</option>
+        </select>
+        <button class="jg-btn jg-btn-default" onclick="toggleMoreFilter()">更多筛选 ⬇</button>
+        <button class="jg-btn jg-btn-primary" onclick="doSearch()">🔍 查询</button>
+        <button class="jg-btn jg-btn-default" onclick="resetFilter()">重置</button>
+      </div>
+      <div class="jg-more-panel" id="moreFilter">
+        <div class="jg-filter-group"><span class="jg-filter-label">建设年份：</span>
+          <select class="jg-filter-select"><option value="">不限</option><option>2015年以前</option><option>2015-2018年</option><option>2019-2021年</option><option>2022年以后</option></select>
+        </div>
+        <div class="jg-filter-group"><span class="jg-filter-label">资金来源：</span>
+          <select class="jg-filter-select"><option value="">不限</option><option>财政拨款</option><option>高标准农田</option><option>村集体自筹</option></select>
+        </div>
+        <div class="jg-filter-group"><span class="jg-filter-label">逾期巡查：</span>
+          <select class="jg-filter-select"><option value="">不限</option><option>已逾期</option><option>正常</option></select>
+        </div>
+        <div class="jg-filter-group"><span class="jg-filter-label">井长：</span>
+          <input type="text" class="jg-filter-select" placeholder="输入姓名" style="min-width:80px">
+        </div>
+        <div class="jg-filter-group"><span class="jg-filter-label">GPS：</span>
+          <select class="jg-filter-select"><option value="">不限</option><option>已采集</option><option>未采集</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 筛选标签 -->
+    <div class="jg-filter-tags"></div>
+
+    <!-- 操作行 -->
+    <div class="jg-action-row">
+      <div class="jg-action-left">
+        <span class="jg-total-label">共 <strong id="totalCount">0</strong> 口机井</span>
+        <button class="jg-btn jg-btn-default" onclick="exportCSV()">⬇ 导出台账</button>
+        <button class="jg-btn jg-btn-default" onclick="openAddModal()">＋ 新增机井</button>
+      </div>
+      <div class="jg-action-right">
+        <span style="font-size:12px;color:#666">选中 <strong id="selCount">0</strong> 口</span>
+        <button class="jg-btn jg-btn-default" onclick="batchOp()">批量停用</button>
+      </div>
+    </div>
+
+    <!-- ===== 列表视图 ===== -->
+    <div id="listView">
+      <div class="jg-table-wrap">
+        <div id="tableSkeleton" style="padding:16px">
+          <div class="jg-skeleton jg-skeleton-row"></div>
+          <div class="jg-skeleton jg-skeleton-row"></div>
+          <div class="jg-skeleton jg-skeleton-row"></div>
+          <div class="jg-skeleton jg-skeleton-row"></div>
+          <div class="jg-skeleton jg-skeleton-row"></div>
+        </div>
+        <table id="dataTable" style="display:none">
+          <colgroup>
+            <col style="width:36px"><col style="width:145px"><col style="width:120px">
+            <col style="width:75px"><col style="width:75px"><col style="width:55px">
+            <col style="width:90px"><col style="width:85px"><col style="width:70px">
+            <col style="width:75px"><col style="width:100px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="checkAll" onchange="toggleAll(this)"></th>
+              <th>机井编号</th><th>所在位置</th><th>井型</th><th>机井状态</th>
+              <th>井深(m)</th><th>水泵型号</th><th>最近巡查</th><th>井长</th>
+              <th>未结工单</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="jg-pagination" id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- ===== 地图视图 ===== -->
+    <div id="mapView" style="display:none">
+      <div class="jg-map-container">
+        <div class="jg-map-bg" id="mapBg">
+          <div class="jg-map-river" style="width:3px;height:320px;left:35%;top:10%;transform:rotate(12deg);border-radius:3px;"></div>
+          <div class="jg-map-river" style="width:3px;height:200px;left:62%;top:30%;transform:rotate(-8deg);border-radius:3px;"></div>
+          <div class="jg-map-road" style="width:100%;height:2px;top:45%;opacity:0.4;"></div>
+          <div class="jg-map-road" style="width:2px;height:100%;left:50%;opacity:0.4;"></div>
+        </div>
+        <div class="jg-map-legend">
+          <div class="jg-legend-title">机井状态图例</div>
+          <div class="jg-legend-item"><div class="jg-legend-dot" style="background:#22a84a"></div>正常运行</div>
+          <div class="jg-legend-item"><div class="jg-legend-dot" style="background:#fa8c16"></div>待维修</div>
+          <div class="jg-legend-item"><div class="jg-legend-dot" style="background:#1890ff"></div>维修中</div>
+          <div class="jg-legend-item"><div class="jg-legend-dot" style="background:#999"></div>已停用</div>
+          <div class="jg-legend-item"><div class="jg-legend-dot" style="background:#ff4d4f"></div>已报废</div>
+        </div>
+        <div class="jg-map-stats">
+          <div style="font-size:12px;font-weight:700;color:#ddd;margin-bottom:8px;">当前视图统计</div>
+          <div class="jg-map-stat-item"><span class="jg-map-stat-name">🟢 正常</span><span class="jg-map-stat-val" style="color:#22a84a" id="mapNormal">0</span></div>
+          <div class="jg-map-stat-item"><span class="jg-map-stat-name">🟡 待修</span><span class="jg-map-stat-val" style="color:#fa8c16" id="mapRepair">0</span></div>
+          <div class="jg-map-stat-item"><span class="jg-map-stat-name">🔵 维修中</span><span class="jg-map-stat-val" style="color:#1890ff" id="mapRepairing">0</span></div>
+          <div class="jg-map-stat-item"><span class="jg-map-stat-name">⚫ 停用</span><span class="jg-map-stat-val" style="color:#666" id="mapStop">0</span></div>
+          <div class="jg-map-stat-item"><span class="jg-map-stat-name">🔴 报废</span><span class="jg-map-stat-val" style="color:#ff4d4f" id="mapScrap">0</span></div>
+        </div>
+        <div class="jg-map-zoom">
+          <div class="jg-map-zoom-btn" title="放大">＋</div>
+          <div class="jg-map-zoom-btn" title="缩小">－</div>
+          <div class="jg-map-zoom-btn" title="定位" style="font-size:13px">⊕</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== 机井详情弹窗 ===== -->
+<div class="jg-modal-overlay" id="detailModal">
+  <div class="jg-modal" style="width:800px" role="dialog" aria-modal="true">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title">🪣 机井档案详情</span>
+      <button class="jg-modal-close" onclick="closeModal('detailModal')" aria-label="关闭">✕</button>
+    </div>
+    <div class="jg-detail-bar">
+      <span class="jg-well-id" id="dWellId"></span>
+      <span class="jg-well-addr" id="dWellAddr"></span>
+      <span class="jg-well-status" id="dWellStatus"></span>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="jg-btn jg-btn-default" onclick="openCreateOrder()">＋ 上报工单</button>
+        <button class="jg-btn jg-btn-default" onclick="openInspectModal()">📋 新增巡查</button>
+      </div>
+    </div>
+    <div class="jg-tab-nav" id="detailTabs">
+      <div class="jg-tab-item active" onclick="switchTab(this,0)">基本信息</div>
+      <div class="jg-tab-item" onclick="switchTab(this,1)">人员绑定</div>
+      <div class="jg-tab-item" onclick="switchTab(this,2)">巡查记录</div>
+      <div class="jg-tab-item" onclick="switchTab(this,3)">关联工单</div>
+    </div>
+    <div class="jg-modal-body">
+      <!-- Tab0：基本信息 -->
+      <div class="jg-tab-pane active" id="tab0">
+        <div class="jg-info-grid" id="infoGrid"></div>
+        <div style="font-size:12px;font-weight:600;color:#666;margin-bottom:8px">GPS坐标 &amp; 位置</div>
+        <div style="background:#f0fff4;border:1px solid #b7ebc7;border-radius:6px;padding:10px 14px;font-size:12px;color:#666;display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <span>📍</span><span id="dGps"></span>
+          <span style="color:#22a84a;cursor:pointer;margin-left:auto;font-size:12px" onclick="switchView('map');closeModal('detailModal')">在地图中查看 →</span>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:#666;margin-bottom:8px">机井照片</div>
+        <div style="display:flex;gap:8px">
+          <div style="width:80px;height:80px;background:#e8f5ec;border:1px solid #c8e6c9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer">🖼</div>
+          <div style="width:80px;height:80px;background:#e8f5ec;border:1px solid #c8e6c9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer">🖼</div>
+          <div style="width:80px;height:80px;background:#f5f5f5;border:1px dashed #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;color:#999">＋</div>
+        </div>
+      </div>
+      <!-- Tab1：人员绑定 -->
+      <div class="jg-tab-pane" id="tab1">
+        <div class="jg-person-cards" id="personCards"></div>
+        <div style="border-top:1px dashed #eee;padding-top:12px">
+          <button class="jg-btn jg-btn-default" onclick="showToast('调整人员绑定功能开发中','info')">调整人员绑定</button>
+        </div>
+      </div>
+      <!-- Tab2：巡查记录 -->
+      <div class="jg-tab-pane" id="tab2">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:13px;color:#666">近6个月巡查记录</span>
+          <button class="jg-btn jg-btn-default" onclick="openInspectModal()">＋ 新增巡查</button>
+        </div>
+        <div class="jg-timeline" id="inspectTimeline"></div>
+      </div>
+      <!-- Tab3：关联工单 -->
+      <div class="jg-tab-pane" id="tab3">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:13px;color:#666">历史工单记录</span>
+          <button class="jg-btn jg-btn-default" onclick="openCreateOrder()">＋ 上报工单</button>
+        </div>
+        <table class="jg-related-table">
+          <thead><tr><th>工单编号</th><th>问题类型</th><th>状态</th><th>创建时间</th><th>处置人</th><th>操作</th></tr></thead>
+          <tbody id="relatedOrders"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('detailModal')">关闭</button>
+      <button class="jg-btn jg-btn-primary" onclick="showToast('档案已保存','success')">保存修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 新增巡查弹窗 ===== -->
+<div class="jg-modal-overlay" id="inspectModal">
+  <div class="jg-modal jg-modal-sm">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title">📋 新增巡查记录</span>
+      <button class="jg-modal-close" onclick="closeModal('inspectModal')" aria-label="关闭">✕</button>
+    </div>
+    <div class="jg-modal-body" style="padding:16px 20px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="jg-filter-group" style="flex-direction:column;align-items:flex-start">
+          <span class="jg-filter-label" style="margin-bottom:4px">巡查日期 <span style="color:#ff4d4f">*</span></span>
+          <input type="date" class="jg-filter-select" style="width:100%" value="2026-05-19">
+        </div>
+        <div class="jg-filter-group" style="flex-direction:column;align-items:flex-start">
+          <span class="jg-filter-label" style="margin-bottom:4px">巡查结论 <span style="color:#ff4d4f">*</span></span>
+          <select class="jg-filter-select" style="width:100%"><option>正常</option><option>发现问题</option></select>
+        </div>
+        <div class="jg-filter-group" style="flex-direction:column;align-items:flex-start">
+          <span class="jg-filter-label" style="margin-bottom:4px">巡查描述</span>
+          <textarea style="width:100%;border:1px solid #d9d9d9;border-radius:4px;padding:6px 8px;font-size:12px;outline:none;resize:vertical;min-height:70px;font-family:inherit" placeholder="记录巡查情况..."></textarea>
+        </div>
+        <div class="jg-filter-group" style="flex-direction:column;align-items:flex-start">
+          <span class="jg-filter-label" style="margin-bottom:4px">上传照片</span>
+          <div style="display:flex;gap:6px">
+            <div style="width:60px;height:60px;background:#f5f5f5;border:1px dashed #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:#999">＋</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('inspectModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="submitInspect()">提交巡查</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 新增机井弹窗 ===== -->
+<div class="jg-modal-overlay" id="addModal">
+  <div class="jg-modal" style="width:640px">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title">＋ 新增机井档案</span>
+      <button class="jg-modal-close" onclick="closeModal('addModal')" aria-label="关闭">✕</button>
+    </div>
+    <div class="jg-modal-body" style="padding:16px 20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div class="jg-filter-label" style="margin-bottom:4px">机井编号 <span style="color:#ff4d4f">*</span></div><input type="text" class="jg-filter-select" style="width:100%" placeholder="自动生成或手动输入"></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">所在省市县 <span style="color:#ff4d4f">*</span></div><select class="jg-filter-select" style="width:100%"><option>河南省 / 郑州市 / 中牟县</option><option>河南省 / 开封市 / 兰考县</option></select></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">乡镇 <span style="color:#ff4d4f">*</span></div><input type="text" class="jg-filter-select" style="width:100%" placeholder="请输入乡镇名称"></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">行政村 <span style="color:#ff4d4f">*</span></div><input type="text" class="jg-filter-select" style="width:100%" placeholder="请输入村名"></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">井型/用途</div><select class="jg-filter-select" style="width:100%"><option>农业灌溉</option><option>人饮工程</option><option>混合用途</option></select></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">水泵类型</div><select class="jg-filter-select" style="width:100%"><option>潜水泵</option><option>电动机泵</option><option>柴油机泵</option></select></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">井深(m)</div><input type="number" class="jg-filter-select" style="width:100%" placeholder="如：68"></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">建设年份</div><input type="number" class="jg-filter-select" style="width:100%" placeholder="如：2019"></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">资金来源</div><select class="jg-filter-select" style="width:100%"><option>财政拨款</option><option>高标准农田</option><option>村集体自筹</option></select></div>
+        <div><div class="jg-filter-label" style="margin-bottom:4px">机井状态</div><select class="jg-filter-select" style="width:100%"><option>正常运行</option><option>待维修</option><option>已停用</option></select></div>
+        <div style="grid-column:span 2"><div class="jg-filter-label" style="margin-bottom:4px">GPS坐标（经度,纬度）</div><input type="text" class="jg-filter-select" style="width:100%" placeholder="如：114.523456, 34.234567"></div>
+      </div>
+    </div>
+    <div class="jg-modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('addModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="submitAdd()">确认新增</button>
+    </div>
+  </div>
+</div>
+
+<script src="jinguan_common.js"></script>
+<script>
+// ===== Mock 数据 =====
+const wellData = [
+  { id:'411025200000311', area:'郑州市/中牟县/刁家乡/红旗村', type:'潜水泵', status:'正常运行', depth:68, pump:'IS80-65-160', lastInspect:'2026-05-15', headman:'刘建国', openOrders:0, buildYear:'2019', fundSource:'高标准农田' },
+  { id:'411025200000342', area:'郑州市/中牟县/刁家乡/前进村', type:'电动机泵', status:'待维修', depth:54, pump:'QJ8-52/7-3', lastInspect:'2026-05-10', headman:'张德胜', openOrders:2, buildYear:'2018', fundSource:'财政拨款' },
+  { id:'411025200000378', area:'郑州市/中牟县/官渡镇/冯庄村', type:'潜水泵', status:'维修中', depth:72, pump:'IS65-50-125', lastInspect:'2026-04-28', headman:'王志远', openOrders:1, buildYear:'2020', fundSource:'高标准农田' },
+  { id:'411025200000401', area:'郑州市/中牟县/官渡镇/大吴庄', type:'潜水泵', status:'正常运行', depth:61, pump:'QJ15-30/3-4', lastInspect:'2026-05-18', headman:'李青山', openOrders:0, buildYear:'2021', fundSource:'村集体自筹' },
+  { id:'411025200000429', area:'郑州市/中牟县/大孟镇/陈桥村', type:'柴油机泵', status:'已停用', depth:45, pump:'—', lastInspect:'2026-03-12', headman:'赵明远', openOrders:0, buildYear:'2012', fundSource:'财政拨款' },
+  { id:'410225200001102', area:'开封市/兰考县/堌阳镇/北沙村', type:'潜水泵', status:'正常运行', depth:78, pump:'QJ25-18/2-2.2', lastInspect:'2026-05-16', headman:'孙建平', openOrders:0, buildYear:'2020', fundSource:'高标准农田' },
+  { id:'410225200001134', area:'开封市/兰考县/堌阳镇/南沙村', type:'电动机泵', status:'待维修', depth:63, pump:'IS80-50-200', lastInspect:'2026-04-20', headman:'周国栋', openOrders:1, buildYear:'2017', fundSource:'财政拨款' },
+  { id:'410225200001198', area:'开封市/兰考县/仪封乡/贺村', type:'潜水泵', status:'正常运行', depth:55, pump:'QJ50-26/2-7.5', lastInspect:'2026-05-17', headman:'吴大伟', openOrders:0, buildYear:'2019', fundSource:'村集体自筹' },
+  { id:'410325200002011', area:'洛阳市/孟津区/朝阳镇/杨家村', type:'潜水泵', status:'正常运行', depth:82, pump:'QJ25-30/3-3', lastInspect:'2026-05-14', headman:'郑文斌', openOrders:0, buildYear:'2021', fundSource:'高标准农田' },
+  { id:'410325200002047', area:'洛阳市/孟津区/朝阳镇/苗庄村', type:'柴油机泵', status:'已报废', depth:30, pump:'—', lastInspect:'2025-12-05', headman:'冯志远', openOrders:0, buildYear:'2008', fundSource:'财政拨款' },
+  { id:'410325200002089', area:'洛阳市/孟津区/平乐镇/上清村', type:'潜水泵', status:'待维修', depth:66, pump:'IS100-80-160', lastInspect:'2026-04-25', headman:'陈国华', openOrders:3, buildYear:'2018', fundSource:'高标准农田' },
+  { id:'410425200003022', area:'平顶山市/叶县/叶邑镇/夏庄村', type:'电动机泵', status:'正常运行', depth:58, pump:'QJ8-52/7-3', lastInspect:'2026-05-12', headman:'谢长江', openOrders:0, buildYear:'2020', fundSource:'财政拨款' },
+  { id:'410425200003056', area:'平顶山市/叶县/叶邑镇/陈村', type:'潜水泵', status:'维修中', depth:70, pump:'QJ25-18/2-2.2', lastInspect:'2026-05-01', headman:'许德茂', openOrders:2, buildYear:'2019', fundSource:'高标准农田' },
+  { id:'410525200004011', area:'安阳市/汤阴县/城关镇/东寺村', type:'潜水泵', status:'正常运行', depth:74, pump:'IS80-65-160', lastInspect:'2026-05-13', headman:'马建国', openOrders:0, buildYear:'2022', fundSource:'村集体自筹' },
+  { id:'410525200004088', area:'安阳市/汤阴县/五陵镇/张庄村', type:'电动机泵', status:'待维修', depth:49, pump:'QJ50-26/2-7.5', lastInspect:'2026-04-15', headman:'宋明达', openOrders:1, buildYear:'2016', fundSource:'财政拨款' },
+  { id:'410625200005034', area:'鹤壁市/浚县/卫贤镇/赵堤村', type:'潜水泵', status:'正常运行', depth:65, pump:'QJ15-30/3-4', lastInspect:'2026-05-11', headman:'田广远', openOrders:0, buildYear:'2020', fundSource:'高标准农田' },
+  { id:'410725200006019', area:'新乡市/原阳县/陡门乡/西马头', type:'潜水泵', status:'正常运行', depth:77, pump:'IS65-50-160', lastInspect:'2026-05-16', headman:'杜玉林', openOrders:0, buildYear:'2021', fundSource:'财政拨款' },
+  { id:'410725200006053', area:'新乡市/原阳县/陡门乡/东马头', type:'电动机泵', status:'待维修', depth:60, pump:'QJ8-52/7-3', lastInspect:'2026-04-22', headman:'霍建文', openOrders:2, buildYear:'2017', fundSource:'村集体自筹' },
+  { id:'410825200007044', area:'焦作市/温县/番田镇/化村', type:'潜水泵', status:'已停用', depth:38, pump:'—', lastInspect:'2026-02-18', headman:'卢志成', openOrders:0, buildYear:'2011', fundSource:'财政拨款' },
+  { id:'410825200007089', area:'焦作市/温县/黄庄镇/丁庄村', type:'潜水泵', status:'正常运行', depth:71, pump:'QJ25-30/3-3', lastInspect:'2026-05-19', headman:'薛鸿远', openOrders:0, buildYear:'2022', fundSource:'高标准农田' },
+];
+
+const statusClass = {
+  '正常运行':'jg-tag-normal','待维修':'jg-tag-inspect','维修中':'jg-tag-repairing',
+  '已停用':'jg-tag-stop','已报废':'jg-tag-scrap'
+};
+const typeClass = { '潜水泵':'jg-tag-pump','电动机泵':'jg-tag-motor','柴油机泵':'jg-tag-diesel' };
+const pinClass = {
+  '正常运行':'jg-pin-normal','待维修':'jg-pin-repair','维修中':'jg-pin-repairing',
+  '已停用':'jg-pin-stop','已报废':'jg-pin-scrap'
+};
+
+let filtered = [...wellData];
+let currentPage = 1;
+let pageSize = 15;
+let selectedIds = new Set();
+let currentWell = null;
+
+// ===== 侧边栏搜索 =====
+document.getElementById('sidebarSearch').addEventListener('input', function() {
+  const keyword = this.value.trim().toLowerCase();
+  document.querySelectorAll('.jg-sidebar .jg-tree-node.child').forEach(function(node) {
+    const text = node.textContent.toLowerCase();
+    node.style.display = (!keyword || text.indexOf(keyword) !== -1) ? '' : 'none';
+  });
+});
+
+// ===== 渲染表格 =====
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  const start = (currentPage - 1) * pageSize;
+  const pageData = filtered.slice(start, start + pageSize);
+  document.getElementById('totalCount').textContent = filtered.length;
+  document.getElementById('checkAll').checked = false;
+  if (!pageData.length) {
+    tbody.innerHTML = '<tr><td colspan="11">' + renderEmpty('暂无符合条件的机井', '请调整筛选条件后重试', '重置筛选', 'resetFilter()') + '</td></tr>';
+    renderPagination();
+    return;
+  }
+  tbody.innerHTML = pageData.map(w => {
+    const sc = statusClass[w.status] || 'jg-tag-stop';
+    const tc = typeClass[w.type] || 'jg-tag-default';
+    const orderCell = w.openOrders > 0
+      ? '<span style="color:#fa8c16;font-weight:700">⚠ ' + w.openOrders + '条</span>'
+      : '<span style="color:#999">无</span>';
+    const shortArea = w.area.split('/').slice(-2).join(' / ');
+    return '<tr>' +
+      '<td><input type="checkbox" class="row-check" value="' + w.id + '" onchange="updateSelCount()"></td>' +
+      '<td><span class="jg-link-btn" onclick="openDetail(\'' + w.id + '\')">' + w.id + '</span></td>' +
+      '<td style="font-size:11px;color:#666" title="' + w.area + '">' + shortArea + '</td>' +
+      '<td><span class="jg-tag ' + tc + '" style="font-size:10px">' + w.type + '</span></td>' +
+      '<td><span class="jg-tag ' + sc + '">' + w.status + '</span></td>' +
+      '<td style="text-align:center">' + w.depth + '</td>' +
+      '<td style="font-size:11px;color:#666">' + w.pump + '</td>' +
+      '<td style="font-size:11px">' + w.lastInspect + '</td>' +
+      '<td>' + w.headman + '</td>' +
+      '<td>' + orderCell + '</td>' +
+      '<td>' +
+        '<span class="jg-link-btn" onclick="openDetail(\'' + w.id + '\')">详情</span>' +
+        '<span class="jg-link-btn" onclick="openInspectDirect(\'' + w.id + '\')">巡查</span>' +
+        '<span class="jg-link-btn danger" onclick="confirmDelete(\'' + w.id + '\')">停用</span>' +
+      '</td></tr>';
+  }).join('');
+  renderPagination();
+}
+
+function renderPagination() {
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const el = document.getElementById('pagination');
+  let html = '<span class="jg-page-info">共' + total + '条，第' + currentPage + '/' + totalPages + '页</span>';
+  html += '<select class="jg-page-size" onchange="changePageSize(this.value)">';
+  [15, 20, 50].forEach(v => { html += '<option value="' + v + '"' + (pageSize == v ? ' selected' : '') + '>' + v + '条/页</option>'; });
+  html += '</select>';
+  html += '<div class="jg-page-btn' + (currentPage <= 1 ? ' disabled' : '') + '" onclick="goPage(' + (currentPage - 1) + ')">◀</div>';
+  getPageRange(currentPage, totalPages).forEach(p => {
+    if (p === '...') html += '<div class="jg-page-btn" style="cursor:default">…</div>';
+    else html += '<div class="jg-page-btn' + (p === currentPage ? ' active' : '') + '" onclick="goPage(' + p + ')">' + p + '</div>';
+  });
+  html += '<div class="jg-page-btn' + (currentPage >= totalPages ? ' disabled' : '') + '" onclick="goPage(' + (currentPage + 1) + ')">▶</div>';
+  html += '<div class="jg-page-jump">跳至<input type="number" min="1" max="' + totalPages + '" value="' + currentPage + '" onkeydown="if(event.key===\'Enter\')goPage(+this.value)">页</div>';
+  el.innerHTML = html;
+}
+
+function getPageRange(cur, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  if (cur <= 4) return [1, 2, 3, 4, 5, '...', total];
+  if (cur >= total - 3) return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+  return [1, '...', cur - 1, cur, cur + 1, '...', total];
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+  if (p < 1 || p > totalPages) return;
+  currentPage = p; renderTable();
+}
+
+function changePageSize(v) { pageSize = +v; currentPage = 1; renderTable(); }
+
+// ===== 筛选 =====
+function doSearch() {
+  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  const st = document.getElementById('statusFilter').value;
+  const tp = document.getElementById('typeFilter').value;
+  filtered = wellData.filter(w => {
+    const matchKw = !kw || w.id.toLowerCase().includes(kw) || w.area.includes(kw) || w.headman.includes(kw);
+    const matchSt = !st || w.status === st;
+    const matchTp = !tp || w.type === tp;
+    return matchKw && matchSt && matchTp;
+  });
+  // 更新筛选标签
+  clearFilterTags();
+  if (kw) addFilterTag('keyword', '关键词: ' + kw, function() { document.getElementById('searchInput').value = ''; });
+  if (st) addFilterTag('status', '状态: ' + st, function() { document.getElementById('statusFilter').value = ''; });
+  if (tp) addFilterTag('type', '类型: ' + tp, function() { document.getElementById('typeFilter').value = ''; });
+  currentPage = 1; selectedIds.clear(); updateSelCount(); renderTable();
+}
+
+function resetFilter() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  clearFilterTags();
+  filtered = [...wellData]; currentPage = 1; selectedIds.clear(); updateSelCount(); renderTable();
+}
+
+function filterStatus(st) {
+  document.getElementById('statusFilter').value = st;
+  doSearch();
+  document.getElementById('listView').style.display = 'block';
+  document.getElementById('mapView').style.display = 'none';
+  document.getElementById('btn-list').classList.add('active');
+  document.getElementById('btn-map').classList.remove('active');
+}
+
+function filterArea(area) {
+  document.querySelectorAll('.jg-tree-node').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('searchInput').value = area;
+  doSearch();
+  addFilterTag('area', '地区: ' + area, function() { document.getElementById('searchInput').value = ''; doSearch(); });
+}
+
+function toggleMoreFilter() { document.getElementById('moreFilter').classList.toggle('open'); }
+
+// ===== 视图切换 =====
+function switchView(v) {
+  if (v === 'list') {
+    document.getElementById('listView').style.display = 'block';
+    document.getElementById('mapView').style.display = 'none';
+    document.getElementById('btn-list').classList.add('active');
+    document.getElementById('btn-map').classList.remove('active');
+  } else {
+    document.getElementById('listView').style.display = 'none';
+    document.getElementById('mapView').style.display = 'block';
+    document.getElementById('btn-list').classList.remove('active');
+    document.getElementById('btn-map').classList.add('active');
+    renderMapMarkers();
+  }
+}
+
+// ===== 地图标记 =====
+function renderMapMarkers() {
+  const bg = document.getElementById('mapBg');
+  bg.querySelectorAll('.jg-map-marker').forEach(m => m.remove());
+  const positions = [
+    [20, 30], [35, 55], [50, 20], [65, 40], [80, 25],
+    [15, 65], [30, 80], [45, 60], [60, 70], [75, 55],
+    [22, 45], [42, 35], [58, 50], [70, 65], [85, 45],
+    [10, 20], [55, 80], [72, 30], [38, 15], [90, 60]
+  ];
+  // 统计
+  let n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0;
+  filtered.forEach(w => {
+    if (w.status === '正常运行') n1++;
+    else if (w.status === '待维修') n2++;
+    else if (w.status === '维修中') n3++;
+    else if (w.status === '已停用') n4++;
+    else if (w.status === '已报废') n5++;
+  });
+  document.getElementById('mapNormal').textContent = n1;
+  document.getElementById('mapRepair').textContent = n2;
+  document.getElementById('mapRepairing').textContent = n3;
+  document.getElementById('mapStop').textContent = n4;
+  document.getElementById('mapScrap').textContent = n5;
+
+  const sample = filtered.slice(0, 20);
+  sample.forEach((w, i) => {
+    const lp = positions[i] ? positions[i][0] : 50;
+    const tp = positions[i] ? positions[i][1] : 50;
+    const pc = pinClass[w.status] || 'jg-pin-stop';
+    const div = document.createElement('div');
+    div.className = 'jg-map-marker ' + pc;
+    div.style.left = lp + '%';
+    div.style.top = tp + '%';
+    div.innerHTML = '<div class="jg-map-pin"><div class="jg-map-pin-head"></div></div>' +
+      '<div class="jg-map-label">' + w.id.slice(-6) + ' · ' + w.status + ' · ' + w.headman + '</div>';
+    div.onclick = function () { openDetail(w.id); };
+    bg.appendChild(div);
+  });
+}
+
+// ===== 多选 =====
+function toggleAll(cb) {
+  document.querySelectorAll('.row-check').forEach(c => { c.checked = cb.checked; });
+  updateSelCount();
+}
+function updateSelCount() {
+  selectedIds.clear();
+  document.querySelectorAll('.row-check:checked').forEach(c => selectedIds.add(c.value));
+  document.getElementById('selCount').textContent = selectedIds.size;
+}
+function batchOp() {
+  if (selectedIds.size === 0) { showToast('请先选择机井', 'warning'); return; }
+  showToast('已批量停用 ' + selectedIds.size + ' 口机井', 'success');
+  selectedIds.clear(); updateSelCount();
+}
+
+// ===== 详情弹窗 =====
+function openDetail(id) {
+  const w = wellData.find(x => x.id === id);
+  if (!w) return;
+  currentWell = w;
+
+  document.getElementById('dWellId').textContent = '编号：' + w.id;
+  document.getElementById('dWellAddr').textContent = '📍 ' + w.area;
+  document.getElementById('dWellStatus').innerHTML = '<span class="jg-tag ' + (statusClass[w.status] || 'jg-tag-stop') + '">' + w.status + '</span>';
+
+  // 基本信息
+  const areaArr = w.area.split('/');
+  const infoData = [
+    ['机井编号', w.id], ['所在省市', areaArr.slice(0, 2).join(' / ')], ['所在县区', areaArr[2] || '—'],
+    ['乡镇名称', areaArr[3] || '—'], ['行政村', areaArr[4] || '—'], ['井型/用途', w.type],
+    ['水泵型号', w.pump], ['井深(m)', w.depth + 'm'], ['机井状态', w.status],
+    ['建设年份', w.buildYear + '年'], ['资金来源', w.fundSource], ['控制箱', '配套齐全']
+  ];
+  document.getElementById('infoGrid').innerHTML = infoData.map(function (r) {
+    return '<div class="jg-info-cell"><div class="jg-info-cell-label">' + r[0] + '</div><div class="jg-info-cell-value">' + r[1] + '</div></div>';
+  }).join('');
+  document.getElementById('dGps').textContent = '经度：114.' + w.id.slice(-4) + '  纬度：34.' + w.id.slice(-3);
+
+  // 人员绑定
+  const guardNames = ['远', '明', '志', '华', '建', '成', '国', '民', '平', '军'];
+  const repairNames = ['磊', '涛', '强', '波', '勇', '伟', '杰', '峰', '鑫', '斌'];
+  const gi = +w.id.slice(-1) % 10;
+  const ri = +w.id.slice(-2, -1) % 10;
+  document.getElementById('personCards').innerHTML =
+    '<div class="jg-person-card">' +
+      '<div class="jg-person-role">井长</div>' +
+      '<div class="jg-person-name">' + w.headman + '</div>' +
+      '<div class="jg-person-info">手机：<span class="jg-person-phone">138****' + w.id.slice(-4) + '</span><br>任职时间：2022年6月<br>所在村：' + (areaArr[4] || '—') + '</div>' +
+    '</div>' +
+    '<div class="jg-person-card">' +
+      '<div class="jg-person-role" style="background:#fff3e0;color:#fa8c16">管护员</div>' +
+      '<div class="jg-person-name">' + w.headman.slice(0, 1) + guardNames[gi] + guardNames[(gi + 3) % 10] + '</div>' +
+      '<div class="jg-person-info">手机：<span class="jg-person-phone">139****' + w.id.slice(-3) + '2</span><br>任职时间：2023年3月<br>负责机井：3口</div>' +
+    '</div>' +
+    '<div class="jg-person-card">' +
+      '<div class="jg-person-role" style="background:#e6f7ff;color:#1890ff">维修员</div>' +
+      '<div class="jg-person-name">刘' + repairNames[ri] + '</div>' +
+      '<div class="jg-person-info">手机：<span class="jg-person-phone">135****0' + w.id.slice(-3) + '</span><br>专业资质：电工证/泵工证<br>服务范围：' + (areaArr[2] || '全区') + '</div>' +
+    '</div>';
+
+  // 巡查记录
+  const inspects = [
+    { date: w.lastInspect, bad: w.status === '待维修' || w.status === '已报废', desc: w.status === '待维修' ? '发现水泵出水量明显减少，建议尽快维修。' : w.status === '已报废' ? '机井已严重损坏，建议报废处理。' : '设备运行正常，井堡完好，无漏水渗水情况。', inspector: w.headman, pics: w.status === '待维修' },
+    { date: '2026-04-18', bad: false, desc: '设备正常，标识牌清晰，周边环境整洁。', inspector: w.headman, pics: false },
+    { date: '2026-03-22', bad: false, desc: '正常运行，控制箱无异常，接线规范。', inspector: w.headman, pics: false },
+    { date: '2026-02-15', bad: false, desc: '冬季巡查，井堡防护完好，未发现冻裂。', inspector: w.headman, pics: false },
+  ];
+  document.getElementById('inspectTimeline').innerHTML = inspects.map(function (ins) {
+    return '<div class="jg-timeline-item">' +
+      '<div class="jg-timeline-dot' + (ins.bad ? ' bad' : '') + '"></div>' +
+      '<div class="jg-timeline-header">' +
+        '<span class="jg-timeline-date">' + ins.date + '</span>' +
+        '<span class="jg-timeline-result ' + (ins.bad ? 'bad' : 'ok') + '">' + (ins.bad ? '✗ 发现问题' : '✓ 正常') + '</span>' +
+        '<span class="jg-timeline-inspector">巡查人：' + ins.inspector + '</span>' +
+      '</div>' +
+      '<div class="jg-timeline-desc">' + ins.desc + '</div>' +
+      (ins.pics ? '<div class="jg-timeline-pics"><div class="jg-timeline-pic">🖼</div><div class="jg-timeline-pic">🖼</div></div>' : '') +
+    '</div>';
+  }).join('');
+
+  // 关联工单
+  var orders = [];
+  if (w.openOrders > 0) {
+    var types = ['水泵损毁', '控制箱故障', '盖板缺失', '出水量减少', '井堡破损'];
+    var statuses = ['待处置', '处置中'];
+    for (var i = 0; i < w.openOrders; i++) {
+      orders.push({
+        no: 'GD' + w.id.slice(-6) + '0' + (i + 1),
+        type: types[i % types.length],
+        status: statuses[i % 2],
+        date: '2026-05-' + String(8 + i).padStart(2, '0'),
+        handler: w.headman
+      });
+    }
+  }
+  orders.push({ no: 'GD' + w.id.slice(-6) + '00', type: '标识牌丢失', status: '已处置', date: '2026-04-02', handler: w.headman });
+  document.getElementById('relatedOrders').innerHTML = orders.map(function (o) {
+    var osc = o.status === '待处置' ? 'jg-tag-inspect' : o.status === '处置中' ? 'jg-tag-repairing' : 'jg-tag-normal';
+    return '<tr>' +
+      '<td><span class="jg-link-btn">' + o.no + '</span></td>' +
+      '<td>' + o.type + '</td>' +
+      '<td><span class="jg-tag ' + osc + '">' + o.status + '</span></td>' +
+      '<td>' + o.date + '</td>' +
+      '<td>' + o.handler + '</td>' +
+      '<td><span class="jg-link-btn">查看</span></td>' +
+    '</tr>';
+  }).join('');
+
+  // 重置Tab
+  document.querySelectorAll('#detailTabs .jg-tab-item').forEach(function (t, i) { t.classList.toggle('active', i === 0); });
+  document.querySelectorAll('.jg-tab-pane').forEach(function (p, i) { p.classList.toggle('active', i === 0); });
+  openModal('detailModal');
+}
+
+// ===== Tab切换 =====
+function switchTab(el, idx) {
+  el.parentElement.querySelectorAll('.jg-tab-item').forEach(function (t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.jg-tab-pane').forEach(function (p, i) { p.classList.toggle('active', i === idx); });
+}
+
+// ===== 弹窗操作 =====
+function openInspectModal() { openModal('inspectModal'); }
+function openInspectDirect(wellId) { currentWell = wellData.find(function (x) { return x.id === wellId; }); openModal('inspectModal'); }
+function openAddModal() { openModal('addModal'); }
+function openCreateOrder() { closeModal('detailModal'); showToast('已跳转至工单上报', 'info'); }
+
+function submitInspect() { closeModal('inspectModal'); showToast('巡查记录已提交', 'success'); }
+function submitAdd() { closeModal('addModal'); showToast('机井档案新增成功', 'success'); }
+function confirmDelete(id) {
+  if (confirm('确定要停用机井 ' + id + ' 吗？')) {
+    var w = wellData.find(function (x) { return x.id === id; });
+    if (w) w.status = '已停用';
+    doSearch();
+    showToast('已停用该机井', 'success');
+  }
+}
+
+// ===== 树形菜单 =====
+function toggleTree(id, el) {
+  var ch = document.getElementById('tree-' + id);
+  if (!ch) return;
+  var arrow = document.getElementById('arrow-' + id);
+  var isOpen = ch.classList.contains('open');
+  ch.classList.toggle('open', !isOpen);
+  if (arrow) arrow.classList.toggle('open', !isOpen);
+  el.classList.toggle('active', !isOpen);
+}
+
+// ===== 导出CSV =====
+function exportCSV() {
+  var header = ['机井编号', '所在位置', '类型', '状态', '井深', '水泵', '最近巡查', '井长', '未结工单'];
+  var rows = filtered.map(function (w) { return [w.id, w.area, w.type, w.status, w.depth, w.pump, w.lastInspect, w.headman, w.openOrders]; });
+  var csv = [header].concat(rows).map(function (r) { return r.join(','); }).join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = '机井台账_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+  showToast('台账导出成功', 'success');
+}
+
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 隐藏骨架屏，显示数据表格
+  document.getElementById('tableSkeleton').style.display = 'none';
+  document.getElementById('dataTable').style.display = '';
+  renderTable();
+});
+</script>
+</body>
+</html>

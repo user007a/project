@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>豫农田机井管护系统 - 工单管理</title>
+<link rel="stylesheet" href="jinguan_common.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+
+  /* ===== 顶部导航 ===== */
+  .header {
+    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-right: 30px;
+  }
+  .jg-logo-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0;
+  }
+  .jg-nav-item {
+    color: rgba(255,255,255,0.9);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    text-decoration: none;
+  }
+  .jg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .jg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .jg-nav-sep { color: rgba(255,255,255,0.4); font-size: 16px; user-select: none; }
+  .nav-icon { font-size: 14px; }
+
+  /* 更多下拉菜单 */
+  .jg-more-dropdown { position: relative; }
+  .jg-more-btn {
+    color: rgba(255,255,255,0.9);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .jg-more-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .jg-more-menu {
+    display: none;
+    position: absolute;
+    top: 56px;
+    right: 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    min-width: 140px;
+    z-index: 200;
+    overflow: hidden;
+  }
+  .jg-more-menu.show { display: block; }
+  .jg-more-menu-item {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .jg-more-menu-item:hover { background: #f6ffed; color: #22a84a; }
+
+  /* 汉堡菜单 */
+  .jg-hamburger {
+    display: none;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-left: 8px;
+  }
+  .jg-hamburger span {
+    width: 20px;
+    height: 2px;
+    background: #fff;
+    border-radius: 1px;
+    transition: all 0.3s;
+  }
+  .jg-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .jg-hamburger.open span:nth-child(2) { opacity: 0; }
+  .jg-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* 移动端导航面板 */
+  .jg-mobile-nav {
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 99;
+    padding: 8px 0;
+  }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .jg-mobile-nav-item:hover, .jg-mobile-nav-item.active { background: #f6ffed; color: #22a84a; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    color: #fff;
+    font-size: 18px;
+  }
+  .msg-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: #ff4d4f;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 8px;
+    font-weight: 600;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  /* ===== 主体布局 ===== */
+  .main-wrap {
+    margin-top: 56px;
+    display: flex;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* ===== 左侧树形菜单 ===== */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: #fff;
+    border-right: 1px solid #e8e8e8;
+    padding: 12px 0;
+    overflow-y: auto;
+    max-height: calc(100vh - 56px);
+  }
+  .jg-sidebar-search {
+    padding: 0 12px 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+  }
+  .jg-sidebar-search input {
+    width: 100%;
+    height: 32px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 12px;
+    outline: none;
+  }
+  .jg-sidebar-search input:focus { border-color: #22a84a; }
+  .tree-node {
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tree-node:hover { background: #f0f7f2; color: #22a84a; }
+  .tree-node.active { background: #e8f5ec; color: #22a84a; font-weight: 600; }
+  .tree-arrow {
+    font-size: 10px;
+    transition: transform 0.2s;
+    color: #666;
+    flex-shrink: 0;
+  }
+  .tree-arrow.open { transform: rotate(90deg); color: #22a84a; }
+  .tree-children { padding-left: 16px; display: none; }
+  .tree-children.open { display: block; }
+  .tree-node.child { padding-left: 20px; font-size: 12px; color: #555; }
+  .tree-node.child:hover { color: #22a84a; }
+  .tree-root { font-weight: 600; font-size: 13px; }
+  .tree-count { color: #666; font-size: 11px; margin-left: 2px; }
+
+  /* ===== 右侧内容 ===== */
+  .content {
+    flex: 1;
+    padding: 12px 16px 20px;
+    overflow-x: auto;
+  }
+
+  /* ===== KPI摘要条 ===== */
+  .jg-kpi-bar {
+    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  .jg-kpi-item {
+    text-align: center;
+    color: #fff;
+  }
+  .jg-kpi-num {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .jg-kpi-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .jg-kpi-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.3);
+  }
+
+  /* ===== 统计卡片 ===== */
+  .stats-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+  .jg-stat-card {
+    background: #fff;
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border: 1px solid #eee;
+    flex: 1;
+    min-width: 0;
+    transition: box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .jg-stat-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #22a84a;
+  }
+  .jg-stat-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .jg-stat-card.primary {
+    background: linear-gradient(135deg, #1a7a3c, #22a84a);
+    border-color: transparent;
+  }
+  .jg-stat-card.primary::before { background: rgba(255,255,255,0.5); }
+  .jg-stat-card.primary .stat-label { color: rgba(255,255,255,0.9); }
+  .jg-stat-card.primary .stat-num { color: #fff; }
+  .jg-stat-card.primary .stat-icon { color: rgba(255,255,255,0.8); }
+  .stat-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .stat-icon { font-size: 16px; }
+  .stat-label { font-size: 11px; color: #666; white-space: nowrap; }
+  .stat-num { font-size: 22px; font-weight: 700; color: #222; line-height: 1.1; }
+  .stat-icon-wrap {
+    width: 32px; height: 32px;
+    background: #e8f5ec;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .jg-stat-card.primary .stat-icon-wrap {
+    background: rgba(255,255,255,0.2);
+  }
+  .dot-indicator {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-blue { background: #4fc3f7; }
+  .dot-yellow { background: #f5a623; }
+  .dot-orange { background: #ff8c00; }
+  .dot-red { background: #ff4d4f; }
+
+  /* ===== 搜索筛选 ===== */
+  .filter-bar {
+    background: #fff;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    border: 1px solid #eee;
+  }
+  .search-input {
+    flex: 1;
+    min-width: 280px;
+    height: 34px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: #22a84a; box-shadow: 0 0 0 2px rgba(34,168,74,0.1); }
+  .filter-select {
+    height: 34px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 28px 0 10px;
+    font-size: 13px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E") no-repeat right 10px center;
+    transition: border-color 0.2s;
+    min-width: 100px;
+  }
+  .filter-select:focus { border-color: #22a84a; }
+
+  /* 筛选标签 */
+  .jg-filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+    min-height: 0;
+  }
+  .jg-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f6ffed;
+    border: 1px solid #b7eb8f;
+    border-radius: 4px;
+    padding: 4px 8px 4px 10px;
+    font-size: 12px;
+    color: #389e0d;
+  }
+  .jg-filter-tag-remove {
+    cursor: pointer;
+    color: #999;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .jg-filter-tag-remove:hover { color: #666; }
+
+  /* ===== 操作栏 ===== */
+  .action-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* ===== 数据表格 ===== */
+  .table-wrap {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr {
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  thead th {
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f6ffed; }
+  tbody td {
+    padding: 10px 12px;
+    vertical-align: middle;
+    font-size: 12px;
+    color: #333;
+  }
+  .checkbox-cell { width: 36px; text-align: center; }
+  input[type="checkbox"] {
+    width: 14px; height: 14px;
+    accent-color: #22a84a;
+    cursor: pointer;
+  }
+  .ticket-cell { min-width: 220px; }
+  .ticket-inner {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .ticket-thumb {
+    width: 60px; height: 50px;
+    background: #e0ebe2;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 20px;
+  }
+  .ticket-no { font-size: 12px; color: #222; font-weight: 600; margin-bottom: 2px; }
+  .ticket-well { font-size: 11px; margin-bottom: 2px; }
+  .ticket-well a { color: #22a84a; text-decoration: none; }
+  .ticket-well a:hover { text-decoration: underline; }
+  .ticket-addr { font-size: 11px; color: #666; }
+  .source-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 3px 7px;
+    font-size: 11px;
+    color: #555;
+    white-space: nowrap;
+  }
+  .source-icon { font-size: 13px; }
+  .problem-cell { min-width: 140px; }
+  .problem-title { color: #333; margin-bottom: 2px; font-size: 12px; }
+  .problem-desc { color: #666; font-size: 11px; }
+  .reporter-cell { min-width: 140px; }
+  .reporter-name { color: #333; margin-bottom: 2px; font-size: 12px; }
+  .reporter-phone { color: #666; font-size: 11px; margin-bottom: 2px; }
+  .reporter-time { color: #999; font-size: 11px; }
+  .status-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .status-pending { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+  .status-processing { background: #e6f4ff; color: #0958d9; border: 1px solid #91caff; }
+  .status-done { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
+  .status-noexist { background: #f5f5f5; color: #8c8c8c; border: 1px solid #d9d9d9; }
+  .assignee-cell { min-width: 130px; }
+  .assignee-name { color: #333; margin-bottom: 2px; font-size: 12px; }
+  .assignee-role { color: #666; font-size: 11px; margin-bottom: 2px; }
+  .assignee-time { color: #999; font-size: 11px; }
+  .ops-cell { min-width: 100px; white-space: nowrap; }
+  .op-link {
+    color: #22a84a;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    margin-right: 8px;
+  }
+  .op-link:hover { color: #1a9940; text-decoration: underline; }
+
+  /* ===== 分页 ===== */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid #f0f0f0;
+    background: #fff;
+    flex-wrap: wrap;
+  }
+  .page-info { color: #666; font-size: 12px; }
+  .page-btn {
+    height: 28px;
+    min-width: 28px;
+    padding: 0 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: #333;
+  }
+  .page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .page-btn.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .page-btn:disabled { cursor: not-allowed; color: #ccc; background: #f5f5f5; }
+  .page-size-select {
+    height: 28px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 0 20px 0 8px;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23666'/%3E%3C/svg%3E") no-repeat right 6px center;
+  }
+  .jg-page-jump {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #666;
+  }
+  .jg-page-jump-input {
+    width: 50px;
+    height: 28px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 0 6px;
+    font-size: 12px;
+    text-align: center;
+    outline: none;
+  }
+  .jg-page-jump-input:focus { border-color: #22a84a; }
+
+  /* ===== 弹窗 ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 8px;
+    min-width: 480px;
+    max-width: 680px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .jg-modal-header {
+    background: #fff;
+    color: #333;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  .jg-modal-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #22a84a;
+  }
+  .jg-modal-close {
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .jg-modal-close:hover { color: #333; }
+  .modal-body { padding: 20px; }
+  .modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .detail-row {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .detail-label {
+    min-width: 80px;
+    color: #666;
+    font-size: 13px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .detail-val { color: #333; font-size: 13px; flex: 1; }
+
+  /* ===== 更多筛选面板 ===== */
+  .advanced-filter {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .advanced-filter.show { display: block; }
+  .af-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .af-label { font-size: 12px; color: #666; white-space: nowrap; min-width: 56px; }
+  .af-input {
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 12px;
+    outline: none;
+    width: 150px;
+    transition: border-color 0.2s;
+  }
+  .af-input:focus { border-color: #22a84a; }
+  .af-select {
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 0 24px 0 8px;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23666'/%3E%3C/svg%3E") no-repeat right 8px center;
+    width: 120px;
+  }
+
+  /* 骨架屏 */
+  .jg-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: jg-skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes jg-skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .jg-skeleton-row {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .jg-skeleton-cell { height: 20px; }
+  .jg-skeleton-text { width: 80px; }
+  .jg-skeleton-text-long { width: 150px; }
+  .jg-skeleton-text-full { width: 100%; }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f5f5f5; }
+  ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+  /* 响应式 */
+  @media (max-width: 1344px) {
+    .jg-hamburger { display: flex; }
+    .nav-menu { display: none; }
+    .jg-nav-sep { display: none; }
+    .header-right { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <svg class="jg-logo-icon" width="38" height="38" viewBox="0 0 38 38">
+      <rect width="38" height="38" fill="#fff" rx="4"/>
+      <polygon points="19,4 10,20 28,20" fill="#22a84a"/>
+      <circle cx="19" cy="13" r="3" fill="#fff" opacity="0.9"/>
+      <rect x="8" y="22" width="22" height="3" rx="1.5" fill="#f5a623"/>
+      <rect x="11" y="27" width="16" height="6" rx="1" fill="#22a84a" opacity="0.6"/>
+    </svg>
+    <span style="margin-left:48px;">豫农田机井管护系统</span>
+  </div>
+
+  <nav class="nav-menu">
+    <a class="jg-nav-item" href="jinguan_home.html">
+      <span class="nav-icon">🏠</span> 系统首页
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_well.html">
+      <span class="nav-icon">🪣</span> 机井管理
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item active" href="#">
+      <span class="nav-icon">📋</span> 工单管理
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_staff.html">
+      <span class="nav-icon">👷</span> 一长两员
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_news.html">
+      <span class="nav-icon">📄</span> 工作动态
+    </a>
+    <span class="jg-nav-sep"></span>
+    <a class="jg-nav-item" href="jinguan_admin.html">
+      <span class="nav-icon">⚙</span> 系统管理
+    </a>
+  </nav>
+
+  <div class="jg-hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="header-right">
+    <div class="msg-btn" onclick="showToast('您有6条未读消息', 'info')">
+      ✉
+      <span class="msg-badge">6</span>
+    </div>
+    <div class="jg-user-btn" id="userBtn" onclick="toggleUserMenu()">
+      <div class="jg-user-avatar">👤</div>
+      <span id="displayName">用户</span>
+      <span style="font-size:10px;opacity:0.8">▾</span>
+    </div>
+    <div class="jg-user-menu" id="userMenu">
+      <div class="jg-user-info">
+        <div class="jg-user-info-avatar">用</div>
+        <div>
+          <div class="jg-user-info-name" id="displayName2">用户</div>
+          <div class="jg-user-info-role">省级监督员</div>
+        </div>
+      </div>
+      <a class="jg-user-menu-item" href="jinguan_profile.html">⚙ 个人设置</a>
+      <a class="jg-user-menu-item" onclick="showToast('修改密码功能开发中','info')">🔑 修改密码</a>
+      <div class="jg-user-menu-sep"></div>
+      <a class="jg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+    </div>
+  </div>
+</header>
+
+<!-- 主体 -->
+<div class="main-wrap">
+  <!-- 左侧城市树 -->
+  <aside class="sidebar">
+    <div class="jg-sidebar-search">
+      <input type="text" id="sidebarSearch" placeholder="搜索地区..." oninput="filterSidebar(this.value)" />
+    </div>
+    <div class="tree-node tree-root active" onclick="toggleTree('henan', this)">
+      <span class="tree-arrow open" id="arrow-henan">▶</span>
+      河南省 <span class="tree-count">(21873)</span>
+    </div>
+    <div class="tree-children open" id="tree-henan">
+      <div class="tree-node child" data-city="郑州市" onclick="filterCity('郑州市', this)">
+        <span class="tree-arrow">▶</span> 郑州市 <span class="tree-count">(2683)</span>
+      </div>
+      <div class="tree-node child" data-city="漯河市" onclick="filterCity('漯河市', this)">
+        <span class="tree-arrow">▶</span> 漯河市 <span class="tree-count">(1288)</span>
+      </div>
+      <div class="tree-node child" data-city="许昌市" onclick="filterCity('许昌市', this)">
+        <span class="tree-arrow">▶</span> 许昌市 <span class="tree-count">(1536)</span>
+      </div>
+      <div class="tree-node child active" data-city="驻马店市" onclick="filterCity('驻马店市', this)">
+        <span class="tree-arrow">▶</span> 驻马店市 <span class="tree-count">(2036)</span>
+      </div>
+      <div class="tree-node child" data-city="开封市" onclick="filterCity('开封市', this)">开封市 <span class="tree-count">(2311)</span></div>
+      <div class="tree-node child" data-city="洛阳市" onclick="filterCity('洛阳市', this)">洛阳市 <span class="tree-count">(1987)</span></div>
+      <div class="tree-node child" data-city="平顶山市" onclick="filterCity('平顶山市', this)">平顶山市 <span class="tree-count">(1762)</span></div>
+      <div class="tree-node child" data-city="安阳市" onclick="filterCity('安阳市', this)">安阳市 <span class="tree-count">(1650)</span></div>
+      <div class="tree-node child" data-city="鹤壁市" onclick="filterCity('鹤壁市', this)">鹤壁市 <span class="tree-count">(824)</span></div>
+      <div class="tree-node child" data-city="新乡市" onclick="filterCity('新乡市', this)">新乡市 <span class="tree-count">(1842)</span></div>
+      <div class="tree-node child" data-city="焦作市" onclick="filterCity('焦作市', this)">焦作市 <span class="tree-count">(1410)</span></div>
+      <div class="tree-node child" data-city="三门峡市" onclick="filterCity('三门峡市', this)">三门峡市 <span class="tree-count">(733)</span></div>
+      <div class="tree-node child" data-city="南阳市" onclick="filterCity('南阳市', this)">南阳市 <span class="tree-count">(2458)</span></div>
+      <div class="tree-node child" data-city="商丘市" onclick="filterCity('商丘市', this)">商丘市 <span class="tree-count">(1690)</span></div>
+      <div class="tree-node child" data-city="信阳市" onclick="filterCity('信阳市', this)">信阳市 <span class="tree-count">(1519)</span></div>
+      <div class="tree-node child" data-city="周口市" onclick="filterCity('周口市', this)">周口市 <span class="tree-count">(1884)</span></div>
+      <div class="tree-node child" data-city="济源市" onclick="filterCity('济源市', this)">
+        <span class="tree-arrow">▶</span> 济源市 <span class="tree-count">(581)</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 右侧内容区 -->
+  <div class="content">
+    <!-- 面包屑 -->
+    <div class="jg-breadcrumb">
+      <span class="jg-breadcrumb-pin">📍</span>
+      当前位置：
+      <a href="jinguan_home.html">首页</a>
+      <span class="jg-breadcrumb-sep">›</span>
+      <span class="jg-breadcrumb-current" data-base="工单管理">工单管理</span>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="stats-row">
+      <div class="jg-stat-card primary" onclick="filterByStatus('')">
+        <div class="stat-header">
+          <div class="stat-icon-wrap">🏠</div>
+          <span class="stat-label" style="color:rgba(255,255,255,0.9)">工单总数</span>
+        </div>
+        <div class="stat-num">21873</div>
+      </div>
+      <div class="jg-stat-card" onclick="filterByStatus('pending')">
+        <div class="stat-header">
+          <span class="stat-icon">⚠️</span>
+          <span class="stat-label">待处置</span>
+        </div>
+        <div class="stat-num" style="color:#d46b08;">2873</div>
+      </div>
+      <div class="jg-stat-card" onclick="filterByStatus('processing')">
+        <div class="stat-header">
+          <span class="stat-icon">🔧</span>
+          <span class="stat-label">处置中</span>
+        </div>
+        <div class="stat-num" style="color:#0958d9;">1873</div>
+      </div>
+      <div class="jg-stat-card" onclick="filterByStatus('done')">
+        <div class="stat-header">
+          <span class="stat-icon">✅</span>
+          <span class="stat-label">已处置</span>
+        </div>
+        <div class="stat-num" style="color:#389e0d;">16428</div>
+      </div>
+      <div class="jg-stat-card" onclick="filterByStatus('noexist')">
+        <div class="stat-header">
+          <span class="stat-icon">🗑️</span>
+          <span class="stat-label">问题不存在</span>
+        </div>
+        <div class="stat-num" style="color:#8c8c8c;">699</div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('逾期1天工单')">
+        <div class="stat-header">
+          <div class="dot-indicator dot-blue"></div>
+          <span class="stat-label">逾期1天</span>
+        </div>
+        <div class="stat-num" style="color:#4fc3f7;">386</div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('逾期3天工单')">
+        <div class="stat-header">
+          <div class="dot-indicator dot-yellow"></div>
+          <span class="stat-label">逾期3天</span>
+        </div>
+        <div class="stat-num" style="color:#f5a623;">128</div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('逾期7天工单')">
+        <div class="stat-header">
+          <div class="dot-indicator dot-orange"></div>
+          <span class="stat-label">逾期7天</span>
+        </div>
+        <div class="stat-num" style="color:#ff8c00;">76</div>
+      </div>
+      <div class="jg-stat-card" onclick="showToast('逾期10天工单')">
+        <div class="stat-header">
+          <div class="dot-indicator dot-red"></div>
+          <span class="stat-label">逾期10天</span>
+        </div>
+        <div class="stat-num" style="color:#ff4d4f;">47</div>
+      </div>
+    </div>
+
+    <!-- 搜索筛选栏 -->
+    <div class="filter-bar">
+      <input class="search-input" id="searchInput" type="text" placeholder="工单编号 / 机井编号 / 问题 / 上报人 / 手机号 / 区域" />
+      <select class="filter-select" id="typeFilter" onchange="applyFilters()">
+        <option value="">全部类型</option>
+        <option value="群众上报">群众上报</option>
+        <option value="机井巡查">机井巡查</option>
+        <option value="监督检查">监督检查</option>
+      </select>
+      <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+        <option value="">全部状态</option>
+        <option value="pending">待处置</option>
+        <option value="processing">处置中</option>
+        <option value="done">已处置</option>
+        <option value="noexist">问题不存在</option>
+      </select>
+      <select class="filter-select" id="sourceFilter" onchange="applyFilters()">
+        <option value="">全部来源</option>
+        <option value="群众上报">群众上报</option>
+        <option value="机井巡查">机井巡查</option>
+        <option value="监督检查">监督检查</option>
+      </select>
+      <button class="jg-btn jg-btn-default" onclick="toggleAdvancedFilter()">更多筛选 ▾</button>
+      <button class="jg-btn jg-btn-primary" onclick="applyFilters()">查询</button>
+      <button class="jg-btn jg-btn-default" onclick="resetFilters()">重置</button>
+    </div>
+
+    <!-- 筛选标签 -->
+    <div class="jg-filter-tags" id="filterTags"></div>
+
+    <!-- 更多筛选面板 -->
+    <div class="advanced-filter" id="advancedFilter">
+      <div class="af-row">
+        <span class="af-label">上报时间：</span>
+        <input class="af-input" type="date" id="dateFrom" style="width:130px;" />
+        <span style="color:#666;font-size:12px;">至</span>
+        <input class="af-input" type="date" id="dateTo" style="width:130px;" />
+        <span class="af-label" style="margin-left:16px;">逾期状态：</span>
+        <select class="af-select" id="overdueFilter">
+          <option value="">全部</option>
+          <option value="1">逾期1天</option>
+          <option value="3">逾期3天</option>
+          <option value="7">逾期7天</option>
+          <option value="10">逾期10天</option>
+        </select>
+      </div>
+      <div class="af-row">
+        <span class="af-label">接单人：</span>
+        <input class="af-input" type="text" id="assigneeFilter" placeholder="请输入接单人姓名" />
+        <span class="af-label" style="margin-left:16px;">区域：</span>
+        <input class="af-input" type="text" id="regionFilter" placeholder="县/镇/村" />
+        <button class="jg-btn jg-btn-primary" style="height:30px;padding:0 14px;font-size:12px;margin-left:8px;" onclick="applyFilters()">应用筛选</button>
+        <button class="jg-btn jg-btn-default" style="height:30px;padding:0 14px;font-size:12px;" onclick="resetAdvanced()">清除</button>
+      </div>
+    </div>
+
+    <!-- 操作栏 -->
+    <div class="action-bar">
+      <button class="jg-btn jg-btn-primary" onclick="batchUrge()">
+        🔔 批量催办
+      </button>
+      <button class="jg-btn jg-btn-default" onclick="exportData()">
+        📤 导出
+      </button>
+      <span style="flex:1;"></span>
+      <span style="color:#666;font-size:12px;" id="totalCount">共 <b style="color:#22a84a;">21873</b> 条记录</span>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="table-wrap">
+      <!-- 骨架屏 -->
+      <div class="jg-skeleton-table" id="skeletonTable" style="display:none;">
+        <div class="jg-skeleton-row"><div class="jg-skeleton jg-skeleton-cell" style="width:36px;"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-full"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div></div>
+        <div class="jg-skeleton-row"><div class="jg-skeleton jg-skeleton-cell" style="width:36px;"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-full"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div></div>
+        <div class="jg-skeleton-row"><div class="jg-skeleton jg-skeleton-cell" style="width:36px;"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-full"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div></div>
+        <div class="jg-skeleton-row"><div class="jg-skeleton jg-skeleton-cell" style="width:36px;"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-full"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div></div>
+        <div class="jg-skeleton-row"><div class="jg-skeleton jg-skeleton-cell" style="width:36px;"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-full"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text-long"></div><div class="jg-skeleton jg-skeleton-cell jg-skeleton-text"></div></div>
+      </div>
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th class="checkbox-cell"><input type="checkbox" id="checkAll" onchange="toggleAll(this)" /></th>
+            <th style="min-width:220px;">工单编号</th>
+            <th>问题来源</th>
+            <th style="min-width:140px;">问题</th>
+            <th style="min-width:150px;">上报人</th>
+            <th>工单状态</th>
+            <th style="min-width:130px;">接单人</th>
+            <th style="min-width:100px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+      <!-- 分页 -->
+      <div class="pagination">
+        <span class="page-info" id="pageInfo">第 1 页，共 10 页</span>
+        <button class="page-btn" onclick="changePage(currentPage-1)" id="prevBtn">‹</button>
+        <div id="pageBtns" style="display:flex;gap:4px;"></div>
+        <button class="page-btn" onclick="changePage(currentPage+1)" id="nextBtn">›</button>
+        <span style="color:#666;font-size:12px;margin-left:4px;">每页</span>
+        <select class="page-size-select" onchange="changePageSize(this.value)" id="pageSizeSelect">
+          <option value="10">10条</option>
+          <option value="20">20条</option>
+          <option value="50">50条</option>
+        </select>
+        <span class="jg-page-jump">跳至 <input class="jg-page-jump-input" id="pageJump" type="number" min="1"> 页 <button class="jg-btn jg-btn-sm jg-btn-default" onclick="jumpToPage()">Go</button></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 工单详情弹窗 -->
+<div class="modal-overlay" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+  <div class="modal">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title" id="detailModalTitle">工单详情</span>
+      <button class="jg-modal-close" onclick="closeModal('detailModal')" aria-label="关闭">✕</button>
+    </div>
+    <div class="modal-body" id="detailContent"></div>
+    <div class="modal-footer">
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('detailModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 催办弹窗 -->
+<div class="modal-overlay" id="urgeModal" role="dialog" aria-modal="true" aria-labelledby="urgeModalTitle">
+  <div class="modal" style="min-width:380px;max-width:420px;">
+    <div class="jg-modal-header">
+      <span class="jg-modal-title" id="urgeModalTitle">催办工单</span>
+      <button class="jg-modal-close" onclick="closeModal('urgeModal')" aria-label="关闭">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-row">
+        <span class="detail-label">催办对象：</span>
+        <span class="detail-val" id="urgeTarget">-</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">催办内容：</span>
+        <textarea style="width:100%;height:80px;border:1px solid #d9d9d9;border-radius:4px;padding:8px;font-size:13px;resize:none;outline:none;" placeholder="请输入催办内容（可选）"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn jg-btn-default" onclick="closeModal('urgeModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="confirmUrge()">确认催办</button>
+    </div>
+  </div>
+</div>
+
+<script src="jinguan_common.js"></script>
+<script>
+// ====== 数据 ======
+const allTickets = [
+  {
+    id: '4116232026051200001',
+    wellNo: '411025200000311',
+    addr: '驻马店市 泌阳县 黄山口乡 尚古村',
+    source: '群众上报',
+    problem: '井堡破损、移位、缺失',
+    problemDesc: '井堡外壳破损，护栏松动',
+    reporterName: '李先生',
+    reporterPhone: '13800138000',
+    reportTime: '2026-05-12 10:30:22',
+    status: 'pending',
+    assigneeName: '刘建民',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001021',
+    assigneeTime: '-',
+    img: '🏗️'
+  },
+  {
+    id: '4116232026051200002',
+    wellNo: '411025200100126',
+    addr: '开封市 尉氏县 张市镇 沈家村',
+    source: '机井巡查',
+    problem: '无水泵或水泵已损毁等',
+    problemDesc: '巡查发现水泵无法启动',
+    reporterName: '张国强',
+    reporterPhone: '13900001234',
+    reportTime: '2026-05-11 21:10:08',
+    status: 'pending',
+    assigneeName: '刘建民',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001021',
+    assigneeTime: '-',
+    img: '🔧'
+  },
+  {
+    id: '4116232026051200003',
+    wellNo: '411025201900245',
+    addr: '郑州市 中牟县 韩寺镇 古城村',
+    source: '监督检查',
+    problem: '机井坍塌、井管损坏等',
+    problemDesc: '井管口沿破损，存在安全隐患',
+    reporterName: '李监督',
+    reporterPhone: '13600008888',
+    reportTime: '2026-05-12 08:46:31',
+    status: 'processing',
+    assigneeName: '赵维修',
+    assigneeRole: '维修员',
+    assigneePhone: '13839001023',
+    assigneeTime: '2026-05-12 09:12',
+    img: '🏚️'
+  },
+  {
+    id: '4116232026051100007',
+    wellNo: '411025202000188',
+    addr: '洛阳市 伊川县 鸣皋镇 中渠村',
+    source: '监督检查',
+    problem: '电线私接、电表无读数',
+    problemDesc: '现场电表箱接线混乱',
+    reporterName: '王监督',
+    reporterPhone: '13700006666',
+    reportTime: '2026-05-10 14:36:02',
+    status: 'pending',
+    assigneeName: '张井长',
+    assigneeRole: '井长',
+    assigneePhone: '13839001024',
+    assigneeTime: '-',
+    img: '⚡'
+  },
+  {
+    id: '4116232026051200009',
+    wellNo: '411025201800099',
+    addr: '新乡市 延津县 僧固乡 东张村',
+    source: '群众上报',
+    problem: '机井出水量明显减少',
+    problemDesc: '灌溉季节出水量不足正常水平',
+    reporterName: '周村民',
+    reporterPhone: '13500002222',
+    reportTime: '2026-05-09 16:20:15',
+    status: 'done',
+    assigneeName: '陈维护',
+    assigneeRole: '维修员',
+    assigneePhone: '13839001025',
+    assigneeTime: '2026-05-10 08:30',
+    img: '💧'
+  },
+  {
+    id: '4116232026051100012',
+    wellNo: '411025201700056',
+    addr: '南阳市 唐河县城郊乡 北关村',
+    source: '机井巡查',
+    problem: '机井护栏缺失或损坏',
+    problemDesc: '护栏多处锈蚀断裂',
+    reporterName: '巡查员',
+    reporterPhone: '13600005555',
+    reportTime: '2026-05-11 09:15:30',
+    status: 'noexist',
+    assigneeName: '王处置',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001026',
+    assigneeTime: '2026-05-11 14:00',
+    img: '🛡️'
+  },
+  {
+    id: '4116232026051200015',
+    wellNo: '411025202100234',
+    addr: '许昌市 鄢陵县 陈化店镇 光明村',
+    source: '群众上报',
+    problem: '机井标识牌丢失或破损',
+    problemDesc: '标识牌被人为损坏',
+    reporterName: '刘村长',
+    reporterPhone: '13800009999',
+    reportTime: '2026-05-12 07:55:11',
+    status: 'pending',
+    assigneeName: '李接单',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001027',
+    assigneeTime: '-',
+    img: '🪧'
+  },
+  {
+    id: '4116232026051100018',
+    wellNo: '411025201600178',
+    addr: '商丘市 宁陵县 逻岗镇 东街村',
+    source: '监督检查',
+    problem: '机井控制箱故障',
+    problemDesc: '控制箱无法正常开关机',
+    reporterName: '孙督察',
+    reporterPhone: '13700003333',
+    reportTime: '2026-05-10 11:40:22',
+    status: 'processing',
+    assigneeName: '赵电工',
+    assigneeRole: '维修员',
+    assigneePhone: '13839001028',
+    assigneeTime: '2026-05-10 15:20',
+    img: '🔌'
+  },
+  {
+    id: '4116232026051200020',
+    wellNo: '411025202200321',
+    addr: '周口市 商水县 魏集镇 大郭村',
+    source: '机井巡查',
+    problem: '取水口破损漏水',
+    problemDesc: '取水口密封圈老化严重',
+    reporterName: '郑巡查',
+    reporterPhone: '13900007777',
+    reportTime: '2026-05-12 13:22:45',
+    status: 'pending',
+    assigneeName: '冯接单',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001029',
+    assigneeTime: '-',
+    img: '🚰'
+  },
+  {
+    id: '4116232026051100023',
+    wellNo: '411025201500089',
+    addr: '安阳市 内黄县 梁庄镇 北街村',
+    source: '群众上报',
+    problem: '机井盖板缺失',
+    problemDesc: '井盖丢失，存在安全隐患',
+    reporterName: '陈群众',
+    reporterPhone: '13600001111',
+    reportTime: '2026-05-09 08:30:00',
+    status: 'done',
+    assigneeName: '田管护',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001030',
+    assigneeTime: '2026-05-09 14:00',
+    img: '🕳️'
+  },
+  {
+    id: '4116232026051200025',
+    wellNo: '411025202300456',
+    addr: '焦作市 武陟县 大封镇 化村',
+    source: '监督检查',
+    problem: '机井周边环境卫生差',
+    problemDesc: '井口周围有垃圾堆积',
+    reporterName: '卢监督',
+    reporterPhone: '13800004444',
+    reportTime: '2026-05-11 15:00:33',
+    status: 'processing',
+    assigneeName: '吴清洁',
+    assigneeRole: '管护员',
+    assigneePhone: '13839001031',
+    assigneeTime: '2026-05-11 17:30',
+    img: '🧹'
+  },
+  {
+    id: '4116232026051100028',
+    wellNo: '411025201400012',
+    addr: '信阳市 光山县 白雀园镇 南街村',
+    source: '机井巡查',
+    problem: '灌溉管道堵塞',
+    problemDesc: '输水管内有淤泥堵塞',
+    reporterName: '郑巡查',
+    reporterPhone: '13700008888',
+    reportTime: '2026-05-08 10:15:20',
+    status: 'done',
+    assigneeName: '何疏通',
+    assigneeRole: '维修员',
+    assigneePhone: '13839001032',
+    assigneeTime: '2026-05-08 16:00',
+    img: '🔩'
+  }
+];
+
+let filteredTickets = [...allTickets];
+let currentPage = 1;
+let pageSize = 10;
+let checkedIds = new Set();
+let isLoading = true;
+
+// 状态映射
+const statusMap = {
+  pending: { label: '待处置', cls: 'status-pending' },
+  processing: { label: '处置中', cls: 'status-processing' },
+  done: { label: '已处置', cls: 'status-done' },
+  noexist: { label: '问题不存在', cls: 'status-noexist' }
+};
+
+// 筛选条件记录
+let activeFilters = {
+  keyword: '',
+  type: '',
+  status: '',
+  source: '',
+  city: ''
+};
+
+// ====== 用户菜单 ======
+function toggleUserMenu() {
+  const m = document.getElementById('userMenu');
+  m.classList.toggle('show');
+}
+function toggleMoreMenu() {
+  const m = document.getElementById('moreMenu');
+  m.classList.toggle('show');
+}
+function toggleMobileNav() {
+  const h = document.getElementById('hamburger');
+  const n = document.getElementById('mobileNav');
+  h.classList.toggle('open');
+  n.classList.toggle('show');
+}
+document.addEventListener('click', function(e) {
+  const userMenu = document.getElementById('userMenu');
+  const userBtn = document.getElementById('userBtn');
+  const moreMenu = document.getElementById('moreMenu');
+  const moreBtn = document.querySelector('.jg-more-btn');
+  if (userMenu && !userMenu.contains(e.target) && !userBtn.contains(e.target)) userMenu.classList.remove('show');
+  if (moreMenu && !moreMenu.contains(e.target) && (!moreBtn || !moreBtn.contains(e.target))) moreMenu.classList.remove('show');
+});
+
+// ====== 侧边栏搜索 ======
+function filterSidebar(keyword) {
+  const nodes = document.querySelectorAll('.tree-node.child');
+  nodes.forEach(n => {
+    const city = n.getAttribute('data-city') || n.textContent.replace(/\(\d+\)/, '').trim();
+    n.style.display = keyword === '' || city.includes(keyword) ? '' : 'none';
+  });
+}
+
+// ====== 渲染骨架屏 ======
+function showSkeleton() {
+  document.getElementById('skeletonTable').style.display = 'block';
+  document.getElementById('mainTable').style.display = 'none';
+}
+
+// ====== 渲染空状态 ======
+function renderEmpty() {
+  return `<tr><td colspan="8" style="text-align:center;padding:48px 12px;">
+    <div style="color:#999;font-size:14px;margin-bottom:8px;">暂无数据</div>
+    <div style="color:#ccc;font-size:12px;">请调整筛选条件后重试</div>
+  </td></tr>`;
+}
+
+// ====== 渲染筛选标签 ======
+function renderFilterTags() {
+  const tagsContainer = document.getElementById('filterTags');
+  const tags = [];
+
+  if (activeFilters.keyword) {
+    tags.push({ key: 'keyword', label: `关键词: ${activeFilters.keyword}` });
+  }
+  if (activeFilters.type) {
+    tags.push({ key: 'type', label: `类型: ${activeFilters.type}` });
+  }
+  if (activeFilters.status) {
+    const label = statusMap[activeFilters.status]?.label || activeFilters.status;
+    tags.push({ key: 'status', label: `状态: ${label}` });
+  }
+  if (activeFilters.source) {
+    tags.push({ key: 'source', label: `来源: ${activeFilters.source}` });
+  }
+  if (activeFilters.city) {
+    tags.push({ key: 'city', label: `区域: ${activeFilters.city}` });
+  }
+
+  if (tags.length === 0) {
+    tagsContainer.innerHTML = '';
+    return;
+  }
+
+  tagsContainer.innerHTML = tags.map(t => `
+    <span class="jg-filter-tag">
+      ${t.label}
+      <span class="jg-filter-tag-remove" onclick="removeFilter('${t.key}')">×</span>
+    </span>
+  `).join('');
+}
+
+function removeFilter(key) {
+  if (key === 'keyword') {
+    document.getElementById('searchInput').value = '';
+    activeFilters.keyword = '';
+  } else if (key === 'type') {
+    document.getElementById('typeFilter').value = '';
+    activeFilters.type = '';
+  } else if (key === 'status') {
+    document.getElementById('statusFilter').value = '';
+    activeFilters.status = '';
+  } else if (key === 'source') {
+    document.getElementById('sourceFilter').value = '';
+    activeFilters.source = '';
+  } else if (key === 'city') {
+    activeFilters.city = '';
+    document.querySelectorAll('.tree-node.child').forEach(n => n.classList.remove('active'));
+    document.querySelector('.tree-node.tree-root').classList.add('active');
+  }
+  applyFilters();
+}
+
+// ====== 渲染表格 ======
+function renderTable() {
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pageData = filteredTickets.slice(start, end);
+  const tbody = document.getElementById('tableBody');
+
+  document.getElementById('skeletonTable').style.display = 'none';
+  document.getElementById('mainTable').style.display = 'table';
+
+  if (pageData.length === 0) {
+    tbody.innerHTML = renderEmpty();
+    renderPagination();
+    document.getElementById('totalCount').innerHTML = `共 <b style="color:#22a84a;">0</b> 条记录`;
+    return;
+  }
+
+  tbody.innerHTML = pageData.map(t => {
+    const st = statusMap[t.status] || { label: t.status, cls: 'status-pending' };
+    const ops = getOps(t);
+    return `
+    <tr>
+      <td class="checkbox-cell"><input type="checkbox" value="${t.id}" ${checkedIds.has(t.id) ? 'checked' : ''} onchange="toggleCheck('${t.id}', this)" /></td>
+      <td class="ticket-cell">
+        <div class="ticket-inner">
+          <div class="ticket-thumb">${t.img}</div>
+          <div>
+            <div class="ticket-no">${t.id}</div>
+            <div class="ticket-well">机井编号：<a href="#" onclick="viewDetail('${t.id}');return false;">${t.wellNo}</a></div>
+            <div class="ticket-addr">${t.addr}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="source-tag">
+          <span class="source-icon">👥</span>
+          ${t.source}
+        </div>
+      </td>
+      <td class="problem-cell">
+        <div class="problem-title">${t.problem}</div>
+        <div class="problem-desc">${t.problemDesc}</div>
+      </td>
+      <td class="reporter-cell">
+        <div class="reporter-name">${t.reporterName}</div>
+        <div class="reporter-phone">${t.reporterPhone}</div>
+        <div class="reporter-time">报修时间：${t.reportTime}</div>
+      </td>
+      <td><span class="status-tag ${st.cls}">${st.label}</span></td>
+      <td class="assignee-cell">
+        <div class="assignee-name">${t.assigneeName}</div>
+        <div class="assignee-role">${t.assigneeRole}·${t.assigneePhone}</div>
+        <div class="assignee-time">接单时间：${t.assigneeTime}</div>
+      </td>
+      <td class="ops-cell">${ops}</td>
+    </tr>`;
+  }).join('');
+
+  renderPagination();
+  document.getElementById('totalCount').innerHTML = `共 <b style="color:#22a84a;">${filteredTickets.length}</b> 条记录`;
+}
+
+function getOps(t) {
+  if (t.status === 'pending') {
+    return '<a class="op-link" onclick="dispatchTicket(\'' + t.id + '\')">派单</a>' +
+      '<a class="op-link" onclick="urgeTicket(\'' + t.id + '\')">催办接单</a>' +
+      '<a class="op-link" onclick="showToast(\'重新流转成功\')">重新流转</a>';
+  } else if (t.status === 'processing') {
+    return '<a class="op-link" onclick="closeTicket(\'' + t.id + '\')">结案</a>' +
+      '<a class="op-link" onclick="urgeTicket(\'' + t.id + '\')">催办处理</a>';
+  } else {
+    return '<a class="op-link" onclick="viewDetail(\'' + t.id + '\')">查看详情</a>';
+  }
+}
+
+// 派单功能
+function dispatchTicket(id) {
+  const t = allTickets.find(x => x.id === id);
+  if (!t) return;
+  showToast(`工单 ${id} 已派发`, 'success');
+}
+
+// 结案功能
+function closeTicket(id) {
+  const t = allTickets.find(x => x.id === id);
+  if (!t) return;
+  showToast(`工单 ${id} 已结案`, 'success');
+}
+
+// ====== 分页 ======
+function renderPagination() {
+  const total = filteredTickets.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  document.getElementById('pageInfo').textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
+  document.getElementById('prevBtn').disabled = currentPage <= 1;
+  document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+  document.getElementById('pageJump').max = totalPages;
+
+  const container = document.getElementById('pageBtns');
+  let html = '';
+  let pages = [];
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+  } else {
+    pages = [1, 2];
+    if (currentPage > 4) pages.push('...');
+    for (let i = Math.max(3, currentPage - 1); i <= Math.min(totalPages - 2, currentPage + 1); i++) pages.push(i);
+    if (currentPage < totalPages - 3) pages.push('...');
+    pages.push(totalPages - 1, totalPages);
+    pages = [...new Set(pages)];
+  }
+  pages.forEach(p => {
+    if (p === '...') {
+      html += `<span style="color:#666;padding:0 4px;line-height:28px;">···</span>`;
+    } else {
+      html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="changePage(${p})">${p}</button>`;
+    }
+  });
+  container.innerHTML = html;
+}
+
+function changePage(p) {
+  const totalPages = Math.ceil(filteredTickets.length / pageSize);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+  window.scrollTo(0, 0);
+}
+
+function jumpToPage() {
+  const input = document.getElementById('pageJump');
+  const page = parseInt(input.value);
+  if (page && page >= 1) {
+    changePage(page);
+  }
+  input.value = '';
+}
+
+function changePageSize(v) {
+  pageSize = parseInt(v);
+  currentPage = 1;
+  renderTable();
+}
+
+// ====== 筛选 ======
+function applyFilters() {
+  const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+  const type = document.getElementById('typeFilter').value;
+  const status = document.getElementById('statusFilter').value;
+  const source = document.getElementById('sourceFilter').value;
+
+  activeFilters = { keyword, type, status, source, city: activeFilters.city };
+
+  filteredTickets = allTickets.filter(t => {
+    if (keyword) {
+      const searchStr = (t.id + t.wellNo + t.problem + t.reporterName + t.reporterPhone + t.addr).toLowerCase();
+      if (!searchStr.includes(keyword)) return false;
+    }
+    if (type && t.source !== type) return false;
+    if (status && t.status !== status) return false;
+    if (source && t.source !== source) return false;
+    if (activeFilters.city && !t.addr.includes(activeFilters.city)) return false;
+    return true;
+  });
+
+  currentPage = 1;
+  renderTable();
+  renderFilterTags();
+  showToast(`查询完成，共找到 ${filteredTickets.length} 条记录`);
+}
+
+function resetFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('typeFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('sourceFilter').value = '';
+  resetAdvanced();
+  activeFilters = { keyword: '', type: '', status: '', source: '', city: '' };
+  document.querySelectorAll('.tree-node.child').forEach(n => n.classList.remove('active'));
+  document.querySelector('.tree-node.tree-root').classList.add('active');
+  filteredTickets = [...allTickets];
+  currentPage = 1;
+  renderTable();
+  renderFilterTags();
+  showToast('已重置筛选条件');
+}
+
+function resetAdvanced() {
+  const fields = ['dateFrom', 'dateTo', 'overdueFilter', 'assigneeFilter', 'regionFilter'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function filterByStatus(status) {
+  document.getElementById('statusFilter').value = status;
+  activeFilters.status = status;
+  applyFilters();
+}
+
+function filterCity(city, el) {
+  document.querySelectorAll('.tree-node.child').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelector('.tree-node.tree-root').classList.remove('active');
+  activeFilters.city = city;
+  document.getElementById('searchInput').value = city;
+  applyFilters();
+}
+
+function toggleAdvancedFilter() {
+  const panel = document.getElementById('advancedFilter');
+  panel.classList.toggle('show');
+}
+
+// ====== 树形折叠 ======
+function toggleTree(id, el) {
+  const tree = document.getElementById('tree-' + id);
+  const arrow = document.getElementById('arrow-' + id);
+  const isOpen = tree.classList.contains('open');
+  tree.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+
+// ====== 多选 ======
+function toggleAll(cb) {
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pageData = filteredTickets.slice(start, end);
+  pageData.forEach(t => {
+    if (cb.checked) checkedIds.add(t.id);
+    else checkedIds.delete(t.id);
+  });
+  renderTable();
+  if (cb.checked) document.getElementById('checkAll').checked = true;
+}
+
+function toggleCheck(id, cb) {
+  if (cb.checked) checkedIds.add(id);
+  else checkedIds.delete(id);
+}
+
+// ====== 催办 ======
+function urgeTicket(id) {
+  const t = allTickets.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('urgeTarget').textContent = `${t.assigneeName}（${t.assigneeRole}·${t.assigneePhone}）`;
+  openModal('urgeModal');
+}
+
+function batchUrge() {
+  if (checkedIds.size === 0) {
+    showToast('请先勾选需要催办的工单');
+    return;
+  }
+  document.getElementById('urgeTarget').textContent = `已选 ${checkedIds.size} 条工单的接单人`;
+  openModal('urgeModal');
+}
+
+function confirmUrge() {
+  closeModal('urgeModal');
+  showToast('催办通知已发送', 'success');
+}
+
+// ====== 导出 ======
+function exportData() {
+  showToast('正在导出数据，请稍候...', 'info');
+  setTimeout(() => {
+    const headers = ['工单编号','机井编号','地址','问题来源','问题','上报人','联系电话','报修时间','工单状态','接单人','角色','接单时间'];
+    const rows = filteredTickets.map(t => [
+      t.id, t.wellNo, t.addr, t.source, t.problem, t.reporterName,
+      t.reporterPhone, t.reportTime, statusMap[t.status]?.label || t.status,
+      t.assigneeName, t.assigneeRole, t.assigneeTime
+    ]);
+    let csv = '\uFEFF' + headers.join(',') + '\n';
+    rows.forEach(r => { csv += r.map(v => `"${v}"`).join(',') + '\n'; });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '工单数据_' + new Date().toLocaleDateString('zh-CN').replace(/\//g, '') + '.csv';
+    a.click();
+    showToast('导出完成！', 'success');
+  }, 800);
+}
+
+// ====== 工单详情 ======
+function viewDetail(id) {
+  const t = allTickets.find(x => x.id === id);
+  if (!t) return;
+  const st = statusMap[t.status] || { label: t.status, cls: '' };
+  document.getElementById('detailContent').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div><div class="detail-row"><span class="detail-label">工单编号</span><span class="detail-val">${t.id}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">机井编号</span><span class="detail-val" style="color:#22a84a;">${t.wellNo}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">所在地址</span><span class="detail-val">${t.addr}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">问题来源</span><span class="detail-val">${t.source}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">问题描述</span><span class="detail-val">${t.problem}<br><span style="color:#666;font-size:11px;">${t.problemDesc}</span></span></div></div>
+      <div><div class="detail-row"><span class="detail-label">工单状态</span><span class="detail-val"><span class="status-tag ${st.cls}">${st.label}</span></span></div></div>
+      <div><div class="detail-row"><span class="detail-label">上报人</span><span class="detail-val">${t.reporterName}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">联系电话</span><span class="detail-val">${t.reporterPhone}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">报修时间</span><span class="detail-val">${t.reportTime}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">接单人</span><span class="detail-val">${t.assigneeName}（${t.assigneeRole}）</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">接单人电话</span><span class="detail-val">${t.assigneePhone}</span></div></div>
+      <div><div class="detail-row"><span class="detail-label">接单时间</span><span class="detail-val">${t.assigneeTime}</span></div></div>
+    </div>
+  `;
+  openModal('detailModal');
+}
+
+// ====== 弹窗控制 ======
+let lastFocusedElement = null;
+
+function openModal(id) {
+  lastFocusedElement = document.activeElement;
+  const modal = document.getElementById(id);
+  modal.classList.add('show');
+  // 焦点移到弹窗内第一个可交互元素
+  setTimeout(() => {
+    const firstFocusable = modal.querySelector('button, input, select, textarea, a[href]');
+    if (firstFocusable) firstFocusable.focus();
+  }, 50);
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.remove('show');
+  // 焦点回到触发元素
+  if (lastFocusedElement) lastFocusedElement.focus();
+}
+
+// 焦点陷阱
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      const focusable = m.querySelectorAll('button, input, select, textarea, a[href]');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    if (e.key === 'Escape') {
+      m.classList.remove('show');
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+  });
+  m.addEventListener('click', e => { if (e.target === m) { m.classList.remove('show'); if (lastFocusedElement) lastFocusedElement.focus(); } });
+});
+
+// ====== Enter 搜索 ======
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') applyFilters();
+});
+
+// 键盘支持 - 导航项
+document.querySelectorAll('.jg-nav-item, .jg-more-btn').forEach(item => {
+  item.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (item.tagName === 'A' && item.getAttribute('href') === '#') {
+        e.preventDefault();
+      }
+    }
+  });
+});
+
+// ====== 初始化 ======
+document.addEventListener('DOMContentLoaded', function() {
+  // 显示骨架屏
+  showSkeleton();
+
+  // 模拟加载延迟
+  setTimeout(() => {
+    isLoading = false;
+    renderTable();
+  }, 500);
+
+  // 用户信息
+  const user = sessionStorage.getItem('jg_user') || '用户';
+  const el = document.getElementById('displayName');
+  const el2 = document.getElementById('displayName2');
+  if (el) el.textContent = user;
+  if (el2) el2.textContent = user;
+});
+</script>
+</body>
+</html>
