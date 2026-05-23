@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 采摘预约</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 66px; }
+    
+    .header { display: flex; align-items: center; padding: 16px; background: #fff; border-bottom: 1px solid var(--border); }
+    .back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 22px; height: 22px; color: var(--text); }
+    .header-title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: var(--text); margin-right: 40px; }
+    
+    .content { padding: 16px; padding-bottom: 80px; }
+    
+    .tree-card { background: #fff; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); display: flex; gap: 14px; }
+    .tree-photo { width: 80px; height: 80px; border-radius: var(--radius); background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tree-photo-icon { font-size: 36px; }
+    .tree-info { flex: 1; }
+    .tree-name { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .tree-variety { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .tree-yield { font-size: 12px; color: var(--primary); font-weight: 500; }
+    
+    .form-section { background: #fff; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .form-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .form-title-icon { font-size: 18px; }
+    .form-item { margin-bottom: 20px; }
+    .form-item:last-child { margin-bottom: 0; }
+    .form-label { font-size: 14px; color: var(--text); font-weight: 500; margin-bottom: 10px; display: block; }
+    
+    .date-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+    .date-scroll::-webkit-scrollbar { display: none; }
+    .date-item { min-width: 60px; padding: 12px 8px; background: #f5f5f5; border-radius: var(--radius); text-align: center; cursor: pointer; border: 2px solid transparent; transition: all .2s; flex-shrink: 0; }
+    .date-item:active { transform: scale(0.96); }
+    .date-item.selected { background: var(--primary-light); border-color: var(--primary); }
+    .date-week { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+    .date-day { font-size: 16px; font-weight: 600; color: var(--text); }
+    .date-item.selected .date-day { color: var(--primary); }
+    .date-month { font-size: 10px; color: var(--text-light); margin-top: 2px; }
+    .date-item.selected .date-month { color: var(--primary); }
+    
+    .time-slots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .time-slot { height: 44px; background: #f5f5f5; border-radius: 22px; font-size: 14px; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all .2s; }
+    .time-slot:active { transform: scale(0.96); }
+    .time-slot.selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary); font-weight: 500; }
+    .time-slot.disabled { background: #f0f0f0; color: var(--text-light); cursor: not-allowed; }
+    
+    .number-input { display: flex; align-items: center; gap: 16px; }
+    .num-btn { width: 44px; height: 44px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+    .num-btn:active { transform: scale(0.9); }
+    .num-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+    .num-btn svg { width: 20px; height: 20px; color: var(--primary); }
+    .num-value { font-size: 24px; font-weight: 600; color: var(--text); min-width: 40px; text-align: center; }
+    .num-label { font-size: 13px; color: var(--text-secondary); }
+    
+    .method-options { display: flex; gap: 12px; }
+    .method-option { flex: 1; padding: 16px; background: #f5f5f5; border-radius: var(--radius); cursor: pointer; border: 2px solid transparent; transition: all .2s; }
+    .method-option:active { transform: scale(0.98); }
+    .method-option.selected { background: var(--primary-light); border-color: var(--primary); }
+    .method-icon { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+    .method-icon svg { width: 22px; height: 22px; color: var(--text-secondary); }
+    .method-option.selected .method-icon svg { color: var(--primary); }
+    .method-name { font-size: 14px; font-weight: 500; color: var(--text); text-align: center; margin-bottom: 4px; }
+    .method-option.selected .method-name { color: var(--primary); }
+    .method-desc { font-size: 11px; color: var(--text-light); text-align: center; }
+    
+    .notice-card { background: var(--orange-light); border-radius: var(--radius); padding: 14px; }
+    .notice-title { font-size: 13px; font-weight: 600; color: var(--orange); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .notice-icon { font-size: 16px; }
+    .notice-item { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 6px; padding-left: 14px; position: relative; }
+    .notice-item::before { content: '•'; position: absolute; left: 0; color: var(--orange); }
+    .notice-item:last-child { margin-bottom: 0; }
+    
+    .summary-card { background: #fff; border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border); }
+    .summary-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-light); }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label { font-size: 13px; color: var(--text-secondary); }
+    .summary-value { font-size: 14px; color: var(--text); font-weight: 500; }
+    .summary-value.highlight { color: var(--primary); font-weight: 600; }
+    
+    .bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; background: #fff; border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 12px; z-index: 100; }
+    .price-section { display: flex; flex-direction: column; justify-content: center; }
+    .price-label { font-size: 12px; color: var(--text-light); }
+    .price-value { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .submit-btn { flex: 1; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .submit-btn:active { opacity: 0.9; }
+    
+    .success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .success-modal.show { display: flex; }
+    .success-box { background: #fff; border-radius: 20px; padding: 32px 24px; width: 85%; max-width: 320px; text-align: center; }
+    .success-icon { width: 80px; height: 80px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .success-icon svg { width: 40px; height: 40px; color: var(--primary); }
+    .success-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .success-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5; }
+    .success-btn { width: 100%; height: 44px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="back-btn" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div class="header-title">采摘预约</div>
+    </div>
+    
+    <div class="content">
+      <div class="tree-card">
+        <div class="tree-photo">
+          <span class="tree-photo-icon">🍎</span>
+        </div>
+        <div class="tree-info">
+          <div class="tree-name">嘎啦 #G012</div>
+          <div class="tree-variety">品种：嘎啦 · 树龄6年</div>
+          <div class="tree-yield">预估可采摘：约60斤</div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-title">
+          <span class="form-title-icon">📅</span>
+          选择日期
+        </div>
+        <div class="date-scroll" id="dateScroll">
+          <div class="date-item" data-date="2026-05-25" onclick="selectDate(this)">
+            <div class="date-week">周一</div>
+            <div class="date-day">25</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item" data-date="2026-05-26" onclick="selectDate(this)">
+            <div class="date-week">周二</div>
+            <div class="date-day">26</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item selected" data-date="2026-05-27" onclick="selectDate(this)">
+            <div class="date-week">周三</div>
+            <div class="date-day">27</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item" data-date="2026-05-28" onclick="selectDate(this)">
+            <div class="date-week">周四</div>
+            <div class="date-day">28</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item" data-date="2026-05-29" onclick="selectDate(this)">
+            <div class="date-week">周五</div>
+            <div class="date-day">29</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item" data-date="2026-05-30" onclick="selectDate(this)">
+            <div class="date-week">周六</div>
+            <div class="date-day">30</div>
+            <div class="date-month">5月</div>
+          </div>
+          <div class="date-item" data-date="2026-05-31" onclick="selectDate(this)">
+            <div class="date-week">周日</div>
+            <div class="date-day">31</div>
+            <div class="date-month">5月</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-title">
+          <span class="form-title-icon">⏰</span>
+          选择时段
+        </div>
+        <div class="time-slots">
+          <div class="time-slot" onclick="selectTime(this)">08:00 - 10:00</div>
+          <div class="time-slot" onclick="selectTime(this)">10:00 - 12:00</div>
+          <div class="time-slot selected" onclick="selectTime(this)">14:00 - 16:00</div>
+          <div class="time-slot" onclick="selectTime(this)">16:00 - 18:00</div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-title">
+          <span class="form-title-icon">👥</span>
+          预约人数
+        </div>
+        <div class="number-input">
+          <div class="num-btn disabled" id="decreaseBtn" onclick="changeNumber(-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <div class="num-value" id="peopleCount">2</div>
+          <div style="display: flex; flex-direction: column;">
+            <span class="num-label">人</span>
+          </div>
+          <div class="num-btn" onclick="changeNumber(1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-title">
+          <span class="form-title-icon">🚗</span>
+          采摘方式
+        </div>
+        <div class="method-options">
+          <div class="method-option selected" onclick="selectMethod(this, 'pickup')">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="method-name">现场采摘</div>
+            <div class="method-desc">亲自体验采摘乐趣</div>
+          </div>
+          <div class="method-option" onclick="selectMethod(this, 'delivery')">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+            <div class="method-name">冷链配送</div>
+            <div class="method-desc">新鲜直达家门</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="notice-card">
+        <div class="notice-title">
+          <span class="notice-icon">⚠️</span>
+          预约须知
+        </div>
+        <div class="notice-item">采摘当天请提前15分钟到达基地签到</div>
+        <div class="notice-item">每个预约时段最多容纳20组家庭</div>
+        <div class="notice-item">采摘超出预估产量部分按15元/斤收费</div>
+        <div class="notice-item">如需取消预约，请提前2天通知</div>
+      </div>
+      
+      <div class="summary-card" style="margin-top: 12px;">
+        <div class="summary-title">预约信息</div>
+        <div class="summary-row">
+          <div class="summary-label">认养果树</div>
+          <div class="summary-value">嘎啦 #G012</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">预约日期</div>
+          <div class="summary-value" id="summaryDate">2026-05-27 周三</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">预约时段</div>
+          <div class="summary-value" id="summaryTime">14:00 - 16:00</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">采摘方式</div>
+          <div class="summary-value" id="summaryMethod">现场采摘</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bottom-bar">
+      <div class="price-section">
+        <div class="price-label">预约费用</div>
+        <div class="price-value">免费</div>
+      </div>
+      <button class="submit-btn" onclick="submitReservation()">确认预约</button>
+    </div>
+    
+    <div class="success-modal" id="successModal">
+      <div class="success-box">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="success-title">预约成功</div>
+        <div class="success-desc">您已成功预约2026年5月27日 14:00的采摘体验，请准时到达基地。</div>
+        <button class="success-btn" onclick="closeSuccess()">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedDate = '2026-05-27';
+    let selectedTime = '14:00 - 16:00';
+    let peopleCount = 2;
+    let harvestMethod = 'pickup';
+    
+    function goBack() {
+      window.history.back();
+    }
+    
+    function selectDate(el) {
+      document.querySelectorAll('.date-item').forEach(item => item.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDate = el.dataset.date;
+      updateSummary();
+    }
+    
+    function selectTime(el) {
+      document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedTime = el.textContent.trim();
+      updateSummary();
+    }
+    
+    function changeNumber(delta) {
+      peopleCount += delta;
+      if (peopleCount < 1) peopleCount = 1;
+      if (peopleCount > 10) peopleCount = 10;
+      document.getElementById('peopleCount').textContent = peopleCount;
+      updateDecreaseBtn();
+    }
+    
+    function updateDecreaseBtn() {
+      const btn = document.getElementById('decreaseBtn');
+      if (peopleCount <= 1) {
+        btn.classList.add('disabled');
+      } else {
+        btn.classList.remove('disabled');
+      }
+    }
+    
+    function selectMethod(el, method) {
+      document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      harvestMethod = method;
+      updateSummary();
+    }
+    
+    function updateSummary() {
+      const date = new Date(selectedDate);
+      const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const weekDay = weekDays[date.getDay()];
+      document.getElementById('summaryDate').textContent = `${selectedDate} ${weekDay}`;
+      document.getElementById('summaryTime').textContent = selectedTime;
+      document.getElementById('summaryMethod').textContent = harvestMethod === 'pickup' ? '现场采摘' : '冷链配送';
+    }
+    
+    function submitReservation() {
+      document.getElementById('successModal').classList.add('show');
+    }
+    
+    function closeSuccess() {
+      document.getElementById('successModal').classList.remove('show');
+      window.location.href = 'mb_adoption.html';
+    }
+  </script>
+</body>
+</html>

@@ -4,71 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>生长模型 - 模型预测中心 - 数农智果</title>
+<link rel="stylesheet" href="css/design-system.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; animation: pageIn 0.25s ease; }
-  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .header {
-    background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%);
-    height: 56px;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    white-space: nowrap;
-    margin-right: 30px;
-  }
-  .logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-  .nav-menu {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; animation: pageIn 0.3s ease; }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
   .nav-menu::-webkit-scrollbar { display: none; }
-  .snzg-nav-item {
-    color: rgba(255,255,255,0.9);
-    padding: 0 14px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
-    text-decoration: none;
-    flex-shrink: 0;
-  }
+  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
   .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
   .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
   .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
   .nav-icon { font-size: 14px; }
-
   .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
   .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
   .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .jg-mobile-nav.show { display: block; }
   .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
   .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
-  .jg-mobile-nav-item.active { background: rgba(255,255,255,0.2); font-weight: 600; }
-
   .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
   .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
   .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
@@ -86,23 +42,8 @@
   .snzg-user-menu-item.danger { color: #ff4d4f; }
   .snzg-user-menu-item.danger:hover { background: #fff1f0; }
   .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
-
   .main-wrap { margin-top: 56px; padding: 16px 20px 24px; min-height: calc(100vh - 56px); }
-
-  .subnav-bar {
-    background: #fff;
-    padding: 0 20px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    position: sticky;
-    top: 56px;
-    z-index: 50;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
+  .subnav-bar { background: #fff; padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: sticky; top: 56px; z-index: 50; overflow-x: auto; scrollbar-width: none; }
   .subnav-bar::-webkit-scrollbar { display: none; }
   .subnav-back { display: flex; align-items: center; gap: 4px; color: #666; font-size: 13px; cursor: pointer; text-decoration: none; padding: 6px 10px; border-radius: 4px; transition: all 0.2s; }
   .subnav-back:hover { color: #22a84a; background: #f0faf3; }
@@ -110,7 +51,6 @@
   .subnav-item { padding: 6px 14px; font-size: 13px; color: #666; cursor: pointer; border-radius: 16px; transition: all 0.2s; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
   .subnav-item:hover { color: #22a84a; }
   .subnav-item.active { background: #22a84a; color: #fff; }
-
   .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
   .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 8px; }
   .page-title-icon { font-size: 22px; }
@@ -119,7 +59,6 @@
   .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
   .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
   .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
-
   .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
   .snzg-stat-card { background: #fff; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
   .snzg-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
@@ -142,7 +81,6 @@
   .snzg-stat-card.red .metric-value { color: #ff4d4f; }
   .metric-unit { font-size: 13px; font-weight: 400; }
   .metric-footer { font-size: 11px; color: #666; }
-
   .main-grid { display: grid; grid-template-columns: 60% 40%; gap: 16px; margin-bottom: 16px; }
   .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
   .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
@@ -152,7 +90,6 @@
   .snzg-panel-link { font-size: 12px; color: #22a84a; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 2px; }
   .snzg-panel-link:hover { color: #1a9940; text-decoration: underline; }
   .snzg-panel-body { padding: 14px 16px; }
-
   .gantt-container { padding: 16px; overflow-x: auto; }
   .gantt-header { display: flex; align-items: center; margin-bottom: 12px; gap: 8px; }
   .gantt-legend { display: flex; gap: 16px; font-size: 11px; }
@@ -179,7 +116,6 @@
   .gantt-status.normal { background: #f0faf3; color: #22a84a; }
   .gantt-status.warning { background: #fff7e6; color: #fa8c16; }
   .gantt-status.danger { background: #fff1f0; color: #ff4d4f; }
-
   .advice-list { list-style: none; }
   .advice-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
   .advice-item:last-child { border-bottom: none; }
@@ -194,7 +130,6 @@
   .advice-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: #999; }
   .advice-action { padding: 4px 12px; border-radius: 4px; font-size: 12px; border: 1px solid #22a84a; color: #22a84a; cursor: pointer; transition: all 0.2s; background: #fff; }
   .advice-action:hover { background: #22a84a; color: #fff; }
-
   .alert-list { list-style: none; }
   .alert-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
   .alert-item:last-child { border-bottom: none; }
@@ -204,28 +139,23 @@
   .alert-content { flex: 1; }
   .alert-title { font-size: 13px; color: #333; margin-bottom: 2px; }
   .alert-meta { font-size: 11px; color: #666; display: flex; gap: 8px; }
-
   .chart-container { padding: 16px; }
   .chart-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 12px; }
   .chart-svg { width: 100%; height: 200px; }
-
   .radar-container { padding: 16px; text-align: center; }
   .radar-svg { width: 100%; max-width: 280px; height: 240px; }
   .radar-legend { display: flex; justify-content: center; gap: 16px; margin-top: 12px; font-size: 11px; }
   .radar-legend-item { display: flex; align-items: center; gap: 4px; }
   .radar-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-
   .jg-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 6px; font-size: 13px; z-index: 9999; animation: toastIn 0.3s ease; }
   .jg-toast.jg-toast-info { background: #e6f4ff; color: #1890ff; border: 1px solid #91d5ff; }
   .jg-toast.jg-toast-success { background: #f0faf3; color: #22a84a; border: 1px solid #b7eb8f; }
   .jg-toast.jg-toast-error { background: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
   @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: #f5f5f5; }
   ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #aaa; }
-
   @media (max-width: 1344px) {
     .nav-menu { display: none; }
     .jg-hamburger { display: flex; }
@@ -240,76 +170,247 @@
 </style>
 </head>
 <body>
-
 <header class="header">
   <div class="logo">
-    <div class="logo-icon">
-      <svg width="38" height="38" viewBox="0 0 38 38">
-        <rect width="38" height="38" fill="#fff" rx="4"/>
-        <circle cx="19" cy="18" r="12" fill="#ff6b35"/>
-        <circle cx="15" cy="15" r="2" fill="#fff" opacity="0.6"/>
-        <circle cx="23" cy="15" r="1.5" fill="#fff" opacity="0.4"/>
-        <path d="M12 28 Q19 34 26 28" fill="none" stroke="#22a84a" stroke-width="2.5" stroke-linecap="round"/>
-        <rect x="14" y="30" width="10" height="4" rx="2" fill="#22a84a"/>
+    <div class="logo-icon snzg-logo-icon">
+      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
+        <circle cx="50" cy="55" r="35" fill="#e53935"/>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
       </svg>
     </div>
-    <span style="margin-left:48px;">数农智果</span>
+    <span>数农智果</span>
   </div>
   <nav class="nav-menu" id="navMenu">
-    <a class="snzg-nav-item" href="home.html"><span class="nav-icon">🏠</span> 系统首页</a>
+    <a class="snzg-nav-item" href="home.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
+          <polyline points="9,22 9,12 15,12 15,22"></polyline>
+        </svg>
+      </span>
+      系统首页
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="enterprise_base.html"><span class="nav-icon">🏢</span> 企业管理</a>
+    <a class="snzg-nav-item" href="enterprise_base.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+          <rect x="9" y="9" width="6" height="6"></rect>
+          <line x="9" y="1" x2="9" y2="4"></line>
+          <line x="15" y="1" x2="15" y2="4"></line>
+          <line x="9" y="20" x2="9" y2="23"></line>
+          <line x="15" y="20" x2="15" y2="23"></line>
+          <line x="20" y="9" x2="23" y2="9"></line>
+          <line x="20" y="15" x2="23" y2="15"></line>
+          <line x="1" y="9" x2="4" y2="9"></line>
+          <line x="1" y="15" x2="4" y2="15"></line>
+        </svg>
+      </span>
+      企业管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="farming_plan.html"><span class="nav-icon">🌾</span> 农事管理</a>
+    <a class="snzg-nav-item" href="farming_plan.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
+          <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
+          <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
+          <path d="M3 9h4"></path>
+          <path d="M17 9h4"></path>
+          <path d="M12 4v3"></path>
+        </svg>
+      </span>
+      农事管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="material_info.html"><span class="nav-icon">📦</span> 农资管理</a>
+    <a class="snzg-nav-item" href="material_info.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+          <line x="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </span>
+      农资管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="device_monitor.html"><span class="nav-icon">📡</span> 设备管理</a>
+    <a class="snzg-nav-item" href="device_info.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+          <line x="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+      </span>
+      设备管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="alert_device.html"><span class="nav-icon">🔔</span> 预警管理</a>
+    <a class="snzg-nav-item" href="alert_settings.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </span>
+      预警管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="trace_code.html"><span class="nav-icon">🏷️</span> 产品追溯</a>
+    <a class="snzg-nav-item" href="trace_code.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+      </span>
+      产品追溯
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="harvest_plan.html"><span class="nav-icon">🍎</span> 采收管理</a>
+    <a class="snzg-nav-item" href="harvest_plan.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="10 8 16 12 10 16 10 8"></polygon>
+        </svg>
+      </span>
+      采收管理
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item active" href="model_growth.html"><span class="nav-icon">🧠</span> 模型预测中心</a>
+    <a class="snzg-nav-item active" href="model_growth.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+      </span>
+      模型预测中心
+    </a>
     <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="system_settings.html"><span class="nav-icon">⚙</span> 系统设置</a>
+    <a class="snzg-nav-item" href="system_settings.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </span>
+      系统设置
+    </a>
   </nav>
-  <button class="jg-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  <button id="hamburgerBtn" class="jg-hamburger">
+    <span></span><span></span><span></span>
+  </button>
   <div class="header-right">
-    <div class="msg-btn" onclick="showToast('您有3条未读消息', 'info')">✉<span class="msg-badge">3</span></div>
-    <button class="snzg-user-btn" id="userBtn">
-      <div class="snzg-user-avatar">👤</div>
+    <div class="msg-btn" onclick="showToast('您有3条未读消息', 'info')">
+      <span>🔔</span>
+      <span class="msg-badge">3</span>
+    </div>
+    <button id="userBtn" class="snzg-user-btn">
+      <div class="snzg-user-avatar">管</div>
       <span>管理员</span>
       <span style="font-size:10px;opacity:0.8">▾</span>
     </button>
-    <div class="snzg-user-menu" id="userMenu">
+    <div id="userMenu" class="snzg-user-menu">
       <div class="snzg-user-info">
         <div class="snzg-user-info-avatar">管</div>
-        <div><div class="snzg-user-info-name">管理员</div><div class="snzg-user-info-role">系统管理员</div></div>
+        <div>
+          <div class="snzg-user-info-name">系统管理员</div>
+          <div class="snzg-user-info-role">超级管理员</div>
+        </div>
       </div>
-      <a class="snzg-user-menu-item" href="#">⚙ 个人设置</a>
+      <a class="snzg-user-menu-item" href="system_settings.html">⚙ 系统设置</a>
       <a class="snzg-user-menu-item" onclick="showToast('修改密码功能开发中', 'info')">🔑 修改密码</a>
       <div class="snzg-user-menu-sep"></div>
       <a class="snzg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
     </div>
   </div>
 </header>
-
 <div class="jg-mobile-nav" id="mobileNav">
-  <a class="jg-mobile-nav-item" href="home.html">🏠 系统首页</a>
-  <a class="jg-mobile-nav-item" href="enterprise_base.html">🏢 企业管理</a>
-  <a class="jg-mobile-nav-item" href="farming_plan.html">🌾 农事管理</a>
-  <a class="jg-mobile-nav-item" href="material_info.html">📦 农资管理</a>
-  <a class="jg-mobile-nav-item" href="device_monitor.html">📡 设备管理</a>
-  <a class="jg-mobile-nav-item" href="alert_device.html">🔔 预警管理</a>
-  <a class="jg-mobile-nav-item" href="trace_code.html">🏷️ 产品追溯</a>
-  <a class="jg-mobile-nav-item" href="harvest_plan.html">🍎 采收管理</a>
-  <a class="jg-mobile-nav-item active" href="model_growth.html">🧠 模型预测中心</a>
-  <a class="jg-mobile-nav-item" href="system_settings.html">⚙ 系统设置</a>
+  <a class="jg-mobile-nav-item" href="home.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
+      <polyline points="9,22 9,12 15,12 15,22"></polyline>
+    </svg>
+    系统首页
+  </a>
+  <a class="jg-mobile-nav-item" href="enterprise_base.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+      <rect x="9" y="9" width="6" height="6"></rect>
+      <line x="9" y="1" x2="9" y2="4"></line>
+      <line x="15" y="1" x2="15" y2="4"></line>
+      <line x="9" y="20" x2="9" y2="23"></line>
+      <line x="15" y="20" x2="15" y2="23"></line>
+      <line x="20" y="9" x2="23" y2="9"></line>
+      <line x="20" y="15" x2="23" y2="15"></line>
+      <line x="1" y="9" x2="4" y2="9"></line>
+      <line x="1" y="15" x2="4" y2="15"></line>
+    </svg>
+    企业管理
+  </a>
+  <a class="jg-mobile-nav-item" href="farming_plan.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
+      <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
+      <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
+      <path d="M3 9h4"></path>
+      <path d="M17 9h4"></path>
+      <path d="M12 4v3"></path>
+    </svg>
+    农事管理
+  </a>
+  <a class="jg-mobile-nav-item" href="material_info.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+      <line x="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+    农资管理
+  </a>
+  <a class="jg-mobile-nav-item" href="device_info.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+      <line x="12" y1="18" x2="12.01" y2="18"></line>
+    </svg>
+    设备管理
+  </a>
+  <a class="jg-mobile-nav-item" href="alert_settings.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+    预警管理
+  </a>
+  <a class="jg-mobile-nav-item" href="trace_code.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x="7" y1="7" x2="7.01" y2="7"></line>
+    </svg>
+    产品追溯
+  </a>
+  <a class="jg-mobile-nav-item" href="harvest_plan.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polygon points="10 8 16 12 10 16 10 8"></polygon>
+    </svg>
+    采收管理
+  </a>
+  <a class="jg-mobile-nav-item active" href="model_growth.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+      <path d="M2 17l10 5 10-5"></path>
+      <path d="M2 12l10 5 10-5"></path>
+    </svg>
+    模型预测中心
+  </a>
+  <a class="jg-mobile-nav-item" href="system_settings.html">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+    系统设置
+  </a>
 </div>
-
 <div class="subnav-bar">
   <a class="subnav-back" href="home.html">← 返回</a>
   <span class="subnav-sep"></span>
@@ -320,7 +421,6 @@
   <a class="subnav-item" href="model_yield.html">📊 产量预估模型</a>
   <a class="subnav-item" href="model_price.html">💰 价格预测模型</a>
 </div>
-
 <div class="main-wrap">
   <div class="page-header">
     <div class="page-title"><span class="page-title-icon">🌱</span> 生长模型</div>
@@ -329,35 +429,45 @@
       <button class="jg-btn jg-btn-primary" onclick="showToast('生成农事计划功能开发中', 'info')">📋 生成农事计划</button>
     </div>
   </div>
-
   <div class="metrics-row">
     <div class="snzg-stat-card green">
-      <div class="metric-header"><span class="metric-icon">🗺️</span><span class="metric-label">监测地块总数</span></div>
+      <div class="metric-header">
+        <span class="metric-icon">🗺️</span>
+        <span class="metric-label">监测地块总数</span>
+      </div>
       <div class="metric-value">126<span class="metric-unit">块</span></div>
       <div class="metric-footer">覆盖8个基地</div>
     </div>
     <div class="snzg-stat-card blue">
-      <div class="metric-header"><span class="metric-icon">📈</span><span class="metric-label">膨大期地块</span></div>
+      <div class="metric-header">
+        <span class="metric-icon">📈</span>
+        <span class="metric-label">膨大期地块</span>
+      </div>
       <div class="metric-value">98<span class="metric-unit">块</span></div>
       <div class="metric-footer">占比77.8%</div>
     </div>
     <div class="snzg-stat-card red">
-      <div class="metric-header"><span class="metric-icon">⚠️</span><span class="metric-label">生长异常地块</span></div>
+      <div class="metric-header">
+        <span class="metric-icon">⚠️</span>
+        <span class="metric-label">生长异常地块</span>
+      </div>
       <div class="metric-value">5<span class="metric-unit">块</span></div>
       <div class="metric-footer">需关注处理</div>
     </div>
     <div class="snzg-stat-card orange">
-      <div class="metric-header"><span class="metric-icon">📝</span><span class="metric-label">本周农事建议</span></div>
+      <div class="metric-header">
+        <span class="metric-icon">📝</span>
+        <span class="metric-label">本周农事建议</span>
+      </div>
       <div class="metric-value">12<span class="metric-unit">项</span></div>
       <div class="metric-footer">基于模型推荐</div>
     </div>
   </div>
-
   <div class="main-grid">
     <div class="snzg-panel">
       <div class="snzg-panel-header">
         <div class="snzg-panel-title"><span class="pt-icon">📊</span> 生长阶段甘特图</div>
-        <a class="snzg-panel-link" href="enterprise_plot.html">查看地块详情 →</a>
+        <a class="snzg-panel-link" href="enterprise_base.html">查看地块详情 →</a>
       </div>
       <div class="gantt-container">
         <div class="gantt-header">
@@ -428,11 +538,10 @@
         </table>
       </div>
     </div>
-
     <div class="snzg-panel">
       <div class="snzg-panel-header">
         <div class="snzg-panel-title"><span class="pt-icon">🔔</span> 生长异常报警 <span class="snzg-panel-badge">5</span></div>
-        <a class="snzg-panel-link" href="alert_farming.html">查看全部 →</a>
+        <a class="snzg-panel-link" href="alert_settings.html">查看全部 →</a>
       </div>
       <div class="snzg-panel-body">
         <ul class="alert-list">
@@ -475,7 +584,6 @@
       </div>
     </div>
   </div>
-
   <div class="main-grid">
     <div class="snzg-panel">
       <div class="snzg-panel-header">
@@ -523,7 +631,6 @@
         </ul>
       </div>
     </div>
-
     <div>
       <div class="snzg-panel" style="margin-bottom:16px;">
         <div class="snzg-panel-header">
@@ -532,100 +639,4 @@
         <div class="chart-container">
           <svg class="chart-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#1890ff" stop-opacity="0.2"/>
-                <stop offset="100%" stop-color="#1890ff" stop-opacity="0.02"/>
-              </linearGradient>
-            </defs>
-            <line x1="40" y1="20" x2="380" y2="20" stroke="#f0f0f0"/>
-            <line x1="40" y1="60" x2="380" y2="60" stroke="#f0f0f0"/>
-            <line x1="40" y1="100" x2="380" y2="100" stroke="#f0f0f0"/>
-            <line x1="40" y1="140" x2="380" y2="140" stroke="#f0f0f0"/>
-            <line x1="40" y1="180" x2="380" y2="180" stroke="#e8e8e8"/>
-            <text x="35" y="24" font-size="9" fill="#999" text-anchor="end">2000</text>
-            <text x="35" y="64" font-size="9" fill="#999" text-anchor="end">1500</text>
-            <text x="35" y="104" font-size="9" fill="#999" text-anchor="end">1000</text>
-            <text x="35" y="144" font-size="9" fill="#999" text-anchor="end">500</text>
-            <text x="35" y="184" font-size="9" fill="#999" text-anchor="end">0</text>
-            <text x="60" y="195" font-size="8" fill="#999" text-anchor="middle">3月</text>
-            <text x="120" y="195" font-size="8" fill="#999" text-anchor="middle">4月</text>
-            <text x="180" y="195" font-size="8" fill="#999" text-anchor="middle">5月</text>
-            <text x="240" y="195" font-size="8" fill="#999" text-anchor="middle">6月</text>
-            <text x="300" y="195" font-size="8" fill="#999" text-anchor="middle">7月</text>
-            <text x="360" y="195" font-size="8" fill="#999" text-anchor="middle">8月</text>
-            <path d="M60,170 L120,140 L180,100 L240,70 L300,45 L360,30" fill="none" stroke="#d9d9d9" stroke-width="2" stroke-dasharray="5,3"/>
-            <path d="M60,165 L120,135 L180,95 L240,60 L300,35 L360,20" fill="none" stroke="#1890ff" stroke-width="2.5"/>
-            <circle cx="60" cy="165" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <circle cx="120" cy="135" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <circle cx="180" cy="95" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <circle cx="240" cy="60" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <circle cx="300" cy="35" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <circle cx="360" cy="20" r="3" fill="#fff" stroke="#1890ff" stroke-width="2"/>
-            <line x1="280" y1="15" x2="300" y2="15" stroke="#1890ff" stroke-width="2"/>
-            <text x="305" y="18" font-size="9" fill="#555">实际积温</text>
-            <line x1="280" y1="28" x2="300" y2="28" stroke="#d9d9d9" stroke-width="2" stroke-dasharray="5,3"/>
-            <text x="305" y="31" font-size="9" fill="#555">理论积温</text>
-          </svg>
-        </div>
-      </div>
-
-      <div class="snzg-panel">
-        <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon">🎯</span> 生长指标评分</div>
-        </div>
-        <div class="radar-container">
-          <svg class="radar-svg" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="140,30 230,80 230,160 140,210 50,160 50,80" fill="none" stroke="#e8e8e8" stroke-width="1"/>
-            <polygon points="140,55 200,90 200,145 140,180 80,145 80,90" fill="none" stroke="#e8e8e8" stroke-width="1"/>
-            <polygon points="140,80 170,100 170,130 140,150 110,130 110,100" fill="none" stroke="#e8e8e8" stroke-width="1"/>
-            <polygon points="140,35 225,82 218,155 140,198 62,155 55,82" fill="rgba(34,168,74,0.15)" stroke="#22a84a" stroke-width="2"/>
-            <circle cx="140" cy="35" r="4" fill="#22a84a"/>
-            <circle cx="225" cy="82" r="4" fill="#22a84a"/>
-            <circle cx="218" cy="155" r="4" fill="#22a84a"/>
-            <circle cx="140" cy="198" r="4" fill="#22a84a"/>
-            <circle cx="62" cy="155" r="4" fill="#22a84a"/>
-            <circle cx="55" cy="82" r="4" fill="#22a84a"/>
-            <text x="140" y="18" font-size="10" fill="#333" text-anchor="middle" font-weight="600">长势</text>
-            <text x="245" y="82" font-size="10" fill="#333" text-anchor="start" font-weight="600">营养</text>
-            <text x="245" y="160" font-size="10" fill="#333" text-anchor="start" font-weight="600">产量</text>
-            <text x="140" y="228" font-size="10" fill="#333" text-anchor="middle" font-weight="600">品质</text>
-            <text x="35" y="160" font-size="10" fill="#333" text-anchor="end" font-weight="600">抗病</text>
-            <text x="35" y="82" font-size="10" fill="#333" text-anchor="end" font-weight="600">成熟</text>
-          </svg>
-          <div class="radar-legend">
-            <div class="radar-legend-item"><span class="radar-legend-dot" style="background:#22a84a"></span> 当前评分</div>
-            <div class="radar-legend-item"><span class="radar-legend-dot" style="background:#e8e8e8"></span> 标准值</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const mobileNav = document.getElementById('mobileNav');
-if (hamburgerBtn && mobileNav) {
-  hamburgerBtn.addEventListener('click', function() { mobileNav.classList.toggle('show'); });
-}
-
-const userBtn = document.getElementById('userBtn');
-const userMenu = document.getElementById('userMenu');
-if (userBtn && userMenu) {
-  userBtn.addEventListener('click', function(e) { e.stopPropagation(); userMenu.classList.toggle('show'); });
-  document.addEventListener('click', function(e) { if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) { userMenu.classList.remove('show'); } });
-}
-
-function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); sessionStorage.removeItem('snzg_user'); window.location.href = 'login.html'; }
-
-function showToast(msg, type) {
-  type = type || 'info';
-  var toast = document.createElement('div');
-  toast.className = 'jg-toast jg-toast-' + type;
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(function() { toast.remove(); }, 2600);
-}
-</script>
-</body>
-</html>
+              <linearGradient id="areaGrad" x1="0" y

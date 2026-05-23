@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 我的认养</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --purple: #9b59b6; --purple-light: #f5eef8;
+      --gold: #d4af37; --gold-light: #fef9e7;
+      --gray: #95a5a6; --gray-light: #f0f0f0;
+      --bg: #f5f5f5; --white: #fff;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --border-light: #f0f0f0;
+      --radius: 12px; --radius-lg: 16px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 72px; }
+    
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 20px 16px 24px; color: #fff; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .header-title { font-size: 20px; font-weight: 700; }
+    .header-actions { display: flex; gap: 12px; }
+    .action-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .action-btn svg { width: 18px; height: 18px; color: #fff; }
+    .stats-row { display: flex; gap: 16px; }
+    .stat-item { flex: 1; text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; }
+    .stat-label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    
+    .content { padding: 16px; }
+    .section-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-icon { font-size: 18px; }
+    
+    .adoption-card { background: #fff; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .adoption-card:active { transform: scale(0.99); }
+    .card-header { display: flex; gap: 14px; margin-bottom: 12px; }
+    .tree-photo { width: 80px; height: 80px; border-radius: var(--radius); background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .tree-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .tree-photo-placeholder { font-size: 36px; }
+    .tree-info { flex: 1; }
+    .tree-name { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .tree-variety { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+    .tree-period { font-size: 12px; color: var(--text-light); }
+    .card-status { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .status-badge { font-size: 11px; padding: 3px 10px; border-radius: 10px; }
+    .status-badge.growing { background: #e8f5ec; color: #22a84a; }
+    .status-badge.harvest-ready { background: var(--orange-light); color: var(--orange); }
+    .status-badge.expired { background: var(--gray-light); color: var(--text-light); }
+    .growth-stage { font-size: 12px; color: #22a84a; }
+    
+    .card-actions { display: flex; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+    .card-action { flex: 1; height: 36px; background: #e8f5ec; border-radius: 18px; font-size: 13px; color: #22a84a; display: flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; }
+    .card-action.secondary { background: #f5f5f5; color: var(--text-secondary); }
+    .card-action svg { width: 16px; height: 16px; }
+    
+    .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    .quick-action { background: #fff; border-radius: var(--radius); padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .quick-action:active { transform: scale(0.96); }
+    .quick-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .quick-icon.cert { background: var(--gold-light); color: var(--gold); }
+    .quick-icon.harvest { background: var(--orange-light); color: var(--orange); }
+    .quick-icon.order { background: var(--blue-light); color: var(--blue); }
+    .quick-icon.history { background: var(--purple-light); color: var(--purple); }
+    .quick-icon svg { width: 22px; height: 22px; }
+    .quick-name { font-size: 12px; color: var(--text); text-align: center; }
+    
+    .updates-section { background: #fff; border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border); }
+    .update-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+    .update-item:last-child { border-bottom: none; }
+    .update-icon { width: 40px; height: 40px; border-radius: 10px; background: #e8f5ec; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .update-icon svg { width: 20px; height: 20px; color: #22a84a; }
+    .update-icon.harvest { background: var(--orange-light); }
+    .update-icon.harvest svg { color: var(--orange); }
+    .update-icon.warning { background: var(--red-light); }
+    .update-icon.warning svg { color: var(--red); }
+    .update-content { flex: 1; }
+    .update-title { font-size: 14px; color: var(--text); margin-bottom: 4px; }
+    .update-time { font-size: 11px; color: var(--text-light); }
+    
+    .empty-state { text-align: center; padding: 60px 20px; }
+    .empty-icon { width: 80px; height: 80px; background: #e8f5ec; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .empty-icon svg { width: 40px; height: 40px; color: #22a84a; }
+    .empty-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .empty-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
+    .empty-btn { display: inline-block; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 12px 32px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-top">
+        <div class="header-title">我的认养</div>
+        <div class="header-actions">
+          <div class="action-btn" onclick="navigateTo('mb_adoption_browse.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/>
+              <line x1="9" y1="12" x2="15" y2="12"/>
+              <line x1="9" y1="16" x2="13" y2="16"/>
+            </svg>
+          </div>
+          <div class="action-btn" onclick="refreshData()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/>
+              <polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">2</div>
+          <div class="stat-label">认养果树</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">156</div>
+          <div class="stat-label">预估产量(斤)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">1</div>
+          <div class="stat-label">待采摘</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="quick-actions">
+        <div class="quick-action" onclick="navigateTo('mb_adoption_cert.html')">
+          <div class="quick-icon cert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <path d="M12 18v-6"/>
+              <path d="M9 15h6"/>
+            </svg>
+          </div>
+          <div class="quick-name">认养证书</div>
+        </div>
+        <div class="quick-action" onclick="navigateTo('mb_adoption_harvest.html')">
+          <div class="quick-icon harvest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/>
+              <path d="M12 2v10l4 4"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="quick-name">采摘预约</div>
+        </div>
+        <div class="quick-action" onclick="navigateTo('mb_adoption_browse.html')">
+          <div class="quick-icon order">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div class="quick-name">认养果树</div>
+        </div>
+        <div class="quick-action" onclick="showFarmingHistory()">
+          <div class="quick-icon history">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div class="quick-name">农事记录</div>
+        </div>
+      </div>
+      
+      <div class="section-title">
+        <span class="section-icon">🌳</span>
+        我的认养果树
+      </div>
+      
+      <div class="adoption-card" onclick="navigateTo('mb_adoption_detail.html')">
+        <div class="card-header">
+          <div class="tree-photo">
+            <span class="tree-photo-placeholder">🍎</span>
+          </div>
+          <div class="tree-info">
+            <div class="tree-name">红富士 #A025</div>
+            <div class="tree-variety">品种：红富士 · 树龄8年</div>
+            <div class="tree-period">认养期限：2026.03.15 - 2027.03.14</div>
+            <div class="card-status">
+              <span class="status-badge growing">生长期</span>
+              <span class="growth-stage">当前：膨大期</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div class="card-action" onclick="event.stopPropagation(); navigateTo('mb_adoption_cert.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            查看证书
+          </div>
+          <div class="card-action secondary" onclick="event.stopPropagation(); navigateTo('mb_adoption_harvest.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+            </svg>
+            预约采摘
+          </div>
+        </div>
+      </div>
+      
+      <div class="adoption-card" onclick="navigateTo('mb_adoption_detail.html')">
+        <div class="card-header">
+          <div class="tree-photo">
+            <span class="tree-photo-placeholder">🍎</span>
+          </div>
+          <div class="tree-info">
+            <div class="tree-name">嘎啦 #G012</div>
+            <div class="tree-variety">品种：嘎啦 · 树龄6年</div>
+            <div class="tree-period">认养期限：2026.04.20 - 2027.04.19</div>
+            <div class="card-status">
+              <span class="status-badge harvest-ready">待采摘</span>
+              <span class="growth-stage">预计9月中旬成熟</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div class="card-action" onclick="event.stopPropagation(); navigateTo('mb_adoption_cert.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            查看证书
+          </div>
+          <div class="card-action" onclick="event.stopPropagation(); navigateTo('mb_adoption_harvest.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+            </svg>
+            立即预约
+          </div>
+        </div>
+      </div>
+      
+      <div class="section-title" style="margin-top: 8px;">
+        <span class="section-icon">📢</span>
+        最新动态
+      </div>
+      
+      <div class="updates-section">
+        <div class="update-item">
+          <div class="update-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="update-content">
+            <div class="update-title">红富士 #A025 已完成夏季追肥</div>
+            <div class="update-time">今天 09:30</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-icon harvest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/>
+              <path d="M12 2v10l4 4"/>
+            </svg>
+          </div>
+          <div class="update-content">
+            <div class="update-title">嘎啦 #G012 采摘季即将来临，请及时预约</div>
+            <div class="update-time">昨天 18:00</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div class="update-content">
+            <div class="update-title">红富士 #A025 发布了新照片</div>
+            <div class="update-time">05-21 14:30</div>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="update-content">
+            <div class="update-title">嘎啦 #G012 已进入成熟期，请尽快预约采摘</div>
+            <div class="update-time">05-20 10:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_adoption.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v4"/>
+          <path d="M12 16h.01"/>
+        </svg>
+        <span>认养</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    
+    function refreshData() {
+      window.location.reload();
+    }
+    
+    function showFarmingHistory() {
+      alert('查看农事记录');
+    }
+  </script>
+</body>
+</html>

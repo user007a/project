@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 认养果树管理</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+  .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
+  .snzg-nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .snzg-nav-item.active { color: #fff; border-bottom: 3px solid #fff; font-weight: 600; }
+  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
+  .nav-icon { font-size: 14px; }
+  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
+  .jg-hamburger span { width: 24px; height: 2px; background: #fff; border-radius: 1px; }
+  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); padding: 12px; z-index: 99; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .jg-mobile-nav.show { display: block; }
+  .jg-mobile-nav-item { display: block; padding: 12px 16px; color: #fff; font-size: 14px; text-decoration: none; border-radius: 6px; transition: background 0.2s; }
+  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
+  .subnav-bar { display: flex; align-items: center; background: #fff; border-radius: 8px; padding: 4px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .nav-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #999; font-size: 20px; border-radius: 4px; transition: all 0.2s; }
+  .nav-arrow:hover { background: #f5f5f5; color: #666; }
+  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .subnav-menu::-webkit-scrollbar { display: none; }
+  .subnav-item { padding: 6px 16px; border-radius: 4px; font-size: 13px; color: #666; text-decoration: none; white-space: nowrap; transition: all 0.2s; }
+  .subnav-item:hover { background: #f0f0f0; color: #333; }
+  .subnav-item.active { background: #22a84a; color: #fff; }
+  .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; position: relative; }
+  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: #fff; font-size: 18px; }
+  .msg-badge { position: absolute; top: -4px; right: -4px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 4px; border-radius: 8px; font-weight: 600; min-width: 16px; text-align: center; }
+  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: #fff; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s; font-size: 13px; background: none; border: none; }
+  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
+  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
+  .snzg-user-menu.show { display: block; }
+  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .snzg-user-info-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, #1a7a3c, #22a84a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 600; }
+  .snzg-user-info-name { font-size: 14px; font-weight: 600; color: #333; }
+  .snzg-user-info-role { font-size: 11px; color: #888; }
+  .snzg-user-menu-item { display: block; padding: 10px 16px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .snzg-user-menu-item:hover { background: #f5f5f5; }
+  .snzg-user-menu-item.danger { color: #ff4d4f; }
+  .snzg-user-menu-item.danger:hover { background: #fff1f0; }
+  .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
+  .main-wrap { margin-top: 56px; padding: 16px 20px 24px; min-height: calc(100vh - 56px); }
+  .page-header { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
+  .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 10px; }
+  .page-title .title-icon { font-size: 22px; }
+  .page-desc { font-size: 13px; color: #666; margin-top: 4px; }
+  .page-actions { display: flex; gap: 10px; }
+  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 12px; color: #333; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+  .jg-btn:hover { border-color: #22a84a; color: #22a84a; box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
+  .jg-btn.jg-btn-primary { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .jg-btn.jg-btn-primary:hover { background: #1a9940; border-color: #1a9940; }
+  .jg-btn.jg-btn-danger { background: #fff; color: #ff4d4f; border-color: #ff4d4f; }
+  .jg-btn.jg-btn-danger:hover { background: #fff1f0; }
+  .jg-btn.jg-btn-warning { background: #fa8c16; color: #fff; border-color: #fa8c16; }
+  .jg-btn.jg-btn-warning:hover { background: #e67d12; border-color: #e67d12; }
+  .snzg-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 16px; }
+  .snzg-panel-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .snzg-panel-title { font-size: 14px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 6px; }
+  .snzg-panel-title .pt-icon { font-size: 16px; }
+  .snzg-panel-body { padding: 14px 16px; }
+  .stats-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat-card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); text-align: center; }
+  .stat-card .stat-label { font-size: 12px; color: #666; margin-bottom: 6px; }
+  .stat-card .stat-value { font-size: 26px; font-weight: 700; }
+  .stat-card.green .stat-value { color: #22a84a; }
+  .stat-card.blue .stat-value { color: #1890ff; }
+  .stat-card.orange .stat-value { color: #fa8c16; }
+  .stat-card.red .stat-value { color: #ff4d4f; }
+  .search-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; width: 200px; transition: border-color 0.2s; }
+  .search-input:focus { outline: none; border-color: #22a84a; }
+  .search-select { padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .search-select:focus { outline: none; border-color: #22a84a; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+  .data-table th { background: #fafafa; font-weight: 600; color: #333; }
+  .data-table tr:hover { background: #fafafa; }
+  .data-table .text-center { text-align: center; }
+  .data-table .text-right { text-align: right; }
+  .data-table .tree-photo { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .data-table .status-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+  .status-tag.available { background: #f6ffed; color: #52c41a; }
+  .status-tag.adopted { background: #e6f4ff; color: #1890ff; }
+  .status-tag.unavailable { background: #f5f5f5; color: #8c8c8c; }
+  .data-table .action-btns { display: flex; gap: 8px; }
+  .action-btn { padding: 4px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; border: none; background: transparent; color: #666; transition: all 0.2s; }
+  .action-btn:hover { background: #f0f0f0; }
+  .action-btn.edit { color: #1890ff; }
+  .action-btn.edit:hover { background: #e6f4ff; }
+  .action-btn.delete { color: #ff4d4f; }
+  .action-btn.delete:hover { background: #fff1f0; }
+  .action-btn.detail { color: #22a84a; }
+  .action-btn.detail:hover { background: #f6ffed; }
+  .action-btn.photo { color: #722ed1; }
+  .action-btn.photo:hover { background: #f5f0ff; }
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; }
+  .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer; background: #fff; font-size: 12px; transition: all 0.2s; }
+  .page-btn:hover { border-color: #22a84a; color: #22a84a; }
+  .page-btn.active { background: #22a84a; color: #fff; border-color: #22a84a; }
+  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-content { background: #fff; border-radius: 8px; width: 90%; max-width: 600px; overflow: hidden; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .modal-header { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 15px; font-weight: 600; color: #222; }
+  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+  .modal-close:hover { background: #f5f5f5; }
+  .modal-body { padding: 16px; max-height: 70vh; overflow-y: auto; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .form-input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; transition: border-color 0.2s; }
+  .form-input:focus { outline: none; border-color: #22a84a; }
+  .form-textarea { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; resize: vertical; min-height: 80px; }
+  .form-textarea:focus { outline: none; border-color: #22a84a; }
+  .form-select { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .form-select:focus { outline: none; border-color: #22a84a; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .modal-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 10px; }
+  .jg-toast { position: fixed; top: 70px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; font-size: 13px; z-index: 2000; animation: toastIn 0.3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .jg-toast-success { background: #52c41a; }
+  .jg-toast-error { background: #ff4d4f; }
+  .jg-toast-info { background: #1890ff; }
+  .photo-upload { border: 2px dashed #d9d9d9; border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+  .photo-upload:hover { border-color: #22a84a; }
+  .photo-upload .upload-icon { font-size: 32px; margin-bottom: 10px; }
+  .photo-upload .upload-text { font-size: 12px; color: #666; }
+  .photo-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .photo-preview img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; }
+  .checkbox-cell { text-align: center; }
+  .batch-actions { display: flex; gap: 10px; align-items: center; padding: 12px 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  @media (max-width: 768px) { .main-wrap { padding: 12px; } .search-bar { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .page-header { flex-direction: column; gap: 12px; align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .stats-cards { grid-template-columns: repeat(2, 1fr); } .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 8px 6px; } .form-row, .form-row-3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
+        <circle cx="50" cy="55" r="35" fill="#e53935"/>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <div class="nav-menu">
+    <a href="home.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg></span><span>系统首页</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M9,22v-4h6v4"></path><path d="M8,6h.01"></path><path d="M16,6h.01"></path><path d="M12,6h.01"></path><path d="M12,10h.01"></path><path d="M12,14h.01"></path></svg></span><span>企业管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2,22 16,8"></path><path d="M3.47,12.53 5,11l1.53,1.53a3.5,3.5 0,0,1 0,4.94L5,19l-1.53,-1.53a3.5,3.5 0,0,1 0,-4.94Z"></path><path d="M20,2h2v20h-2"></path></svg></span><span>农事管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5,4.27 9,5.15"></path><path d="M21,8a2,2 0,0,1 -1,1.73l-7,4a2,2 0,0,1 -2,0l-7,-4A2,2 0,0,1 3,8V6a2,2 0,0,1 1,-1.73l7,-4a2,2 0,0,1 2,0l7,4A2,2 0,0,1 21,6z"></path><polyline points="3.29,7 12,12 20.71,7"></polyline><line x1="12" x2="12" y1="22" y2="12"></line></svg></span><span>农资管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="device_monitor.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2,12 7,2"></path><path d="m7,12 5,-10"></path><path d="m12,12 5,-10"></path><path d="m17,12 5,-10"></path><rect width="20" height="4" x="2" y="18" rx="2"></rect></svg></span><span>设备管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="alert_device.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6,8a6,6 0,0,1 12,0c0,7 3,9 3,9H3s3,-2 3,-9"></path><path d="M10.3,21a1.94,1.94 0,0,0 3.4,0"></path></svg></span><span>预警管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12,22s8,-4 8,-10V5l-8,-3 -8,3v7c0,6 8,10 8,10z"></path></svg></span><span>产品追溯</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="harvest_plan.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12,21a9,9 0,0,0 9,-9c0,-4.97 -4.03,-9 -9,-9s-9,4.03 -9,9a9,9 0,0,0 9,9z"></path></svg></span><span>采收管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="adoption_tree.html" class="snzg-nav-item active"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12,22v-7"></path><path d="M17,13H7"></path><path d="M18,6H6"></path><path d="M12,2v2"></path><path d="M8,6l2,-4"></path><path d="M16,6l-2,-4"></path></svg></span><span>认养管理</span></a>
+    <span class="snzg-nav-sep"></span>
+    <a href="model_growth.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12,5a3,3 0,1,0 -5.997,0.125 4,4 0,0,0 -2.526,5.77 4,4 0,0,0 1.156,6.526 4.5,4.5 0,0,0 5.39,-2.02l0.022,-0.033 0.022,0.033a4.5,4.5 0,0,0 5.39,2.02 4,4 0,0,0 1.155,-6.526 4,4 0,0,0 -2.526,-5.77A3,3 0,1,0 12,5"></path></svg></span> 模型预测中心</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22,2h-0.44a2,2 0,0,0 -2,2v0.18a2,2 0,0,1 -1,1.73l-0.43,0.25a2,2 0,0,1 -2,0l-0.15,-0.08a2,2 0,0,0 -2.73,0.73l-0.22,0.38a2,2 0,0,0 0.73,2.73l0.15,0.1a2,2 0,0,1 1,1.72v0.51a2,2 0,0,1 -1,1.74l-0.15,0.09a2,2 0,0,0 -0.73,2.73l0.22,0.38a2,2 0,0,0 2.73,0.73l0.15,-0.08a2,2 0,0,1 2,0l0.43,0.25a2,2 0,0,1 1,1.73V20a2,2 0,0,0 2,2h0.44a2,2 0,0,0 2,-2v-0.18a2,2 0,0,1 1,-1.73l0.43,-0.25a2,2 0,0,1 2,0l0.15,0.08a2,2 0,0,0 2.73,-0.73l0.22,-0.38a2,2 0,0,0 -0.73,-2.73l-0.15,-0.09a2,2 0,0,1 -1,-1.74v-0.51a2,2 0,0,1 1,-1.74l0.15,-0.09a2,2 0,0,0 0.73,-2.73l-0.22,-0.38a2,2 0,0,0 -2.73,-0.73l-0.15,0.08a2,2 0,0,1 -2,0l-0.43,-0.25a2,2 0,0,1 -1,-1.73V4a2,2 0,0,0 -2,-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></span><span>系统设置</span></a>
+  </div>
+  <button id="hamburgerBtn" class="jg-hamburger">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-right">
+    <div class="msg-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+        <path d="M6,8a6,6 0,0,1 12,0c0,7 3,9 3,9H3s3,-2 3,-9"></path>
+        <path d="M10.3,21a1.94,1.94 0,0,0 3.4,0"></path>
+      </svg>
+      <span class="msg-badge">3</span>
+    </div>
+    <button id="userBtn" class="snzg-user-btn">
+      <span class="snzg-user-avatar">管</span>
+      <span>管理员</span>
+    </button>
+    <div id="userMenu" class="snzg-user-menu">
+      <div class="snzg-user-info">
+        <div class="snzg-user-info-avatar">管</div>
+        <div>
+          <div class="snzg-user-info-name">系统管理员</div>
+          <div class="snzg-user-info-role">超级管理员</div>
+        </div>
+      </div>
+      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
+      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
+      <div class="snzg-user-menu-sep"></div>
+      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+    </div>
+  </div>
+</div>
+<div id="mobileNav" class="jg-mobile-nav">
+  <a href="home.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg> 系统首页</a>
+  <a href="enterprise_base.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect width="16" height="20" x="4" y="2" rx="2"></rect><path d="M9,22v-4h6v4"></path></svg> 企业管理</a>
+  <a href="farming_plan.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M2,22 16,8"></path><path d="M20,2h2v20h-2"></path></svg> 农事管理</a>
+  <a href="material_info.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="m7.5,4.27 9,5.15"></path><rect width="18" height="16" x="3" y="4" rx="2"></rect></svg> 农资管理</a>
+  <a href="device_monitor.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect width="20" height="4" x="2" y="18" rx="2"></rect></svg> 设备管理</a>
+  <a href="alert_device.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M6,8a6,6 0,0,1 12,0c0,7 3,9 3,9H3s3,-2 3,-9"></path></svg> 预警管理</a>
+  <a href="trace_code.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12,22s8,-4 8,-10V5l-8,-3 -8,3v7c0,6 8,10 8,10z"></path></svg> 产品追溯</a>
+  <a href="harvest_plan.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"></circle></svg> 采收管理</a>
+  <a href="adoption_tree.html" class="jg-mobile-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12,22v-7"></path><path d="M17,13H7"></path><path d="M18,6H6"></path></svg> 认养管理</a>
+  <a href="model_growth.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"></circle></svg> 模型预测中心</a>
+  <a href="system_settings.html" class="jg-mobile-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="3"></circle></svg> 系统设置</a>
+</div>
+<div class="main-wrap">
+  <div class="subnav-bar">
+    <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
+    <div class="subnav-menu">
+      <a href="adoption_tree.html" class="subnav-item active">认养果树管理</a>
+      <a href="adoption_order.html" class="subnav-item">认养订单管理</a>
+      <a href="adoption_farming.html" class="subnav-item">农事发布管理</a>
+      <a href="adoption_harvest.html" class="subnav-item">采摘管理</a>
+    </div>
+    <div class="nav-arrow" onclick="scrollNav(1)">›</div>
+  </div>
+  <div class="page-header">
+    <div>
+      <div class="page-title"><span class="title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M12,22v-7"></path><path d="M17,13H7"></path><path d="M18,6H6"></path><path d="M12,2v2"></path><path d="M8,6l2,-4"></path><path d="M16,6l-2,-4"></path></svg></span>认养果树管理</div>
+      <div class="page-desc">管理可认养果树信息，设置认养状态和价格</div>
+    </div>
+    <div class="page-actions">
+      <button class="jg-btn" onclick="showBatchModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+          <path d="M9,11h11"></path>
+          <path d="M9,17h11"></path>
+          <path d="M3,11h.01"></path>
+          <path d="M3,17h.01"></path>
+        </svg>批量设置
+      </button>
+      <button class="jg-btn jg-btn-primary" onclick="showAddModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+          <path d="M5,12h14"></path>
+          <path d="M12,5v14"></path>
+        </svg>添加认养果树
+      </button>
+    </div>
+  </div>
+  <div class="stats-cards">
+    <div class="stat-card green">
+      <div class="stat-label">可认养果树</div>
+      <div class="stat-value">286</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="stat-label">已认养果树</div>
+      <div class="stat-value">156</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-label">不可认养</div>
+      <div class="stat-value">58</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">认养总收入</div>
+      <div class="stat-value" style="color:#722ed1;">¥58.6万</div>
+    </div>
+  </div>
+  <div class="snzg-panel">
+    <div class="snzg-panel-header">
+      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12,22v-7"></path><path d="M17,13H7"></path><path d="M18,6H6"></path><path d="M12,2v2"></path><path d="M8,6l2,-4"></path><path d="M16,6l-2,-4"></path></svg></span>果树列表</div>
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="搜索果树编号..." id="searchInput">
+        <select class="search-select" id="varietySelect">
+          <option value="">全部品种</option>
+          <option value="red_fuji">红富士</option>
+          <option value="gala">嘎啦</option>
+          <option value="qin_guan">秦冠</option>
+        </select>
+        <select class="search-select" id="statusSelect">
+          <option value="">全部状态</option>
+          <option value="available">可认养</option>
+          <option value="adopted">已认养</option>
+          <option value="unavailable">不可认养</option>
+        </select>
+        <button class="jg-btn" onclick="doSearch()">搜索</button>
+      </div>
+    </div>
+    <div class="batch-actions">
+      <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+      <label for="selectAll">全选</label>
+      <span style="margin-left: 20px; color: #666;">已选择 <span id="selectedCount">0</span> 项</span>
+    </div>
+    <div class="snzg-panel-body">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:40px;"></th>
+            <th>果树编号</th>
+            <th>品种</th>
+            <th>树龄</th>
+            <th>位置</th>
+            <th>预估产量</th>
+            <th>认养价格</th>
+            <th>认养状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="treeList">
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="1"></td>
+            <td><strong>A025</strong></td>
+            <td>红富士</td>
+            <td>8年</td>
+            <td>洛川基地 A区 3号地块</td>
+            <td class="text-right">80斤</td>
+            <td class="text-right">¥399/年</td>
+            <td><span class="status-tag adopted">已认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('A025')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('A025')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('A025')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('A025')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="2"></td>
+            <td><strong>A018</strong></td>
+            <td>红富士</td>
+            <td>10年</td>
+            <td>洛川基地 A区 2号地块</td>
+            <td class="text-right">95斤</td>
+            <td class="text-right">¥499/年</td>
+            <td><span class="status-tag adopted">已认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('A018')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('A018')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('A018')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('A018')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="3"></td>
+            <td><strong>B012</strong></td>
+            <td>嘎啦</td>
+            <td>6年</td>
+            <td>洛川基地 B区 5号地块</td>
+            <td class="text-right">65斤</td>
+            <td class="text-right">¥299/年</td>
+            <td><span class="status-tag available">可认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('B012')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('B012')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('B012')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('B012')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="4"></td>
+            <td><strong>C008</strong></td>
+            <td>秦冠</td>
+            <td>12年</td>
+            <td>洛川基地 C区 1号地块</td>
+            <td class="text-right">110斤</td>
+            <td class="text-right">¥599/年</td>
+            <td><span class="status-tag available">可认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('C008')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('C008')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('C008')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('C008')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="5"></td>
+            <td><strong>A030</strong></td>
+            <td>红富士</td>
+            <td>7年</td>
+            <td>洛川基地 A区 4号地块</td>
+            <td class="text-right">72斤</td>
+            <td class="text-right">¥359/年</td>
+            <td><span class="status-tag unavailable">不可认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('A030')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('A030')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('A030')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('A030')">删除</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="checkbox-cell"><input type="checkbox" class="tree-checkbox" value="6"></td>
+            <td><strong>B015</strong></td>
+            <td>嘎啦</td>
+            <td>5年</td>
+            <td>洛川基地 B区 6号地块</td>
+            <td class="text-right">55斤</td>
+            <td class="text-right">¥259/年</td>
+            <td><span class="status-tag adopted">已认养</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn detail" onclick="showDetail('B015')">详情</button>
+                <button class="action-btn edit" onclick="showEditModal('B015')">编辑</button>
+                <button class="action-btn photo" onclick="showPhotoModal('B015')">照片</button>
+                <button class="action-btn delete" onclick="handleDelete('B015')">删除</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button class="page-btn disabled">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="addModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">添加认养果树</div>
+      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">果树编号 *</label>
+        <input type="text" class="form-input" placeholder="请输入果树编号，如：A025">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">品种 *</label>
+          <select class="form-select">
+            <option value="">请选择品种</option>
+            <option value="red_fuji">红富士</option>
+            <option value="gala">嘎啦</option>
+            <option value="qin_guan">秦冠</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">树龄 *</label>
+          <input type="text" class="form-input" placeholder="请输入树龄，如：8年">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">预估产量 *</label>
+          <input type="text" class="form-input" placeholder="请输入预估产量，如：80斤">
+        </div>
+        <div class="form-group">
+          <label class="form-label">认养价格 *</label>
+          <input type="text" class="form-input" placeholder="请输入认养价格，如：399">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">位置 *</label>
+        <input type="text" class="form-input" placeholder="请输入位置，如：洛川基地 A区 3号地块">
+      </div>
+      <div class="form-group">
+        <label class="form-label">认养状态 *</label>
+        <select class="form-select">
+          <option value="available">可认养</option>
+          <option value="adopted">已认养</option>
+          <option value="unavailable">不可认养</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">关联地块</label>
+        <select class="form-select">
+          <option value="">请选择地块</option>
+          <option value="1">洛川基地 A区 1号地块</option>
+          <option value="2">洛川基地 A区 2号地块</option>
+          <option value="3">洛川基地 A区 3号地块</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">关联监控设备</label>
+        <select class="form-select">
+          <option value="">请选择设备（可选）</option>
+          <option value="cam_001">摄像头 CAM-001</option>
+          <option value="cam_002">摄像头 CAM-002</option>
+          <option value="cam_003">摄像头 CAM-003</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">果树照片</label>
+        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+          <div class="upload-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;">
+              <path d="M23,19a2,2 0,0,1 -2,2H3a2,2 0,0,1 -2,-2V8a2,2 0,0,1 2,-2h3l2,-2h4l2,2h3a2,2 0,0,1 2,2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </div>
+          <div class="upload-text">点击上传果树照片<br>支持 JPG、PNG 格式</div>
+          <input type="file" id="photoInput" style="display:none;" accept="image/*" multiple>
+        </div>
+        <div class="photo-preview" id="photoPreview"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">备注</label>
+        <textarea class="form-textarea" placeholder="请输入备注信息"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('addModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAdd()">确认添加</button>
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">编辑认养果树</div>
+      <div class="modal-close" onclick="closeModal('editModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">果树编号</label>
+          <input type="text" class="form-input" value="A025" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">品种</label>
+          <select class="form-select">
+            <option value="red_fuji" selected>红富士</option>
+            <option value="gala">嘎啦</option>
+            <option value="qin_guan">秦冠</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">树龄</label>
+          <input type="text" class="form-input" value="8年">
+        </div>
+        <div class="form-group">
+          <label class="form-label">预估产量</label>
+          <input type="text" class="form-input" value="80斤">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">认养价格</label>
+          <input type="text" class="form-input" value="399">
+        </div>
+        <div class="form-group">
+          <label class="form-label">认养状态</label>
+          <select class="form-select">
+            <option value="available">可认养</option>
+            <option value="adopted" selected>已认养</option>
+            <option value="unavailable">不可认养</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">位置</label>
+        <input type="text" class="form-input" value="洛川基地 A区 3号地块">
+      </div>
+      <div class="form-group">
+        <label class="form-label">备注</label>
+        <textarea class="form-textarea">果树生长良好，树势健壮。</textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('editModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleEdit()">确认修改</button>
+    </div>
+  </div>
+</div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 700px;">
+    <div class="modal-header">
+      <div class="modal-title">果树详情</div>
+      <div class="modal-close" onclick="closeModal('detailModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px;">
+        <div>
+          <div style="background: #f5f5f5; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 60px; margin-bottom: 8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:60px;height:60px;color:#22a84a;">
+                <path d="M12,22v-7"></path>
+                <path d="M17,13H7"></path>
+                <path d="M18,6H6"></path>
+                <path d="M12,2v2"></path>
+                <path d="M8,6l2,-4"></path>
+                <path d="M16,6l-2,-4"></path>
+              </svg>
+            </div>
+            <div style="font-size: 14px; font-weight: 600; color: #333;">红富士 #A025</div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px;">8年生果树</div>
+          </div>
+          <div style="padding: 12px; background: #f6ffed; border-radius: 6px; text-align: center;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">认养价格</div>
+            <div style="font-size: 20px; font-weight: 700; color: #22a84a;">¥399/年</div>
+          </div>
+        </div>
+        <div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">预估产量</div>
+              <div style="font-size: 18px; font-weight: 600; color: #333;">80斤</div>
+            </div>
+            <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">认养状态</div>
+              <div style="font-size: 14px; font-weight: 600; color: #1890ff;">已认养</div>
+            </div>
+            <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">所在地块</div>
+              <div style="font-size: 14px; font-weight: 600; color: #333;">A区 3号地块</div>
+            </div>
+            <div style="padding: 12px; background: #fafafa; border-radius: 6px;">
+              <div style="font-size: 11px; color: #888; margin-bottom: 4px;">关联设备</div>
+              <div style="font-size: 14px; font-weight: 600; color: #333;">CAM-001</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 12px; color: #888; margin-bottom: 6px;">位置</div>
+            <div style="font-size: 14px; font-weight: 500;">洛川基地 A区 3号地块</div>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 12px; color: #888; margin-bottom: 6px;">认养人</div>
+            <div style="font-size: 14px; font-weight: 500;">张三 (138****8888)</div>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 12px; color: #888; margin-bottom: 6px;">认养期限</div>
+            <div style="font-size: 14px; font-weight: 500;">2026.03.15 - 2027.03.14</div>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: #888; margin-bottom: 6px;">关联VR</div>
+            <div style="font-size: 14px; font-weight: 500; color: #1890ff; cursor: pointer;" onclick="window.open('vr_panorama.html')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:4px;">
+                <path d="M18,13v-1h-5V8"></path>
+                <path d="M10,17H4a2,2 0,0,1 -2,-2V5a2,2 0,0,1 2,-2h12a2,2 0,0,1 2,2v4"></path>
+                <path d="M8,21h10a2,2 0,0,0 2,-2v-4"></path>
+                <path d="M2,15l4,-4"></path>
+              </svg>查看VR全景 →
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('detailModal')">关闭</button>
+      <button class="jg-btn jg-btn-primary" onclick="closeModal('detailModal'); showEditModal('A025');">编辑信息</button>
+    </div>
+  </div>
+</div>
+<div id="photoModal" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <div class="modal-title">果树照片管理</div>
+      <div class="modal-close" onclick="closeModal('photoModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; display:flex;align-items:center;gap:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#22a84a;">
+            <path d="M12,22v-7"></path>
+            <path d="M17,13H7"></path>
+            <path d="M18,6H6"></path>
+          </svg>红富士 #A025
+        </div>
+        <div class="photo-upload" onclick="document.getElementById('photoInput2').click()" style="padding: 20px;">
+          <div class="upload-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;">
+              <path d="M23,19a2,2 0,0,1 -2,2H3a2,2 0,0,1 -2,-2V8a2,2 0,0,1 2,-2h3l2,-2h4l2,2h3a2,2 0,0,1 2,2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </div>
+          <div class="upload-text">点击上传更多照片</div>
+          <input type="file" id="photoInput2" style="display:none;" accept="image/*" multiple>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">已上传照片</div>
+        <div style="display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;">
+          <div style="position: relative;">
+            <div style="background: linear-gradient(135deg,#f0faf3,#e6fffb); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:50px;height:50px;color:#22a84a;">
+                <path d="M12,22v-7"></path>
+                <path d="M17,13H7"></path>
+                <path d="M18,6H6"></path>
+              </svg>
+            </div>
+            <button onclick="showToast('照片删除成功','success')" style="position: absolute; top:5px; right:5px; width:24px; height:24px; border-radius:50%; background: rgba(255,77,79,0.9); color:#fff; border:none; cursor:pointer; font-size:12px;">✕</button>
+          </div>
+          <div style="position: relative;">
+            <div style="background: linear-gradient(135deg,#f6ffed,#e6fffb); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:50px;height:50px;color:#faad14;">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </div>
+            <button onclick="showToast('照片删除成功','success')" style="position: absolute; top:5px; right:5px; width:24px; height:24px; border-radius:50%; background: rgba(255,77,79,0.9); color:#fff; border:none; cursor:pointer; font-size:12px;">✕</button>
+          </div>
+          <div style="position: relative;">
+            <div style="background: linear-gradient(135deg,#fafafa,#f5f5f5); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:50px;height:50px;color:#8c8c8c;">
+                <path d="M12,21a10,10 0,0,0 4,-.79"></path>
+                <path d="M12,3a10,10 0,0,0 -4,.79"></path>
+                <path d="M3,12a10,10 0,0,0 .79,4"></path>
+                <path d="M21,12a10,10 0,0,0 -.79,-4"></path>
+              </svg>
+            </div>
+            <button onclick="showToast('照片删除成功','success')" style="position: absolute; top:5px; right:5px; width:24px; height:24px; border-radius:50%; background: rgba(255,77,79,0.9); color:#fff; border:none; cursor:pointer; font-size:12px;">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('photoModal')">关闭</button>
+    </div>
+  </div>
+</div>
+<div id="batchModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">批量设置认养状态</div>
+      <div class="modal-close" onclick="closeModal('batchModal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="padding: 16px; background: #fafafa; border-radius: 8px; margin-bottom: 16px;">
+        <div style="font-size: 13px; color: #666; margin-bottom: 8px;">已选择 <strong style="color: #22a84a;">3</strong> 棵果树</div>
+        <div style="font-size: 12px; color: #888;">A025, A018, B015</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">批量设置认养状态</label>
+        <select class="form-select">
+          <option value="">请选择状态</option>
+          <option value="available">设为可认养</option>
+          <option value="adopted">设为已认养</option>
+          <option value="unavailable">设为不可认养</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="closeModal('batchModal')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleBatch()">确认设置</button>
+    </div>
+  </div>
+</div>
+<script>
+function scrollNav(direction) { var menu = document.querySelector('.subnav-menu'); menu.scrollBy({ left: direction * 100, behavior: 'smooth' }); }
+function showAddModal() { document.getElementById('addModal').classList.add('show'); }
+function showEditModal(code) { document.getElementById('editModal').classList.add('show'); }
+function showDetail(code) { document.getElementById('detailModal').classList.add('show'); }
+function showPhotoModal(code) { document.getElementById('photoModal').classList.add('show'); }
+function showBatchModal() { document.getElementById('batchModal').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function doSearch() { showToast('搜索功能开发中', 'info'); }
+function handleAdd() { closeModal('addModal'); showToast('果树添加成功', 'success'); }
+function handleEdit() { closeModal('editModal'); showToast('果树信息更新成功', 'success'); }
+function handleDelete(code) { if (confirm(`确定删除果树"${code}"吗？`)) { showToast('果树删除成功', 'success'); } }
+function handleBatch() { closeModal('batchModal'); showToast('批量设置成功', 'success'); }
+function toggleSelectAll() { var checked = document.getElementById('selectAll').checked; document.querySelectorAll('.tree-checkbox').forEach(cb => cb.checked = checked); updateSelectedCount(); }
+function updateSelectedCount() { var count = document.querySelectorAll('.tree-checkbox:checked').length; document.getElementById('selectedCount').textContent = count; }
+document.querySelectorAll('.tree-checkbox').forEach(cb => cb.addEventListener('change', updateSelectedCount));
+function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
+function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
+document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
+document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
+document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
+document.getElementById('photoInput') && document.getElementById('photoInput').addEventListener('change', function(e) { var files = e.target.files; if (files.length > 0) { var preview = document.getElementById('photoPreview'); preview.innerHTML = ''; for (var i = 0; i < files.length; i++) { var div = document.createElement('div'); div.style.cssText = 'background:#f5f5f5;height:80px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;'; div.textContent = '🖼️'; preview.appendChild(div); } showToast('已选择 ' + files.length + ' 张照片', 'info'); } });
+</script>
+</body>
+</html>

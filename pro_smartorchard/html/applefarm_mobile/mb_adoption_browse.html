@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>数农智果 - 认养果树</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --orange: #f39c12; --orange-light: #fef5e7;
+      --blue: #3498db; --blue-light: #eaf2fa;
+      --red: #e74c3c; --red-light: #fdecea;
+      --purple: #9b59b6; --purple-light: #f5eef8;
+      --text: #333; --text-secondary: #666; --text-light: #999;
+      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 72px; }
+    
+    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px; color: #fff; }
+    .header-top { display: flex; align-items: center; gap: 12px; }
+    .back-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .back-btn svg { width: 18px; height: 18px; color: #fff; }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .search-box { display: flex; align-items: center; background: rgba(255,255,255,0.2); border-radius: 22px; padding: 0 16px; margin-top: 12px; }
+    .search-box svg { width: 18px; height: 18px; color: #fff; opacity: 0.8; flex-shrink: 0; }
+    .search-input { flex: 1; height: 40px; background: transparent; border: none; font-size: 14px; color: #fff; outline: none; }
+    .search-input::placeholder { color: rgba(255,255,255,0.7); }
+    
+    .filter-section { padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--border); }
+    .filter-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .filter-tag { padding: 8px 16px; background: #f5f5f5; border-radius: 18px; font-size: 13px; color: var(--text-secondary); white-space: nowrap; cursor: pointer; border: 1px solid transparent; transition: all .2s; }
+    .filter-tag:active { transform: scale(0.96); }
+    .filter-tag.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    
+    .content { padding: 16px; padding-bottom: 80px; }
+    
+    .tree-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .tree-card { background: #fff; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
+    .tree-card:active { transform: scale(0.98); }
+    .card-photo { height: 140px; background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; position: relative; }
+    .card-photo-icon { font-size: 60px; }
+    .card-badge { position: absolute; top: 10px; left: 10px; font-size: 11px; padding: 4px 10px; border-radius: 10px; }
+    .badge-available { background: var(--primary); color: #fff; }
+    .badge-reserved { background: var(--orange); color: #fff; }
+    .card-body { padding: 12px; }
+    .card-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .card-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .card-price { font-size: 16px; font-weight: 700; color: var(--primary); }
+    .card-price-unit { font-size: 11px; font-weight: 400; color: var(--text-light); }
+    .card-btn { padding: 6px 14px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border-radius: 14px; font-size: 12px; font-weight: 500; }
+    
+    .banner-card { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: var(--radius-lg); padding: 20px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .banner-icon { font-size: 48px; }
+    .banner-content { flex: 1; }
+    .banner-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .banner-desc { font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.4; }
+    .banner-arrow { font-size: 24px; color: rgba(255,255,255,0.6); }
+    
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .section-title { font-size: 16px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .section-icon { font-size: 18px; }
+    .section-more { font-size: 13px; color: var(--text-light); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .section-more svg { width: 14px; height: 14px; }
+    
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
+    .tab-item.active { color: var(--primary); }
+    .tab-item svg { width: 22px; height: 22px; }
+    .tab-item span { font-size: 10px; }
+    
+    .detail-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 200; display: none; overflow-y: auto; }
+    .detail-modal.show { display: block; }
+    .detail-header { position: relative; height: 280px; background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; }
+    .detail-photo { font-size: 100px; }
+    .detail-back { position: absolute; top: 16px; left: 16px; width: 40px; height: 40px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .detail-back svg { width: 20px; height: 20px; color: var(--text); }
+    .detail-content { padding: 16px; padding-bottom: 80px; }
+    .detail-name { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .detail-tags { display: flex; gap: 8px; margin-bottom: 16px; }
+    .detail-tag { font-size: 12px; padding: 4px 12px; border-radius: 12px; background: var(--primary-light); color: var(--primary); }
+    .detail-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .info-card { background: #f8f9fa; border-radius: var(--radius); padding: 12px; }
+    .info-label { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+    .info-value { font-size: 15px; color: var(--text); font-weight: 600; }
+    
+    .detail-section { background: #fff; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .section-title-text { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+    .review-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+    .review-item:last-child { border-bottom: none; }
+    .review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--primary); flex-shrink: 0; }
+    .review-content { flex: 1; }
+    .review-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+    .review-text { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+    .review-time { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+    
+    .detail-bottom { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; background: #fff; border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 12px; z-index: 100; }
+    .detail-price { display: flex; flex-direction: column; justify-content: center; }
+    .price-value { font-size: 22px; font-weight: 700; color: var(--primary); }
+    .price-unit { font-size: 12px; color: var(--text-light); }
+    .adopt-btn { flex: 1; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-top">
+        <div class="back-btn" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <div class="header-title">认养果树</div>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="搜索果树品种...">
+      </div>
+    </div>
+    
+    <div class="filter-section">
+      <div class="filter-scroll">
+        <div class="filter-tag active" onclick="filterByVariety(this, 'all')">全部</div>
+        <div class="filter-tag" onclick="filterByVariety(this, 'hongfushi')">红富士</div>
+        <div class="filter-tag" onclick="filterByVariety(this, 'gala')">嘎啦</div>
+        <div class="filter-tag" onclick="filterByVariety(this, 'qinguang')">秦冠</div>
+        <div class="filter-tag" onclick="filterByVariety(this, 'jonagold')">乔纳金</div>
+        <div class="filter-tag" onclick="filterByVariety(this, 'xinredstar')">新红星</div>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="banner-card" onclick="showAdoptGuide()">
+        <span class="banner-icon">🌳</span>
+        <div class="banner-content">
+          <div class="banner-title">果树认养指南</div>
+          <div class="banner-desc">了解如何认养一棵属于自己的苹果树，开启专属的田园之旅</div>
+        </div>
+        <span class="banner-arrow">›</span>
+      </div>
+      
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-icon">🔥</span>
+          热门推荐
+        </div>
+        <div class="section-more">
+          查看更多
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="tree-grid">
+        <div class="tree-card" onclick="showTreeDetail('A001')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-available">可认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">红富士 #A001</div>
+            <div class="card-meta">树龄8年 · 预估产量80斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥399<span class="card-price-unit">/年</span></div>
+              <div class="card-btn">立即认养</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tree-card" onclick="showTreeDetail('A025')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-available">可认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">红富士 #A025</div>
+            <div class="card-meta">树龄8年 · 预估产量85斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥429<span class="card-price-unit">/年</span></div>
+              <div class="card-btn">立即认养</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tree-card" onclick="showTreeDetail('G012')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-reserved">已认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">嘎啦 #G012</div>
+            <div class="card-meta">树龄6年 · 预估产量60斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥299<span class="card-price-unit">/年</span></div>
+              <div class="card-btn" style="background: #ccc;">已认养</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tree-card" onclick="showTreeDetail('Q008')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-available">可认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">秦冠 #Q008</div>
+            <div class="card-meta">树龄10年 · 预估产量90斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥459<span class="card-price-unit">/年</span></div>
+              <div class="card-btn">立即认养</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tree-card" onclick="showTreeDetail('J015')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-available">可认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">乔纳金 #J015</div>
+            <div class="card-meta">树龄7年 · 预估产量70斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥359<span class="card-price-unit">/年</span></div>
+              <div class="card-btn">立即认养</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tree-card" onclick="showTreeDetail('X003')">
+          <div class="card-photo">
+            <span class="card-photo-icon">🍎</span>
+            <span class="card-badge badge-available">可认养</span>
+          </div>
+          <div class="card-body">
+            <div class="card-name">新红星 #X003</div>
+            <div class="card-meta">树龄5年 · 预估产量55斤</div>
+            <div class="card-footer">
+              <div class="card-price">¥279<span class="card-price-unit">/年</span></div>
+              <div class="card-btn">立即认养</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-bar">
+      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>首页</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>服务</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>AI</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>地块</span>
+      </div>
+      <div class="tab-item active" onclick="navigateTo('mb_adoption.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v4"/>
+          <path d="M12 16h.01"/>
+        </svg>
+        <span>认养</span>
+      </div>
+      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+    
+    <div class="detail-modal" id="detailModal">
+      <div class="detail-header">
+        <div class="detail-back" onclick="closeDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <span class="detail-photo">🍎</span>
+      </div>
+      <div class="detail-content">
+        <div class="detail-name" id="detailName">红富士 #A001</div>
+        <div class="detail-tags">
+          <span class="detail-tag">可认养</span>
+          <span class="detail-tag">优质果园</span>
+          <span class="detail-tag">实时监控</span>
+        </div>
+        
+        <div class="detail-info-grid">
+          <div class="info-card">
+            <div class="info-label">品种</div>
+            <div class="info-value">红富士</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">树龄</div>
+            <div class="info-value">8年</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">预估产量</div>
+            <div class="info-value">约80斤</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">位置</div>
+            <div class="info-value">洛川基地</div>
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <div class="section-title-text">认养权益</div>
+          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+            <div style="margin-bottom: 8px;">• 果树全年产出归您所有</div>
+            <div style="margin-bottom: 8px;">• 实时视频监控您的果树</div>
+            <div style="margin-bottom: 8px;">• 专业果农代为养护</div>
+            <div style="margin-bottom: 8px;">• 免费采摘体验一次</div>
+            <div style="margin-bottom: 8px;">• 专属认养证书</div>
+            <div>• 冷链配送到家服务</div>
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <div class="section-title-text">用户评价</div>
+          <div class="review-item">
+            <div class="review-avatar">张</div>
+            <div class="review-content">
+              <div class="review-name">张先生</div>
+              <div class="review-text">非常好的一棵果树，去年产了90多斤苹果，口感特别甜，孩子特别喜欢吃。</div>
+              <div class="review-time">2025-10-15</div>
+            </div>
+          </div>
+          <div class="review-item">
+            <div class="review-avatar">李</div>
+            <div class="review-content">
+              <div class="review-name">李女士</div>
+              <div class="review-text">认养体验很棒，定期能收到果树的生长照片，很有参与感。</div>
+              <div class="review-time">2025-09-20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="detail-bottom">
+        <div class="detail-price">
+          <div class="price-value">¥399</div>
+          <div class="price-unit">/年</div>
+        </div>
+        <button class="adopt-btn" onclick="startAdopt()">立即认养</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+    
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+    
+    function filterByVariety(el, variety) {
+      document.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
+      el.classList.add('active');
+    }
+    
+    function showAdoptGuide() {
+      alert('果树认养指南');
+    }
+    
+    function showTreeDetail(treeCode) {
+      document.getElementById('detailName').textContent = '红富士 #' + treeCode;
+      document.getElementById('detailModal').classList.add('show');
+    }
+    
+    function closeDetail() {
+      document.getElementById('detailModal').classList.remove('show');
+    }
+    
+    function startAdopt() {
+      alert('开始认养流程');
+    }
+  </script>
+</body>
+</html>

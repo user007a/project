@@ -10,7 +10,7 @@
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
     :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
+      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
       --orange: #f39c12; --orange-light: #fef5e7;
       --blue: #3498db; --blue-light: #eaf2fa;
       --red: #e74c3c; --red-light: #fdecea;
@@ -44,6 +44,19 @@
     .model-desc { font-size: 12px; color: var(--text-light); text-align: center; }
     .model-card.full { grid-column: span 2; }
     
+    .risk-summary-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+    .risk-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .risk-title { font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .risk-title-icon { font-size: 20px; }
+    .risk-score { font-size: 26px; font-weight: 800; color: var(--primary); }
+    .risk-indicators { display: flex; justify-content: space-around; }
+    .risk-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .risk-light { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .risk-light.green { background: #2ecc71; }
+    .risk-light.yellow { background: #f39c12; }
+    .risk-light.red { background: #e74c3c; }
+    .risk-label { font-size: 12px; color: var(--text-secondary); }
+    
     .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
     .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
     .tab-item.active { color: var(--primary); }
@@ -71,6 +84,30 @@
           AI模型说明
         </div>
         <div class="model-intro-text">基于历史农事数据、环境监测和气象信息，运用机器学习算法为您预测生长趋势、病虫害风险、产量预估和市场价格，帮助科学决策。</div>
+      </div>
+      
+      <div class="risk-summary-card">
+        <div class="risk-header">
+          <div class="risk-title">
+            <span class="risk-title-icon">📊</span>
+            <span>综合健康指数</span>
+          </div>
+          <div class="risk-score">85分</div>
+        </div>
+        <div class="risk-indicators">
+          <div class="risk-item">
+            <div class="risk-light green"></div>
+            <span class="risk-label">生长状态</span>
+          </div>
+          <div class="risk-item">
+            <div class="risk-light yellow"></div>
+            <span class="risk-label">病虫害</span>
+          </div>
+          <div class="risk-item">
+            <div class="risk-light green"></div>
+            <span class="risk-label">气象预警</span>
+          </div>
+        </div>
       </div>
       
       <div class="model-grid">

@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数农智果 - 采收管理</title>
+<link rel="stylesheet" href="css/design-system.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f0f2f5; color: #333; font-size: 13px; animation: pageIn 0.3s ease; }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .header { background: linear-gradient(135deg, #1a7a3c 0%, #22a84a 100%); height: 56px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
   .logo { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
-  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
   .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
   .nav-menu::-webkit-scrollbar { display: none; }
   .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
@@ -42,13 +44,13 @@
   .snzg-user-menu-sep { height: 1px; background: #f0f0f0; margin: 4px 0; }
   .main-wrap { margin-top: 100px; padding: 16px 20px 24px; min-height: calc(100vh - 100px); }
   .subnav-bar { position: fixed; top: 56px; left: 0; right: 0; height: 44px; background: #fff; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; padding: 0 12px; z-index: 90; overflow: hidden; }
-  .nav-arrow { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 4px; cursor: pointer; font-size: 18px; color: #666; flex-shrink: 0; transition: all 0.2s; }
-  .nav-arrow:hover { background: #e8e8e8; color: #333; }
-  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scroll-behavior: smooth; }
+  .nav-arrow { width: 36px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #999; font-size: 20px; user-select: none; transition: all 0.2s; }
+  .nav-arrow:hover { background: #f5f5f5; color: #333; }
+  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
   .subnav-menu::-webkit-scrollbar { display: none; }
-  .subnav-item { padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 12px; color: #666; white-space: nowrap; transition: all 0.2s; }
-  .subnav-item:hover { background: #f0f0f0; color: #22a84a; }
-  .subnav-item.active { background: #22a84a; color: #fff; }
+  .subnav-item { flex-shrink: 0; padding: 14px 20px; text-decoration: none; font-size: 13px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .subnav-item:hover { color: #22a84a; }
+  .subnav-item.active { color: #22a84a; border-bottom-color: #22a84a; font-weight: 500; }
   .page-header { background: #fff; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: space-between; }
   .page-title { font-size: 18px; font-weight: 600; color: #222; display: flex; align-items: center; gap: 10px; }
   .page-title .title-icon { font-size: 22px; }
@@ -125,41 +127,133 @@
 </style>
 </head>
 <body>
-<div class="header">
+<header class="header">
   <div class="logo">
     <div class="logo-icon snzg-logo-icon">
       <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
-        <circle cx="50" cy="55" r="35" fill="#e53935"/>
-        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
-        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
-        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
+        <circle cx="50" cy="55" r="35" fill="#e53935"></circle>
+        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"></ellipse>
+        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"></ellipse>
+        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"></circle>
       </svg>
     </div>
     <span>数农智果</span>
   </div>
-  <div class="nav-menu">
-    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="device_monitor.html" class="snzg-nav-item"><span class="nav-icon">📡</span><span>设备管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="alert_device.html" class="snzg-nav-item"><span class="nav-icon">🔔</span><span>预警管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="harvest_plan.html" class="snzg-nav-item active"><span class="nav-icon">🍎</span><span>采收管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="model_growth.html">
-      <span class="nav-icon">🧠</span> 模型预测中心
+  <nav class="nav-menu" id="navMenu">
+    <a class="snzg-nav-item" href="home.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
+          <polyline points="9,22 9,12 15,12 15,22"></polyline>
+        </svg>
+      </span>
+      系统首页
     </a>
     <span class="snzg-nav-sep"></span>
-    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
-  </div>
+    <a class="snzg-nav-item" href="enterprise_base.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+          <rect x="9" y="9" width="6" height="6"></rect>
+          <line x="9" y="1" x2="9" y2="4"></line>
+          <line x="15" y="1" x2="15" y2="4"></line>
+          <line x="9" y="20" x2="9" y2="23"></line>
+          <line x="15" y="20" x2="15" y2="23"></line>
+          <line x="20" y="9" x2="23" y2="9"></line>
+          <line x="20" y="15" x2="23" y2="15"></line>
+          <line x="1" y="9" x2="4" y2="9"></line>
+          <line x="1" y="15" x2="4" y2="15"></line>
+        </svg>
+      </span>
+      企业管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="farming_plan.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
+          <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
+          <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
+          <path d="M3 9h4"></path>
+          <path d="M17 9h4"></path>
+          <path d="M12 4v3"></path>
+        </svg>
+      </span>
+      农事管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="material_info.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+          <line x="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </span>
+      农资管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="device_info.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+          <line x="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+      </span>
+      设备管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="alert_settings.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </span>
+      预警管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="trace_code.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+      </span>
+      产品追溯
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item active" href="harvest_plan.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polygon points="10 8 16 12 10 16 10 8"></polygon>
+        </svg>
+      </span>
+      采收管理
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="model_growth.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+      </span>
+      模型预测中心
+    </a>
+    <span class="snzg-nav-sep"></span>
+    <a class="snzg-nav-item" href="system_settings.html" tabindex="0">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </span>
+      系统设置
+    </a>
+  </nav>
   <button id="hamburgerBtn" class="jg-hamburger">
     <span></span><span></span><span></span>
   </button>
@@ -186,18 +280,92 @@
       <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
     </div>
   </div>
-</div>
+</header>
 <div id="mobileNav" class="jg-mobile-nav">
-  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
-  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
-  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
-  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
-  <a href="device_monitor.html" class="jg-mobile-nav-item">📡 设备管理</a>
-  <a href="alert_device.html" class="jg-mobile-nav-item">🔔 预警管理</a>
-  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
-  <a href="harvest_plan.html" class="jg-mobile-nav-item active">🍎 采收管理</a>
-  <a class="jg-mobile-nav-item" href="model_growth.html">🧠 模型预测中心</a>
-  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
+  <a href="home.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
+      <polyline points="9,22 9,12 15,12 15,22"></polyline>
+    </svg>
+    系统首页
+  </a>
+  <a href="enterprise_base.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+      <rect x="9" y="9" width="6" height="6"></rect>
+      <line x="9" y="1" x2="9" y2="4"></line>
+      <line x="15" y="1" x2="15" y2="4"></line>
+      <line x="9" y="20" x2="9" y2="23"></line>
+      <line x="15" y="20" x2="15" y2="23"></line>
+      <line x="20" y="9" x2="23" y2="9"></line>
+      <line x="20" y="15" x2="23" y2="15"></line>
+      <line x="1" y="9" x2="4" y2="9"></line>
+      <line x="1" y="15" x2="4" y2="15"></line>
+    </svg>
+    企业管理
+  </a>
+  <a href="farming_plan.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
+      <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
+      <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
+      <path d="M3 9h4"></path>
+      <path d="M17 9h4"></path>
+      <path d="M12 4v3"></path>
+    </svg>
+    农事管理
+  </a>
+  <a href="material_info.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+      <line x="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+    农资管理
+  </a>
+  <a href="device_info.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+      <line x="12" y1="18" x2="12.01" y2="18"></line>
+    </svg>
+    设备管理
+  </a>
+  <a href="alert_settings.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+    预警管理
+  </a>
+  <a href="trace_code.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+      <line x="7" y1="7" x2="7.01" y2="7"></line>
+    </svg>
+    产品追溯
+  </a>
+  <a href="harvest_plan.html" class="jg-mobile-nav-item active">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polygon points="10 8 16 12 10 16 10 8"></polygon>
+    </svg>
+    采收管理
+  </a>
+  <a href="model_growth.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+      <path d="M2 17l10 5 10-5"></path>
+      <path d="M2 12l10 5 10-5"></path>
+    </svg>
+    模型预测中心
+  </a>
+  <a href="system_settings.html" class="jg-mobile-nav-item">
+    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+    系统设置
+  </a>
 </div>
 <div class="subnav-bar">
   <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
@@ -508,48 +676,7 @@
   </div>
 </div>
 <script>
-function scrollNav(direction) {
-  const menu = document.querySelector('.subnav-menu');
-  menu.scrollBy({ left: direction * 100, behavior: 'smooth' });
-}
-
-const plotData = {
-  qixia: [
-    {value: 'A1', label: 'A1地块'},
-    {value: 'A2', label: 'A2地块'},
-    {value: 'A3', label: 'A3地块'}
-  ],
-  zhaoyuan: [
-    {value: 'B1', label: 'B1地块'},
-    {value: 'B2', label: 'B2地块'},
-    {value: 'B3', label: 'B3地块'}
-  ],
-  penglai: [
-    {value: 'center', label: '中心区域'},
-    {value: 'east', label: '东区'},
-    {value: 'west', label: '西区'}
-  ],
-  rongcheng: [
-    {value: 'C1', label: 'C1地块'},
-    {value: 'C2', label: 'C2地块'},
-    {value: 'C3', label: 'C3地块'}
-  ]
-};
-
-function loadPlots() {
-  const base = document.getElementById('baseSelect').value;
-  const plotSelect = document.getElementById('plotSelect');
-  plotSelect.innerHTML = '<option value="">请选择地块</option>';
-  if (base && plotData[base]) {
-    plotData[base].forEach(function(p) {
-      const opt = document.createElement('option');
-      opt.value = p.value;
-      opt.textContent = p.label;
-      plotSelect.appendChild(opt);
-    });
-  }
-}
-
+function scrollNav(direction) { document.querySelector('.subnav-menu').scrollBy({ left: direction * 150, behavior: 'smooth' }); }
 function showAddModal() { document.getElementById('addModal').classList.add('show'); }
 function showFilterModal() { document.getElementById('filterModal').classList.add('show'); }
 function showDetail(id) { document.getElementById('detailModal').classList.add('show'); }
