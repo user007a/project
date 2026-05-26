@@ -3,8 +3,8 @@ var vrHotspotsData = {
         {
             id: "scene_main",
             name: "园区主入口",
-            image: "../common/images/vr/panorama_main.jpg",
-            preview: "../common/images/vr/preview_main.jpg",
+            image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20degree%20panoramic%20view%20from%20ground%20level%20inside%20a%20lush%20apple%20orchard%20in%20August%2C%20green%20apple%20trees%20with%20young%20green%20apples%2C%20sunny%20summer%20day%2C%20blue%20sky%2C%20rows%20of%20fruit%20trees%2C%20agricultural%20pathway%2C%20photorealistic%2C%20high%20detail&image_size=square_hd",
+            preview: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20degree%20panoramic%20view%20inside%20apple%20orchard%20August%2C%20green%20trees%2C%20young%20apples%2C%20sunny%20summer%2C%20photorealistic&image_size=square",
             yaw: 180,
             pitch: 0,
             hfov: 100,
@@ -64,8 +64,8 @@ var vrHotspotsData = {
         {
             id: "scene_b",
             name: "B区全景",
-            image: "../common/images/vr/panorama_b.jpg",
-            preview: "../common/images/vr/preview_b.jpg",
+            image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20degree%20panoramic%20view%20inside%20apple%20orchard%20in%20July%2C%20rows%20of%20tall%20apple%20trees%20with%20green%20foliage%2C%20small%20green%20apples%20growing%2C%20summer%20sunlight%2C%20irrigation%20drip%20lines%2C%20grass%20between%20rows%2C%20professional%20fruit%20farming%2C%20photorealistic%2C%20high%20detail&image_size=square_hd",
+            preview: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20panoramic%20apple%20orchard%20July%2C%20green%20trees%2C%20small%20apples%2C%20summer%20farm%2C%20photorealistic&image_size=square",
             yaw: 0,
             pitch: 0,
             hfov: 100,
@@ -115,8 +115,8 @@ var vrHotspotsData = {
         {
             id: "scene_c",
             name: "C区全景",
-            image: "../common/images/vr/panorama_c.jpg",
-            preview: "../common/images/vr/preview_c.jpg",
+            image: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20degree%20panoramic%20view%20inside%20modern%20apple%20orchard%20August%2C%20mixed%20apple%20varieties%2C%20green%20apples%20on%20branches%2C%20weather%20station%20equipment%2C%20modern%20agricultural%20technology%2C%20summer%20afternoon%2C%20blue%20sky%20with%20light%20clouds%2C%20photorealistic%2C%20high%20detail&image_size=square_hd",
+            preview: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=360%20panoramic%20modern%20apple%20orchard%20August%2C%20weather%20station%2C%20green%20apples%2C%20summer%2C%20photorealistic&image_size=square",
             yaw: 0,
             pitch: 0,
             hfov: 100,
