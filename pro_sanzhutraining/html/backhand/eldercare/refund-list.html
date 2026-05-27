@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>退款管理 - 叁竹培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>* { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }</style>
+    <style>
+        .modal-overlay { opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { opacity: 1; }
+        .modal-content { transform: scale(0.95) translateY(10px); opacity: 0; transition: all 0.3s ease; }
+        .modal-overlay.show .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
+        <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                <span class="iconify text-white text-lg" data-icon="ri:plant-line"></span>
+            </div>
+            <span class="text-white font-bold text-base">叁竹培训系统</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span>
+                <span class="text-sm">工作台</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">学员管理</div>
+            <a href="student-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
+                <span class="text-sm">学员列表</span>
+            </a>
+            <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:award-line"></span>
+                <span class="text-sm">证书管理</span>
+            </a>
+            <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
+                <span class="text-sm">学习记录</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">课程中心</div>
+            <a href="course-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
+                <span class="text-sm">课程管理</span>
+            </a>
+            <a href="category-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                <span class="text-sm">分类管理</span>
+            </a>
+            <a href="teacher-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
+                <span class="text-sm">讲师管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">订单中心</div>
+            <a href="order-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span>
+                <span class="text-sm">订单管理</span>
+            </a>
+            <a href="refund-list.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md">
+                <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span>
+                <span class="text-sm">退款管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">题库中心</div>
+            <a href="question-bank.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:questionnaire-line"></span>
+                <span class="text-sm">题库管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">内容管理</div>
+            <a href="article-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:article-line"></span>
+                <span class="text-sm">资讯管理</span>
+            </a>
+            <a href="article-category.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                <span class="text-sm">资讯分类</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">系统设置</div>
+            <a href="user-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
+                <span class="text-sm">用户管理</span>
+            </a>
+            <a href="message-center.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span>
+                <span class="text-sm">消息中心</span>
+            </a>
+            <a href="system-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span>
+                <span class="text-sm">基础设置</span>
+            </a>
+            <a href="payment-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:bank-card-line"></span>
+                <span class="text-sm">支付配置</span>
+            </a>
+            <a href="sms-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:message-3-line"></span>
+                <span class="text-sm">短信配置</span>
+            </a>
+            <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
+                <span class="text-sm">角色权限</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- 顶部栏 -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-bold text-gray-900">退款管理</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:notification-3-line"></span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="h-6 w-px bg-gray-200"></div>
+                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-sm font-bold">管</span>
+                    </div>
+                    <span class="text-sm text-gray-700">管理员</span>
+                    <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6">
+            <!-- 搜索筛选区 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <div class="grid grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">订单号</label>
+                        <input type="text" placeholder="搜索订单号" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">学员姓名</label>
+                        <input type="text" placeholder="搜索学员姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">退款状态</label>
+                        <select class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-gray-500 transition-all">
+                            <option>全部</option>
+                            <option>待审核</option>
+                            <option>退款中</option>
+                            <option>已退款</option>
+                            <option>已拒绝</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">搜索</button>
+                        <button class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-5 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">退款申请总数</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">22</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-blue-500 text-xl" data-icon="ri:file-list-3-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">待审核</p>
+                            <p class="text-xl font-bold text-yellow-600 mt-1">4</p>
+                        </div>
+                        <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-yellow-500 text-xl" data-icon="ri:time-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">退款中</p>
+                            <p class="text-xl font-bold text-blue-600 mt-1">3</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-blue-500 text-xl" data-icon="ri:loader-4-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">已退款</p>
+                            <p class="text-xl font-bold text-green-600 mt-1">10</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-green-500 text-xl" data-icon="ri:checkbox-circle-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">已拒绝</p>
+                            <p class="text-xl font-bold text-red-600 mt-1">5</p>
+                        </div>
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-red-500 text-xl" data-icon="ri:close-circle-line"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b bg-gray-50/50 flex justify-between items-center">
+                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">22</span> 条退款申请</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-100">
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-12">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">退款单号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">原订单号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">学员姓名</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[160px]">课程名称</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[100px]">退款金额</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[120px]">退款原因</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[80px]">退款状态</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[120px]">申请时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[80px]">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <!-- 1. 待审核 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="1">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">1</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260521001</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260521001</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">刘秀英</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程内容不符</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-21 14:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                        <button onclick="showAudit()" class="text-green-600 hover:text-green-700 font-medium text-sm">审核</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 2. 退款中 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="2">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">2</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260519003</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260519003</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">王丽萍</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥580</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">时间冲突</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">退款中</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-19 11:20</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 3. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="3">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">3</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260518004</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260518004</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">赵国强</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥1,680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程质量差</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-18 09:50</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 4. 已拒绝 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="4">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">4</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260517005</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260517005</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">孙美华</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">个人原因不想学了</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-17 15:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 5. 待审核 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="5">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">5</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260516006</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260516006</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">周建国</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥440</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重复购买</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-16 10:40</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                        <button onclick="showAudit()" class="text-green-600 hover:text-green-700 font-medium text-sm">审核</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 6. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="6">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">6</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260515007</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260515007</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">李芳</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程内容不符</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-15 08:20</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 7. 退款中 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="7">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">7</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260514008</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260514008</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">张伟</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥590</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">时间冲突</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">退款中</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-14 13:15</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 8. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="8">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">8</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260513009</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260513009</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">吴秀兰</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程质量差</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-13 16:50</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 9. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="9">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">9</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260512010</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260512010</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">郑明华</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥740</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">个人原因不想学了</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-12 10:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 10. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="10">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">10</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260511011</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260511011</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">黄丽珍</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥980</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程内容不符</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-11 09:15</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 11. 已拒绝 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="11">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">11</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260510012</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260510012</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">林志强</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">个人原因不想学了</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-10 14:20</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 12. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="12">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">12</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260509013</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260509013</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">何玉兰</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重复购买</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-09 11:40</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 13. 待审核 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="13">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">13</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260508014</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260508014</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">马建华</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥1,680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程内容不符</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-08 08:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                        <button onclick="showAudit()" class="text-green-600 hover:text-green-700 font-medium text-sm">审核</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 14. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="14">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">14</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260507015</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260507015</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">胡秀英</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥880</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">时间冲突</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-07 15:50</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 15. 已拒绝 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="15">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">15</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260506016</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260506016</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">杨国庆</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程质量差</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-06 10:10</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 16. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="16">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">16</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260505017</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260505017</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">朱丽华</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥590</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重复购买</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-05 09:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 17. 退款中 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="17">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">17</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260504018</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260504018</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">徐明</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥580</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程内容不符</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">退款中</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-04 14:00</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 18. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="18">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">18</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260503019</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260503019</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">高秀兰</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥980</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">时间冲突</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-03 10:45</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 19. 已拒绝 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="19">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">19</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260502020</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260502020</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">宋建国</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">个人原因不想学了</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-02 16:30</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 20. 待审核 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="20">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">20</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260501021</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260501021</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">邓芳</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">课程质量差</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-01 11:20</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                        <button onclick="showAudit()" class="text-green-600 hover:text-green-700 font-medium text-sm">审核</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- 21. 已退款 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="21">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">21</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260430022</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260430022</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">曹明华</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥1,280</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重复购买</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-04-30 14:45</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                            <!-- 22. 已拒绝 -->
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="22">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">22</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">TK20260429023</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500 font-mono">SZ20260429023</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">蒋丽萍</span></td>
+                                <td class="px-4 py-3.5 whitespace-nowrap"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-orange-600">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">个人原因不想学了</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-04-29 10:00</span></td>
+                                <td class="px-4 py-3.5 text-right">
+                                    <button onclick="showDetail()" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页 -->
+                <div class="px-6 py-4 border-t flex items-center justify-between">
+                    <span id="pageInfo" class="text-sm text-gray-500">第 1 / 3 页，共 22 条</span>
+                    <div id="paginationBtns" class="flex items-center gap-1"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/50" onclick="closeDetail()"></div>
+        <div class="relative bg-white rounded-xl w-full max-w-lg shadow-xl">
+            <div class="px-6 py-4 border-b flex items-center justify-between">
+                <h3 class="text-lg font-bold text-gray-900">退款详情</h3>
+                <button onclick="closeDetail()" class="p-1 text-gray-400 hover:text-gray-600"><span class="iconify text-xl" data-icon="ri:close-line"></span></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">退款单号</span>
+                    <span class="text-sm font-mono text-gray-900">TK20260521001</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">原订单号</span>
+                    <span class="text-sm font-mono text-gray-900">SZ20260521001</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">学员姓名</span>
+                    <span class="text-sm text-gray-900">刘秀英</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">课程名称</span>
+                    <span class="text-sm text-gray-900">养老护理员（初级）</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">退款金额</span>
+                    <span class="text-sm font-semibold text-orange-600">¥680</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">退款原因</span>
+                    <span class="text-sm text-gray-900">课程内容不符</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">申请时间</span>
+                    <span class="text-sm text-gray-900">2026-05-21 14:30</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">退款状态</span>
+                    <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t flex justify-end gap-2">
+                <button onclick="closeDetail()" class="px-4 py-2 border border-gray-200 text-gray-600

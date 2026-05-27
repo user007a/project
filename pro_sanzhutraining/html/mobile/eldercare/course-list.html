@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>叁竹培训 - 课程列表</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#2e9e5a', dark: '#1e7e42', light: '#e8f5ec', 50: '#f0faf4' },
+            accent: { orange: '#f39c12', blue: '#3498db', red: '#e74c3c', purple: '#9b59b6', cyan: '#1abc9c' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#f5f5f5] font-sans text-[#333]">
+  <div class="max-w-[750px] mx-auto min-h-screen relative pb-16">
+
+    <!-- 顶部绿色渐变Header -->
+    <div class="bg-gradient-to-br from-brand to-brand-dark rounded-b-3xl px-4 pt-10 pb-5">
+      <div class="flex items-center gap-3">
+        <!-- 返回按钮 -->
+        <a href="home.html" class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all hover:bg-white/30">
+          <span class="iconify text-white text-lg" data-icon="solar:arrow-left-linear"></span>
+        </a>
+        <!-- 搜索栏 -->
+        <div class="flex-1 flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-xl h-10 px-3 shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)] focus-within:shadow-md focus-within:shadow-emerald-100/50 transition-all">
+          <span class="iconify text-gray-400 text-base" data-icon="solar:magnifer-linear"></span>
+          <input type="text" placeholder="搜索课程名称、讲师" class="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400">
+        </div>
+        <!-- 筛选按钮 -->
+        <div class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 active:rotate-90 transition-all cursor-pointer" id="btnFilter">
+          <span class="iconify text-white text-lg" data-icon="solar:sort-vertical-linear"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 横向滚动分类标签栏 -->
+    <div class="bg-white sticky top-0 z-40 border-b border-gray-100">
+      <div class="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar" id="filterScroll">
+        <div class="filter-tag flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all duration-200 whitespace-nowrap select-none bg-brand-light text-brand font-semibold" data-cat="all">全部</div>
+        <div class="filter-tag flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all duration-200 whitespace-nowrap select-none bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95" data-cat="nursing">养老护理员</div>
+        <div class="filter-tag flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all duration-200 whitespace-nowrap select-none bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95" data-cat="assessor">老年人能力评估师</div>
+        <div class="filter-tag flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all duration-200 whitespace-nowrap select-none bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95" data-cat="carer">健康照护师</div>
+        <div class="filter-tag flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all duration-200 whitespace-nowrap select-none bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95" data-cat="nutrition">营养配餐员</div>
+      </div>
+    </div>
+
+    <!-- 排序栏 -->
+    <div class="bg-white px-4 py-2.5 flex items-center justify-between border-b border-gray-50">
+      <div class="flex gap-5" id="sortTabs">
+        <div class="sort-tab text-sm text-gray-400 cursor-pointer relative pb-1 select-none active text-brand font-semibold" data-sort="recommend">推荐
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-brand rounded-full"></span>
+        </div>
+        <div class="sort-tab text-sm text-gray-400 cursor-pointer relative pb-1 select-none" data-sort="newest">最新</div>
+        <div class="sort-tab text-sm text-gray-400 cursor-pointer relative pb-1 select-none" data-sort="popular">最热</div>
+        <div class="sort-tab text-sm text-gray-400 cursor-pointer relative pb-1 select-none" data-sort="price">价格</div>
+      </div>
+      <span class="text-xs text-gray-400" id="courseCount">共12门课程</span>
+    </div>
+
+    <!-- 课程列表 -->
+    <div class="px-4 py-3 space-y-3" id="courseList">
+
+      <!-- 课程1: 养老护理员初级 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=260&h=200&fit=crop" alt="养老护理员初级" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-red text-white font-medium">热门</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">养老护理员初级职业技能培训</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>李老师 · 18课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥299</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>1,280人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程2: 老年人能力评估师 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=260&h=200&fit=crop" alt="老年人能力评估师" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-blue text-white font-medium">新课</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人能力评估师认证培训</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>王老师 · 20课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥499</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>860人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程3: 健康照护师 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=260&h=200&fit=crop" alt="健康照护师" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-orange text-white font-medium">推荐</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">健康照护师职业技能等级培训</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>赵老师 · 16课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-[15px] font-bold text-brand">免费</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>2,150人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程4: 营养配餐员 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=260&h=200&fit=crop" alt="营养配餐员" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人营养配餐实操课程</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>陈老师 · 12课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥199</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>620人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程5: 养老护理员中级 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=260&h=200&fit=crop" alt="养老护理员中级" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-red text-white font-medium">热门</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">养老护理员中级职业技能培训</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>刘老师 · 24课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥499</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>950人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程6: 能力评估实务 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=260&h=200&fit=crop" alt="能力评估实务" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-blue text-white font-medium">新课</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人能力评估实务与案例分析</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>张老师 · 15课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥399</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>430人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程7: 养老护理员高级 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=260&h=200&fit=crop" alt="养老护理员高级" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-orange text-white font-medium">推荐</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">养老护理员高级职业技能培训</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>周老师 · 32课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥699</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>580人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程8: 健康照护师实操 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=260&h=200&fit=crop" alt="健康照护师实操" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-red text-white font-medium">热门</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">健康照护师实操技能提升班</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>孙老师 · 20课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥399</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>720人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程9: 老年人膳食营养 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=260&h=200&fit=crop" alt="老年人膳食营养" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-blue text-white font-medium">新课</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人膳食营养与配餐方案设计</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>吴老师 · 14课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥299</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>540人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程10: 养老护理实操 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=260&h=200&fit=crop" alt="养老护理实操" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-orange text-white font-medium">推荐</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">养老护理实操技能强化训练</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>李老师 · 22课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥399</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>1,050人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程11: 评估师实操 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=260&h=200&fit=crop" alt="评估师实操" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人能力评估实操演练</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>王老师 · 18课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-[15px] font-bold text-brand">免费</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>1,380人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- 课程12: 老年人急救护理 -->
+      <a href="learn.html" class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200">
+        <div class="flex">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=260&h=200&fit=crop" alt="老年人急救护理" class="w-full h-full object-cover">
+            <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-red text-white font-medium">热门</span>
+          </div>
+          <div class="flex-1 p-3 flex flex-col justify-between">
+            <div>
+              <div class="text-[15px] font-semibold text-gray-800 leading-snug line-clamp-2">老年人急救护理与突发事件处理</div>
+              <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                <span class="iconify text-sm" data-icon="solar:user-rounded-linear"></span>张老师 · 16课时
+              </div>
+            </div>
+            <div class="flex items-end justify-between">
+              <span class="text-lg font-bold text-accent-red">¥299</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
+                <span class="iconify text-xs" data-icon="solar:users-group-rounded-linear"></span>890人
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 加载更多 -->
+    <div class="text-center py-5 text-sm text-gray-400" id="loadMore">
+      <span class="inline-block w-4 h-4 border-2 border-gray-200 border-t-brand rounded-full animate-spin align-middle mr-1.5"></span>加载更多课程...
+    </div>
+
+    <!-- 底部5tab导航 -->
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] h-14 bg-white flex border-t border-gray-100 z-50">
+      <a href="home.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 transition cursor-pointer">
+        <span class="iconify text-[22px]" data-icon="solar:home-smile-linear"></span>
+        <span class="text-[10px]">首页</span>
+      </a>
+      <a href="course-list.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-brand transition cursor-pointer">
+        <span class="iconify text-[22px]" data-icon="solar:book-bold"></span>
+        <span class="text-[10px] font-semibold">课程</span>
+      </a>
+      <a href="question-bank.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 transition cursor-pointer">
+        <span class="iconify text-[22px]" data-icon="solar:document-text-linear"></span>
+        <span class="text-[10px]">题库</span>
+      </a>
+      <a href="news.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 transition cursor-pointer">
+        <span class="iconify text-[22px]" data-icon="solar:document-text-linear"></span>
+        <span class="text-[10px]">资讯</span>
+      </a>
+      <a href="profile.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 transition cursor-pointer">
+        <span class="iconify text-[22px]" data-icon="solar:user-rounded-linear"></span>
+        <span class="text-[10px]">我的</span>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // 分类筛选切换
+    document.querySelectorAll('.filter-tag').forEach(function(tag) {
+      tag.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tag').forEach(function(t) {
+          t.classList.remove('bg-brand-light', 'text-brand', 'font-semibold');
+          t.classList.add('bg-gray-100', 'text-gray-500');
+        });
+        this.classList.remove('bg-gray-100', 'text-gray-500');
+        this.classList.add('bg-brand-light', 'text-brand', 'font-semibold');
+      });
+    });
+
+    // 排序切换
+    document.querySelectorAll('.sort-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.sort-tab').forEach(function(t) {
+          t.classList.remove('text-brand', 'font-semibold', 'active');
+          t.classList.add('text-gray-400');
+          var bar = t.querySelector('span');
+          if (bar) bar.remove();
+        });
+        this.classList.remove('text-gray-400');
+        this.classList.add('text-brand', 'font-semibold', 'active');
+        var underline = document.createElement('span');
+        underline.className = 'absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-brand rounded-full';
+        this.appendChild(underline);
+      });
+    });
+  </script>
+</body>
+</html>

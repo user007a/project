@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人中心 - 叁竹培训</title>
+  <style>
+    /* ========================================
+       Design System: 叁竹培训 PC官网 (中国大学MOOC风格)
+       品牌色 #00cc7e | 背景 #f5f5f5
+    ======================================== */
+    :root {
+      /* 品牌色 */
+      --color-primary: #00cc7e;
+      --color-primary-dark: #00b86e;
+      --color-primary-light: #e6ffed;
+      --color-secondary: #ffa838;
+      --color-accent: #896cff;
+      --color-price: #ff4d4f;
+      --color-price-alt: #ff7a45;
+
+      /* 背景与边框 */
+      --bg-page: #f5f5f5;
+      --bg-card: #FFFFFF;
+      --bg-footer: #1f1f1f;
+      --border-color: #e8e8e8;
+      --border-light: #eeeeee;
+      --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-card-hover: 0 6px 16px rgba(0,0,0,0.12);
+
+      /* 文字色 */
+      --text-primary: #333333;
+      --text-regular: #666666;
+      --text-secondary: #999999;
+      --text-white: #FFFFFF;
+      --text-link: #00cc7e;
+      --text-link-blue: #1890FF;
+
+      /* 字体 */
+      --font-stack: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+      /* 字号 */
+      --fs-logo: 20px;
+      --fs-page-title: 24px;
+      --fs-section-title: 18px;
+      --fs-card-title: 15px;
+      --fs-body: 14px;
+      --fs-aux: 12px;
+      --fs-price: 18px;
+      --fs-tag: 12px;
+      --fs-nav: 14px;
+
+      /* 间距 */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+
+      /* 圆角 */
+      --radius-xs: 2px;
+      --radius-sm: 5px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+
+      /* 布局 */
+      --max-width: 1200px;
+      --header-height: 56px;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 14px; }
+    body { font-family: var(--font-stack); color: var(--text-primary); background: var(--bg-page); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    ul, ol { list-style: none; }
+    button { border: none; cursor: pointer; font-family: inherit; }
+
+    /* Header */
+    .header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: linear-gradient(135deg, var(--color-primary) 0%, #00b86e 100%); z-index: 1000; box-shadow: 0 2px 8px rgba(0,204,126,0.3); }
+    .header-inner { max-width: var(--max-width); margin: 0 auto; height: 100%; display: flex; align-items: center; padding: 0 20px; gap: 24px; }
+    .logo-area { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .logo-text { font-size: var(--fs-logo); font-weight: 700; color: var(--text-white); }
+    .search-box { flex: 1; max-width: 440px; display: flex; height: 36px; border-radius: var(--radius-md); overflow: hidden; background: var(--text-white); }
+    .search-input { flex: 1; border: none; outline: none; padding: 0 12px; font-size: var(--fs-body); font-family: var(--font-stack); }
+    .search-input::placeholder { color: var(--text-secondary); }
+    .search-btn { width: 56px; background: var(--color-primary-dark); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .search-btn:hover { background: #00a564; }
+    .search-btn svg { width: 18px; height: 18px; fill: var(--text-white); }
+    .header-nav { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .header-nav a { color: rgba(255,255,255,0.9); font-size: var(--fs-nav); }
+    .header-nav .btn-login { padding: 5px 16px; border: 1px solid rgba(255,255,255,0.6); border-radius: var(--radius-sm); }
+    .header-nav .btn-register { padding: 5px 16px; background: rgba(255,255,255,0.2); border-radius: var(--radius-sm); }
+
+    /* Page */
+    .page-body { margin-top: var(--header-height); }
+    .page-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+
+    /* User profile banner */
+    .user-banner {
+      background: linear-gradient(135deg, #00cc7e 0%, #00b86e 40%, #896cff 100%);
+      padding: 36px 0;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .user-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .user-banner-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .user-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      border: 3px solid rgba(255,255,255,0.5);
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .user-avatar svg { width: 32px; height: 32px; fill: rgba(255,255,255,0.9); }
+    .user-info { flex: 1; }
+    .user-name { font-size: 22px; font-weight: 700; color: var(--text-white); margin-bottom: 6px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .user-desc { font-size: 14px; color: rgba(255,255,255,0.85); }
+    .user-stats {
+      display: flex;
+      gap: 48px;
+    }
+    .stat-item { text-align: center; position: relative; }
+    .stat-item::after { content: ''; position: absolute; right: -24px; top: 50%; transform: translateY(-50%); width: 1px; height: 32px; background: rgba(255,255,255,0.3); }
+    .stat-item:last-child::after { display: none; }
+    .stat-num { font-size: 26px; font-weight: 700; color: var(--text-white); }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+    /* Tab nav */
+    .tab-nav-bar {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 20px;
+      display: flex;
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+    .tab-nav-item {
+      padding: 16px 32px;
+      font-size: 15px;
+      color: var(--text-regular);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-nav-item:hover { color: var(--color-primary); background: var(--color-primary-light); }
+    .tab-nav-item.active { color: var(--color-primary); font-weight: 600; background: var(--bg-card); border-bottom-color: var(--color-primary); }
+
+    /* Content area */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Course list in user center */
+    .uc-course-list { display: flex; flex-direction: column; gap: 14px; }
+    .uc-course-item {
+      display: flex;
+      gap: 18px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+      position: relative;
+    }
+    .uc-course-item:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      border-color: var(--color-primary-light);
+    }
+    .uc-course-thumb {
+      width: 160px;
+      height: 96px;
+      flex-shrink: 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+    }
+    .uc-course-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .uc-course-item:hover .uc-course-thumb img { transform: scale(1.06); }
+    .uc-course-thumb .badge-small {
+      position: absolute;
+      top: 6px; left: 6px;
+      padding: 2px 8px;
+      font-size: 11px;
+      background: var(--color-primary);
+      color: #fff;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .uc-course-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .uc-course-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      transition: color 0.2s ease;
+    }
+    .uc-course-item:hover .uc-course-title { color: var(--color-primary); }
+    .uc-course-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .uc-course-meta span { margin-right: 0; }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #f0f0f0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: auto;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary) 0%, #00e676 100%);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    .uc-course-action {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-continue {
+      padding: 8px 18px;
+      background: var(--color-primary);
+      color: var(--text-white);
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+      transition: all 0.25s ease;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,204,126,0.25);
+    }
+    .btn-continue:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,204,126,0.35); }
+    .btn-secondary {
+      padding: 8px 18px;
+      background: var(--bg-card);
+      color: var(--text-regular);
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+    }
+    .empty-icon { margin-bottom: 16px; }
+    .empty-icon svg { width: 80px; height: 80px; fill: #e8e8e8; }
+    .empty-title { font-size: 16px; color: var(--text-primary); margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+    .btn-browse {
+      display: inline-block;
+      padding: 10px 32px;
+      background: var(--color-primary);
+      color: var(--text-white);
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .btn-browse:hover { background: var(--color-primary-dark); }
+
+    /* Certificate list */
+    .cert-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .cert-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .cert-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .cert-icon { margin-bottom: 12px; width: 64px; height: 64px; margin-left: auto; margin-right: auto; }
+    .cert-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .cert-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+    .cert-date { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .cert-status { font-size: 12px; padding: 3px 10px; border-radius: 2px; display: inline-block; }
+    .cert-status-active { background: #f0fff0; color: #52C41A; }
+    .cert-status-expired { background: #fffbe6; color: #D48806; }
+
+    /* Order list */
+    .order-item {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 12px;
+      padding: 16px;
+    }
+    .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
+    .order-no { font-size: 13px; color: var(--text-secondary); }
+    .order-status { font-size: 13px; font-weight: 500; }
+    .order-status-paid { color: #52C41A; }
+    .order-status-pending { color: #FAAD14; }
+    .order-body { display: flex; gap: 16px; align-items: center; }
+    .order-thumb { width: 80px; height: 50px; flex-shrink: 0; border-radius: var(--radius-sm); overflow: hidden; }
+    .order-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .order-info { flex: 1; }
+    .order-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+    .order-time { font-size: 12px; color: var(--text-secondary); }
+    .order-price { font-size: 16px; font-weight: 700; color: var(--color-price); flex-shrink: 0; }
+
+    /* Favorites */
+    .fav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .fav-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .fav-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-4px); }
+    .fav-cover {
+      aspect-ratio: 16/9;
+      position: relative;
+      overflow: hidden;
+    }
+    .fav-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .fav-remove {
+      position: absolute; top: 8px; right: 8px;
+      width: 24px; height: 24px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fav-remove:hover { background: rgba(0,0,0,0.6); }
+    .fav-remove svg { width: 12px; height: 12px; fill: #fff; }
+    .fav-body { padding: 12px 14px; }
+    .fav-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .fav-meta { font-size: 12px; color: var(--text-secondary); }
+    .fav-price { font-size: 14px; font-weight: 700; color: var(--color-price); }
+
+    /* Footer */
+    .footer { background: var(--bg-footer); color: var(--text-white); margin-top: var(--spacing-xl); }
+    .footer-inner { max-width: var(--max-width); margin: 0 auto; padding: 40px 20px 20px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 32px; margin-bottom: 32px; }
+    .footer-brand .footer-logo { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+    .footer-brand p { font-size: 13px; color: #999; line-height: 1.6; }
+    .footer-col-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+    .footer-links a { display: block; font-size: 13px; color: #999; margin-bottom: 8px; }
+    .footer-links a:hover { color: var(--text-white); }
+    .footer-bottom { border-top: 1px solid #444; padding-top: 16px; display: flex; justify-content: space-between; font-size: 12px; color: #666; }
+
+    @media (max-width: 991px) {
+      .cert-list { grid-template-columns: repeat(2, 1fr); }
+      .fav-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .user-banner-inner { flex-direction: column; text-align: center; }
+      .user-stats { justify-content: center; }
+      .uc-course-item { flex-direction: column; }
+      .uc-course-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
+      .cert-list, .fav-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <svg width="32" height="32" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/><text x="16" y="22" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">叁</text></svg>
+        <span class="logo-text">叁竹培训</span>
+      </div>
+      <div class="search-box">
+        <input class="search-input" type="text" placeholder="搜索课程、讲师、证书..." id="searchInput">
+        <button class="search-btn" onclick="handleSearch()"><svg viewBox="0 0 18 18"><path d="M12.5 11h-.79l-.28-.27A6.47 6.47 0 0013 7.5 6.5 6.5 0 106.5 14c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L17.49 16l-4.99-5zm-6 0A3.5 3.5 0 1110 7.5 3.49 3.49 0 016.5 11z" fill="currentColor"/></svg></button>
+      </div>
+      <nav class="header-nav">
+        <a href="user-center.html">我的学习</a>
+        <a href="#" class="btn-login">登录</a>
+        <a href="#" class="btn-register">注册</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <!-- User banner -->
+    <div class="user-banner">
+      <div class="user-banner-inner">
+        <div class="user-avatar">
+          <svg viewBox="0 0 28 28"><circle cx="14" cy="10" r="5" fill="rgba(255,255,255,0.6)"/><ellipse cx="14" cy="24" rx="8" ry="5" fill="rgba(255,255,255,0.6)"/></svg>
+        </div>
+        <div class="user-info">
+          <div class="user-name">张女士</div>
+          <div class="user-desc">养老护理从业者 · 已学习 128 课时</div>
+        </div>
+        <div class="user-stats">
+          <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">在学课程</div></div>
+          <div class="stat-item"><div class="stat-num">1</div><div class="stat-label">已完成</div></div>
+          <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">我的证书</div></div>
+          <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">收藏课程</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-container">
+      <!-- Tab nav -->
+      <div class="tab-nav-bar">
+        <span class="tab-nav-item active" onclick="switchTab(this, 'panel-courses')">我的课程</span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-certs')">我的证书</span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-favs')">收藏夹</span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-orders')">我的订单</span>
+      </div>
+
+      <!-- 我的课程 -->
+      <div class="tab-panel active" id="panel-courses">
+        <div class="uc-course-list">
+          <div class="uc-course-item" onclick="window.location.href='course-detail.html'">
+            <div class="uc-course-thumb">
+              <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=240&h=150&fit=crop" alt="课程封面">
+              <span class="badge-small">学习中</span>
+            </div>
+            <div class="uc-course-info">
+              <div class="uc-course-title">养老护理员（初级）考证培训</div>
+              <div class="uc-course-meta">
+                <span>讲师：李芳</span>
+                <span>48课时</span>
+                <span>上次学习：2025-01-15</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+              <div class="progress-text">已学 68% · 33/48课时</div>
+            </div>
+            <div class="uc-course-action">
+              <a href="course-detail.html" class="btn-continue">继续学习</a>
+            </div>
+          </div>
+
+          <div class="uc-course-item" onclick="window.location.href='course-detail.html'">
+            <div class="uc-course-thumb">
+              <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=240&h=150&fit=crop" alt="课程封面">
+              <span class="badge-small">学习中</span>
+            </div>
+            <div class="uc-course-info">
+              <div class="uc-course-title">老年人能力评估师认证培训</div>
+              <div class="uc-course-meta">
+                <span>讲师：王建国</span>
+                <span>36课时</span>
+                <span>上次学习：2025-01-12</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
+              <div class="progress-text">已学 35% · 13/36课时</div>
+            </div>
+            <div class="uc-course-action">
+              <a href="course-detail.html" class="btn-continue">继续学习</a>
+            </div>
+          </div>
+
+          <div class="uc-course-item" onclick="window.location.href='course-detail.html'">
+            <div class="uc-course-thumb">
+              <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=240&h=150&fit=crop" alt="课程封面">
+              <span class="badge-small" style="background:#52C41A;">已完成</span>
+            </div>
+            <div class="uc-course-info">
+              <div class="uc-course-title">养老护理入门：职业道德与服务意识</div>
+              <div class="uc-course-meta">
+                <span>讲师：张丽华</span>
+                <span>6课时</span>
+                <span>完成时间：2024-12-20</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+              <div class="progress-text">已完成 100%</div>
+            </div>
+            <div class="uc-course-action">
+              <a href="course-detail.html" class="btn-secondary">查看课程</a>
+            </div>
+          </div>
+
+          <div class="uc-course-item" onclick="window.location.href='course-detail.html'">
+            <div class="uc-course-thumb">
+              <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=240&h=150&fit=crop" alt="课程封面">
+              <span class="badge-small">学习中</span>
+            </div>
+            <div class="uc-course-info">
+              <div class="uc-course-title">养老护理员继续教育学分课程 2025</div>
+              <div class="uc-course-meta">
+                <span>讲师：赵老师</span>
+                <span>24课时</span>
+                <span>上次学习：2025-01-08</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:12%"></div></div>
+              <div class="progress-text">已学 12% · 3/24课时</div>
+            </div>
+            <div class="uc-course-action">
+              <a href="course-detail.html" class="btn-continue">继续学习</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 我的证书 -->
+      <div class="tab-panel" id="panel-certs">
+        <div class="cert-list">
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">养老护理员（初级）</div>
+            <div class="cert-date">获证日期：2024-12-25</div>
+            <span class="cert-status cert-status-active">有效</span>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">心肺复苏（CPR）急救证</div>
+            <div class="cert-date">获证日期：2024-08-15</div>
+            <span class="cert-status cert-status-expired">即将到期</span>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">老年人能力评估师</div>
+            <div class="cert-date">获证日期：2025-01-10</div>
+            <span class="cert-status cert-status-active">有效</span>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">健康照护师（中级）</div>
+            <div class="cert-date">获证日期：2024-06-20</div>
+            <span class="cert-status cert-status-active">有效</span>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">养老营养师</div>
+            <div class="cert-date">获证日期：2024-11-05</div>
+            <span class="cert-status cert-status-active">有效</span>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">
+              <svg viewBox="0 0 64 64" width="64" height="64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#52C41A" stroke="#389E0D" stroke-width="2"/><rect x="10" y="14" width="44" height="36" rx="2" fill="#fff"/><path d="M20 24h24M20 30h20M20 36h16" stroke="#52C41A" stroke-width="2" fill="none"/><circle cx="32" cy="54" r="5" fill="#52C41A"/><path d="M28 50l4 4 4-4" stroke="#fff" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="cert-name">老年心理咨询师</div>
+            <div class="cert-date">获证日期：2025-02-15</div>
+            <span class="cert-status cert-status-active">有效</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 收藏夹 -->
+      <div class="tab-panel" id="panel-favs">
+        <div class="fav-grid">
+          <div class="fav-card">
+            <div class="fav-cover">
+              <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=320&h=180&fit=crop" alt="收藏课程">
+              <div class="fav-remove" title="取消收藏"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="fav-body">
+              <div class="fav-title">健康照护师（中级）技能提升</div>
+              <div class="fav-meta">刘志远老师 · 56课时</div>
+              <div class="fav-price">¥1280</div>
+            </div>
+          </div>
+          <div class="fav-card">
+            <div class="fav-cover">
+              <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=320&h=180&fit=crop" alt="收藏课程">
+              <div class="fav-remove" title="取消收藏"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="fav-body">
+              <div class="fav-title">老年营养与膳食指导精品课</div>
+              <div class="fav-meta">陈晓红老师 · 28课时</div>
+              <div class="fav-price">¥420</div>
+            </div>
+          </div>
+          <div class="fav-card">
+            <div class="fav-cover">
+              <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=320&h=180&fit=crop" alt="收藏课程">
+              <div class="fav-remove" title="取消收藏"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="fav-body">
+              <div class="fav-title">养老机构安全管理规范</div>
+              <div class="fav-meta">张丽华老师 · 18课时</div>
+              <div class="fav-price">¥360</div>
+            </div>
+          </div>
+          <div class="fav-card">
+            <div class="fav-cover">
+              <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=320&h=180&fit=crop" alt="收藏课程">
+              <div class="fav-remove" title="取消收藏"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="fav-body">
+              <div class="fav-title">老年人心理关怀与沟通技巧</div>
+              <div class="fav-meta">陈晓红老师 · 4课时</div>
+              <div class="fav-price">免费</div>
+            </div>
+          </div>
+          <div class="fav-card">
+            <div class="fav-cover">
+              <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=320&h=180&fit=crop" alt="收藏课程">
+              <div class="fav-remove" title="取消收藏"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="fav-body">
+              <div class="fav-title">养老护理员（高级）管理与培训能力</div>
+              <div class="fav-meta">刘志远老师 · 72课时</div>
+              <div class="fav-price">¥1680</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 我的订单 -->
+      <div class="tab-panel" id="panel-orders">
+        <div class="order-item">
+          <div class="order-header">
+            <span class="order-no">订单号：SZ202501150001</span>
+            <span class="order-status order-status-paid">已支付</span>
+          </div>
+          <div class="order-body">
+            <div class="order-thumb"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=160&h=100&fit=crop" alt="订单课程"></div>
+            <div class="order-info">
+              <div class="order-title">养老护理员（初级）考证培训</div>
+              <div class="order-time">2025-01-15 14:30:00</div>
+            </div>
+            <div class="order-price">¥680</div>
+          </div>
+        </div>
+        <div class="order-item">
+          <div class="order-header">
+            <span class="order-no">订单号：SZ202501100002</span>
+            <span class="order-status order-status-paid">已支付</span>
+          </div>
+          <div class="order-body">
+            <div class="order-thumb"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=160&h=100&fit=crop" alt="订单课程"></div>
+            <div class="order-info">
+              <div class="order-title">老年人能力评估师认证培训</div>
+              <div class="order-time">2025-01-10 09:15:00</div>
+            </div>
+            <div class="order-price">¥980</div>
+          </div>
+        </div>
+        <div class="order-item">
+          <div class="order-header">
+            <span class="order-no">订单号：SZ202412200003</span>
+            <span class="order-status order-status-paid">已支付</span>
+          </div>
+          <div class="order-body">
+            <div class="order-thumb"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=160&h=100&fit=crop" alt="订单课程"></div>
+            <div class="order-info">
+              <div class="order-title">养老护理员继续教育学分课程 2025</div>
+              <div class="order-time">2024-12-20 16:45:00</div>
+            </div>
+            <div class="order-price">¥360</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="footer-logo">叁竹培训</div><p>专注养老行业人才培训与认证，助力养老从业者职业成长</p></div>
+        <div><div class="footer-col-title">培训课程</div><div class="footer-links"><a href="#">养老护理员</a><a href="#">老年人能力评估师</a><a href="#">健康照护师</a><a href="#">营养配餐员</a></div></div>
+        <div><div class="footer-col-title">学习服务</div><div class="footer-links"><a href="#">免费课程</a><a href="#">直播公开课</a><a href="#">继续教育</a><a href="#">证书查询</a></div></div>
+        <div><div class="footer-col-title">帮助中心</div><div class="footer-links"><a href="#">常见问题</a><a href="#">报名流程</a><a href="#">补贴政策</a><a href="#">联系客服</a></div></div>
+        <div><div class="footer-col-title">关于我们</div><div class="footer-links"><a href="#">机构介绍</a><a href="#">师资团队</a><a href="#">合作伙伴</a><a href="#">加入我们</a></div></div>
+      </div>
+      <div class="footer-bottom"><span>© 2025 叁竹培训 版权所有</span><span>京ICP备XXXXXXXX号</span></div>
+    </div>
+  </footer>
+
+  <script>
+    function switchTab(el, panelId) {
+      document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+    function handleSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (q) window.location.href = 'search.html?q=' + encodeURIComponent(q);
+    }
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleSearch();
+    });
+  </script>
+
+</body>
+</html>

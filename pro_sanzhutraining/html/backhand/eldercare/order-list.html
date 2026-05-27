@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - 叁竹培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>* { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }</style>
+    <style>
+        .modal-overlay { opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { opacity: 1; }
+        .modal-content { transform: scale(0.95) translateY(10px); opacity: 0; transition: all 0.3s ease; }
+        .modal-overlay.show .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
+        <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                <span class="iconify text-white text-lg" data-icon="ri:plant-line"></span>
+            </div>
+            <span class="text-white font-bold text-base">叁竹培训系统</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span>
+                <span class="text-sm">工作台</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">学员管理</div>
+            <a href="student-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
+                <span class="text-sm">学员列表</span>
+            </a>
+            <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:award-line"></span>
+                <span class="text-sm">证书管理</span>
+            </a>
+            <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
+                <span class="text-sm">学习记录</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">课程中心</div>
+            <a href="course-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
+                <span class="text-sm">课程管理</span>
+            </a>
+            <a href="category-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                <span class="text-sm">分类管理</span>
+            </a>
+            <a href="teacher-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
+                <span class="text-sm">讲师管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">订单中心</div>
+            <a href="order-list.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md">
+                <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span>
+                <span class="text-sm">订单管理</span>
+            </a>
+            <a href="refund-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span>
+                <span class="text-sm">退款管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">题库中心</div>
+            <a href="question-bank.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:questionnaire-line"></span>
+                <span class="text-sm">题库管理</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">内容管理</div>
+            <a href="article-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:article-line"></span>
+                <span class="text-sm">资讯管理</span>
+            </a>
+            <a href="article-category.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                <span class="text-sm">资讯分类</span>
+            </a>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">系统设置</div>
+            <a href="user-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
+                <span class="text-sm">用户管理</span>
+            </a>
+            <a href="message-center.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span>
+                <span class="text-sm">消息中心</span>
+            </a>
+            <a href="system-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span>
+                <span class="text-sm">基础设置</span>
+            </a>
+            <a href="payment-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:bank-card-line"></span>
+                <span class="text-sm">支付配置</span>
+            </a>
+            <a href="sms-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:message-3-line"></span>
+                <span class="text-sm">短信配置</span>
+            </a>
+            <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
+                <span class="text-sm">角色权限</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- 顶部栏 -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-bold text-gray-900">订单管理</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:notification-3-line"></span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="h-6 w-px bg-gray-200"></div>
+                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-sm font-bold">管</span>
+                    </div>
+                    <span class="text-sm text-gray-700">管理员</span>
+                    <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6">
+            <!-- 搜索筛选区 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <div class="grid grid-cols-5 gap-4 items-end">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">订单号</label>
+                        <input type="text" placeholder="搜索订单号" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">学员姓名</label>
+                        <input type="text" placeholder="搜索学员姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">下单时间</label>
+                        <div class="flex items-center gap-2">
+                            <input type="date" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-gray-500 transition-all">
+                            <span class="text-gray-400 text-sm">至</span>
+                            <input type="date" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-gray-500 transition-all">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-2">订单状态</label>
+                        <select class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm text-gray-500 transition-all">
+                            <option>全部</option>
+                            <option>待付款</option>
+                            <option>已完成</option>
+                            <option>已取消</option>
+                            <option>已退款</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">搜索</button>
+                        <button class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-6 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">今日营收</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">¥12,680</p>
+                            <p class="text-xs text-green-600 mt-1 flex items-center gap-0.5">
+                                <span class="iconify text-xs" data-icon="ri:arrow-up-line"></span>8.3%
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-blue-500 text-xl" data-icon="ri:money-cny-circle-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">本月营收</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">¥286,540</p>
+                            <p class="text-xs text-green-600 mt-1 flex items-center gap-0.5">
+                                <span class="iconify text-xs" data-icon="ri:arrow-up-line"></span>12.7%
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-green-500 text-xl" data-icon="ri:line-chart-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">今日订单</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">31</p>
+                            <p class="text-xs text-red-500 mt-1 flex items-center gap-0.5">
+                                <span class="iconify text-xs" data-icon="ri:arrow-down-line"></span>3.1%
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-orange-500 text-xl" data-icon="ri:file-list-3-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">本月订单</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">687</p>
+                            <p class="text-xs text-green-600 mt-1 flex items-center gap-0.5">
+                                <span class="iconify text-xs" data-icon="ri:arrow-up-line"></span>5.8%
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-purple-500 text-xl" data-icon="ri:bar-chart-box-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">待付款</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">5<span class="text-sm font-normal text-gray-400 ml-1">笔</span></p>
+                        </div>
+                        <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-yellow-500 text-xl" data-icon="ri:time-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500">已退款</p>
+                            <p class="text-xl font-bold text-gray-900 mt-1">3<span class="text-sm font-normal text-gray-400 ml-1">笔</span></p>
+                        </div>
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-red-500 text-xl" data-icon="ri:refund-line"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作栏 + 数据表格 -->
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b bg-gray-50/50 flex justify-between items-center">
+                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">23</span> 笔订单</span>
+                    <div class="flex items-center gap-3">
+                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                            <span class="iconify" data-icon="ri:download-2-line"></span>导出Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-100">
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-12">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">订单号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">学员姓名</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">课程名称</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">金额</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">支付方式</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">订单状态</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">下单时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <!-- 1. 已完成 -->
+                            <tr data-row="1" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">1</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260521001</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">刘秀英</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-21 09:15</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 2. 已完成 -->
+                            <tr data-row="2" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">2</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260520002</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">陈建华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-20 14:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 3. 已完成 -->
+                            <tr data-row="3" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">3</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260519003</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">王丽萍</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥580</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-19 10:20</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 4. 已完成 -->
+                            <tr data-row="4" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">4</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260518004</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">赵国强</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-18 16:45</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 5. 已完成 -->
+                            <tr data-row="5" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">5</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260517005</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">孙美华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-17 11:00</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 6. 待付款 -->
+                            <tr data-row="6" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">6</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260516006</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">周建国</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥880</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-400">—</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待付款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-16 08:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 7. 已完成 -->
+                            <tr data-row="7" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">7</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260515007</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">李芳</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-15 13:20</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 8. 已完成 -->
+                            <tr data-row="8" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">8</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260514008</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">张伟</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,180</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-14 09:50</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 9. 已取消 -->
+                            <tr data-row="9" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">9</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260513009</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">吴秀兰</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-400">—</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">已取消</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-13 15:10</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 10. 已完成 -->
+                            <tr data-row="10" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">10</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260512010</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">郑明华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,480</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-12 10:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 11. 已退款 -->
+                            <tr data-row="11" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">11</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260511011</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">黄丽珍</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-11 14:20</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 12. 已完成 -->
+                            <tr data-row="12" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">12</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260510012</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">林志强</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-10 08:45</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 13. 已完成 -->
+                            <tr data-row="13" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">13</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260509013</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">何玉兰</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-09 16:00</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 14. 待付款 -->
+                            <tr data-row="14" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">14</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260508014</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">马建华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-400">—</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待付款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-08 11:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 15. 已完成 -->
+                            <tr data-row="15" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">15</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260507015</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">胡秀英</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥880</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-07 09:40</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 16. 已完成 -->
+                            <tr data-row="16" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">16</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260506016</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">杨国庆</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-06 13:15</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 17. 已退款 -->
+                            <tr data-row="17" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">17</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260505017</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">朱丽华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,180</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-05 10:50</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 18. 已完成 -->
+                            <tr data-row="18" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">18</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260504018</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">徐明</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥580</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-04 15:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 19. 已完成 -->
+                            <tr data-row="19" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">19</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260503019</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">高秀兰</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-03 08:20</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 20. 已取消 -->
+                            <tr data-row="20" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">20</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260502020</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">宋建国</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥380</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-400">—</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">已取消</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-02 17:00</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 21. 已完成 -->
+                            <tr data-row="21" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">21</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260501021</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">邓芳</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已完成</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-01 10:10</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 22. 待付款 -->
+                            <tr data-row="22" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">22</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260430022</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">曹明华</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,480</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-400">—</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待付款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-04-30 14:40</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                            <!-- 23. 已退款 -->
+                            <tr data-row="23" class="hover:bg-blue-50/30 transition-all">
+                                <td class="px-4 py-3.5 text-sm text-gray-400">23</td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260429023</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">韩秀珍</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥780</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">微信支付</span></td>
+                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已退款</span></td>
+                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-04-29 09:30</span></td>
+                                <td class="px-4 py-3.5 text-right"><button onclick="showDetail(this)" class="text-[#1890FF] hover:text-blue-700 font-medium text-sm">查看</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页 -->
+                <div class="px-6 py-4 border-t flex items-center justify-between">
+                    <span id="pageInfo" class="text-sm text-gray-500">第 1 / X 页，共 Y 条</span>
+                    <div id="paginationBtns" class="flex items-center gap-1">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 订单详情弹窗 -->
+    <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 modal-overlay" onclick="if(event.target===this)closeDetail()">
+        <div class="modal-content bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-xl mx-4">
+            <!-- 弹窗头部 -->
+            <div class="flex items-center justify-between px-6 py-4 border-b">
+                <h3 class="text-lg font-bold text-gray-900">订单详情</h3>
+                <button onclick="closeDetail()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <!-- 弹窗内容 -->
+            <div class="px-6 py-5 overflow-y-auto" style="max-height: calc(85vh - 130px);">
+                <!-- 订单信息 -->
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="iconify text-[#1890FF]" data-icon="ri:file-text-line"></span>订单信息
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-3">
+                        <div><span class="text-xs text-gray-500">订单号</span><p class="text-sm font-medium text-gray-900 mt-0.5">SZ20260521001</p></div>
+                        <div><span class="text-xs text-gray-500">下单时间</span><p class="text-sm font-medium text-gray-900 mt-0.5">2026-05-21 09:15</p></div>
+                        <div><span class="text-xs text-gray-500">支付时间</span><p class="text-sm font-medium text-gray-900 mt-0.5">2026-05-21 09:16</p></div>
+                        <div><span class="text-xs text-gray-500">支付方式</span><p class="text-sm font-medium text-gray-900 mt-0.5">微信支付</p></div>
+                    </div>
+                </div>
+                <!-- 学员信息 -->
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="iconify text-[#1890FF]" data-icon="ri:user-line"></span>学员信息
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-3">
+                        <div><span class="text-xs text-gray-500">姓名</span><p class="text-sm font-medium text-gray-900 mt-0.5">刘秀英</p></div>
+                        <div><span class="text-xs text-gray-500">手机号</span><p class="text-sm font-medium text-gray-900 mt-0.5">138****5678</p></div>
+                    </div>
+                </div>
+                <!-- 课程信息 -->
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="iconify text-[#1890FF]" data-icon="ri:book-open-line"></span>课程信息
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-3">
+                        <div><span class="text-xs text-gray-500">课程名称</span><p class="text-sm font-medium text-gray-900 mt-0.5">养老护理员（初级）</p></div>
+                        <div><span class="text-xs text-gray-500">价格</span><p class="text-sm font-medium text-gray-900 mt-0.5">¥680</p></div>
+                    </div>
+                </div>
+                <!-- 金额明细 -->
+                <div class="mb-6">
+                    <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="iconify text-[#1890FF]" data-icon="ri:money-cny-circle-line"></span>金额明细
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex justify-between py-2"><span class="text-sm text-gray-600">课程价格</span><span class="text-sm text-gray-900">¥680.00</span></div>
+                        <div class="flex justify-between py-2"><span class="text-sm text-gray-600">优惠金额</span><span class="text-sm text-green-600">-¥0.00</span></div>
+                        <div class="border-t border-gray-200 mt-2 pt-2 flex justify-between"><span class="text-sm font-bold text-gray-900">实付金额</span><span class="text-sm font-bold text-[#1890FF]">¥680.00</span></div>
+                    </div>
+                </div>
+                <!-- 订单状态时间轴 -->
+                <div>
+                    <h4 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span class="iconify text-[#1890FF]" data-icon="ri:route-line"></span>订单状态
+                    </h4>
+                    <div class="pl-4">
+                        <div class="relative pb-6 border-l-2 border-green-400 pl-6">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                            <p class="text-sm font-medium text-gray-900">下单成功</p>
+                            <p class="text-xs text-gray-500 mt-0.5">2026-05-21 09:15</p>
+                        </div>
+                        <div class="relative pb-6 border-l-2 border-green-400 pl-6">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                            <p class="text-sm font-medium text-gray-900">支付成功</p>
+                            <p class="text-xs text-gray-500 mt-0.5">2026-05-21 09:16</p>
+                        </div>
+                        <div class="relative border-l-2 border-green-400 pl-6">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                            <p class="text-sm font-medium text-gray-900">订单完成</p>
+                            <p class="text-xs text-gray-500 mt-0.5">2026-05-21 09:16</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 弹窗底部 -->
+            <div class="px-6 py-4 border-t bg-gray-50 flex justify-end">
+                <button onclick="closeDetail()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDetail() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => { modal.classList.add('show'); });
+        }
+        function closeDetail() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('show');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        // 分页功能
+        const PAGE_SIZE = 10;
+        let currentPage = 1;
+        const rows = document.querySelectorAll('tbody tr[data-row]');
+        const totalRows = rows.length;
+        const totalPages = Math.ceil(totalRows / PAGE_SIZE);
+
+        function renderPagination(page) {
+            currentPage = page;
+            rows.forEach((row) => {
+                const rowNum = parseInt(row.getAttribute('data-row'));
+                if (rowNum > (page - 1) * PAGE_SIZE && rowNum <= page * PAGE_SIZE) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const infoEl = document.getElementById('pageInfo');
+            if (infoEl) infoEl.textContent = `第 ${page} / ${totalPages} 页，共 ${totalRows} 条`;
+
+            const paginationBtns = document.getElementById('paginationBtns');
+            if (paginationBtns) {
+                let html = '';
+                html += `<button onclick="renderPagination(${page - 1})" class="px-3 py-1.5 text-sm border rounded-lg ${page === 1 ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${page === 1 ? 'disabled' : ''}>上一页</button>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button onclick="renderPagination(${i})" class="px-3 py-1.5 text-sm border rounded-lg ${i === page ? 'bg-[#1890FF] text-white border-[#1890FF]' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}">${i}</button>`;
+                }
+                html += `<button onclick="renderPagination(${page + 1})" class="px-3 py-1.5 text-sm border rounded-lg ${page === totalPages ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${page === totalPages ? 'disabled' : ''}>下一页</button>`;
+                paginationBtns.innerHTML = html;
+            }
+        }
+
+        renderPagination(1);
+    </script>
+</body>
+</html>

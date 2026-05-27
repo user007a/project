@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>叁竹培训 - 我的订单</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#f5f5f5] min-h-screen">
+
+<div class="w-full max-w-[375px] mx-auto min-h-screen bg-[#f5f5f5] relative">
+
+  <!-- 顶部Header -->
+  <div class="bg-gradient-to-br from-[#2e9e5a] to-[#1e7e42] px-4 pt-10 pb-4 rounded-b-[40px]">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center cursor-pointer" onclick="history.back()">
+        <span class="iconify text-white text-lg" data-icon="solar:arrow-left-linear"></span>
+      </div>
+      <h1 class="text-white font-bold text-base">我的订单</h1>
+    </div>
+  </div>
+
+  <!-- 订单状态Tab -->
+  <div class="sticky top-0 z-40 bg-white px-4 py-3 shadow-sm">
+    <div class="flex gap-2" id="statusTabs">
+      <div class="status-tab flex-1 text-center py-2 rounded-full text-sm cursor-pointer transition-all bg-[#e8f5ec] text-[#2e9e5a] font-semibold" data-status="all">全部</div>
+      <div class="status-tab flex-1 text-center py-2 rounded-full text-sm cursor-pointer transition-all bg-[#f5f5f5] text-[#666]" data-status="pending">待支付</div>
+      <div class="status-tab flex-1 text-center py-2 rounded-full text-sm cursor-pointer transition-all bg-[#f5f5f5] text-[#666]" data-status="completed">已完成</div>
+      <div class="status-tab flex-1 text-center py-2 rounded-full text-sm cursor-pointer transition-all bg-[#f5f5f5] text-[#666]" data-status="cancelled">已取消</div>
+    </div>
+  </div>
+
+  <!-- 订单列表 -->
+  <div class="px-4 py-3 space-y-3" id="orderList">
+
+    <!-- 订单1 - 待支付 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="pending">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250615001</span>
+        <span class="text-xs font-medium text-[#f39c12]">待支付</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#1e7e42,#3db870);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:book-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug">养老护理员（初级）全程通关班</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：李老师</p>
+          <p class="text-[#e74c3c] font-bold text-base mt-1">¥1,280</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-06-15 14:30</span>
+        <button class="px-5 py-1.5 rounded-full bg-[#f39c12] text-white text-xs font-medium active:scale-95 transition-all">去支付</button>
+      </div>
+    </div>
+
+    <!-- 订单2 - 待支付 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="pending">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250614002</span>
+        <span class="text-xs font-medium text-[#f39c12]">待支付</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#2471a3,#5dade2);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:clipboard-check-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug">老年人能力评估师认证培训</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：王教授</p>
+          <p class="text-[#e74c3c] font-bold text-base mt-1">¥2,580</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-06-14 09:15</span>
+        <button class="px-5 py-1.5 rounded-full bg-[#f39c12] text-white text-xs font-medium active:scale-95 transition-all">去支付</button>
+      </div>
+    </div>
+
+    <!-- 订单3 - 已完成 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="completed">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250510003</span>
+        <span class="text-xs font-medium text-[#2e9e5a]">已完成</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#7d3c98,#bb8fce);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:book-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug">养老护理员（中级）提升班</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：张老师</p>
+          <p class="text-[#e74c3c] font-bold text-base mt-1">¥1,880</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-05-10 16:20</span>
+        <button class="px-5 py-1.5 rounded-full border border-[#2e9e5a] text-[#2e9e5a] text-xs font-medium active:scale-95 transition-all">再次购买</button>
+      </div>
+    </div>
+
+    <!-- 订单4 - 已完成 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="completed">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250425004</span>
+        <span class="text-xs font-medium text-[#2e9e5a]">已完成</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#1abc9c,#48c9b0);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:heart-pulse-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug">急救护理技能专项培训班</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：赵医生</p>
+          <p class="text-[#e74c3c] font-bold text-base mt-1">¥680</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-04-25 11:45</span>
+        <button class="px-5 py-1.5 rounded-full border border-[#2e9e5a] text-[#2e9e5a] text-xs font-medium active:scale-95 transition-all">再次购买</button>
+      </div>
+    </div>
+
+    <!-- 订单5 - 已完成 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="completed">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250315005</span>
+        <span class="text-xs font-medium text-[#2e9e5a]">已完成</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#b7950b,#f4d03f);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:document-text-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug">养老护理员初级考试题库+冲刺卷</h3>
+          <p class="text-xs text-gray-400 mt-1">虚拟商品</p>
+          <p class="text-[#e74c3c] font-bold text-base mt-1">¥198</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-03-15 20:30</span>
+        <button class="px-5 py-1.5 rounded-full border border-[#2e9e5a] text-[#2e9e5a] text-xs font-medium active:scale-95 transition-all">再次购买</button>
+      </div>
+    </div>
+
+    <!-- 订单6 - 已取消 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="cancelled">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250501006</span>
+        <span class="text-xs font-medium text-[#95a5a6]">已取消</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#95a5a6,#bdc3c7);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:book-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug line-through opacity-60">养老机构管理师认证课程</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：刘老师</p>
+          <p class="text-gray-400 font-bold text-base mt-1 line-through">¥3,280</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-05-01 08:50</span>
+        <span class="text-xs text-gray-400">超时未支付，自动取消</span>
+      </div>
+    </div>
+
+    <!-- 订单7 - 已取消 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm order-item" data-status="cancelled">
+      <div class="flex items-center justify-between mb-3 pb-3 border-b border-gray-50">
+        <span class="text-xs text-gray-400">订单号：SZ20250405007</span>
+        <span class="text-xs font-medium text-[#95a5a6]">已取消</span>
+      </div>
+      <div class="flex gap-3">
+        <div class="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center" style="background:linear-gradient(135deg,#95a5a6,#bdc3c7);">
+          <span class="iconify text-white/70 text-2xl" data-icon="solar:shield-check-linear"></span>
+        </div>
+        <div class="flex-1 flex flex-col justify-between min-w-0">
+          <h3 class="font-bold text-sm text-[#333] leading-snug line-through opacity-60">康复护理技术进阶课程</h3>
+          <p class="text-xs text-gray-400 mt-1">讲师：孙老师</p>
+          <p class="text-gray-400 font-bold text-base mt-1 line-through">¥1,580</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
+        <span class="text-xs text-gray-400">2025-04-05 15:20</span>
+        <span class="text-xs text-gray-400">用户主动取消</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // 状态Tab切换 + 筛选
+  var tabs = document.querySelectorAll('.status-tab');
+  var items = document.querySelectorAll('.order-item');
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) {
+        t.classList.remove('bg-[#e8f5ec]', 'text-[#2e9e5a]', 'font-semibold');
+        t.classList.add('bg-[#f5f5f5]', 'text-[#666]');
+      });
+      this.classList.remove('bg-[#f5f5f5]', 'text-[#666]');
+      this.classList.add('bg-[#e8f5ec]', 'text-[#2e9e5a]', 'font-semibold');
+
+      var status = this.dataset.status;
+      items.forEach(function(item) {
+        if (status === 'all' || item.dataset.status === status) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

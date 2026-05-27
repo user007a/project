@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>叁竹培训 - 养老行业培训认证平台</title>
+  <style>
+    /* ========================================
+       Design System: 叁竹培训 PC官网 (中国大学MOOC风格)
+       品牌色 #00cc7e | 背景 #f5f5f5
+    ======================================== */
+    :root {
+      /* 品牌色 */
+      --color-primary: #00cc7e;
+      --color-primary-dark: #00b86e;
+      --color-primary-light: #e6ffed;
+      --color-secondary: #ffa838;
+      --color-accent: #896cff;
+      --color-price: #ff4d4f;
+      --color-price-alt: #ff7a45;
+
+      /* 背景与边框 */
+      --bg-page: #f5f5f5;
+      --bg-card: #FFFFFF;
+      --bg-footer: #1f1f1f;
+      --border-color: #e8e8e8;
+      --border-light: #eeeeee;
+      --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-card-hover: 0 6px 16px rgba(0,0,0,0.12);
+
+      /* 文字色 */
+      --text-primary: #333333;
+      --text-regular: #666666;
+      --text-secondary: #999999;
+      --text-white: #FFFFFF;
+      --text-link: #00cc7e;
+      --text-link-blue: #1890FF;
+
+      /* 字体 */
+      --font-stack: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+      /* 字号 */
+      --fs-logo: 20px;
+      --fs-page-title: 24px;
+      --fs-section-title: 18px;
+      --fs-card-title: 15px;
+      --fs-body: 14px;
+      --fs-aux: 12px;
+      --fs-price: 18px;
+      --fs-tag: 12px;
+      --fs-nav: 14px;
+      --fs-breadcrumb: 12px;
+
+      /* 间距 */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+
+      /* 圆角 */
+      --radius-xs: 2px;
+      --radius-sm: 5px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+
+      /* 布局 */
+      --max-width: 1200px;
+      --header-height: 56px;
+      --sidebar-width: 190px;
+      --aside-width: 280px;
+    }
+
+    /* Reset */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-stack);
+      color: var(--text-primary);
+      background: var(--bg-page);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    ul, ol { list-style: none; }
+    img { display: block; max-width: 100%; }
+    button { border: none; cursor: pointer; font-family: inherit; }
+
+    /* ========================================
+       顶部导航栏
+    ======================================== */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-height);
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,204,126,0.35);
+      transition: box-shadow 0.3s ease;
+    }
+    .header.scrolled {
+      box-shadow: 0 4px 20px rgba(0,204,126,0.4);
+    }
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 24px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      fill: var(--text-white);
+    }
+    .logo-text {
+      font-size: var(--fs-logo);
+      font-weight: 700;
+      color: var(--text-white);
+      white-space: nowrap;
+    }
+    .cat-trigger {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255,255,255,0.9);
+      font-size: var(--fs-body);
+      cursor: pointer;
+      white-space: nowrap;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .cat-trigger:hover { background: rgba(255,255,255,0.15); }
+    .cat-trigger svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .search-box {
+      flex: 1;
+      max-width: 440px;
+      display: flex;
+      height: 36px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--text-white);
+    }
+    .search-cat-select {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: var(--fs-aux);
+      color: var(--text-regular);
+      background: #f5f5f5;
+      border: none;
+      border-right: 1px solid var(--border-color);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 0 12px;
+      font-size: var(--fs-body);
+      font-family: var(--font-stack);
+      color: var(--text-primary);
+    }
+    .search-input::placeholder { color: var(--text-secondary); }
+    .search-btn {
+      width: 56px;
+      background: var(--color-primary-dark);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-btn:hover {
+      background: #00a35e;
+      transform: scale(1.02);
+    }
+    .search-btn:active {
+      transform: scale(0.98);
+    }
+    .search-btn svg { width: 18px; height: 18px; fill: var(--text-white); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .header-nav a {
+      color: rgba(255,255,255,0.9);
+      font-size: var(--fs-nav);
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .header-nav a:hover { color: var(--text-white); }
+    .header-nav .btn-login {
+      padding: 5px 16px;
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .header-nav .btn-login:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.9);
+    }
+    .header-nav .btn-register {
+      padding: 5px 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .header-nav .btn-register:hover { background: rgba(255,255,255,0.3); }
+
+    /* ========================================
+       页面主体
+    ======================================== */
+    .page-body {
+      margin-top: var(--header-height);
+      padding: 20px 0;
+    }
+    .page-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* 三栏布局 */
+    .three-col {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .col-left {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+    }
+    .col-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .col-right {
+      width: var(--aside-width);
+      flex-shrink: 0;
+    }
+
+    /* ========================================
+       左侧分类导航
+    ======================================== */
+    .category-nav {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+    .category-nav-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .category-nav-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--color-primary);
+      border-radius: 2px;
+    }
+    .category-list { padding: 8px 0; }
+    .category-item {
+      position: relative;
+    }
+    .category-item-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 18px;
+      font-size: var(--fs-body);
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border-left: 3px solid transparent;
+    }
+    .category-item-title:hover {
+      color: var(--color-primary);
+      background: linear-gradient(90deg, var(--color-primary-light) 0%, transparent 100%);
+      border-left-color: var(--color-primary);
+    }
+    .category-item-title.active {
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      border-left-color: var(--color-primary);
+    }
+    .category-item-title.active::before {
+      display: none;
+    }
+    .category-item-title svg { width: 12px; height: 12px; fill: var(--text-secondary); transition: transform 0.3s ease; }
+    .category-item.expanded .category-item-title svg { transform: rotate(90deg); }
+    .category-children {
+      display: none;
+      padding: 4px 0 10px;
+      background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--bg-card) 100%);
+    }
+    .category-item.expanded .category-children { display: block; }
+    .category-children a {
+      display: flex;
+      align-items: center;
+      padding: 8px 18px 8px 32px;
+      font-size: 13px;
+      color: var(--text-regular);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .category-children a::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .category-children a:hover {
+      color: var(--color-primary);
+      background: rgba(0,204,126,0.08);
+    }
+    .category-children a:hover::before {
+      opacity: 1;
+    }
+    .category-children a.active {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* ========================================
+       轮播 Banner
+    ======================================== */
+    .banner-section {
+      margin-bottom: var(--spacing-lg);
+    }
+    .banner-carousel {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 16 / 6;
+      background: linear-gradient(135deg, #1a3a2a 0%, #0d2818 50%, #1a3a2a 100%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .banner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0,80,40,0.7) 0%, rgba(0,60,30,0.5) 50%, rgba(0,80,40,0.7) 100%);
+      z-index: 0;
+    }
+    .banner-slides {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    .banner-slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+      position: relative;
+    }
+    .banner-slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.6;
+      z-index: -1;
+    }
+    .banner-slide:nth-child(1)::before {
+      background-image: url('https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&h=600&fit=crop');
+    }
+    .banner-slide:nth-child(2)::before {
+      background-image: url('https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&h=600&fit=crop');
+    }
+    .banner-slide:nth-child(3)::before {
+      background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1600&h=600&fit=crop');
+    }
+    .banner-content {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+    }
+    .banner-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      color: var(--text-white);
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-weight: 500;
+    }
+    .banner-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text-white);
+      line-height: 1.3;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .banner-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .banner-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: var(--color-primary);
+      color: var(--text-white);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,204,126,0.4);
+    }
+    .banner-cta:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,204,126,0.5);
+    }
+    .banner-cta svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .banner-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+    .banner-arrow:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .banner-arrow svg { width: 18px; height: 18px; fill: #fff; }
+    .banner-arrow.prev { left: 16px; }
+    .banner-arrow.next { right: 16px; }
+    .banner-dots {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+    .banner-dot {
+      width: 8px; height: 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .banner-dot.active {
+      width: 28px;
+      background: var(--text-white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .banner-dot:hover:not(.active) {
+      background: rgba(255,255,255,0.7);
+    }
+
+    /* ========================================
+       区块标题
+    ======================================== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: var(--fs-section-title);
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      padding-left: 14px;
+    }
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border-radius: 2px;
+    }
+    .section-title .icon-dot {
+      display: none;
+    }
+    .section-more {
+      font-size: var(--fs-aux);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .section-more:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+    .section-more svg { width: 12px; height: 12px; fill: currentColor; }
+
+    /* ========================================
+       课程卡片
+    ======================================== */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .course-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+    }
+    .course-card-cover {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+    .course-card-cover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0);
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+    .course-card:hover .course-card-cover::after {
+      background: rgba(0,0,0,0.08);
+    }
+    .course-card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .course-card:hover .course-card-cover img {
+      transform: scale(1.08);
+    }
+    .course-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      color: var(--text-white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .badge-free { background: var(--color-primary); }
+    .badge-hot { background: var(--color-secondary); }
+    .badge-new { background: var(--text-link-blue); }
+    .badge-subsidy { background: #52C41A; }
+    .badge-cert { background: #FAAD14; color: #333; }
+    .badge-credit { background: var(--color-accent); }
+
+    .course-card-body { padding: 14px 16px 16px; }
+    .course-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px;
+      height: 45px;
+      transition: color 0.2s ease;
+    }
+    .course-card:hover .course-card-title {
+      color: var(--color-primary);
+    }
+    .course-card-meta {
+      font-size: var(--fs-aux);
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .course-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .stars { display: flex; gap: 1px; }
+    .stars svg { width: 12px; height: 12px; }
+    .star-filled { fill: #FAAD14; }
+    .star-empty { fill: #e8e8e8; }
+    .rating-num { font-size: var(--fs-aux); color: #FAAD14; font-weight: 500; }
+    .course-card-bottom {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .course-price {
+      font-size: var(--fs-price);
+      font-weight: 700;
+      color: var(--color-price);
+    }
+    .course-price .unit { font-size: 12px; }
+    .course-price-original {
+      font-size: var(--fs-aux);
+      color: var(--text-secondary);
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+    .course-card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .card-tag {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 2px;
+      line-height: 1.6;
+    }
+    .card-tag-green { color: var(--color-primary); background: var(--color-primary-light); }
+    .card-tag-gold { color: #D48806; background: #fffbe6; }
+    .card-tag-purple { color: #722ED1; background: #f5f0ff; }
+    .card-tag-blue { color: #1890FF; background: #e6f7ff; }
+
+    /* ========================================
+       直播公开课
+    ======================================== */
+    .live-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+    .live-scroll::-webkit-scrollbar { height: 4px; }
+    .live-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+    .live-card {
+      flex-shrink: 0;
+      width: 180px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+    .live-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+    .live-card-avatar {
+      width: 100%;
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .live-card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .live-indicator {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 11px;
+      border-radius: 2px;
+    }
+    .live-indicator .dot {
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      animation: livePulse 1.5s infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .live-card-info { padding: 10px 12px; }
+    .live-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .live-card-time {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ========================================
+       精选课（大封面）
+    ======================================== */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .featured-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .featured-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .featured-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+    .featured-card:hover::before {
+      transform: scaleX(1);
+    }
+    .featured-card-cover {
+      aspect-ratio: 16 / 10;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-card-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .featured-card-body { padding: 14px; }
+    .featured-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .featured-card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .featured-card-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .price-tag {
+      padding: 2px 8px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 2px;
+    }
+    .featured-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+    .featured-price .unit { font-size: 13px; }
+
+    /* ========================================
+       新闻推荐
+    ======================================== */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .news-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .news-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+    }
+    .news-card-cover {
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #e8f4f8, #e6ffed);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .news-card-cover svg { width: 32px; height: 32px; fill: #ddd; }
+    .news-card-body { padding: 12px 14px; }
+    .news-card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .news-card-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ========================================
+       右侧边栏
+    ======================================== */
+    .aside-block {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .aside-block-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* 登录卡片 */
+    .login-card { padding: 24px 16px; text-align: center; }
+    .login-avatar {
+      width: 56px; height: 56px;
+      margin: 0 auto 12px;
+      background: #f0f0f0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-avatar svg { width: 28px; height: 28px; fill: #ccc; }
+    .login-card p {
+      font-size: 14px;
+      color: var(--text-regular);
+      margin-bottom: 16px;
+    }
+    .login-btns { display: flex; gap: 10px; justify-content: center; }
+    .btn-primary {
+      padding: 8px 24px;
+      background: var(--color-primary);
+      color: var(--text-white);
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--color-primary-dark); }
+    .btn-outline {
+      padding: 8px 24px;
+      background: var(--text-white);
+      color: var(--color-primary);
+      font-size: 13px;
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--color-primary-light); }
+
+    /* 推荐课程 */
+    .rec-course-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .rec-course-item:hover { background: #fafafa; }
+    .rec-course-thumb {
+      width: 80px; height: 50px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #e6ffed, #f5eef8);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rec-course-thumb svg { width: 18px; height: 18px; fill: #ddd; }
+    .rec-course-info { flex: 1; min-width: 0; }
+    .rec-course-title {
+      font-size: 13px;
+      color: var(--text-primary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .rec-course-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+
+    /* 排行榜 */
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .rank-item:hover { background: #fafafa; }
+    .rank-num {
+      width: 20px; height: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .rank-num.top1 { background: #E4393C; color: #fff; }
+    .rank-num.top2 { background: #FF6600; color: #fff; }
+    .rank-num.top3 { background: #FAAD14; color: #fff; }
+    .rank-num.normal { background: #f0f0f0; color: #999; }
+    .rank-title {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .rank-count {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* 推广位 */
+    .promo-card {
+      padding: 16px;
+      background: linear-gradient(135deg, #e6ffed, #f0fff5);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .promo-card:hover { transform: scale(1.02); }
+    .promo-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 6px;
+    }
+    .promo-card-desc {
+      font-size: 12px;
+      color: var(--text-regular);
+      margin-bottom: 12px;
+    }
+    .promo-card-btn {
+      display: inline-block;
+      padding: 6px 20px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ========================================
+       页脚
+    ======================================== */
+    .footer {
+      background: var(--bg-footer);
+      color: var(--text-white);
+      margin-top: var(--spacing-xl);
+    }
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 20px 20px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+    .footer-brand .footer-logo {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .footer-brand p {
+      font-size: 13px;
+      color: #999;
+      line-height: 1.6;
+    }
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .footer-links a {
+      display: block;
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-white); }
+    .footer-bottom {
+      border-top: 1px solid #444;
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* ========================================
+       响应式
+    ======================================== */
+    @media (max-width: 1439px) {
+      .course-grid, .featured-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1199px) {
+      .col-left { display: none; }
+    }
+    @media (max-width: 991px) {
+      .col-right { display: none; }
+      .course-grid, .featured-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .header-nav .nav-text { display: none; }
+      .course-grid, .featured-grid, .news-grid { grid-template-columns: 1fr; }
+      .banner-title { font-size: 20px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ========================================
+       入场动画 (Entrance Animations)
+    ======================================== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .animate-slideInLeft {
+      animation: slideInLeft 0.5s ease forwards;
+    }
+    .animate-scaleIn {
+      animation: scaleIn 0.4s ease forwards;
+    }
+    .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.15s; opacity: 0; }
+    .stagger-4 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-5 { animation-delay: 0.25s; opacity: 0; }
+    .stagger-6 { animation-delay: 0.3s; opacity: 0; }
+    .stagger-7 { animation-delay: 0.35s; opacity: 0; }
+    .stagger-8 { animation-delay: 0.4s; opacity: 0; }
+
+    /* ========================================
+       增强卡片悬停效果
+    ======================================== */
+    .course-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      transition: border-color 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .course-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+    .course-card:hover::before {
+      border-color: var(--color-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 顶部导航栏 ==================== -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <svg class="logo-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="28" height="28" rx="6" fill="rgba(255,255,255,0.2)"/>
+          <text x="16" y="22" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">叁</text>
+        </svg>
+        <span class="logo-text">叁竹培训</span>
+      </div>
+
+      <div class="cat-trigger" id="catTrigger">
+        <svg viewBox="0 0 14 14"><path d="M1 3h12M1 7h12M1 11h12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        <span>课程分类</span>
+      </div>
+
+      <div class="search-box">
+        <select class="search-cat-select">
+          <option>全部课程</option>
+          <option>养老护理员</option>
+          <option>老年人能力评估师</option>
+          <option>健康照护师</option>
+          <option>营养配餐员</option>
+        </select>
+        <input class="search-input" type="text" placeholder="搜索课程、讲师、证书..." id="searchInput">
+        <button class="search-btn" onclick="handleSearch()">
+          <svg viewBox="0 0 18 18"><path d="M12.5 11h-.79l-.28-.27A6.47 6.47 0 0013 7.5 6.5 6.5 0 106.5 14c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L17.49 16l-4.99-5zm-6 0A3.5 3.5 0 1110 7.5 3.49 3.49 0 016.5 11z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <nav class="header-nav">
+        <a href="user-center.html">我的学习</a>
+        <a href="#" class="btn-login">登录</a>
+        <a href="#" class="btn-register">注册</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== 页面主体 ==================== -->
+  <div class="page-body">
+    <div class="page-container">
+      <div class="three-col">
+
+        <!-- ====== 左侧分类导航 ====== -->
+        <aside class="col-left">
+          <nav class="category-nav">
+            <div class="category-nav-title">培训分类</div>
+            <ul class="category-list">
+              <li class="category-item expanded">
+                <div class="category-item-title active" onclick="toggleCategory(this)">
+                  养老护理员
+                  <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                </div>
+                <div class="category-children">
+                  <a href="course-list.html" class="active">初级养老护理员</a>
+                  <a href="course-list.html">中级养老护理员</a>
+                  <a href="course-list.html">高级养老护理员</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">
+                  老年人能力评估师
+                  <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                </div>
+                <div class="category-children">
+                  <a href="course-list.html">初级评估师</a>
+                  <a href="course-list.html">中级评估师</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">
+                  健康照护师
+                  <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                </div>
+                <div class="category-children">
+                  <a href="course-list.html">基础照护</a>
+                  <a href="course-list.html">高级照护</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">
+                  营养配餐员
+                  <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                </div>
+                <div class="category-children">
+                  <a href="course-list.html">老年营养基础</a>
+                  <a href="course-list.html">特殊膳食配餐</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">
+                  继续教育
+                  <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                </div>
+                <div class="category-children">
+                  <a href="course-list.html">年度继续教育</a>
+                  <a href="course-list.html">专业技能提升</a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+
+        <!-- ====== 中间主内容 ====== -->
+        <main class="col-main">
+
+          <!-- Banner 轮播 -->
+          <section class="banner-section">
+            <div class="banner-carousel" id="bannerCarousel">
+              <div class="banner-slides" id="bannerSlides">
+                <div class="banner-slide">
+                  <div class="banner-content">
+                    <span class="banner-tag">政府补贴课程</span>
+                    <h2 class="banner-title">养老护理员职业资格认证培训</h2>
+                    <p class="banner-desc">人社部认证 · 在线学习 · 持证上岗 · 政府补贴低至 —</p>
+                    <a href="course-list.html" class="banner-cta">
+                      立即报名
+                      <svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <div class="banner-content">
+                    <span class="banner-tag">新课上架</span>
+                    <h2 class="banner-title">老年人能力评估师培训</h2>
+                    <p class="banner-desc">国家新兴职业 · 评估师缺口大 · 线上学习灵活安排</p>
+                    <a href="course-list.html" class="banner-cta">
+                      了解详情
+                      <svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <div class="banner-content">
+                    <span class="banner-tag">免费试听</span>
+                    <h2 class="banner-title">健康照护师免费公开课</h2>
+                    <p class="banner-desc">零基础入门 · 名师直播带学 · 随时回放</p>
+                    <a href="course-list.html" class="banner-cta">
+                      免费试听
+                      <svg viewBox="0 0 14 14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <button class="banner-arrow prev" onclick="slideBanner(-1)">
+                <svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <button class="banner-arrow next" onclick="slideBanner(1)">
+                <svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <div class="banner-dots" id="bannerDots">
+                <span class="banner-dot active" onclick="goToSlide(0)"></span>
+                <span class="banner-dot" onclick="goToSlide(1)"></span>
+                <span class="banner-dot" onclick="goToSlide(2)"></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 直播公开课 -->
+          <section style="margin-bottom: 28px;">
+            <div class="section-header">
+              <h2 class="section-title"><span class="icon-dot"></span>直播公开课</h2>
+              <a href="course-list.html" class="section-more">更多 <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="live-scroll">
+              <div class="live-card">
+                <div class="live-card-avatar">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=200&h=200&fit=crop" alt="直播课程">
+                  <span class="live-indicator"><span class="dot"></span>直播中</span>
+                </div>
+                <div class="live-card-info">
+                  <div class="live-card-title">老年人日常生活照护实操要点</div>
+                  <div class="live-card-time">李芳老师 · 今天 19:00</div>
+                </div>
+              </div>
+              <div class="live-card">
+                <div class="live-card-avatar">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=200&h=200&fit=crop" alt="直播课程">
+                </div>
+                <div class="live-card-info">
+                  <div class="live-card-title">老年人能力评估标准解读</div>
+                  <div class="live-card-time">王建国老师 · 明天 20:00</div>
+                </div>
+              </div>
+              <div class="live-card">
+                <div class="live-card-avatar">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=200&h=200&fit=crop" alt="直播课程">
+                </div>
+                <div class="live-card-info">
+                  <div class="live-card-title">养老机构安全管理规范</div>
+                  <div class="live-card-time">张丽华老师 · 周三 19:30</div>
+                </div>
+              </div>
+              <div class="live-card">
+                <div class="live-card-avatar">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=200&h=200&fit=crop" alt="直播课程">
+                </div>
+                <div class="live-card-info">
+                  <div class="live-card-title">老年人营养膳食搭配指南</div>
+                  <div class="live-card-time">陈晓红老师 · 周四 20:00</div>
+                </div>
+              </div>
+              <div class="live-card">
+                <div class="live-card-avatar">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=200&h=200&fit=crop" alt="直播课程">
+                </div>
+                <div class="live-card-info">
+                  <div class="live-card-title">养老护理员考试通关秘籍</div>
+                  <div class="live-card-time">刘志远老师 · 周五 19:00</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 精选课 -->
+          <section style="margin-bottom: 28px;">
+            <div class="section-header">
+              <h2 class="section-title"><span class="icon-dot"></span>精选课程</h2>
+              <a href="course-list.html" class="section-more">更多 <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="featured-grid">
+              <div class="featured-card">
+                <div class="featured-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="精选课程">
+                  <span class="course-badge badge-cert">人社部认证</span>
+                </div>
+                <div class="featured-card-body">
+                  <div class="featured-card-title">养老护理员（初级）考证培训</div>
+                  <div class="featured-card-desc">系统学习养老护理基础知识与实操技能，备考初级养老护理员职业资格认证</div>
+                  <div class="featured-card-price">
+                    <span class="price-tag">政府补贴价</span>
+                    <span class="featured-price"><span class="unit">¥</span>680</span>
+                  </div>
+                </div>
+              </div>
+              <div class="featured-card">
+                <div class="featured-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="精选课程">
+                  <span class="course-badge badge-subsidy">政府补贴</span>
+                </div>
+                <div class="featured-card-body">
+                  <div class="featured-card-title">老年人能力评估师认证培训</div>
+                  <div class="featured-card-desc">掌握老年人能力评估标准与方法，获取评估师职业资格证书</div>
+                  <div class="featured-card-price">
+                    <span class="price-tag">政府补贴价</span>
+                    <span class="featured-price"><span class="unit">¥</span>980</span>
+                  </div>
+                </div>
+              </div>
+              <div class="featured-card">
+                <div class="featured-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="精选课程">
+                  <span class="course-badge badge-hot">热销</span>
+                </div>
+                <div class="featured-card-body">
+                  <div class="featured-card-title">健康照护师（中级）技能提升</div>
+                  <div class="featured-card-desc">提升专业照护能力，掌握高级护理技能，职业发展更进一步</div>
+                  <div class="featured-card-price">
+                    <span class="price-tag">热门课程</span>
+                    <span class="featured-price"><span class="unit">¥</span>1280</span>
+                  </div>
+                </div>
+              </div>
+              <div class="featured-card">
+                <div class="featured-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="精选课程">
+                  <span class="course-badge badge-new">新课</span>
+                </div>
+                <div class="featured-card-body">
+                  <div class="featured-card-title">老年营养与膳食指导精品课</div>
+                  <div class="featured-card-desc">科学搭配老年膳食，满足特殊营养需求，提升膳食管理能力</div>
+                  <div class="featured-card-price">
+                    <span class="price-tag">新课特惠</span>
+                    <span class="featured-price"><span class="unit">¥</span>420</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 热门课程 -->
+          <section style="margin-bottom: 28px;">
+            <div class="section-header">
+              <h2 class="section-title"><span class="icon-dot"></span>热门课程</h2>
+              <a href="course-list.html" class="section-more">更多 <svg viewBox="0 0 12 12"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></a>
+            </div>
+            <div class="course-grid">
+              <div class="course-card" onclick="window.location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&h=450&fit=crop" alt="养老护理员培训">
+                  <span class="course-badge badge-subsidy">政府补贴</span>
+                </div>
+                <div class="course-card-body">
+                  <div class="course-card-title">养老护理员（初级）考证培训</div>
+                  <div class="course-card-meta">李芳老师 · 48课时</div>
+                  <div class="course-card-rating">
+                    <div class="stars">
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                    </div>
+                    <span class="rating-num">4.9</span>
+                  </div>
+                  <div class="course-card-bottom">
+                    <div><span class="course-price"><span class="unit">¥</span>680</span><span class="course-price-original">¥1200</span></div>
+                  </div>
+                  <div class="course-card-tags">
+                    <span class="card-tag card-tag-green">持证上岗必备</span>
+                    <span class="card-tag card-tag-gold">人社部认证</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="window.location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&h=450&fit=crop" alt="养老护理技能提升">
+                  <span class="course-badge badge-hot">热销</span>
+                </div>
+                <div class="course-card-body">
+                  <div class="course-card-title">养老护理员（中级）技能提升培训</div>
+                  <div class="course-card-meta">王建国老师 · 56课时</div>
+                  <div class="course-card-rating">
+                    <div class="stars">
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-empty"/></svg>
+                    </div>
+                    <span class="rating-num">4.7</span>
+                  </div>
+                  <div class="course-card-bottom">
+                    <div><span class="course-price"><span class="unit">¥</span>980</span><span class="course-price-original">¥1600</span></div>
+                  </div>
+                  <div class="course-card-tags">
+                    <span class="card-tag card-tag-green">政府补贴课程</span>
+                    <span class="card-tag card-tag-gold">人社部认证</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="window.location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=450&fit=crop" alt="养老护理职业道德">
+                  <span class="course-badge badge-free">免费</span>
+                </div>
+                <div class="course-card-body">
+                  <div class="course-card-title">养老护理入门：职业道德与服务意识</div>
+                  <div class="course-card-meta">张丽华老师 · 6课时</div>
+                  <div class="course-card-rating">
+                    <div class="stars">
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1 3.3L6 7.5 2.7 9.3l1-3.3L1 4h3.5z" class="star-filled"/></svg>
+                      <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3H11l-2.7 2 1

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 叁竹培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F0F2F5] flex">
+
+    <!-- 左侧装饰区 -->
+    <div class="hidden lg:flex lg:w-[55%] bg-gradient-to-br from-blue-600 to-blue-800 relative overflow-hidden">
+        <!-- 装饰元素 -->
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" viewBox="0 0 800 600" fill="none">
+                <circle cx="650" cy="100" r="200" fill="white" opacity="0.08"/>
+                <circle cx="150" cy="450" r="150" fill="white" opacity="0.06"/>
+                <circle cx="400" cy="300" r="300" fill="white" opacity="0.04"/>
+            </svg>
+        </div>
+        <div class="relative z-10 flex flex-col justify-center px-20">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <span class="iconify text-white text-2xl" data-icon="ri:plant-line"></span>
+                </div>
+                <span class="text-white text-2xl font-bold">叁竹培训系统</span>
+            </div>
+            <h1 class="text-white text-4xl font-bold leading-tight mb-4">专业养老培训<br/>一站式管理平台</h1>
+            <p class="text-blue-100 text-lg leading-relaxed max-w-md">面向养老行业从业人员，提供在线培训、考证服务与学时管理，助力养老人才专业成长。</p>
+            <div class="mt-12 grid grid-cols-3 gap-8 max-w-lg">
+                <div>
+                    <div class="text-white text-3xl font-bold">—</div>
+                    <div class="text-blue-200 text-sm mt-1">培训课程</div>
+                </div>
+                <div>
+                    <div class="text-white text-3xl font-bold">—</div>
+                    <div class="text-blue-200 text-sm mt-1">持证学员</div>
+                </div>
+                <div>
+                    <div class="text-white text-3xl font-bold">—</div>
+                    <div class="text-blue-200 text-sm mt-1">合作机构</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧登录区 -->
+    <div class="flex-1 flex items-center justify-center p-8">
+        <div class="w-full max-w-md">
+            <!-- 移动端 Logo -->
+            <div class="lg:hidden flex items-center gap-3 mb-8 justify-center">
+                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span class="iconify text-white text-xl" data-icon="ri:plant-line"></span>
+                </div>
+                <span class="text-gray-900 text-xl font-bold">叁竹培训</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">欢迎回来</h2>
+            <p class="text-gray-500 mb-8">请登录后台管理系统</p>
+
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <!-- 用户名 -->
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">账号</label>
+                    <div class="relative">
+                        <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="ri:user-line"></span>
+                        <input type="text" id="username" placeholder="请输入管理员账号"
+                            class="w-full border border-gray-200 pl-10 pr-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
+                            value="admin">
+                    </div>
+                </div>
+
+                <!-- 密码 -->
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">密码</label>
+                    <div class="relative">
+                        <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="ri:lock-line"></span>
+                        <input type="password" id="password" placeholder="请输入密码"
+                            class="w-full border border-gray-200 pl-10 pr-10 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-all"
+                            value="••••••••">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <span class="iconify" data-icon="ri:eye-off-line" id="eyeIcon"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 记住 & 忘记 -->
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-600">7天内免登录</span>
+                    </label>
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">忘记密码？</a>
+                </div>
+
+                <!-- 错误提示 -->
+                <div id="errorMsg" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg flex items-center gap-2">
+                    <span class="iconify" data-icon="ri:error-warning-line"></span>
+                    <span id="errorText">账号或密码错误</span>
+                </div>
+
+                <!-- 登录按钮 -->
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    登 录
+                </button>
+            </form>
+
+            <!-- 底部 -->
+            <div class="mt-8 text-center">
+                <p class="text-xs text-gray-400">© 2025 叁竹培训 · 养老培训管理平台</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-icon', 'ri:eye-line');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-icon', 'ri:eye-off-line');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                const errorMsg = document.getElementById('errorMsg');
+                const errorText = document.getElementById('errorText');
+                errorText.textContent = '请输入账号和密码';
+                errorMsg.classList.remove('hidden');
+                return false;
+            }
+
+            // 模拟登录
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.textContent = '登录中...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 800);
+
+            return false;
+        }
+    </script>
+</body>
+</html>
