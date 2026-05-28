@@ -13,11 +13,14 @@
 <body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
 
     <!-- 侧边栏 -->
-    <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
+    <aside id="sidebar" class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen transition-all duration-300">
         <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
             <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"><span class="iconify text-white text-lg" data-icon="ri:plant-line"></span></div>
-            <span class="text-white font-bold text-base">叁竹培训系统</span>
+            <span id="sidebarTitle" class="text-white font-bold text-base">叁竹培训系统</span>
         </div>
+        <button id="sidebarToggle" class="absolute top-1/2 -right-3 transform -translate-y-1/2 w-6 h-12 bg-[#001529] border border-white/10 rounded-r-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#002140] transition-all">
+            <span class="iconify text-lg" data-icon="ri:chevron-left-line"></span>
+        </button>
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             <a href="dashboard.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md"><span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span><span class="text-sm">工作台</span></a>
             <div class="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">学员管理</div>
@@ -607,5 +610,60 @@
             </div>
         </main>
     </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarTitle = document.getElementById('sidebarTitle');
+        const sidebarNav = sidebar.querySelector('nav');
+        const menuTexts = sidebarNav.querySelectorAll('span.text-sm:not(.iconify)');
+        const menuDividers = sidebarNav.querySelectorAll('div.pt-4');
+
+        let isCollapsed = false;
+
+        sidebarToggle.addEventListener('click', function() {
+            isCollapsed = !isCollapsed;
+            
+            if (isCollapsed) {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-16');
+                sidebarTitle.style.display = 'none';
+                
+                menuTexts.forEach(text => {
+                    text.style.display = 'none';
+                });
+                
+                menuDividers.forEach(divider => {
+                    divider.style.display = 'none';
+                });
+                
+                sidebarNav.querySelectorAll('a').forEach(link => {
+                    link.classList.add('justify-center');
+                    link.querySelector('span.iconify').classList.remove('mr-3');
+                });
+                
+                sidebarToggle.querySelector('span').setAttribute('data-icon', 'ri:chevron-right-line');
+            } else {
+                sidebar.classList.remove('w-16');
+                sidebar.classList.add('w-64');
+                sidebarTitle.style.display = 'block';
+                
+                menuTexts.forEach(text => {
+                    text.style.display = 'block';
+                });
+                
+                menuDividers.forEach(divider => {
+                    divider.style.display = 'block';
+                });
+                
+                sidebarNav.querySelectorAll('a').forEach(link => {
+                    link.classList.remove('justify-center');
+                    link.querySelector('span.iconify').classList.add('mr-3');
+                });
+                
+                sidebarToggle.querySelector('span').setAttribute('data-icon', 'ri:chevron-left-line');
+            }
+        });
+    </script>
 </body>
 </html>
