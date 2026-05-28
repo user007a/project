@@ -1,0 +1,1263 @@
+/* ================================================
+   Design System - 叁竹培训后台管理系统
+   统一设计规范，专业稳重的企业级风格
+   ================================================ */
+
+:root {
+  /* ============ 品牌色系统 ============ */
+  --admin-color-primary: #1E40AF;
+  --admin-color-primary-dark: #1E3A8A;
+  --admin-color-primary-light: #3B82F6;
+  --admin-color-primary-50: #EFF6FF;
+  --admin-color-primary-100: #DBEAFE;
+  --admin-color-primary-200: #BFDBFE;
+
+  /* ============ 辅助色系 ============ */
+  --admin-color-accent-blue: #0EA5E9;
+  --admin-color-accent-orange: #F97316;
+  --admin-color-accent-purple: #8B5CF6;
+  --admin-color-accent-cyan: #06B6D4;
+  --admin-color-accent-rose: #F43F5E;
+  --admin-color-accent-emerald: #10B981;
+
+  /* ============ 语义色彩 ============ */
+  --admin-color-success: #10B981;
+  --admin-color-warning: #F59E0B;
+  --admin-color-error: #EF4444;
+  --admin-color-info: #3B82F6;
+
+  /* ============ 中性色系统 ============ */
+  --admin-color-gray-50: #F9FAFB;
+  --admin-color-gray-100: #F3F4F6;
+  --admin-color-gray-200: #E5E7EB;
+  --admin-color-gray-300: #D1D5DB;
+  --admin-color-gray-400: #9CA3AF;
+  --admin-color-gray-500: #6B7280;
+  --admin-color-gray-600: #4B5563;
+  --admin-color-gray-700: #374151;
+  --admin-color-gray-800: #1F2937;
+  --admin-color-gray-900: #111827;
+
+  /* ============ 背景色系统 ============ */
+  --admin-color-bg-primary: #F0F2F5;
+  --admin-color-bg-card: #FFFFFF;
+  --admin-color-bg-sidebar: #001529;
+  --admin-color-bg-header: #FFFFFF;
+
+  /* ============ 文字色系统 ============ */
+  --admin-text-primary: #1F2937;
+  --admin-text-regular: #4B5563;
+  --admin-text-secondary: #6B7280;
+  --admin-text-muted: #9CA3AF;
+  --admin-text-white: #FFFFFF;
+  --admin-text-link: var(--admin-color-primary);
+
+  /* ============ 边框色 ============ */
+  --admin-border-color: #E5E7EB;
+  --admin-border-light: #F3F4F6;
+  --admin-border-sidebar: rgba(255, 255, 255, 0.1);
+
+  /* ============ 间距系统 ============ */
+  --admin-spacing-xs: 4px;
+  --admin-spacing-sm: 8px;
+  --admin-spacing-md: 16px;
+  --admin-spacing-lg: 24px;
+  --admin-spacing-xl: 32px;
+  --admin-spacing-2xl: 48px;
+
+  /* ============ 圆角系统 ============ */
+  --admin-radius-sm: 6px;
+  --admin-radius-md: 8px;
+  --admin-radius-lg: 12px;
+  --admin-radius-xl: 16px;
+  --admin-radius-full: 9999px;
+
+  /* ============ 字体大小系统 ============ */
+  --admin-font-xs: 11px;
+  --admin-font-sm: 12px;
+  --admin-font-base: 14px;
+  --admin-font-lg: 16px;
+  --admin-font-xl: 18px;
+  --admin-font-2xl: 20px;
+  --admin-font-3xl: 24px;
+  --admin-font-4xl: 28px;
+
+  /* ============ 字体粗细 ============ */
+  --admin-font-weight-normal: 400;
+  --admin-font-weight-medium: 500;
+  --admin-font-weight-semibold: 600;
+  --admin-font-weight-bold: 700;
+
+  /* ============ 阴影系统 ============ */
+  --admin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --admin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --admin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --admin-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  --admin-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --admin-shadow-card-hover: 0 8px 24px rgba(30, 64, 175, 0.12);
+  --admin-shadow-floating: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* ============ 过渡动画系统 ============ */
+  --admin-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --admin-transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --admin-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ============ 布局系统 ============ */
+  --admin-max-width: 1920px;
+  --admin-header-height: 64px;
+  --admin-sidebar-width: 240px;
+  --admin-sidebar-width-collapsed: 64px;
+
+  /* ============ Z-index 层级 ============ */
+  --admin-z-dropdown: 100;
+  --admin-z-sticky: 200;
+  --admin-z-modal: 300;
+  --admin-z-toast: 400;
+}
+
+/* ================================================
+   全局重置与基础样式
+   ================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--admin-font-base);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.admin-layout {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Microsoft YaHei', sans-serif;
+  color: var(--admin-text-primary);
+  background-color: var(--admin-color-bg-primary);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--admin-transition-fast);
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--admin-transition-fast);
+}
+
+/* ================================================
+   侧边栏样式
+   ================================================ */
+.admin-sidebar {
+  width: var(--admin-sidebar-width);
+  background-color: var(--admin-color-bg-sidebar);
+  color: var(--admin-text-white);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--admin-z-sticky);
+  transition: width var(--admin-transition-normal);
+}
+
+.admin-sidebar.collapsed {
+  width: var(--admin-sidebar-width-collapsed);
+}
+
+.admin-sidebar-header {
+  height: var(--admin-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--admin-spacing-lg);
+  border-bottom: 1px solid var(--admin-border-sidebar);
+  gap: var(--admin-spacing-md);
+}
+
+.admin-sidebar-header .logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--admin-color-primary-light), var(--admin-color-primary));
+  border-radius: var(--admin-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-sidebar-header .logo-text {
+  font-size: var(--admin-font-lg);
+  font-weight: var(--admin-font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-sidebar.collapsed .logo-text {
+  display: none;
+}
+
+.admin-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--admin-spacing-md) 0;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--admin-radius-full);
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.admin-sidebar-group-title {
+  padding: var(--admin-spacing-sm) var(--admin-spacing-lg);
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-semibold);
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: var(--admin-spacing-md);
+}
+
+.admin-sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  color: rgba(255, 255, 255, 0.85);
+  transition: all var(--admin-transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.admin-sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--admin-text-white);
+}
+
+.admin-sidebar-link.active {
+  background-color: var(--admin-color-primary);
+  color: var(--admin-text-white);
+  border-left-color: var(--admin-color-primary-light);
+}
+
+.admin-sidebar-link .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-sidebar-link .label {
+  margin-left: var(--admin-spacing-md);
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-sidebar.collapsed .label {
+  display: none;
+}
+
+.admin-sidebar.collapsed .admin-sidebar-group-title {
+  display: none;
+}
+
+.admin-sidebar.collapsed .admin-sidebar-link {
+  justify-content: center;
+  padding: var(--admin-spacing-md);
+}
+
+/* ================================================
+   顶部栏样式
+   ================================================ */
+.admin-header {
+  height: var(--admin-header-height);
+  background-color: var(--admin-color-bg-header);
+  border-bottom: 1px solid var(--admin-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--admin-spacing-lg);
+  position: sticky;
+  top: 0;
+  z-index: var(--admin-z-sticky);
+  box-shadow: var(--admin-shadow-sm);
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+}
+
+.admin-header-title {
+  font-size: var(--admin-font-xl);
+  font-weight: var(--admin-font-weight-bold);
+  color: var(--admin-text-primary);
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-sm);
+}
+
+.admin-header-btn {
+  padding: var(--admin-spacing-sm) var(--admin-spacing-md);
+  border-radius: var(--admin-radius-md);
+  background: transparent;
+  color: var(--admin-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-xs);
+  transition: all var(--admin-transition-fast);
+}
+
+.admin-header-btn:hover {
+  background-color: var(--admin-color-gray-100);
+  color: var(--admin-text-primary);
+}
+
+.admin-header-btn.active {
+  background-color: var(--admin-color-primary-100);
+  color: var(--admin-color-primary);
+}
+
+.admin-header-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--admin-border-color);
+}
+
+.admin-user-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+  padding: var(--admin-spacing-sm) var(--admin-spacing-md);
+  border-radius: var(--admin-radius-md);
+  cursor: pointer;
+  transition: all var(--admin-transition-fast);
+}
+
+.admin-user-menu:hover {
+  background-color: var(--admin-color-gray-100);
+}
+
+.admin-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--admin-radius-full);
+  background: linear-gradient(135deg, var(--admin-color-primary-light), var(--admin-color-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--admin-text-white);
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-semibold);
+}
+
+.admin-user-name {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  color: var(--admin-text-primary);
+  white-space: nowrap;
+}
+
+.admin-user-arrow {
+  color: var(--admin-text-muted);
+  transition: transform var(--admin-transition-fast);
+}
+
+.admin-user-menu:hover .admin-user-arrow {
+  transform: rotate(180deg);
+}
+
+/* ================================================
+   主内容区样式
+   ================================================ */
+.admin-main {
+  margin-left: var(--admin-sidebar-width);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left var(--admin-transition-normal);
+}
+
+.admin-sidebar.collapsed + .admin-main {
+  margin-left: var(--admin-sidebar-width-collapsed);
+}
+
+.admin-content {
+  flex: 1;
+  padding: var(--admin-spacing-lg);
+  overflow-y: auto;
+}
+
+.admin-sidebar.collapsed ~ .admin-main .admin-content {
+  padding-left: calc(var(--admin-spacing-lg) + (var(--admin-sidebar-width) - var(--admin-sidebar-width-collapsed)) / 2);
+}
+
+/* ================================================
+   卡片组件样式
+   ================================================ */
+.admin-card {
+  background-color: var(--admin-color-bg-card);
+  border-radius: var(--admin-radius-lg);
+  border: 1px solid var(--admin-border-light);
+  box-shadow: var(--admin-shadow-card);
+  overflow: hidden;
+  transition: all var(--admin-transition-normal);
+}
+
+.admin-card:hover {
+  box-shadow: var(--admin-shadow-card-hover);
+}
+
+.admin-card-header {
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  border-bottom: 1px solid var(--admin-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-card-title {
+  font-size: var(--admin-font-lg);
+  font-weight: var(--admin-font-weight-bold);
+  color: var(--admin-text-primary);
+}
+
+.admin-card-subtitle {
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-secondary);
+}
+
+.admin-card-body {
+  padding: var(--admin-spacing-lg);
+}
+
+.admin-card-footer {
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  border-top: 1px solid var(--admin-border-light);
+  background-color: var(--admin-color-gray-50);
+}
+
+/* ================================================
+   统计卡片样式
+   ================================================ */
+.admin-stat-card {
+  background-color: var(--admin-color-bg-card);
+  border-radius: var(--admin-radius-lg);
+  border: 1px solid var(--admin-border-light);
+  box-shadow: var(--admin-shadow-card);
+  padding: var(--admin-spacing-lg);
+  transition: all var(--admin-transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.05) 0%, transparent 70%);
+  transition: transform var(--admin-transition-slow);
+}
+
+.admin-stat-card:hover {
+  box-shadow: var(--admin-shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.admin-stat-card:hover::before {
+  transform: scale(1.5);
+}
+
+.admin-stat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.admin-stat-info {
+  flex: 1;
+}
+
+.admin-stat-label {
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-semibold);
+  color: var(--admin-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--admin-spacing-sm);
+}
+
+.admin-stat-value {
+  font-size: var(--admin-font-3xl);
+  font-weight: var(--admin-font-weight-bold);
+  color: var(--admin-text-primary);
+  line-height: 1.2;
+}
+
+.admin-stat-change {
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+  margin-top: var(--admin-spacing-xs);
+}
+
+.admin-stat-change.up {
+  color: var(--admin-color-success);
+}
+
+.admin-stat-change.down {
+  color: var(--admin-color-error);
+}
+
+.admin-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--admin-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--admin-transition-fast);
+}
+
+.admin-stat-card:hover .admin-stat-icon {
+  transform: scale(1.05);
+}
+
+.admin-stat-icon.blue {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--admin-color-accent-blue);
+}
+
+.admin-stat-icon.emerald {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--admin-color-accent-emerald);
+}
+
+.admin-stat-icon.purple {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--admin-color-accent-purple);
+}
+
+.admin-stat-icon.orange {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: var(--admin-color-accent-orange);
+}
+
+/* ================================================
+   渐变统计卡片样式
+   ================================================ */
+.admin-stat-card-gradient {
+  border-radius: var(--admin-radius-lg);
+  padding: var(--admin-spacing-lg);
+  color: var(--admin-text-white);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--admin-transition-normal);
+}
+
+.admin-stat-card-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+.admin-stat-card-gradient:hover {
+  transform: translateY(-2px);
+}
+
+.admin-stat-card-gradient .admin-stat-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-stat-card-gradient .admin-stat-value {
+  color: var(--admin-text-white);
+}
+
+.admin-stat-card-gradient .admin-stat-change {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-stat-card-gradient .admin-stat-icon {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--admin-text-white);
+}
+
+.admin-stat-card-gradient.blue {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+}
+
+.admin-stat-card-gradient.emerald {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.admin-stat-card-gradient.purple {
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+}
+
+.admin-stat-card-gradient.orange {
+  background: linear-gradient(135deg, #EA580C, #C2410C);
+}
+
+/* ================================================
+   按钮组件样式
+   ================================================ */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--admin-spacing-sm);
+  padding: var(--admin-spacing-sm) var(--admin-spacing-lg);
+  border-radius: var(--admin-radius-md);
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  cursor: pointer;
+  border: none;
+  transition: all var(--admin-transition-fast);
+  font-family: inherit;
+  min-height: 36px;
+}
+
+.admin-btn-primary {
+  background: linear-gradient(135deg, var(--admin-color-primary), var(--admin-color-primary-dark));
+  color: var(--admin-text-white);
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+}
+
+.admin-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+}
+
+.admin-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(30, 64, 175, 0.3);
+}
+
+.admin-btn-secondary {
+  background-color: var(--admin-color-gray-100);
+  color: var(--admin-text-primary);
+}
+
+.admin-btn-secondary:hover {
+  background-color: var(--admin-color-gray-200);
+}
+
+.admin-btn-outline {
+  background: transparent;
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-text-primary);
+}
+
+.admin-btn-outline:hover {
+  background-color: var(--admin-color-gray-50);
+  border-color: var(--admin-color-gray-300);
+}
+
+.admin-btn-sm {
+  padding: var(--admin-spacing-xs) var(--admin-spacing-md);
+  font-size: var(--admin-font-xs);
+  min-height: 28px;
+}
+
+.admin-btn-lg {
+  padding: var(--admin-spacing-md) var(--admin-spacing-xl);
+  font-size: var(--admin-font-base);
+  min-height: 44px;
+}
+
+/* ================================================
+   标签组件样式
+   ================================================ */
+.admin-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--admin-spacing-xs);
+  padding: 2px var(--admin-spacing-sm);
+  border-radius: var(--admin-radius-sm);
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-medium);
+}
+
+.admin-tag-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--admin-color-success);
+}
+
+.admin-tag-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--admin-color-warning);
+}
+
+.admin-tag-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--admin-color-error);
+}
+
+.admin-tag-info {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--admin-color-info);
+}
+
+.admin-tag-purple {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--admin-color-accent-purple);
+}
+
+.admin-tag-orange {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: var(--admin-color-accent-orange);
+}
+
+.admin-tag-rose {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--admin-color-accent-rose);
+}
+
+/* ================================================
+   表格组件样式
+   ================================================ */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-table th {
+  padding: var(--admin-spacing-md);
+  text-align: left;
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-semibold);
+  color: var(--admin-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--admin-border-light);
+}
+
+.admin-table td {
+  padding: var(--admin-spacing-md);
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-regular);
+  border-bottom: 1px solid var(--admin-border-light);
+  transition: background-color var(--admin-transition-fast);
+}
+
+.admin-table tbody tr:hover td {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================================================
+   列表组件样式
+   ================================================ */
+.admin-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-list-item {
+  display: flex;
+  align-items: center;
+  padding: var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-light);
+  transition: background-color var(--admin-transition-fast);
+}
+
+.admin-list-item:hover {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-list-item:last-child {
+  border-bottom: none;
+}
+
+.admin-list-item-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-list-item-title {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  color: var(--admin-text-primary);
+  margin-bottom: 2px;
+}
+
+.admin-list-item-subtitle {
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+}
+
+.admin-list-item-action {
+  margin-left: var(--admin-spacing-md);
+  flex-shrink: 0;
+}
+
+/* ================================================
+   快捷操作卡片样式
+   ================================================ */
+.admin-quick-action {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+  padding: var(--admin-spacing-md);
+  border-radius: var(--admin-radius-md);
+  cursor: pointer;
+  transition: all var(--admin-transition-fast);
+}
+
+.admin-quick-action:hover {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-quick-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--admin-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--admin-transition-fast);
+}
+
+.admin-quick-action:hover .admin-quick-action-icon {
+  transform: scale(1.05);
+}
+
+.admin-quick-action-icon.blue {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--admin-color-accent-blue);
+}
+
+.admin-quick-action-icon.emerald {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--admin-color-accent-emerald);
+}
+
+.admin-quick-action-icon.purple {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--admin-color-accent-purple);
+}
+
+.admin-quick-action-icon.orange {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: var(--admin-color-accent-orange);
+}
+
+.admin-quick-action-icon.yellow {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: var(--admin-color-warning);
+}
+
+.admin-quick-action-icon.rose {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--admin-color-accent-rose);
+}
+
+.admin-quick-action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-quick-action-title {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  color: var(--admin-text-primary);
+}
+
+.admin-quick-action-desc {
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+}
+
+/* ================================================
+   待办事项样式
+   ================================================ */
+.admin-todo-item {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+  padding: var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-light);
+  transition: background-color var(--admin-transition-fast);
+}
+
+.admin-todo-item:hover {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-todo-item:last-child {
+  border-bottom: none;
+}
+
+.admin-todo-indicator {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--admin-radius-full);
+  flex-shrink: 0;
+}
+
+.admin-todo-indicator.urgent {
+  background-color: var(--admin-color-error);
+}
+
+.admin-todo-indicator.warning {
+  background-color: var(--admin-color-warning);
+}
+
+.admin-todo-indicator.normal {
+  background-color: var(--admin-color-info);
+}
+
+.admin-todo-indicator.info {
+  background-color: var(--admin-color-accent-orange);
+}
+
+.admin-todo-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-todo-title {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  color: var(--admin-text-primary);
+  margin-bottom: 2px;
+}
+
+.admin-todo-desc {
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+}
+
+.admin-todo-action {
+  flex-shrink: 0;
+}
+
+.admin-todo-action-link {
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-semibold);
+  color: var(--admin-color-primary);
+  transition: color var(--admin-transition-fast);
+}
+
+.admin-todo-action-link:hover {
+  color: var(--admin-color-primary-dark);
+}
+
+/* ================================================
+   排行列表样式
+   ================================================ */
+.admin-rank-item {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-md);
+  padding: var(--admin-spacing-sm) var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-light);
+  transition: background-color var(--admin-transition-fast);
+}
+
+.admin-rank-item:hover {
+  background-color: var(--admin-color-gray-50);
+}
+
+.admin-rank-item:last-child {
+  border-bottom: none;
+}
+
+.admin-rank-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--admin-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--admin-font-xs);
+  font-weight: var(--admin-font-weight-bold);
+  flex-shrink: 0;
+}
+
+.admin-rank-badge.top1 {
+  background-color: #DC2626;
+  color: var(--admin-text-white);
+}
+
+.admin-rank-badge.top2 {
+  background-color: #EA580C;
+  color: var(--admin-text-white);
+}
+
+.admin-rank-badge.top3 {
+  background-color: #CA8A04;
+  color: var(--admin-text-white);
+}
+
+.admin-rank-badge.other {
+  background-color: var(--admin-color-gray-200);
+  color: var(--admin-color-gray-500);
+}
+
+.admin-rank-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-rank-title {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-medium);
+  color: var(--admin-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-rank-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--admin-spacing-md);
+  flex-shrink: 0;
+}
+
+.admin-rank-price {
+  font-size: var(--admin-font-sm);
+  font-weight: var(--admin-font-weight-bold);
+  color: var(--admin-text-primary);
+}
+
+.admin-rank-count {
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+}
+
+/* ================================================
+   通知徽章样式
+   ================================================ */
+.admin-notification-badge {
+  position: relative;
+}
+
+.admin-notification-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: var(--admin-color-error);
+  border-radius: var(--admin-radius-full);
+  animation: admin-pulse 2s infinite;
+}
+
+@keyframes admin-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+/* ================================================
+   欢迎区域样式
+   ================================================ */
+.admin-welcome {
+  margin-bottom: var(--admin-spacing-xl);
+}
+
+.admin-welcome-title {
+  font-size: var(--admin-font-3xl);
+  font-weight: var(--admin-font-weight-bold);
+  color: var(--admin-text-primary);
+  margin-bottom: var(--admin-spacing-xs);
+}
+
+.admin-welcome-subtitle {
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-secondary);
+}
+
+/* ================================================
+   响应式适配
+   ================================================ */
+@media (max-width: 1280px) {
+  .admin-sidebar {
+    width: var(--admin-sidebar-width-collapsed);
+  }
+  
+  .admin-sidebar .logo-text,
+  .admin-sidebar .admin-sidebar-group-title,
+  .admin-sidebar .admin-sidebar-link .label {
+    display: none;
+  }
+  
+  .admin-sidebar .admin-sidebar-link {
+    justify-content: center;
+    padding: var(--admin-spacing-md);
+  }
+  
+  .admin-main {
+    margin-left: var(--admin-sidebar-width-collapsed);
+  }
+  
+  .admin-content {
+    padding-left: calc(var(--admin-spacing-lg) + (var(--admin-sidebar-width) - var(--admin-sidebar-width-collapsed)) / 2);
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-stat-value {
+    font-size: var(--admin-font-2xl);
+  }
+  
+  .admin-stat-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    z-index: var(--admin-z-modal);
+  }
+  
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .admin-main {
+    margin-left: 0;
+  }
+  
+  .admin-content {
+    padding-left: var(--admin-spacing-lg);
+  }
+  
+  .admin-header-title {
+    font-size: var(--admin-font-lg);
+  }
+  
+  .admin-user-name {
+    display: none;
+  }
+  
+  .admin-stat-card {
+    padding: var(--admin-spacing-md);
+  }
+  
+  .admin-stat-value {
+    font-size: var(--admin-font-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-content {
+    padding: var(--admin-spacing-md);
+  }
+  
+  .admin-header {
+    padding: 0 var(--admin-spacing-md);
+  }
+  
+  .admin-welcome-title {
+    font-size: var(--admin-font-xl);
+  }
+}
+
+/* ================================================
+   无障碍与焦点样式
+   ================================================ */
+.admin-sidebar-link:focus,
+.admin-btn:focus,
+.admin-header-btn:focus {
+  outline: 2px solid var(--admin-color-primary);
+  outline-offset: 2px;
+}
+
+/* ================================================
+   prefers-reduced-motion 支持
+   ================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================================
+   滚动条美化
+   ================================================ */
+.admin-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.admin-content::-webkit-scrollbar-track {
+  background: var(--admin-color-gray-100);
+  border-radius: var(--admin-radius-full);
+}
+
+.admin-content::-webkit-scrollbar-thumb {
+  background: var(--admin-color-gray-300);
+  border-radius: var(--admin-radius-full);
+  transition: background var(--admin-transition-fast);
+}
+
+.admin-content::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-color-gray-400);
+}

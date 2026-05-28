@@ -6,6 +6,7 @@
   <title>叁竹培训 - 课程学习</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
   <script>
     tailwind.config = {
       theme: {
@@ -24,6 +25,16 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes checkmark { 0% { stroke-dashoffset: 24; } 100% { stroke-dashoffset: 0; } }
     .checkmark-anim { stroke-dasharray: 24; stroke-dashoffset: 24; animation: checkmark 0.4s ease forwards 0.2s; }
+    
+    .chapter-list {
+      max-height: 500px;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, opacity 0.3s ease;
+    }
+    .chapter-list.hidden {
+      max-height: 0;
+      opacity: 0;
+    }
   </style>
 </head>
 <body class="bg-[#f5f5f5] font-sans text-[#333]">
@@ -31,30 +42,38 @@
 
     <!-- 视频播放区 -->
     <div class="relative w-full aspect-video bg-[#1a1a1a] overflow-hidden" id="videoArea">
-      <div class="w-full h-full flex flex-col items-center justify-center text-white" id="videoPlaceholder">
-        <!-- 播放按钮 -->
-        <div class="w-14 h-14 rounded-full bg-white/20 border-2 border-white/60 flex items-center justify-center cursor-pointer active:scale-90 transition" id="playBtn">
+      <!-- 渐变遮罩 -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20"></div>
+      
+      <div class="w-full h-full flex flex-col items-center justify-center text-white relative z-10" id="videoPlaceholder">
+        <!-- 播放按钮增强 -->
+        <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/60 flex items-center justify-center cursor-pointer active:scale-90 hover:scale-105 transition-all duration-300 shadow-lg shadow-black/30" id="playBtn">
           <span class="iconify text-white text-2xl ml-0.5" data-icon="solar:play-bold"></span>
         </div>
         <div class="text-[13px] text-white/70 mt-3">养老护理员初级 · 第13节</div>
       </div>
-      <div class="absolute top-2.5 right-2.5 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded">已学 24 分钟</div>
+      
+      <div class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-white text-[11px] px-2 py-0.5 rounded">已学 24 分钟</div>
+      
       <!-- 底部控制条 -->
       <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 pt-3 pb-2 flex items-center gap-2.5">
-        <span class="iconify text-white text-sm" data-icon="solar:play-bold"></span>
-        <div class="flex-1 h-1 bg-white/30 rounded-full cursor-pointer relative">
-          <div class="h-full bg-brand rounded-full" style="width:35%"></div>
+        <span class="iconify text-white text-sm cursor-pointer hover:scale-110 transition-transform" data-icon="solar:play-bold"></span>
+        <div class="flex-1 h-1.5 bg-white/20 rounded-full cursor-pointer relative hover:h-2 transition-all">
+          <div class="h-full bg-gradient-to-r from-brand to-brand-light rounded-full relative">
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md shadow-black/30 opacity-0 hover:opacity-100 transition-opacity"></div>
+          </div>
         </div>
         <span class="text-[11px] text-white/80 whitespace-nowrap">12:36 / 36:10</span>
-        <div class="bg-white/20 border border-white/30 text-white text-[11px] px-1.5 py-0.5 rounded cursor-pointer whitespace-nowrap" id="speedBtn">1.0x</div>
+        <div class="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-[11px] px-1.5 py-0.5 rounded cursor-pointer whitespace-nowrap hover:bg-white/30 transition-colors" id="speedBtn">1.0x</div>
       </div>
+      
       <!-- 倍速弹窗 -->
-      <div class="hidden absolute bottom-12 right-3 bg-black/85 rounded-xl py-2 min-w-[80px] z-10" id="speedPopup">
-        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10" data-speed="0.75">0.75x</div>
-        <div class="speed-option py-2 px-4 text-[13px] text-brand font-semibold cursor-pointer text-center" data-speed="1.0">1.0x</div>
-        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10" data-speed="1.25">1.25x</div>
-        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10" data-speed="1.5">1.5x</div>
-        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10" data-speed="2.0">2.0x</div>
+      <div class="hidden absolute bottom-12 right-3 bg-black/85 backdrop-blur-sm rounded-xl py-2 min-w-[80px] z-10 shadow-xl" id="speedPopup">
+        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10 transition-colors" data-speed="0.75">0.75x</div>
+        <div class="speed-option py-2 px-4 text-[13px] text-brand font-semibold cursor-pointer text-center bg-white/10" data-speed="1.0">1.0x</div>
+        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10 transition-colors" data-speed="1.25">1.25x</div>
+        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10 transition-colors" data-speed="1.5">1.5x</div>
+        <div class="speed-option py-2 px-4 text-[13px] text-white/70 cursor-pointer text-center hover:bg-white/10 transition-colors" data-speed="2.0">2.0x</div>
       </div>
     </div>
 
@@ -91,21 +110,21 @@
           <span class="text-xs text-gray-400">4节 · 已完成</span>
         </div>
         <div class="chapter-list">
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">1.1 养老护理职业概述</div>
               <div class="text-[11px] text-gray-400 mt-0.5">25分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">1.2 老年人身心特点</div>
               <div class="text-[11px] text-gray-400 mt-0.5">30分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">1.3 护理伦理与沟通技巧</div>
@@ -113,7 +132,7 @@
             </div>
             <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-accent-blue">可试看</span>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">1.4 安全防护与急救基础</div>
@@ -133,21 +152,21 @@
           <span class="text-xs text-gray-400">5节 · 学习中</span>
         </div>
         <div class="chapter-list">
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">2.1 饮食照料与营养搭配</div>
               <div class="text-[11px] text-gray-400 mt-0.5">32分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">2.2 排泄照料</div>
               <div class="text-[11px] text-gray-400 mt-0.5">26分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-brand" data-icon="solar:check-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">2.3 清洁卫生照料</div>
@@ -155,14 +174,14 @@
             </div>
           </div>
           <!-- 当前播放 -->
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer bg-brand-light" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer bg-brand-light transform scale-[1.01] transition-all" onclick="selectLesson(this)">
             <span class="iconify text-lg text-accent-orange" data-icon="solar:play-circle-bold"></span>
             <div class="flex-1">
               <div class="text-sm text-brand font-medium">2.4 睡眠照料与舒适体位</div>
               <div class="text-[11px] text-brand/70 mt-0.5">36分钟 · 正在播放</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">2.5 移动与转运技术</div>
@@ -183,35 +202,35 @@
           <span class="text-xs text-gray-400">5节 · 未开始</span>
         </div>
         <div class="chapter-list hidden">
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">3.1 高血压患者护理</div>
               <div class="text-[11px] text-gray-400 mt-0.5">30分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">3.2 糖尿病患者护理</div>
               <div class="text-[11px] text-gray-400 mt-0.5">28分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">3.3 脑卒中康复护理</div>
               <div class="text-[11px] text-gray-400 mt-0.5">35分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">3.4 阿尔茨海默症护理</div>
               <div class="text-[11px] text-gray-400 mt-0.5">32分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">3.5 骨折术后护理</div>
@@ -231,7 +250,7 @@
           <span class="text-xs text-gray-400">4节 · 未开始</span>
         </div>
         <div class="chapter-list hidden">
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">4.1 老年人心理特征</div>
@@ -239,21 +258,21 @@
             </div>
             <span class="text-[10px] px-1.5 py-0.5 rounded bg-brand-light text-brand">免费</span>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">4.2 心理疏导技巧</div>
               <div class="text-[11px] text-gray-400 mt-0.5">30分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">4.3 临终关怀理念</div>
               <div class="text-[11px] text-gray-400 mt-0.5">28分钟</div>
             </div>
           </div>
-          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50" onclick="selectLesson(this)">
+          <div class="flex items-center gap-2.5 px-4 py-3 border-t border-gray-50 cursor-pointer active:bg-gray-50 transition-all hover:bg-gray-50" onclick="selectLesson(this)">
             <span class="iconify text-lg text-gray-300" data-icon="solar:circle-linear"></span>
             <div class="flex-1">
               <div class="text-sm text-gray-800">4.4 家属沟通与哀伤辅导</div>
@@ -333,7 +352,7 @@
         </h3>
         <div class="space-y-3">
           <div class="flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0 shadow-sm">
               <span class="iconify text-brand text-lg" data-icon="solar:video-frame-play-horizontal-bold"></span>
             </div>
             <div>
@@ -342,7 +361,7 @@
             </div>
           </div>
           <div class="flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0 shadow-sm">
               <span class="iconify text-accent-orange text-lg" data-icon="solar:clipboard-check-bold"></span>
             </div>
             <div>
@@ -351,7 +370,7 @@
             </div>
           </div>
           <div class="flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 shadow-sm">
               <span class="iconify text-accent-blue text-lg" data-icon="solar:chat-round-dots-bold"></span>
             </div>
             <div>
@@ -360,7 +379,7 @@
             </div>
           </div>
           <div class="flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0 shadow-sm">
               <span class="iconify text-accent-purple text-lg" data-icon="solar:refresh-circle-bold"></span>
             </div>
             <div>
@@ -377,7 +396,7 @@
           <span class="iconify text-accent-cyan" data-icon="solar:user-rounded-bold"></span>讲师介绍
         </h3>
         <div class="flex items-start gap-3">
-          <div class="w-12 h-12 rounded-full bg-brand-light flex items-center justify-center flex-shrink-0">
+          <div class="w-12 h-12 rounded-full bg-brand-light flex items-center justify-center flex-shrink-0 shadow-sm">
             <span class="iconify text-brand text-2xl" data-icon="solar:user-rounded-bold"></span>
           </div>
           <div class="flex-1">
@@ -392,7 +411,7 @@
     <div id="tabNotes" class="tab-content hidden">
       <!-- 笔记列表 -->
       <div class="p-4 space-y-3" id="noteList">
-        <div class="bg-white rounded-xl p-3.5">
+        <div class="bg-white rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="iconify text-brand text-sm" data-icon="solar:bookmark-bold"></span>
             <span class="text-xs text-brand font-medium">第二章 · 2.4 睡眠照料与舒适体位</span>
@@ -401,7 +420,7 @@
           <div class="text-[11px] text-gray-400 mt-2">03:25 · 2小时前</div>
         </div>
 
-        <div class="bg-white rounded-xl p-3.5">
+        <div class="bg-white rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="iconify text-brand text-sm" data-icon="solar:bookmark-bold"></span>
             <span class="text-xs text-brand font-medium">第二章 · 2.3 清洁卫生照料</span>
@@ -410,7 +429,7 @@
           <div class="text-[11px] text-gray-400 mt-2">15:42 · 昨天</div>
         </div>
 
-        <div class="bg-white rounded-xl p-3.5">
+        <div class="bg-white rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="iconify text-brand text-sm" data-icon="solar:bookmark-bold"></span>
             <span class="text-xs text-brand font-medium">第一章 · 1.4 安全防护与急救基础</span>
@@ -419,7 +438,7 @@
           <div class="text-[11px] text-gray-400 mt-2">08:15 · 3天前</div>
         </div>
 
-        <div class="bg-white rounded-xl p-3.5">
+        <div class="bg-white rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="iconify text-brand text-sm" data-icon="solar:bookmark-bold"></span>
             <span class="text-xs text-brand font-medium">第一章 · 1.2 老年人身心特点</span>
@@ -428,7 +447,7 @@
           <div class="text-[11px] text-gray-400 mt-2">22:30 · 5天前</div>
         </div>
 
-        <div class="bg-white rounded-xl p-3.5">
+        <div class="bg-white rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center gap-1.5 mb-2">
             <span class="iconify text-brand text-sm" data-icon="solar:bookmark-bold"></span>
             <span class="text-xs text-brand font-medium">第一章 · 1.1 养老护理职业概述</span>
@@ -439,24 +458,29 @@
       </div>
 
       <!-- 添加笔记浮动按钮 -->
-      <div class="fixed bottom-20 right-4 w-12 h-12 rounded-full bg-brand shadow-lg flex items-center justify-center cursor-pointer active:scale-90 transition z-20" onclick="showAddNote()">
+      <div class="fixed bottom-20 right-4 w-12 h-12 rounded-full bg-gradient-to-r from-brand to-brand-dark shadow-lg shadow-green-500/30 flex items-center justify-center cursor-pointer active:scale-90 transition-all z-20 hover:shadow-xl hover:shadow-green-500/40">
         <span class="iconify text-white text-xl" data-icon="solar:pen-new-square-bold"></span>
       </div>
     </div>
 
     <!-- ==================== 底部操作栏 ==================== -->
-    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] h-14 bg-white flex items-center px-4 border-t border-gray-100 z-50 gap-3" id="bottomBar">
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] h-14 bg-white flex items-center px-4 border-t border-gray-100 z-50 safe-area-bottom gap-3" id="bottomBar">
       <!-- 收藏按钮 -->
       <div class="flex flex-col items-center gap-0.5 cursor-pointer px-2" id="collectBtn" onclick="toggleCollect()">
         <span class="iconify text-xl text-gray-400 transition" data-icon="solar:heart-linear" id="collectIcon"></span>
         <span class="text-[10px] text-gray-400" id="collectText">收藏</span>
       </div>
+      <!-- 分享按钮 -->
+      <div class="flex flex-col items-center gap-0.5 cursor-pointer px-2" id="shareBtn" onclick="showShareModal()">
+        <span class="iconify text-xl text-gray-400 transition" data-icon="solar:share-bold"></span>
+        <span class="text-[10px] text-gray-400">分享</span>
+      </div>
       <!-- 购买按钮 -->
-      <button class="flex-1 h-10 rounded-full bg-gradient-to-r from-accent-red to-red-700 text-white text-[15px] font-semibold cursor-pointer active:scale-98 transition" id="buyBtn" onclick="showBuyModal()">
+      <button class="flex-1 h-10 rounded-full bg-gradient-to-r from-accent-red to-red-700 text-white text-[15px] font-semibold cursor-pointer active:scale-98 transition shadow-lg" id="buyBtn" onclick="showBuyModal()">
         ¥299 购买课程
       </button>
       <!-- 继续学习按钮(已购买后显示) -->
-      <button class="flex-1 h-10 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-[15px] font-semibold cursor-pointer active:scale-98 transition hidden" id="continueBtn" onclick="continueStudy()">
+      <button class="flex-1 h-10 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-[15px] font-semibold cursor-pointer active:scale-98 transition shadow-lg hidden" id="continueBtn" onclick="continueStudy()">
         继续学习
       </button>
     </div>
@@ -464,10 +488,10 @@
     <!-- ==================== 购买确认弹窗 ==================== -->
     <div class="fixed inset-0 z-[200] hidden" id="buyModal">
       <div class="absolute inset-0 bg-black/50" onclick="hideBuyModal()"></div>
-      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto">
+      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto shadow-xl">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-base font-semibold text-gray-800">确认购买</h3>
-          <span class="iconify text-xl text-gray-400 cursor-pointer" data-icon="solar:close-circle-linear" onclick="hideBuyModal()"></span>
+          <span class="iconify text-xl text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" data-icon="solar:close-circle-linear" onclick="hideBuyModal()"></span>
         </div>
         <div class="bg-gray-50 rounded-xl p-3 mb-4">
           <div class="text-sm font-medium text-gray-800 mb-1">养老护理员初级职业技能培训</div>
@@ -485,7 +509,7 @@
           <span class="text-sm font-semibold text-gray-800">实付金额</span>
           <span class="text-lg font-bold text-accent-red">¥299</span>
         </div>
-        <button class="w-full h-11 rounded-full bg-gradient-to-r from-accent-red to-red-700 text-white text-base font-semibold mt-4 cursor-pointer active:scale-98 transition" onclick="showWxPay()">
+        <button class="w-full h-11 rounded-full bg-gradient-to-r from-accent-red to-red-700 text-white text-base font-semibold mt-4 cursor-pointer active:scale-98 transition shadow-lg" onclick="showWxPay()">
           确认支付
         </button>
       </div>
@@ -494,7 +518,7 @@
     <!-- ==================== 微信支付模拟弹窗 ==================== -->
     <div class="fixed inset-0 z-[300] hidden" id="wxPayModal">
       <div class="absolute inset-0 bg-black/50"></div>
-      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto" id="wxPayContent">
+      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto shadow-xl" id="wxPayContent">
         <!-- 支付中状态 -->
         <div id="wxPayPaying">
           <div class="flex items-center gap-2 mb-5">
@@ -515,14 +539,14 @@
         <!-- 支付成功状态 -->
         <div id="wxPaySuccess" class="hidden">
           <div class="text-center py-8">
-            <div class="w-16 h-16 rounded-full bg-brand-light flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 rounded-full bg-brand-light flex items-center justify-center mx-auto mb-4 shadow-lg">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2e9e5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12" class="checkmark-anim"></polyline>
               </svg>
             </div>
             <div class="text-lg font-semibold text-gray-800 mb-1">支付成功</div>
             <div class="text-sm text-gray-400 mb-6">已成功购买课程，开始学习吧！</div>
-            <button class="w-3/4 h-11 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-base font-semibold cursor-pointer active:scale-98 transition" onclick="onPaySuccess()">
+            <button class="w-3/4 h-11 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-base font-semibold cursor-pointer active:scale-98 transition shadow-lg" onclick="onPaySuccess()">
               开始学习
             </button>
           </div>
@@ -533,14 +557,95 @@
     <!-- ==================== 添加笔记弹窗 ==================== -->
     <div class="fixed inset-0 z-[200] hidden" id="addNoteModal">
       <div class="absolute inset-0 bg-black/50" onclick="hideAddNote()"></div>
-      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto">
+      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto shadow-xl">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-base font-semibold text-gray-800">添加笔记</h3>
-          <span class="iconify text-xl text-gray-400 cursor-pointer" data-icon="solar:close-circle-linear" onclick="hideAddNote()"></span>
+          <span class="iconify text-xl text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" data-icon="solar:close-circle-linear" onclick="hideAddNote()"></span>
         </div>
         <div class="text-xs text-brand font-medium mb-2">当前：第二章 · 2.4 睡眠照料与舒适体位</div>
-        <textarea class="w-full h-32 bg-gray-50 rounded-xl p-3 text-sm text-gray-700 outline-none border border-gray-200 focus:border-brand resize-none" placeholder="记录学习心得..."></textarea>
-        <button class="w-full h-10 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-sm font-semibold mt-3 cursor-pointer" onclick="saveNote()">保存笔记</button>
+        <textarea class="w-full h-32 bg-gray-50 rounded-xl p-3 text-sm text-gray-700 outline-none border border-gray-200 focus:border-brand focus:shadow-sm resize-none transition-all" placeholder="记录学习心得..."></textarea>
+        <button class="w-full h-10 rounded-full bg-gradient-to-r from-brand to-brand-dark text-white text-sm font-semibold mt-3 cursor-pointer shadow-md hover:shadow-lg transition-shadow" onclick="saveNote()">保存笔记</button>
+      </div>
+    </div>
+
+    <!-- ==================== 分享弹窗 ==================== -->
+    <div class="fixed inset-0 z-[200] hidden" id="shareModal">
+      <div class="absolute inset-0 bg-black/50" onclick="hideShareModal()"></div>
+      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto shadow-xl" id="sharePanel">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-gray-800">分享到</h3>
+          <span class="iconify text-xl text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" data-icon="solar:close-circle-linear" onclick="hideShareModal()"></span>
+        </div>
+        <!-- 分享方式 -->
+        <div class="flex justify-around mb-5">
+          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareToWechat()">
+            <div class="w-14 h-14 rounded-full bg-[#07c160] flex items-center justify-center shadow-md">
+              <span class="iconify text-white text-2xl" data-icon="solar:chat-round-dots-bold"></span>
+            </div>
+            <span class="text-xs text-gray-600">微信</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareToMoments()">
+            <div class="w-14 h-14 rounded-full bg-[#07c160] flex items-center justify-center shadow-md">
+              <span class="iconify text-white text-2xl" data-icon="solar:gallery-add-bold"></span>
+            </div>
+            <span class="text-xs text-gray-600">朋友圈</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="copyShareLink()">
+            <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+              <span class="iconify text-gray-600 text-2xl" data-icon="solar:copy-bold"></span>
+            </div>
+            <span class="text-xs text-gray-600">复制链接</span>
+          </div>
+          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareByQR()">
+            <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+              <span class="iconify text-gray-600 text-2xl" data-icon="solar:qr-code-bold"></span>
+            </div>
+            <span class="text-xs text-gray-600">二维码</span>
+          </div>
+        </div>
+        <!-- 分享预览信息 -->
+        <div class="bg-gray-50 rounded-xl p-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-16 h-16 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0">
+              <span class="iconify text-brand text-3xl" data-icon="solar:video-frame-play-horizontal-bold"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-800 truncate">养老护理员初级职业技能培训</div>
+              <div class="text-xs text-gray-400 mt-1">叁竹培训 · 18节课时</div>
+              <div class="text-xs text-gray-400 mt-0.5">点击即可免费试看</div>
+            </div>
+          </div>
+        </div>
+        <!-- 分享文案 -->
+        <div class="text-xs text-gray-400 text-center mb-4">
+          分享后，好友点击链接即可试看课程片段<br>并以游客身份浏览首页
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 二维码弹窗 ==================== -->
+    <div class="fixed inset-0 z-[250] hidden" id="qrModal">
+      <div class="absolute inset-0 bg-black/50" onclick="hideQRModal()"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl p-6 max-w-[300px] w-[85%] shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-semibold text-gray-800">扫码分享</h3>
+          <span class="iconify text-xl text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" data-icon="solar:close-circle-linear" onclick="hideQRModal()"></span>
+        </div>
+        <div class="text-center">
+          <div class="w-48 h-48 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-3" id="qrCodeArea">
+            <div class="text-xs text-gray-400">加载中...</div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">微信扫描上方二维码</p>
+          <p class="text-xs text-gray-400">即可试看课程并浏览首页</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 复制成功提示 ==================== -->
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[300] hidden" id="copyToast">
+      <div class="bg-black/80 backdrop-blur-sm text-white text-sm px-5 py-3 rounded-full shadow-lg flex items-center gap-2">
+        <span class="iconify text-brand" data-icon="solar:check-circle-bold"></span>
+        <span>链接已复制到剪贴板</span>
       </div>
     </div>
 
@@ -551,7 +656,6 @@
     document.querySelectorAll('.content-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         var tabName = this.getAttribute('data-tab');
-        // 更新tab样式
         document.querySelectorAll('.content-tab').forEach(function(t) {
           t.classList.remove('text-brand', 'font-semibold');
           t.classList.add('text-gray-400');
@@ -563,7 +667,6 @@
         var underline = document.createElement('span');
         underline.className = 'absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-brand rounded-full';
         this.appendChild(underline);
-        // 切换内容
         document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.add('hidden'); });
         var target = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
         if (target) target.classList.remove('hidden');
@@ -593,11 +696,11 @@
     document.querySelectorAll('.speed-option').forEach(function(opt) {
       opt.addEventListener('click', function() {
         document.querySelectorAll('.speed-option').forEach(function(o) {
-          o.classList.remove('text-brand', 'font-semibold');
+          o.classList.remove('text-brand', 'font-semibold', 'bg-white/10');
           o.classList.add('text-white/70');
         });
         this.classList.remove('text-white/70');
-        this.classList.add('text-brand', 'font-semibold');
+        this.classList.add('text-brand', 'font-semibold', 'bg-white/10');
         speedBtn.textContent = this.getAttribute('data-speed') + 'x';
         speedPopup.classList.add('hidden');
       });
@@ -641,7 +744,6 @@
       document.getElementById('wxPayModal').classList.remove('hidden');
       document.getElementById('wxPayPaying').classList.remove('hidden');
       document.getElementById('wxPaySuccess').classList.add('hidden');
-      // 2秒后显示支付成功
       setTimeout(function() {
         document.getElementById('wxPayPaying').classList.add('hidden');
         document.getElementById('wxPaySuccess').classList.remove('hidden');
@@ -649,7 +751,6 @@
     }
     function onPaySuccess() {
       document.getElementById('wxPayModal').classList.add('hidden');
-      // 切换为已购买状态
       document.getElementById('buyBtn').classList.add('hidden');
       document.getElementById('continueBtn').classList.remove('hidden');
     }
@@ -666,6 +767,62 @@
     }
     function saveNote() {
       hideAddNote();
+    }
+
+    // ========== 分享功能 ==========
+    var shareUrl = window.location.origin + '/html/mobile/eldercare/home.html?from=shared&course=eldercare初级&trial=1';
+    var shareTitle = '养老护理员初级职业技能培训 - 叁竹培训';
+    var shareDesc = '免费试看课程片段，学习专业养老护理技能，点击即可浏览首页';
+
+    function showShareModal() {
+      document.getElementById('shareModal').classList.remove('hidden');
+    }
+    function hideShareModal() {
+      document.getElementById('shareModal').classList.add('hidden');
+    }
+
+    function shareToWechat() {
+      hideShareModal();
+      if (navigator.share) {
+        navigator.share({
+          title: shareTitle,
+          text: shareDesc,
+          url: shareUrl
+        }).catch(function() {});
+      } else {
+        copyShareLink();
+      }
+    }
+
+    function shareToMoments() {
+      hideShareModal();
+      copyShareLink();
+    }
+
+    function copyShareLink() {
+      hideShareModal();
+      var input = document.createElement('input');
+      input.value = shareUrl;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      var toast = document.getElementById('copyToast');
+      toast.classList.remove('hidden');
+      setTimeout(function() {
+        toast.classList.add('hidden');
+      }, 2000);
+    }
+
+    function shareByQR() {
+      hideShareModal();
+      var qrArea = document.getElementById('qrCodeArea');
+      qrArea.innerHTML = '<div class="w-48 h-48 bg-white rounded-xl flex items-center justify-center"><div class="text-center p-4"><div class="w-32 h-32 mx-auto bg-gray-200 rounded-lg mb-2 flex items-center justify-center text-gray-500 text-xs">QR Code</div><div class="text-xs text-gray-400 mt-2">微信扫码打开</div></div></div>';
+      document.getElementById('qrModal').classList.remove('hidden');
+    }
+
+    function hideQRModal() {
+      document.getElementById('qrModal').classList.add('hidden');
     }
   </script>
 </body>
