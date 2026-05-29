@@ -466,12 +466,12 @@
     <!-- ==================== 底部操作栏 ==================== -->
     <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] h-14 bg-white flex items-center px-4 border-t border-gray-100 z-50 safe-area-bottom gap-3" id="bottomBar">
       <!-- 收藏按钮 -->
-      <div class="flex flex-col items-center gap-0.5 cursor-pointer px-2" id="collectBtn" onclick="toggleCollect()">
+      <div class="flex flex-col items-center gap-0.5 cursor-pointer px-3 py-2 rounded-xl transition-all hover:bg-gray-50 active:scale-95" id="collectBtn" onclick="toggleCollect()">
         <span class="iconify text-xl text-gray-400 transition" data-icon="solar:heart-linear" id="collectIcon"></span>
         <span class="text-[10px] text-gray-400" id="collectText">收藏</span>
       </div>
       <!-- 分享按钮 -->
-      <div class="flex flex-col items-center gap-0.5 cursor-pointer px-2" id="shareBtn" onclick="showShareModal()">
+      <div class="flex flex-col items-center gap-0.5 cursor-pointer px-3 py-2 rounded-xl transition-all hover:bg-gray-50 active:scale-95" id="shareBtn" onclick="showShareModal()">
         <span class="iconify text-xl text-gray-400 transition" data-icon="solar:share-bold"></span>
         <span class="text-[10px] text-gray-400">分享</span>
       </div>
@@ -570,54 +570,57 @@
 
     <!-- ==================== 分享弹窗 ==================== -->
     <div class="fixed inset-0 z-[200] hidden" id="shareModal">
-      <div class="absolute inset-0 bg-black/50" onclick="hideShareModal()"></div>
-      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-5 max-w-[750px] mx-auto shadow-xl" id="sharePanel">
-        <div class="flex items-center justify-between mb-4">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="hideShareModal()"></div>
+      <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 max-w-[750px] mx-auto shadow-xl transform transition-transform duration-300" id="sharePanel">
+        <!-- 拖动指示条 -->
+        <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-3"></div>
+
+        <div class="flex items-center justify-between mb-5">
           <h3 class="text-base font-semibold text-gray-800">分享到</h3>
           <span class="iconify text-xl text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" data-icon="solar:close-circle-linear" onclick="hideShareModal()"></span>
         </div>
         <!-- 分享方式 -->
         <div class="flex justify-around mb-5">
-          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareToWechat()">
-            <div class="w-14 h-14 rounded-full bg-[#07c160] flex items-center justify-center shadow-md">
+          <div class="flex flex-col items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="shareToWechat()">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#07c160] to-[#06ad56] flex items-center justify-center shadow-lg hover:shadow-[#07c160]/30 transition-shadow">
               <span class="iconify text-white text-2xl" data-icon="solar:chat-round-dots-bold"></span>
             </div>
             <span class="text-xs text-gray-600">微信</span>
           </div>
-          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareToMoments()">
-            <div class="w-14 h-14 rounded-full bg-[#07c160] flex items-center justify-center shadow-md">
+          <div class="flex flex-col items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="shareToMoments()">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#07c160] to-[#06ad56] flex items-center justify-center shadow-lg hover:shadow-[#07c160]/30 transition-shadow">
               <span class="iconify text-white text-2xl" data-icon="solar:gallery-add-bold"></span>
             </div>
             <span class="text-xs text-gray-600">朋友圈</span>
           </div>
-          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="copyShareLink()">
-            <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+          <div class="flex flex-col items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="copyShareLink()">
+            <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center shadow-sm hover:shadow-md transition-shadow">
               <span class="iconify text-gray-600 text-2xl" data-icon="solar:copy-bold"></span>
             </div>
             <span class="text-xs text-gray-600">复制链接</span>
           </div>
-          <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="shareByQR()">
-            <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center shadow-sm">
+          <div class="flex flex-col items-center gap-2 cursor-pointer active:scale-95 transition-transform" onclick="shareByQR()">
+            <div class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center shadow-sm hover:shadow-md transition-shadow">
               <span class="iconify text-gray-600 text-2xl" data-icon="solar:qr-code-bold"></span>
             </div>
             <span class="text-xs text-gray-600">二维码</span>
           </div>
         </div>
         <!-- 分享预览信息 -->
-        <div class="bg-gray-50 rounded-xl p-3 mb-4">
+        <div class="bg-gradient-to-r from-[#f0fdf4] to-[#dcfce7] rounded-2xl p-4 mb-4 border border-[#bbf7d0]">
           <div class="flex items-center gap-3">
-            <div class="w-16 h-16 rounded-lg bg-brand-light flex items-center justify-center flex-shrink-0">
+            <div class="w-16 h-16 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
               <span class="iconify text-brand text-3xl" data-icon="solar:video-frame-play-horizontal-bold"></span>
             </div>
             <div class="flex-1 min-w-0">
-              <div class="text-sm font-medium text-gray-800 truncate">养老护理员初级职业技能培训</div>
-              <div class="text-xs text-gray-400 mt-1">叁竹培训 · 18节课时</div>
-              <div class="text-xs text-gray-400 mt-0.5">点击即可免费试看</div>
+              <div class="text-sm font-semibold text-gray-800 truncate">养老护理员初级职业技能培训</div>
+              <div class="text-xs text-gray-500 mt-1">叁竹培训 · 18节课时</div>
+              <div class="text-xs text-brand mt-0.5">点击即可免费试看</div>
             </div>
           </div>
         </div>
         <!-- 分享文案 -->
-        <div class="text-xs text-gray-400 text-center mb-4">
+        <div class="text-xs text-gray-400 text-center mb-4 leading-relaxed">
           分享后，好友点击链接即可试看课程片段<br>并以游客身份浏览首页
         </div>
       </div>

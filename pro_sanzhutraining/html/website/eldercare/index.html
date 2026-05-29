@@ -44,9 +44,10 @@
 
     .banner-section { margin-bottom: var(--spacing-xl); }
     .banner-carousel { position: relative; border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 16/6; }
-    .banner-slides { display: flex; transition: transform 0.6s; height: 100%; }
-    .banner-slide { min-width: 100%; height: 100%; display: flex; align-items: center; padding: 40px 60px; position: relative; }
-    .banner-slide::before { content: ''; position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.7; }
+    .banner-slides { display: flex; transition: opacity 0.6s ease; height: 100%; }
+    .banner-slide { min-width: 100%; height: 100%; display: flex; align-items: center; padding: 40px 60px; position: relative; opacity: 0; transition: opacity 0.6s ease; }
+    .banner-slide.active { opacity: 1; }
+    .banner-slide::before { content: ''; position: absolute; inset: 0; background-size: cover; background-position: center; }
     .banner-slide:nth-child(1)::before { background-image: url('https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&h=600&fit=crop'); }
     .banner-slide:nth-child(2)::before { background-image: url('https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&h=600&fit=crop'); }
     .banner-slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,80,40,0.85) 0%, rgba(0,60,30,0.6) 50%, rgba(0,80,40,0.7) 100%); }
@@ -54,13 +55,15 @@
     .banner-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; background: rgba(255,255,255,0.18); color: var(--text-white); font-size: 13px; border-radius: var(--radius-full); margin-bottom: 18px; }
     .banner-title { font-size: 36px; font-weight: 800; color: var(--text-white); margin-bottom: 14px; }
     .banner-desc { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 28px; }
-    .banner-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: var(--text-white); font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); }
-    .banner-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+    .banner-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: var(--text-white); font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(46,158,90,0.4); }
+    .banner-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: all 0.25s ease; }
+    .banner-arrow:hover { background: rgba(255,255,255,0.35); transform: translateY(-50%) scale(1.1); }
     .banner-arrow.prev { left: 20px; }
     .banner-arrow.next { right: 20px; }
     .banner-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 2; }
-    .banner-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; }
-    .banner-dot.active { width: 32px; border-radius: var(--radius-full); background: var(--text-white); }
+    .banner-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s ease; }
+    .banner-dot:hover { background: rgba(255,255,255,0.6); transform: scale(1.15); }
+    .banner-dot.active { width: 32px; border-radius: var(--radius-full); background: var(--text-white); animation: dotPulse 1.5s ease-in-out infinite; }
 
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .section-title { font-size: 22px; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
@@ -68,8 +71,8 @@
     .section-more { font-size: 15px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 
     .course-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .course-card { background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: all 0.3s; }
-    .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-card-hover); }
+    .course-card { background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: all 0.3s; border-left: 3px solid transparent; }
+    .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-card-hover); border-left-color: var(--color-primary); }
     .course-card-cover { position: relative; aspect-ratio: 16/9; overflow: hidden; }
     .course-card-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
     .course-card:hover .course-card-cover img { transform: scale(1.08); }
@@ -219,7 +222,7 @@
           <section class="banner-section">
             <div class="banner-carousel">
               <div class="banner-slides" id="bannerSlides">
-                <div class="banner-slide"><div class="banner-content"><span class="banner-tag"><span class="iconify" data-icon="mdi:star" style="font-size: 16px;"></span>政府补贴课程</span><h2 class="banner-title">养老护理员职业资格认证培训</h2><p class="banner-desc">人社部认证 · 在线学习 · 持证上岗 · 政府补贴低至免费</p><a href="course-list.html" class="banner-cta">立即报名<span class="iconify" data-icon="mdi:arrow-right" style="font-size: 18px;"></span></a></div></div>
+                <div class="banner-slide active"><div class="banner-content"><span class="banner-tag"><span class="iconify" data-icon="mdi:star" style="font-size: 16px;"></span>政府补贴课程</span><h2 class="banner-title">养老护理员职业资格认证培训</h2><p class="banner-desc">人社部认证 · 在线学习 · 持证上岗 · 政府补贴低至免费</p><a href="course-list.html" class="banner-cta">立即报名<span class="iconify" data-icon="mdi:arrow-right" style="font-size: 18px;"></span></a></div></div>
                 <div class="banner-slide"><div class="banner-content"><span class="banner-tag"><span class="iconify" data-icon="mdi:sparkles" style="font-size: 16px;"></span>新课上架</span><h2 class="banner-title">老年人能力评估师培训</h2><p class="banner-desc">国家新兴职业 · 评估师缺口大 · 线上学习灵活安排</p><a href="course-list.html" class="banner-cta">了解详情<span class="iconify" data-icon="mdi:arrow-right" style="font-size: 18px;"></span></a></div></div>
               </div>
               <button class="banner-arrow prev" onclick="slideBanner(-1)"><span class="iconify" data-icon="mdi:chevron-left" style="color: white; font-size: 28px;"></span></button>
@@ -234,7 +237,7 @@
               <a href="course-list.html" class="section-more">更多<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></a>
             </div>
             <div class="live-scroll">
-              <div class="live-card" onclick="window.location.href='course-detail.html'">
+              <div class="live-card" onclick="window.location.href='live-class.html'">
                 <div class="live-card-avatar">
                   <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=560&h=350&fit=crop" alt="直播课程">
                   <span class="live-indicator"><span class="dot"></span>直播中</span>
@@ -251,7 +254,7 @@
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='course-detail.html'">
+              <div class="live-card" onclick="window.location.href='live-class.html'">
                 <div class="live-card-avatar">
                   <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
@@ -267,7 +270,7 @@
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='course-detail.html'">
+              <div class="live-card" onclick="window.location.href='live-class.html'">
                 <div class="live-card-avatar">
                   <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
@@ -283,7 +286,7 @@
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='course-detail.html'">
+              <div class="live-card" onclick="window.location.href='live-class.html'">
                 <div class="live-card-avatar">
                   <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
@@ -299,7 +302,7 @@
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='course-detail.html'">
+              <div class="live-card" onclick="window.location.href='live-class.html'">
                 <div class="live-card-avatar">
                   <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
@@ -367,7 +370,7 @@
     let currentSlide = 0;
     function slideBanner(direction) { const slides = document.querySelectorAll('.banner-slide'); currentSlide += direction; if (currentSlide < 0) currentSlide = slides.length - 1; if (currentSlide >= slides.length) currentSlide = 0; updateBanner(); }
     function goToSlide(index) { currentSlide = index; updateBanner(); }
-    function updateBanner() { document.getElementById('bannerSlides').style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.banner-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide)); }
+    function updateBanner() { document.querySelectorAll('.banner-slide').forEach((slide, i) => slide.classList.toggle('active', i === currentSlide)); document.querySelectorAll('.banner-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide)); }
     function handleSearch() { const keyword = document.getElementById('searchInput').value; if (keyword.trim()) window.location.href = `search.html?q=${encodeURIComponent(keyword)}`; }
     document.getElementById('searchInput').addEventListener('keyup', e => { if (e.key === 'Enter') handleSearch(); });
   </script>

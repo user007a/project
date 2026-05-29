@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>直播课堂 - 叁竹培训</title>
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    .header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); z-index: 1000; box-shadow: 0 4px 20px rgba(46,158,90,0.3); }
+    .header-inner { max-width: var(--max-width); margin: 0 auto; height: 100%; display: flex; align-items: center; padding: 0 20px; gap: 24px; }
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; }
+    .logo-text { font-size: 20px; font-weight: 700; color: var(--text-white); }
+    .header-title { flex: 1; text-align: center; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.95); }
+    .header-nav { display: flex; align-items: center; gap: 16px; }
+    .header-nav a { color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; padding: 8px 12px; border-radius: var(--radius-md); }
+    .header-nav a:hover { color: var(--text-white); background: rgba(255,255,255,0.15); }
+    .header-nav .btn-login { padding: 8px 20px; border: 1.5px solid rgba(255,255,255,0.6); }
+
+    .page-body { margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); background: var(--color-gray-100); }
+    .page-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+
+    .live-container { display: flex; gap: 20px; padding: 24px 0; }
+    .live-main { flex: 1; min-width: 0; }
+    .live-sidebar { width: 360px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+
+    .video-player { background: var(--color-gray-900); border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 16/9; position: relative; margin-bottom: 20px; }
+    .video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .video-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(46,158,90,0.4) 0%, rgba(30,126,66,0.35) 50%, rgba(46,158,90,0.4) 100%); }
+    .video-content { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .video-title { font-size: 34px; font-weight: 800; margin-bottom: 14px; color: var(--text-white); text-align: center; max-width: 600px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .video-teacher { font-size: 19px; color: rgba(255,255,255,0.95); margin-bottom: 28px; text-shadow: 0 1px 5px rgba(0,0,0,0.3); }
+    .play-btn { width: 88px; height: 88px; border-radius: 50%; background: rgba(255,255,255,0.18); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; border: 3px solid rgba(255,255,255,0.7); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .play-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.28); box-shadow: 0 6px 30px rgba(0,0,0,0.4); }
+    .video-controls { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%); display: flex; align-items: center; justify-content: space-between; }
+    .video-left-info { display: flex; align-items: center; gap: 16px; }
+    .watch-count { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.85); font-size: 14px; }
+    .download-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.85); font-size: 14px; cursor: pointer; padding: 8px 16px; border-radius: var(--radius-md); background: rgba(255,255,255,0.1); }
+    .download-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .tab-header { display: flex; gap: 8px; padding: 4px; background: var(--color-gray-100); border-radius: var(--radius-lg); margin-bottom: 16px; }
+    .tab-item { flex: 1; padding: 12px 20px; text-align: center; font-size: 15px; font-weight: 600; border-radius: var(--radius-md); cursor: pointer; transition: all 0.25s; color: var(--text-secondary); }
+    .tab-item.active { background: var(--color-bg-card); color: var(--color-primary); box-shadow: var(--shadow-sm); }
+
+    .question-area { background: var(--color-bg-card); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-card); }
+    .question-input { width: 100%; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px; resize: none; min-height: 80px; margin-bottom: 12px; }
+    .question-input:focus { outline: none; border-color: var(--color-primary); }
+    .question-submit { display: flex; justify-content: flex-end; }
+    .question-submit button { padding: 10px 24px; background: var(--color-primary); color: var(--text-white); border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; }
+    .question-submit button:hover { background: var(--color-primary-dark); }
+    .history-questions { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+    .no-questions { text-align: center; padding: 30px 0; color: var(--text-muted); }
+    .no-questions-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+    .course-info { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; }
+    .info-header { padding: 16px 20px; border-bottom: 1px solid var(--border-light); }
+    .info-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .info-body { padding: 16px 20px; }
+    .course-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .course-meta { display: flex; flex-direction: column; gap: 10px; }
+    .meta-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+    .meta-item strong { color: var(--text-primary); font-weight: 600; }
+    .online-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: var(--radius-full); font-size: 13px; font-weight: 600; }
+    .online-dot { width: 8px; height: 8px; background: #EF4444; border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .course-rating { padding-top: 16px; border-top: 1px solid var(--border-light); }
+    .rating-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .rating-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .rating-label { font-size: 14px; color: var(--text-secondary); }
+    .rating-stars { display: flex; gap: 4px; }
+    .rating-submit { margin-top: 16px; width: 100%; padding: 12px; background: var(--color-primary); color: var(--text-white); border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; }
+    .rating-submit:hover { background: var(--color-primary-dark); }
+
+    .chapter-list { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; }
+    .chapter-header { padding: 16px 20px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .chapter-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .chapter-tabs { display: flex; gap: 4px; background: var(--color-gray-50); padding: 4px; border-radius: var(--radius-md); }
+    .chapter-tab { padding: 6px 14px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer; }
+    .chapter-tab.active { background: var(--color-bg-card); font-weight: 600; color: var(--color-primary); }
+    .chapter-items { padding: 8px 0; }
+    .chapter-group { margin-bottom: 4px; }
+    .chapter-group-title { padding: 12px 20px; font-size: 15px; font-weight: 600; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .chapter-group-title:hover { background: var(--color-gray-50); }
+    .chapter-group-title::before { content: ''; width: 4px; height: 16px; background: var(--color-primary); border-radius: var(--radius-sm); }
+    .chapter-arrow { margin-left: auto; transition: transform 0.3s; }
+    .chapter-group.expanded .chapter-arrow { transform: rotate(90deg); }
+    .chapter-videos { display: none; padding-left: 24px; }
+    .chapter-group.expanded .chapter-videos { display: block; }
+    .video-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-left: 3px solid transparent; }
+    .video-item:hover { background: var(--color-gray-50); }
+    .video-item.active { border-left-color: var(--color-primary); background: var(--color-primary-50); }
+    .video-play-icon { width: 28px; height: 28px; border-radius: var(--radius-md); background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: var(--text-white); font-size: 12px; }
+    .video-item.active .video-play-icon { background: var(--color-primary-dark); }
+    .video-info { flex: 1; min-width: 0; }
+    .video-name { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+    .video-duration { font-size: 12px; color: var(--text-muted); }
+    .video-status { width: 8px; height: 8px; border-radius: 50%; }
+    .video-status.completed { background: var(--color-success); }
+    .video-status.playing { background: var(--color-primary); animation: pulse 1.5s infinite; }
+    .video-status.pending { background: var(--color-gray-300); }
+
+    @media (max-width: 1199px) { .live-sidebar { width: 320px; } }
+    @media (max-width: 991px) { .live-container { flex-direction: column; } .live-sidebar { width: 100%; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon"><span class="iconify" data-icon="mdi:bamboo" style="color: white; font-size: 24px;"></span></div>
+        <span class="logo-text">叁竹培训</span>
+      </div>
+      <div class="header-title">直播课堂</div>
+      <nav class="header-nav">
+        <a href="index.html">返回首页</a>
+        <a href="#" class="btn-login">登录</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="page-container">
+      <div class="live-container">
+        <div class="live-main">
+          <div class="video-player">
+            <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&h=900&fit=crop" alt="老师讲课" class="video-bg">
+            <div class="video-overlay"></div>
+            <div class="video-content">
+              <div class="video-title">老年人日常生活照护实操要点详解</div>
+              <div class="video-teacher">主讲人：李芳老师</div>
+              <div class="play-btn" onclick="togglePlay()">
+                <span class="iconify" data-icon="mdi:play" style="color: white; font-size: 40px;"></span>
+              </div>
+            </div>
+            <div class="video-controls">
+              <div class="video-left-info">
+                <span class="watch-count"><span class="iconify" data-icon="mdi:users" style="font-size: 18px;"></span> 2,321人正在学习本课程</span>
+              </div>
+              <div class="download-btn">
+                <span class="iconify" data-icon="mdi:download" style="font-size: 18px;"></span>
+                <span>课件下载</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-header">
+            <div class="tab-item active" onclick="switchTab('question')">提问(0)</div>
+            <div class="tab-item" onclick="switchTab('notes')">笔记(0)</div>
+          </div>
+
+          <div class="question-area">
+            <textarea class="question-input" placeholder="有问题问老师~"></textarea>
+            <div class="question-submit">
+              <button>提交</button>
+            </div>
+            <div class="history-questions">
+              <div class="no-questions">
+                <div class="no-questions-icon"><span class="iconify" data-icon="mdi:message-question-outline"></span></div>
+                <p>暂无提问，欢迎提问~</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="live-sidebar">
+          <div class="chapter-list">
+            <div class="chapter-header">
+              <div class="chapter-title">目录</div>
+              <div class="chapter-tabs">
+                <div class="chapter-tab active">目录</div>
+                <div class="chapter-tab">笔记</div>
+              </div>
+            </div>
+            <div class="chapter-items">
+              <div class="chapter-group expanded">
+                <div class="chapter-group-title" onclick="toggleChapter(this)">
+                  第一章 老年人日常生活照护
+                  <span class="chapter-arrow"><span class="iconify" data-icon="mdi:chevron-right" style="font-size: 16px;"></span></span>
+                </div>
+                <div class="chapter-videos">
+                  <div class="video-item active">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">1.1 老年人生活环境安全评估</div>
+                      <div class="video-duration">时长 02:22 | 已学 0%</div>
+                    </div>
+                    <span class="video-status playing"></span>
+                  </div>
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">1.2 老年人个人卫生护理要点</div>
+                      <div class="video-duration">时长 05:38</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">1.3 老年人饮食照护技巧</div>
+                      <div class="video-duration">时长 08:15</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">习题：一个完整的C程序</div>
+                      <div class="video-duration">时长 02:21 | 已学 0%</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="chapter-group">
+                <div class="chapter-group-title" onclick="toggleChapter(this)">
+                  第二章 老年人常见健康问题处理
+                  <span class="chapter-arrow"><span class="iconify" data-icon="mdi:chevron-right" style="font-size: 16px;"></span></span>
+                </div>
+                <div class="chapter-videos">
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">2.1 老年人跌倒预防与处理</div>
+                      <div class="video-duration">时长 10:45</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">2.2 老年人用药安全管理</div>
+                      <div class="video-duration">时长 06:30</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="chapter-group">
+                <div class="chapter-group-title" onclick="toggleChapter(this)">
+                  第三章 老年人心理护理与沟通
+                  <span class="chapter-arrow"><span class="iconify" data-icon="mdi:chevron-right" style="font-size: 16px;"></span></span>
+                </div>
+                <div class="chapter-videos">
+                  <div class="video-item">
+                    <div class="video-play-icon"><span class="iconify" data-icon="mdi:play" style="font-size: 14px;"></span></div>
+                    <div class="video-info">
+                      <div class="video-name">3.1 老年人心理特点分析</div>
+                      <div class="video-duration">时长 08:20</div>
+                    </div>
+                    <span class="video-status pending"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-info">
+            <div class="info-header">
+              <div class="info-title">课程信息</div>
+            </div>
+            <div class="info-body">
+              <div class="course-title">
+                老年人日常生活照护实操要点详解
+                <span class="online-badge"><span class="online-dot"></span>直播中</span>
+              </div>
+              <div class="course-meta">
+                <div class="meta-item"><span class="iconify" data-icon="mdi:account" style="font-size: 18px; color: var(--color-primary);"></span> <strong>李芳老师</strong> | 高级养老护理师</div>
+                <div class="meta-item"><span class="iconify" data-icon="mdi:clock" style="font-size: 18px; color: var(--color-primary);"></span> 课程时长：<strong>11节 · 约3小时12分</strong></div>
+                <div class="meta-item"><span class="iconify" data-icon="mdi:users" style="font-size: 18px; color: var(--color-primary);"></span> 学员数量：<strong>8,327人学习</strong></div>
+                <div class="meta-item"><span class="iconify" data-icon="mdi:eye" style="font-size: 18px; color: var(--color-primary);"></span> 正在学习：<strong>2,321人</strong></div>
+              </div>
+
+              <div class="course-rating">
+                <div class="rating-title">课程评分</div>
+                <div class="rating-item">
+                  <span class="rating-label">授课老师</span>
+                  <div class="rating-stars">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                  </div>
+                </div>
+                <div class="rating-item">
+                  <span class="rating-label">课程内容</span>
+                  <div class="rating-stars">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B; font-size: 18px;"></span>
+                  </div>
+                </div>
+                <button class="rating-submit">提交</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleChapter(el) {
+      const group = el.parentElement;
+      group.classList.toggle('expanded');
+    }
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-item').forEach(item => item.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    function togglePlay() {
+      const playBtn = document.querySelector('.play-btn');
+      playBtn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

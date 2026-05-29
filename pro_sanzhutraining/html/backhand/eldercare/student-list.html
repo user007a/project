@@ -391,6 +391,327 @@
         </div>
     </div>
 
+    <!-- 资料详情弹窗 -->
+    <div id="materialsModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeMaterialsModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-10 lg:inset-x-[15%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0" id="materialsModalContent">
+            <!-- 弹窗头部 -->
+            <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
+                <h2 class="text-lg font-bold text-gray-900">资料详情</h2>
+                <div class="flex items-center gap-3">
+                    <button id="editBtn" onclick="toggleEditMode()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <span class="iconify mr-1" data-icon="ri:edit-line"></span>编辑
+                    </button>
+                    <button id="saveBtn" onclick="saveMaterials()" class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors hidden">
+                        <span class="iconify mr-1" data-icon="ri:save-line"></span>保存
+                    </button>
+                    <button onclick="closeMaterialsModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                    </button>
+                </div>
+            </div>
+            <!-- 弹窗内容 -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="mb-6">
+                    <div class="flex items-center gap-4 mb-2">
+                        <div id="materialsAvatar" class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 text-lg font-bold">刘</span>
+                        </div>
+                        <div>
+                            <p id="materialsName" class="font-bold text-gray-900 text-base">刘秀英</p>
+                            <p id="materialsPhone" class="text-sm text-gray-500">138****2201</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 通用基础材料 -->
+                <div class="bg-gray-50 rounded-xl p-5 mb-6">
+                    <h3 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="iconify text-blue-500" data-icon="ri:file-text-line"></span>
+                        通用基础材料
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- 身份证正反面扫描件 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-blue-500" data-icon="ri:id-card-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">身份证正反面扫描件（或原件拍照）</span>
+                                </div>
+                                <span id="idCardStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
+                                    <span class="iconify mr-1" data-icon="ri:check-line"></span>已提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">支持格式：JPG、PNG、PDF，单文件不超过10MB</p>
+                            <!-- 文件预览区域 -->
+                            <div id="idCardPreview" class="flex items-center gap-3 mb-3">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:id-card-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-700">身份证正面.jpg</p>
+                                    <p class="text-xs text-gray-400">2025-06-15 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('idCard')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('idCard')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <!-- 上传区域 -->
+                            <div id="idCardUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传身份证扫描件</span>
+                                    <input type="file" accept="image/jpeg,image/png,application/pdf" class="hidden" onchange="handleFileUpload(this, 'idCard')">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 证件照 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-blue-500" data-icon="ri:image-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">电子版2寸蓝底/白底证件照</span>
+                                </div>
+                                <span id="photoStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
+                                    <span class="iconify mr-1" data-icon="ri:check-line"></span>已提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">尺寸要求：413×531像素，支持JPG、PNG格式</p>
+                            <div id="photoPreview" class="flex items-center gap-3 mb-3">
+                                <img src="https://neeko-copilot.bytedance.net/api/text_to_image?prompt=professional%20ID%20photo%20blue%20background%20portrait&image_size=portrait_4_3" alt="证件照" class="w-16 h-20 object-cover rounded-lg">
+                                <div>
+                                    <p class="text-sm text-gray-700">证件照.jpg</p>
+                                    <p class="text-xs text-gray-400">2025-06-15 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('photo')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('photo')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <div id="photoUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传证件照</span>
+                                    <input type="file" accept="image/jpeg,image/png" class="hidden" onchange="handleFileUpload(this, 'photo')">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 学历证明 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-blue-500" data-icon="ri:graduation-cap-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">学历证明扫描件（初中及以上）</span>
+                                </div>
+                                <span id="eduStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-600">
+                                    <span class="iconify mr-1" data-icon="ri:clock-line"></span>待审核
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">毕业证丢失可开具学历证明</p>
+                            <div id="eduPreview" class="flex items-center gap-3 mb-3">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:file-text-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-700">学历证明.pdf</p>
+                                    <p class="text-xs text-gray-400">2025-06-20 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('edu')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('edu')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <div id="eduUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传学历证明</span>
+                                    <input type="file" accept="image/jpeg,image/png,application/pdf" class="hidden" onchange="handleFileUpload(this, 'edu')">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 职业技能等级认定申报表 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-blue-500" data-icon="ri:file-edit-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">《职业技能等级认定申报表》</span>
+                                </div>
+                                <span id="declarationStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
+                                    <span class="iconify mr-1" data-icon="ri:check-line"></span>已提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">机构提供模板，需本人签字</p>
+                            <div id="declarationPreview" class="flex items-center gap-3 mb-3">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:file-edit-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-700">职业技能等级认定申报表.pdf</p>
+                                    <p class="text-xs text-gray-400">2025-06-15 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('declaration')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('declaration')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <div id="declarationUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传申报表</span>
+                                    <input type="file" accept="application/pdf" class="hidden" onchange="handleFileUpload(this, 'declaration')">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 申报材料真实性承诺书 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-blue-500" data-icon="ri:file-check-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">《申报材料真实性承诺书》</span>
+                                </div>
+                                <span id="promiseStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
+                                    <span class="iconify mr-1" data-icon="ri:check-line"></span>已提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">机构提供模板</p>
+                            <div id="promisePreview" class="flex items-center gap-3 mb-3">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:file-check-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-700">申报材料真实性承诺书.pdf</p>
+                                    <p class="text-xs text-gray-400">2025-06-15 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('promise')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('promise')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <div id="promiseUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传承诺书</span>
+                                    <input type="file" accept="application/pdf" class="hidden" onchange="handleFileUpload(this, 'promise')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 等级补充材料 -->
+                <div class="bg-gray-50 rounded-xl p-5">
+                    <h3 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <span class="iconify text-purple-500" data-icon="ri:layers-line"></span>
+                        等级补充材料
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- 报考中/高级证书 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-purple-500" data-icon="ri:award-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">下一级别证书扫描件</span>
+                                </div>
+                                <span id="certStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">
+                                    <span class="iconify mr-1" data-icon="ri:check-line"></span>已提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">报考中/高级需额外提供</p>
+                            <div id="certPreview" class="flex items-center gap-3 mb-3">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:award-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-700">养老护理员初级证书.pdf</p>
+                                    <p class="text-xs text-gray-400">2025-08-10 上传</p>
+                                </div>
+                                <button class="ml-auto opacity-0 edit-btn" onclick="previewFile('cert')">
+                                    <span class="iconify text-blue-500" data-icon="ri:eye-line"></span>
+                                </button>
+                                <button class="opacity-0 edit-btn" onclick="removeFile('cert')">
+                                    <span class="iconify text-red-500" data-icon="ri:trash-line"></span>
+                                </button>
+                            </div>
+                            <div id="certUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传证书扫描件</span>
+                                    <input type="file" accept="image/jpeg,image/png,application/pdf" class="hidden" onchange="handleFileUpload(this, 'cert')">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 工作证明 -->
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="iconify text-purple-500" data-icon="ri:building-line"></span>
+                                    <span class="text-sm font-medium text-gray-900">《工作证明》</span>
+                                </div>
+                                <span id="workStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">
+                                    <span class="iconify mr-1" data-icon="ri:alert-circle-line"></span>未提交
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">非学历报考（凭工作年限）需提供，机构提供模板，单位盖章</p>
+                            <div id="workPreview" class="flex items-center gap-3 mb-3 opacity-50">
+                                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <span class="iconify text-gray-400 text-2xl" data-icon="ri:file-question-line"></span>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-400">暂无文件</p>
+                                </div>
+                            </div>
+                            <div id="workUpload" class="hidden upload-area">
+                                <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span class="iconify text-gray-400 text-2xl mb-2" data-icon="ri:upload-line"></span>
+                                    <span class="text-xs text-gray-400">点击上传工作证明</span>
+                                    <input type="file" accept="image/jpeg,image/png,application/pdf" class="hidden" onchange="handleFileUpload(this, 'work')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件预览弹窗 -->
+    <div id="filePreviewModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeFilePreview()"></div>
+        <div class="absolute inset-8 md:inset-16 bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b flex items-center justify-between">
+                <h3 class="text-base font-semibold text-gray-900">文件预览</h3>
+                <button onclick="closeFilePreview()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 flex items-center justify-center p-8">
+                <div id="previewContent" class="max-w-full max-h-full">
+                    <img id="previewImage" src="" alt="预览图片" class="max-w-full max-h-[60vh] object-contain">
+                    <div id="previewDoc" class="hidden text-center">
+                        <span class="iconify text-gray-400 text-6xl" data-icon="ri:file-text-line"></span>
+                        <p class="text-gray-400 mt-4">文档预览</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
     // 学员Mock数据
     const students = [
@@ -456,7 +777,8 @@
             <td class="px-4 py-3 text-sm text-gray-500">${s.regDate}</td>
             <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
             <td class="px-4 py-3 text-right">
-                <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium">查看</button>
+                <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                <button onclick="viewMaterials(${i})" class="text-green-600 hover:text-green-700 text-sm font-medium">资料</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -534,6 +856,177 @@
         content.classList.remove('scale-100','opacity-100');
         content.classList.add('scale-95','opacity-0');
         setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    // 查看资料弹窗
+    function viewMaterials(idx) {
+        const s = students[idx];
+        const modal = document.getElementById('materialsModal');
+        const content = document.getElementById('materialsModalContent');
+
+        document.getElementById('materialsAvatar').innerHTML = `<span class="text-blue-600 text-lg font-bold">${s.name.charAt(0)}</span>`;
+        document.getElementById('materialsName').textContent = s.name;
+        document.getElementById('materialsPhone').textContent = s.phone.substring(0,3)+'****'+s.phone.substring(7);
+
+        // 退出编辑模式
+        editMode = false;
+        updateEditModeUI();
+
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95','opacity-0');
+            content.classList.add('scale-100','opacity-100');
+        });
+    }
+
+    function closeMaterialsModal() {
+        const modal = document.getElementById('materialsModal');
+        const content = document.getElementById('materialsModalContent');
+        content.classList.remove('scale-100','opacity-100');
+        content.classList.add('scale-95','opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    // 编辑模式状态
+    let editMode = false;
+
+    // 切换编辑模式
+    function toggleEditMode() {
+        editMode = !editMode;
+        updateEditModeUI();
+    }
+
+    // 更新编辑模式UI
+    function updateEditModeUI() {
+        const editBtn = document.getElementById('editBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const editBtns = document.querySelectorAll('.edit-btn');
+        const uploadAreas = document.querySelectorAll('.upload-area');
+
+        if (editMode) {
+            editBtn.classList.add('hidden');
+            saveBtn.classList.remove('hidden');
+            editBtns.forEach(btn => {
+                btn.classList.remove('opacity-0');
+                btn.classList.add('opacity-100');
+                btn.classList.add('cursor-pointer');
+            });
+            uploadAreas.forEach(area => {
+                area.classList.remove('hidden');
+                area.classList.remove('opacity-0');
+            });
+        } else {
+            editBtn.classList.remove('hidden');
+            saveBtn.classList.add('hidden');
+            editBtns.forEach(btn => {
+                btn.classList.remove('opacity-100');
+                btn.classList.add('opacity-0');
+                btn.classList.remove('cursor-pointer');
+            });
+            uploadAreas.forEach(area => {
+                area.classList.add('hidden');
+            });
+        }
+    }
+
+    // 保存资料
+    function saveMaterials() {
+        alert('资料已保存！');
+        editMode = false;
+        updateEditModeUI();
+    }
+
+    // 预览文件
+    function previewFile(type) {
+        const modal = document.getElementById('filePreviewModal');
+        const previewImage = document.getElementById('previewImage');
+        const previewDoc = document.getElementById('previewDoc');
+
+        // 获取预览区域的实际图片（如果有）
+        const previewDiv = document.getElementById(type + 'Preview');
+        const img = previewDiv.querySelector('img');
+        
+        // 根据类型设置预览内容
+        if ((type === 'photo' || type === 'idCard') && img && img.src) {
+            previewImage.src = img.src;
+            previewImage.classList.remove('hidden');
+            previewDoc.classList.add('hidden');
+        } else {
+            previewImage.classList.add('hidden');
+            previewDoc.classList.remove('hidden');
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    // 关闭文件预览
+    function closeFilePreview() {
+        const modal = document.getElementById('filePreviewModal');
+        modal.classList.add('hidden');
+    }
+
+    // 处理文件上传
+    function handleFileUpload(input, type) {
+        const file = input.files[0];
+        if (file) {
+            // 更新预览区域
+            const previewDiv = document.getElementById(type + 'Preview');
+            const statusSpan = document.getElementById(type + 'Status');
+            
+            // 移除opacity-50类（如果存在）
+            previewDiv.classList.remove('opacity-50');
+            
+            // 更新文件名显示
+            const fileName = previewDiv.querySelector('p.text-sm.text-gray-700');
+            if (fileName) {
+                fileName.textContent = file.name;
+            }
+            
+            // 更新上传时间
+            const uploadTime = previewDiv.querySelector('p.text-xs.text-gray-400');
+            if (uploadTime) {
+                const now = new Date();
+                uploadTime.textContent = now.toISOString().split('T')[0] + ' 上传';
+            }
+            
+            // 更新状态为待审核
+            statusSpan.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-600';
+            statusSpan.innerHTML = '<span class="iconify mr-1" data-icon="ri:clock-line"></span>待审核';
+            
+            // 如果是图片类型，更新预览图片
+            if (type === 'photo' && file.type.startsWith('image/')) {
+                const img = previewDiv.querySelector('img');
+                if (img) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // 清空input以便重新选择
+            input.value = '';
+        }
+    }
+
+    // 删除文件
+    function removeFile(type) {
+        if (confirm('确定要删除该文件吗？')) {
+            const previewDiv = document.getElementById(type + 'Preview');
+            const statusSpan = document.getElementById(type + 'Status');
+            
+            // 更新预览为无文件状态
+            previewDiv.classList.add('opacity-50');
+            const fileName = previewDiv.querySelector('p.text-sm');
+            if (fileName) {
+                fileName.textContent = '暂无文件';
+            }
+            
+            // 更新状态为未提交
+            statusSpan.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600';
+            statusSpan.innerHTML = '<span class="iconify mr-1" data-icon="ri:alert-circle-line"></span>未提交';
+        }
     }
 
     // 分页功能
