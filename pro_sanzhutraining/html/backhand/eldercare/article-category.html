@@ -6,7 +6,15 @@
     <title>资讯分类 - 叁竹培训系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
-    <style>* { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }</style>
+    <style>
+        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .animate-\[slideIn_0\.3s_ease-out\] { animation: slideIn 0.3s ease-out; }
+        .animate-\[fadeOut_0\.3s_ease-out\] { animation: fadeOut 0.3s ease-out; }
+        .animate-\[fadeIn_0\.15s_ease-out\] { animation: fadeIn 0.15s ease-out; }
+    </style>
     <style>
         .modal-overlay { opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { opacity: 1; }
@@ -41,11 +49,15 @@
                 <div class="menu-items pl-6">
                     <a href="student-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员列表</span>
+                        <span class="text-sm">学员管理</span>
+                    </a>
+                    <a href="certificate-manage.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:certificate-line"></span>
+                        <span class="text-sm">证书管理</span>
                     </a>
                     <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:award-line"></span>
-                        <span class="text-sm">证书管理</span>
+                        <span class="iconify mr-3 text-lg" data-icon="ri:search-line"></span>
+                        <span class="text-sm">证书查询</span>
                     </a>
                     <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
@@ -126,7 +138,7 @@
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                     <div class="flex items-center">
                         <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:article-line"></span>
-                        <span class="text-sm">内容管理</span>
+                        <span class="text-sm">内容中心</span>
                     </div>
                     <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
                 </button>
@@ -203,18 +215,89 @@
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">资讯分类管理</h1>
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">分类总数</p>
+                            <p class="text-2xl font-bold text-gray-900">4</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-blue-500 text-xl" data-icon="ri:folder-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">顶级分类</p>
+                            <p class="text-2xl font-bold text-gray-900">4</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-green-500 text-xl" data-icon="ri:folder-chart-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">子分类</p>
+                            <p class="text-2xl font-bold text-gray-900">9</p>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-orange-500 text-xl" data-icon="ri:folder-3-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">文章总数</p>
+                            <p class="text-2xl font-bold text-gray-900">23</p>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-purple-500 text-xl" data-icon="ri:article-line"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 搜索筛选区 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">分类名称</label>
+                        <div class="relative">
+                            <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="ri:search-line"></span>
+                            <input type="text" placeholder="搜索分类名称" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">状态</label>
+                        <select class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-500">
+                            <option value="">全部</option>
+                            <option value="enabled">启用</option>
+                            <option value="disabled">禁用</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">搜索</button>
+                        <button class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作栏 -->
+            <div class="flex items-center justify-between mb-4">
                 <button onclick="showEditModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
                     <span class="iconify" data-icon="ri:add-line"></span>新建分类
                 </button>
+                <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">4</span> 个顶级分类，<span class="font-semibold text-gray-900">9</span> 个子分类</span>
             </div>
 
             <!-- 数据表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
-                <div class="px-6 py-4 border-b bg-gray-50/50 flex justify-between items-center">
-                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">4</span> 个顶级分类，<span class="font-semibold text-gray-900">9</span> 个子分类</span>
-                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
@@ -577,6 +660,61 @@
                 }
             });
         });
+    </script>
+
+    <!-- Toast 通知容器 -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- 悬浮操作按钮 (FAB) -->
+    <div id="fabContainer" class="fixed bottom-6 right-6 z-[9998] flex flex-col items-end gap-3">
+        <div id="fabMenu" class="flex flex-col items-end gap-2 mb-2 hidden">
+            <button onclick="fabAction('category')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-blue-500" data-icon="ri:folder-add-line"></span>
+                <span class="text-sm font-medium">新增分类</span>
+            </button>
+        </div>
+        <button id="fabMain" onclick="toggleFab()" class="w-14 h-14 bg-[#1890FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110">
+            <span id="fabIcon" class="iconify text-2xl transition-transform duration-300" data-icon="ri:add-line"></span>
+        </button>
+    </div>
+
+    <script>
+    function showToast(type, title, message, duration = 4000) {
+        var container = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
+        var toastId = 'toast_' + Date.now();
+        var icons = { success: 'ri:checkbox-circle-line', error: 'ri:error-warning-line', warning: 'ri:alert-line', info: 'ri:information-line' };
+        var colors = { success: 'bg-green-50 border-green-200 text-green-800', error: 'bg-red-50 border-red-200 text-red-800', warning: 'bg-yellow-50 border-yellow-200 text-yellow-800', info: 'bg-blue-50 border-blue-200 text-blue-800' };
+        var iconColors = { success: 'text-green-500', error: 'text-red-500', warning: 'text-yellow-500', info: 'text-blue-500' };
+        toast.id = toastId;
+        toast.className = 'pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg ' + colors[type] + ' animate-[slideIn_0.3s_ease-out]';
+        toast.innerHTML = '<span class="iconify text-xl ' + iconColors[type] + '" data-icon="' + icons[type] + '"></span><div class="flex-1"><div class="font-medium text-sm">' + title + '</div><div class="text-xs opacity-80 mt-0.5">' + message + '</div></div><button onclick="dismissToast(\'' + toastId + '\')" class="opacity-60 hover:opacity-100 transition-opacity"><span class="iconify text-lg" data-icon="ri:close-line"></span></button>';
+        container.appendChild(toast);
+        setTimeout(function() { var el = document.getElementById(toastId); if(el) { el.style.animation = 'fadeOut 0.3s ease-out forwards'; setTimeout(function() { el.remove(); }, 300); } }, duration);
+    }
+    function dismissToast(id) { var el = document.getElementById(id); if(el) { el.style.animation = 'fadeOut 0.3s ease-out forwards'; setTimeout(function() { el.remove(); }, 300); } }
+
+    var fabOpen = false;
+    function toggleFab() { fabOpen = !fabOpen; var menu = document.getElementById('fabMenu'); var icon = document.getElementById('fabIcon'); if (fabOpen) { menu.classList.remove('hidden'); menu.classList.add('flex'); icon.style.transform = 'rotate(45deg)'; } else { menu.classList.add('hidden'); menu.classList.remove('flex'); icon.style.transform = 'rotate(0deg)'; } }
+    function fabAction(type) { toggleFab(); showToast('info', '功能提示', '该功能即将上线'); }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') { if (e.key === 'Escape') e.target.blur(); return; }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); showToast('info', '快捷搜索', '按 Ctrl+K 打开全局搜索'); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); fabAction('category'); }
+    });
+
+    function initShortcutHints() {
+        var hint = document.createElement('div');
+        hint.className = 'fixed bottom-4 left-4 z-[9997] bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100 text-xs text-gray-500';
+        hint.innerHTML = '<div class="flex items-center gap-3"><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">K</kbd> 搜索</span><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">N</kbd> 新增</span></div>';
+        hint.style.display = 'none'; hint.id = 'shortcutHint';
+        var hintTimeout;
+        document.addEventListener('keydown', function(e) { if (e.ctrlKey || e.metaKey) { hint.style.display = 'flex'; clearTimeout(hintTimeout); hintTimeout = setTimeout(function() { hint.style.display = 'none'; }, 3000); } });
+        document.body.appendChild(hint);
+    }
+    initShortcutHints();
+    window.addEventListener('load', function() { showToast('info', '欢迎使用资讯分类管理', '按 Ctrl+N 快速新增分类'); });
     </script>
 </body>
 </html>

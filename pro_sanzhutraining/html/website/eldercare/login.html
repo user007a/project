@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>叁竹培训 - 登录</title>
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--color-bg-primary);
+    }
+
+    .login-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .login-left {
+      flex: 1;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, #1a6b3a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .login-left::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .brand-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .brand-text {
+      font-size: 32px;
+      font-weight: var(--font-weight-bold);
+      color: white;
+      letter-spacing: 2px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      color: white;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: var(--font-weight-bold);
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 400px;
+    }
+
+    .features-list {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .feature-icon .iconify {
+      font-size: 22px;
+      color: white;
+    }
+
+    .feature-text {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .login-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      background: var(--color-bg-primary);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      padding: 48px;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-light);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .login-title {
+      font-size: 28px;
+      font-weight: var(--font-weight-bold);
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-gray-400);
+      font-size: 20px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 48px 14px 52px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: var(--font-base);
+      color: var(--text-primary);
+      background: var(--color-gray-50);
+      transition: all var(--transition-fast);
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-input:focus {
+      border-color: var(--color-primary);
+      background: var(--color-bg-card);
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+    }
+
+    .form-input:focus + .input-icon {
+      color: var(--color-primary);
+    }
+
+    .form-input.error {
+      border-color: var(--color-error);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-gray-400);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color var(--transition-fast);
+    }
+
+    .toggle-password:hover {
+      color: var(--color-primary);
+    }
+
+    .error-message {
+      display: none;
+      font-size: var(--font-xs);
+      color: var(--color-error);
+      margin-top: 8px;
+      margin-left: 4px;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .error-message.show {
+      display: flex;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid var(--border-color);
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      font-size: var(--font-sm);
+      color: var(--color-primary);
+      font-weight: var(--font-weight-medium);
+      transition: color var(--transition-fast);
+    }
+
+    .forgot-link:hover {
+      color: var(--color-primary-dark);
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+      color: var(--text-white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--font-lg);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+    }
+
+    .btn-login:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    .btn-login .spinner {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn-login.loading .btn-text {
+      opacity: 0;
+    }
+
+    .btn-login.loading .spinner {
+      display: block;
+      position: absolute;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .privacy-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .privacy-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-xs);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .privacy-label a {
+      color: var(--color-primary);
+    }
+
+    .privacy-label a:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .divider-text {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+    }
+
+    .btn-wechat {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--color-bg-card);
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-base);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .btn-wechat:hover:not(:disabled) {
+      background: var(--color-primary-50);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-wechat .iconify {
+      font-size: 24px;
+    }
+
+    .btn-wechat .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(5, 150, 105, 0.3);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .btn-wechat.loading .wechat-text {
+      opacity: 0;
+    }
+
+    .btn-wechat.loading .spinner {
+      display: block;
+      position: absolute;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .register-link a {
+      color: var(--color-primary);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .success-overlay.show {
+      display: flex;
+    }
+
+    .success-modal {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      padding: 40px 48px;
+      text-align: center;
+      animation: scaleIn 0.3s ease;
+      box-shadow: var(--shadow-floating);
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .success-icon .iconify {
+      font-size: 36px;
+      color: var(--color-primary);
+    }
+
+    .success-title {
+      font-size: var(--font-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .success-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 992px) {
+      .login-wrapper {
+        flex-direction: column;
+      }
+
+      .login-left {
+        padding: 40px 30px;
+        min-height: 300px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-desc {
+        font-size: 16px;
+        max-width: 100%;
+      }
+
+      .login-right {
+        padding: 40px 30px;
+      }
+
+      .login-card {
+        padding: 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-left {
+        padding: 30px 20px;
+        min-height: 250px;
+      }
+
+      .brand-logo {
+        margin-bottom: 24px;
+      }
+
+      .logo-icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      .logo-icon svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .brand-text {
+        font-size: 24px;
+      }
+
+      .hero-title {
+        font-size: 26px;
+      }
+
+      .hero-desc {
+        font-size: 14px;
+      }
+
+      .login-right {
+        padding: 20px;
+      }
+
+      .login-card {
+        padding: 24px;
+      }
+
+      .login-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-left">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 42V14C16 14 12 8 12 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M24 42V10C24 10 20 5 20 2" stroke="rgba(255,255,255,0.8)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M32 42V16C32 16 28 10 28 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 22C14 22 16 20 20 22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M22 18C22 18 24 16 28 18" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M30 24C30 24 32 22 36 24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 28C12 28 14 26 16 28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="brand-text">叁竹培训</span>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">开启您的<br/>职业发展之旅</h1>
+        <p class="hero-desc">专注养老护理领域，提供专业培训课程与技能认证服务，助您成就职业梦想。</p>
+      </div>
+
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <span class="iconify" data-icon="solar:graduation-cap-bold"></span>
+          </div>
+          <span class="feature-text">专业认证课程</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <span class="iconify" data-icon="solar:video-circle-bold"></span>
+          </div>
+          <span class="feature-text">高清视频教学</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <span class="iconify" data-icon="solar:users-bold"></span>
+          </div>
+          <span class="feature-text">专业导师指导</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="login-card">
+        <div class="login-header">
+          <h2 class="login-title">欢迎回来</h2>
+          <p class="login-subtitle">请登录您的账户</p>
+        </div>
+
+        <form id="loginForm" onsubmit="return false;">
+          <div class="form-group" id="phoneGroup">
+            <div class="input-wrapper">
+              <span class="iconify input-icon" data-icon="solar:phone-bold"></span>
+              <input type="text" class="form-input" id="phoneInput" placeholder="手机号码 / 用户名" autocomplete="username">
+            </div>
+            <div class="error-message" id="phoneError">
+              <span class="iconify" data-icon="solar:danger-circle-bold"></span>
+              <span>请输入手机号或用户名</span>
+            </div>
+          </div>
+
+          <div class="form-group" id="passwordGroup">
+            <div class="input-wrapper">
+              <span class="iconify input-icon" data-icon="solar:lock-password-bold"></span>
+              <input type="password" class="form-input" id="passwordInput" placeholder="请输入密码" autocomplete="current-password">
+              <span class="iconify toggle-password" data-icon="solar:eye-bold" id="togglePassword"></span>
+            </div>
+            <div class="error-message" id="passwordError">
+              <span class="iconify" data-icon="solar:danger-circle-bold"></span>
+              <span>请输入密码</span>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberCheck">
+              <span>记住登录状态</span>
+            </label>
+            <a href="javascript:void(0)" class="forgot-link">忘记密码？</a>
+          </div>
+
+          <button type="button" class="btn-login" id="btnLogin">
+            <span class="btn-text">登 录</span>
+            <span class="spinner"></span>
+          </button>
+        </form>
+
+        <div class="privacy-section">
+          <label class="privacy-label">
+            <input type="checkbox" id="privacyCheck">
+            <span>已阅读并同意 <a href="javascript:void(0)">《服务协议》</a> 与 <a href="javascript:void(0)">《隐私政策》</a></span>
+          </label>
+        </div>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">快捷登录</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <button type="button" class="btn-wechat" id="btnWechat">
+          <span class="iconify" data-icon="ri:wechat-fill"></span>
+          <span class="wechat-text">微信授权登录</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="register-link">
+          <span>还没有账户？</span>
+          <a href="register.html">立即注册</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-icon">
+        <span class="iconify" data-icon="solar:check-circle-bold"></span>
+      </div>
+      <div class="success-title">登录成功</div>
+      <div class="success-desc" id="successCountdown">2秒后自动跳转...</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      if (sessionStorage.getItem('isLoggedIn')) {
+        window.location.href = 'index.html';
+      }
+    })();
+
+    var togglePassword = document.getElementById('togglePassword');
+    var passwordInput = document.getElementById('passwordInput');
+    var isPasswordVisible = false;
+
+    togglePassword.addEventListener('click', function() {
+      isPasswordVisible = !isPasswordVisible;
+      passwordInput.type = isPasswordVisible ? 'text' : 'password';
+      togglePassword.setAttribute('data-icon', isPasswordVisible ? 'solar:eye-closed-bold' : 'solar:eye-bold');
+    });
+
+    function showError(groupId, errorId, message) {
+      var errorEl = document.getElementById(errorId);
+      errorEl.querySelector('span:last-child').textContent = message;
+      errorEl.classList.add('show');
+      var input = document.getElementById(groupId).querySelector('.form-input');
+      if (input) input.classList.add('error');
+    }
+
+    function clearError(groupId, errorId) {
+      document.getElementById(errorId).classList.remove('show');
+      var input = document.getElementById(groupId).querySelector('.form-input');
+      if (input) input.classList.remove('error');
+    }
+
+    function clearAllErrors() {
+      ['phoneError', 'passwordError'].forEach(function(id) {
+        document.getElementById(id).classList.remove('show');
+      });
+      ['phoneGroup', 'passwordGroup'].forEach(function(id) {
+        var input = document.getElementById(id).querySelector('.form-input');
+        if (input) input.classList.remove('error');
+      });
+    }
+
+    document.getElementById('phoneInput').addEventListener('input', function() {
+      clearError('phoneGroup', 'phoneError');
+    });
+
+    document.getElementById('passwordInput').addEventListener('input', function() {
+      clearError('passwordGroup', 'passwordError');
+    });
+
+    function doLogin(btn, username, textClass) {
+      var textEl = btn.querySelector('.' + textClass);
+      var spinnerEl = btn.querySelector('.spinner');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(function() {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('loginUser', username);
+
+        var overlay = document.getElementById('successOverlay');
+        overlay.classList.add('show');
+
+        var countdown = 2;
+        var countdownEl = document.getElementById('successCountdown');
+        countdownEl.textContent = countdown + '秒后自动跳转...';
+
+        var timer = setInterval(function() {
+          countdown--;
+          if (countdown <= 0) {
+            clearInterval(timer);
+            window.location.href = 'index.html';
+          } else {
+            countdownEl.textContent = countdown + '秒后自动跳转...';
+          }
+        }, 1000);
+      }, 1200);
+    }
+
+    document.getElementById('btnLogin').addEventListener('click', function() {
+      clearAllErrors();
+      var phone = document.getElementById('phoneInput').value.trim();
+      var pass = document.getElementById('passwordInput').value.trim();
+      var valid = true;
+
+      if (!phone) {
+        showError('phoneGroup', 'phoneError', '请输入手机号或用户名');
+        valid = false;
+      }
+
+      if (!pass) {
+        showError('passwordGroup', 'passwordError', '请输入密码');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      if (!document.getElementById('privacyCheck').checked) {
+        alert('请先阅读并同意《服务协议》与《隐私政策》');
+        return;
+      }
+
+      doLogin(this, phone, 'btn-text');
+    });
+
+    document.getElementById('btnWechat').addEventListener('click', function() {
+      if (!document.getElementById('privacyCheck').checked) {
+        alert('请先阅读并同意《服务协议》与《隐私政策》');
+        return;
+      }
+      doLogin(this, '微信用户', 'wechat-text');
+    });
+  </script>
+</body>
+</html>

@@ -713,12 +713,65 @@
     });
 
     // ========== 收藏 ==========
-    var isCollected = false;
+    var currentCourse = {
+      id: 'eldercare-primary',
+      title: '养老护理员初级职业技能培训',
+      teacher: '李老师',
+      lessons: '18',
+      image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=200&h=150&fit=crop'
+    };
+    
+    function getCollections() {
+      var collections = localStorage.getItem('sanzhu_collections');
+      return collections ? JSON.parse(collections) : [];
+    }
+    
+    function saveCollections(collections) {
+      localStorage.setItem('sanzhu_collections', JSON.stringify(collections));
+    }
+    
+    function checkCollected() {
+      var collections = getCollections();
+      return collections.some(function(course) {
+        return course.id === currentCourse.id;
+      });
+    }
+    
     function toggleCollect() {
-      isCollected = !isCollected;
+      var isCollected = checkCollected();
+      var collections = getCollections();
+      
+      if (isCollected) {
+        // 取消收藏
+        collections = collections.filter(function(course) {
+          return course.id !== currentCourse.id;
+        });
+        saveCollections(collections);
+        updateCollectUI(false);
+      } else {
+        // 添加收藏
+        var today = new Date();
+        var dateStr = today.getFullYear() + '-' + 
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(today.getDate()).padStart(2, '0');
+        
+        collections.push({
+          id: currentCourse.id,
+          title: currentCourse.title,
+          teacher: currentCourse.teacher,
+          lessons: currentCourse.lessons,
+          image: currentCourse.image,
+          time: dateStr
+        });
+        saveCollections(collections);
+        updateCollectUI(true);
+      }
+    }
+    
+    function updateCollectUI(collected) {
       var icon = document.getElementById('collectIcon');
       var text = document.getElementById('collectText');
-      if (isCollected) {
+      if (collected) {
         icon.setAttribute('data-icon', 'solar:heart-bold');
         icon.classList.remove('text-gray-400');
         icon.classList.add('text-accent-red');
@@ -734,6 +787,11 @@
         text.classList.add('text-gray-400');
       }
     }
+    
+    // 页面加载时检查收藏状态
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCollectUI(checkCollected());
+    });
 
     // ========== 购买流程 ==========
     function showBuyModal() {

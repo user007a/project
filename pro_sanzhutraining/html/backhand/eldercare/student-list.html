@@ -3,12 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学员列表 - 叁竹培训系统</title>
+    <title>学员管理 - 叁竹培训系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
-    <style>* { font-family: 'Microsoft YaHei', 'Inter', sans-serif; }</style>
+    <style>
+        * { font-family: 'Microsoft YaHei', 'Inter', sans-serif; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-\[slideIn_0\.3s_ease-out\] { animation: slideIn 0.3s ease-out; }
+        .animate-\[fadeOut_0\.3s_ease-out\] { animation: fadeOut 0.3s ease-out; }
+        .animate-\[fadeIn_0\.15s_ease-out\] { animation: fadeIn 0.15s ease-out; }
+    </style>
 </head>
 <body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+
+    <!-- Toast 通知容器 -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- 悬浮操作按钮 (FAB) -->
+    <div id="fabContainer" class="fixed bottom-6 right-6 z-[9998] flex flex-col items-end gap-3">
+        <div id="fabMenu" class="flex flex-col items-end gap-2 mb-2 hidden">
+            <button onclick="fabAction('student')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-green-500" data-icon="ri:user-add-line"></span>
+                <span class="text-sm font-medium">新增学员</span>
+            </button>
+            <button onclick="fabAction('course')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-blue-500" data-icon="ri:book-open-line"></span>
+                <span class="text-sm font-medium">新增课程</span>
+            </button>
+            <button onclick="fabAction('teacher')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-purple-500" data-icon="ri:user-star-line"></span>
+                <span class="text-sm font-medium">新增讲师</span>
+            </button>
+            <button onclick="fabAction('question')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-orange-500" data-icon="ri:file-list-3-line"></span>
+                <span class="text-sm font-medium">新增题目</span>
+            </button>
+        </div>
+        <button id="fabMain" onclick="toggleFab()" class="w-14 h-14 bg-[#1890FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110">
+            <span id="fabIcon" class="iconify text-2xl transition-transform duration-300" data-icon="ri:add-line"></span>
+        </button>
+    </div>
+
+    <!-- 右键菜单 -->
+    <div id="contextMenu" class="fixed z-[9999] hidden bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[180px] animate-[fadeIn_0.15s_ease-out]">
+        <div onclick="ctxViewStudent()" class="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 cursor-pointer transition-colors">
+            <span class="iconify text-gray-500" data-icon="ri:eye-line"></span>
+            <span class="text-sm text-gray-700">查看详情</span>
+        </div>
+        <div onclick="ctxEditStudent()" class="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 cursor-pointer transition-colors">
+            <span class="iconify text-gray-500" data-icon="ri:edit-line"></span>
+            <span class="text-sm text-gray-700">编辑信息</span>
+        </div>
+        <div onclick="ctxMaterials()" class="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 cursor-pointer transition-colors">
+            <span class="iconify text-gray-500" data-icon="ri:file-text-line"></span>
+            <span class="text-sm text-gray-700">资料管理</span>
+        </div>
+        <div class="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 cursor-pointer transition-colors">
+            <span class="iconify text-gray-500" data-icon="ri:copy-line"></span>
+            <span class="text-sm text-gray-700">复制信息</span>
+        </div>
+        <div class="border-t border-gray-100 my-1"></div>
+        <div onclick="ctxDeleteStudent()" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 cursor-pointer transition-colors">
+            <span class="iconify text-red-500" data-icon="ri:delete-bin-line"></span>
+            <span class="text-sm text-red-600">删除学员</span>
+        </div>
+    </div>
+
+    <!-- 快捷搜索弹窗 (Ctrl+K) -->
+    <div id="globalSearchModal" class="fixed inset-0 z-[9998] hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeGlobalSearch()"></div>
+        <div class="absolute top-[20%] left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+                <span class="iconify text-gray-400 text-xl" data-icon="ri:search-line"></span>
+                <input type="text" id="globalSearchInput" placeholder="搜索学员姓名、手机号、身份证号..." class="flex-1 text-lg outline-none placeholder-gray-400" oninput="handleGlobalSearch(this.value)">
+                <kbd class="px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded">ESC</kbd>
+            </div>
+            <div id="globalSearchResults" class="max-h-[400px] overflow-y-auto">
+                <div class="p-4 text-center text-gray-400 text-sm">
+                    <span class="iconify text-3xl mb-2" data-icon="ri:search-eye-line"></span>
+                    <p>输入关键词开始搜索</p>
+                </div>
+            </div>
+            <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-white rounded border border-gray-200">↑</kbd><kbd class="px-1.5 py-0.5 bg-white rounded border border-gray-200">↓</kbd> 导航</span>
+                    <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-white rounded border border-gray-200">Enter</kbd> 选择</span>
+                </div>
+                <span>按 Ctrl+K 快速打开</span>
+            </div>
+        </div>
+    </div>
 
     <!-- 侧边栏 -->
     <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
@@ -35,11 +130,15 @@
                 <div class="menu-items pl-6">
                     <a href="student-list.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员列表</span>
+                        <span class="text-sm">学员管理</span>
+                    </a>
+                    <a href="certificate-manage.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:certificate-line"></span>
+                        <span class="text-sm">证书管理</span>
                     </a>
                     <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:award-line"></span>
-                        <span class="text-sm">证书管理</span>
+                        <span class="iconify mr-3 text-lg" data-icon="ri:search-line"></span>
+                        <span class="text-sm">证书查询</span>
                     </a>
                     <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
@@ -120,7 +219,7 @@
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                     <div class="flex items-center">
                         <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:article-line"></span>
-                        <span class="text-sm">内容管理</span>
+                        <span class="text-sm">内容中心</span>
                     </div>
                     <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
                 </button>
@@ -179,7 +278,7 @@
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
             <div class="flex items-center gap-4">
-                <h1 class="text-lg font-bold text-gray-900">学员列表</h1>
+                <h1 class="text-lg font-bold text-gray-900">学员管理</h1>
             </div>
             <div class="flex items-center gap-4">
                 <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
@@ -199,40 +298,6 @@
 
         <!-- 主内容 -->
         <main class="flex-1 overflow-y-auto p-6">
-            <!-- 搜索筛选区 -->
-            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1.5">关键词搜索</label>
-                        <input type="text" placeholder="学员姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1.5">手机号</label>
-                        <input type="text" placeholder="手机号" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1.5">注册时间</label>
-                        <input type="date" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1.5">至</label>
-                        <input type="date" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-400">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1.5">学员状态</label>
-                        <select class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-500">
-                            <option>全部</option>
-                            <option>正常</option>
-                            <option>禁用</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end gap-2">
-                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">搜索</button>
-                        <button class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
-                    </div>
-                </div>
-            </div>
-
             <!-- 统计卡片 -->
             <div class="grid grid-cols-4 gap-4 mb-6">
                 <div class="bg-white rounded-xl border shadow-sm p-5">
@@ -281,18 +346,126 @@
                 </div>
             </div>
 
+            <!-- 搜索筛选区 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <!-- 快速筛选标签 -->
+                <div class="flex items-center gap-2 mb-4 pb-4 border-b border-gray-100">
+                    <span class="text-xs text-gray-400 flex-shrink-0">快速筛选：</span>
+                    <button onclick="applyQuickFilter('new')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium hover:bg-blue-100 transition-colors">
+                        <span class="iconify text-xs" data-icon="ri:add-circle-line"></span>本周新增
+                    </button>
+                    <button onclick="applyQuickFilter('active')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-600 rounded-md text-xs font-medium hover:bg-green-100 transition-colors">
+                        <span class="iconify text-xs" data-icon="ri:pulse-line"></span>活跃学员
+                    </button>
+                    <button onclick="applyQuickFilter('expiring')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-orange-50 text-orange-600 rounded-md text-xs font-medium hover:bg-orange-100 transition-colors">
+                        <span class="iconify text-xs" data-icon="ri:time-line"></span>即将过期
+                    </button>
+                    <button onclick="applyQuickFilter('certified')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md text-xs font-medium hover:bg-purple-100 transition-colors">
+                        <span class="iconify text-xs" data-icon="ri:award-line"></span>已获证书
+                    </button>
+                    <button onclick="applyQuickFilter('nocourse')" class="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium hover:bg-gray-200 transition-colors">
+                        <span class="iconify text-xs" data-icon="ri:user-line"></span>未购课
+                    </button>
+                </div>
+                <!-- 保存的筛选条件 -->
+                <div id="savedFiltersContainer" class="mb-4 flex items-center gap-2 flex-wrap">
+                    <span class="text-xs text-gray-400">已保存：</span>
+                    <span class="text-xs text-gray-400">暂无保存的筛选条件</span>
+                </div>
+                <!-- 筛选表单 -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">关键词搜索</label>
+                        <input type="text" id="searchName" placeholder="学员姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">手机号</label>
+                        <input type="text" id="searchPhone" placeholder="手机号" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">注册时间</label>
+                        <input type="date" id="searchStartDate" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">至</label>
+                        <input type="date" id="searchEndDate" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">学员状态</label>
+                        <select id="searchStatus" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-500">
+                            <option value="">全部</option>
+                            <option value="正常">正常</option>
+                            <option value="禁用">禁用</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button onclick="performSearch()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-1">
+                            <span class="iconify" data-icon="ri:search-line"></span>搜索
+                        </button>
+                        <button onclick="resetSearch()" class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
+                        <button onclick="saveCurrentFilter()" class="px-3 py-2 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors" title="保存当前筛选条件">
+                            <span class="iconify" data-icon="ri:bookmark-line"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- 操作栏 + 表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div id="tableToolbar" class="px-6 py-4 border-b flex justify-between items-center hidden">
+                    <div class="flex items-center gap-3">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">全选</span>
+                        </label>
+                        <span class="text-sm text-gray-500">已选 <span id="selectedCount" class="font-semibold text-blue-600">0</span> 项</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="batchDelete()" class="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
+                            <span class="iconify mr-1" data-icon="ri:delete-bin-line"></span>批量删除
+                        </button>
+                        <button onclick="batchExport()" class="px-4 py-2 bg-green-50 text-green-600 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors">
+                            <span class="iconify mr-1" data-icon="ri:download-line"></span>批量导出
+                        </button>
+                        <button onclick="batchChangeStatus('正常')" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
+                            <span class="iconify mr-1" data-icon="ri:checkbox-circle-line"></span>批量启用
+                        </button>
+                        <button onclick="batchChangeStatus('禁用')" class="px-4 py-2 bg-orange-50 text-orange-600 rounded-lg text-sm font-medium hover:bg-orange-100 transition-colors">
+                            <span class="iconify mr-1" data-icon="ri:close-circle-line"></span>批量禁用
+                        </button>
+                    </div>
+                </div>
                 <div class="px-6 py-4 border-b flex justify-between items-center">
-                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">23</span> 条记录</span>
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-                        <span class="iconify" data-icon="ri:download-line"></span>导出Excel
-                    </button>
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-gray-500">共 <span id="recordCount" class="font-semibold text-gray-900">23</span> 条记录</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="showBatchActions()" class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                                <span class="iconify" data-icon="ri:checkbox-line"></span>批量操作
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="openAddStudentModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                            <span class="iconify" data-icon="ri:user-add-line"></span>新增学员
+                        </button>
+                        <button onclick="openImportModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                            <span class="iconify" data-icon="ri:upload-line"></span>导入学员
+                        </button>
+                        <button onclick="downloadTemplate()" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <span class="iconify" data-icon="ri:file-download-line"></span>导入模板
+                        </button>
+                        <button onclick="exportSelectedOrAll()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                            <span class="iconify" data-icon="ri:download-line"></span>导出Excel
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-100 bg-gray-50/50">
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium w-10">
+                                    <input type="checkbox" id="selectAllHeader" onchange="toggleSelectAll()" class="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+                                </th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">序号</th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">学员姓名</th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">手机号</th>
@@ -712,6 +885,137 @@
         </div>
     </div>
 
+    <!-- 新增学员弹窗 -->
+    <div id="addStudentModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAddStudentModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-10 lg:inset-x-[15%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b flex items-center justify-between">
+                <h2 class="text-lg font-bold text-gray-900">新增学员</h2>
+                <button onclick="closeAddStudentModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">学员姓名 <span class="text-red-500">*</span></label>
+                        <input type="text" id="addName" placeholder="请输入学员姓名" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">手机号 <span class="text-red-500">*</span></label>
+                        <input type="tel" id="addPhone" placeholder="请输入手机号" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">性别 <span class="text-red-500">*</span></label>
+                        <select id="addGender" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm text-gray-600 transition-all">
+                            <option value="">请选择性别</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">年龄</label>
+                        <input type="number" id="addAge" placeholder="请输入年龄" min="1" max="150" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">身份证号</label>
+                        <input type="text" id="addIdCard" placeholder="请输入身份证号" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">邮箱</label>
+                        <input type="email" id="addEmail" placeholder="请输入邮箱" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">学历</label>
+                        <select id="addEducation" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm text-gray-600 transition-all">
+                            <option value="">请选择学历</option>
+                            <option value="小学">小学</option>
+                            <option value="初中">初中</option>
+                            <option value="高中/中专">高中/中专</option>
+                            <option value="大专">大专</option>
+                            <option value="本科">本科</option>
+                            <option value="研究生">研究生</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">职业</label>
+                        <input type="text" id="addOccupation" placeholder="请输入职业" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">地址</label>
+                        <input type="text" id="addAddress" placeholder="请输入地址" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">备注</label>
+                        <textarea id="addRemark" placeholder="请输入备注信息" rows="2" class="w-full border border-gray-200 px-4 py-2.5 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-sm transition-all resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
+                <button onclick="submitAddStudent()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">保存并继续添加</button>
+                <button onclick="submitAddStudent(true)" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">确认新增</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入学员弹窗 -->
+    <div id="importModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeImportModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-20 lg:inset-x-[25%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b flex items-center justify-between">
+                <h2 class="text-lg font-bold text-gray-900">导入学员</h2>
+                <button onclick="closeImportModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="iconify text-blue-600 text-3xl" data-icon="ri:upload-line"></span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">上传学员数据</h3>
+                    <p class="text-sm text-gray-500">请先下载模板，填写数据后再上传</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                    <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                        <span class="iconify text-gray-400 text-3xl mb-3" data-icon="ri:cloud-upload-line"></span>
+                        <span class="text-sm text-gray-600 mb-1">点击或拖拽文件到此处上传</span>
+                        <span class="text-xs text-gray-400">支持 .xlsx .xls .csv 格式，文件大小不超过10MB</span>
+                        <input type="file" accept=".xlsx,.xls,.csv" class="hidden" id="importFile" onchange="handleImportFile(this)">
+                    </label>
+                </div>
+
+                <div id="importPreview" class="hidden">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-3">数据预览</h4>
+                    <div class="border border-gray-200 rounded-xl overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">姓名</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">手机号</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">性别</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">年龄</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="importTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="importCount" class="text-xs text-gray-500 mt-3"></p>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
+                <button onclick="downloadTemplate()" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                    <span class="iconify" data-icon="ri:file-download-line"></span>下载模板
+                </button>
+                <button onclick="closeImportModal()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">取消</button>
+                <button onclick="submitImport()" id="submitImportBtn" disabled class="px-5 py-2 bg-gray-300 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed">确认导入</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     // 学员Mock数据
     const students = [
@@ -758,9 +1062,15 @@
         const avatarColors = ['bg-blue-100 text-blue-600','bg-green-100 text-green-600','bg-purple-100 text-purple-600','bg-orange-100 text-orange-600','bg-pink-100 text-pink-600'];
         const ac = avatarColors[i % avatarColors.length];
         const tr = document.createElement('tr');
+        tr.setAttribute('data-index', i);
         tr.setAttribute('data-row', i + 1);
-        tr.className = 'hover:bg-blue-50/30 transition-colors';
+        tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
+        tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, i); };
+        tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(i, e); };
         tr.innerHTML = `
+            <td class="px-4 py-3">
+                <input type="checkbox" data-index="${i}" onchange="toggleRowSelection(${i}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
+            </td>
             <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
             <td class="px-4 py-3">
                 <div class="flex items-center gap-2.5">
@@ -1063,6 +1373,960 @@
     }
 
     renderPagination(1);
+
+    // 新增学员弹窗
+    function openAddStudentModal() {
+        const modal = document.getElementById('addStudentModal');
+        modal.classList.remove('hidden');
+        // 清空表单
+        document.getElementById('addName').value = '';
+        document.getElementById('addPhone').value = '';
+        document.getElementById('addGender').value = '';
+        document.getElementById('addAge').value = '';
+        document.getElementById('addIdCard').value = '';
+        document.getElementById('addEmail').value = '';
+        document.getElementById('addEducation').value = '';
+        document.getElementById('addOccupation').value = '';
+        document.getElementById('addAddress').value = '';
+        document.getElementById('addRemark').value = '';
+    }
+
+    function closeAddStudentModal() {
+        const modal = document.getElementById('addStudentModal');
+        modal.classList.add('hidden');
+    }
+
+    function submitAddStudent(closeAfterSave = false) {
+        const name = document.getElementById('addName').value.trim();
+        const phone = document.getElementById('addPhone').value.trim();
+        const gender = document.getElementById('addGender').value;
+
+        // 验证必填项
+        if (!name) {
+            showToast('warning', '请输入学员姓名', '姓名不能为空');
+            return;
+        }
+        if (!phone) {
+            showToast('warning', '请输入手机号', '手机号不能为空');
+            return;
+        }
+        if (!gender) {
+            showToast('warning', '请选择性别', '性别不能为空');
+            return;
+        }
+
+        // 创建新学员数据
+        const age = parseInt(document.getElementById('addAge').value) || 0;
+        const newStudent = {
+            name: name,
+            phone: phone,
+            gender: gender,
+            age: age,
+            courses: 0,
+            certs: 0,
+            time: 0,
+            regDate: new Date().toISOString().split('T')[0],
+            status: '正常'
+        };
+
+        // 添加到列表
+        students.unshift(newStudent);
+
+        // 重新渲染表格
+        renderTable();
+        updateStats();
+
+        showToast('success', '学员新增成功', `"${name}"已添加到学员列表`);
+
+        if (closeAfterSave) {
+            closeAddStudentModal();
+        } else {
+            // 清空表单但保持弹窗打开
+            document.getElementById('addName').value = '';
+            document.getElementById('addPhone').value = '';
+            document.getElementById('addGender').value = '';
+            document.getElementById('addAge').value = '';
+            document.getElementById('addIdCard').value = '';
+            document.getElementById('addEmail').value = '';
+            document.getElementById('addEducation').value = '';
+            document.getElementById('addOccupation').value = '';
+            document.getElementById('addAddress').value = '';
+            document.getElementById('addRemark').value = '';
+            document.getElementById('addName').focus();
+        }
+    }
+
+    // 搜索功能
+    function performSearch() {
+        const name = document.getElementById('searchName')?.value.trim().toLowerCase() || '';
+        const phone = document.getElementById('searchPhone')?.value.trim() || '';
+        const status = document.getElementById('searchStatus')?.value || '';
+
+        const filtered = students.filter(s => {
+            const matchName = !name || s.name.toLowerCase().includes(name);
+            const matchPhone = !phone || s.phone.includes(phone);
+            const matchStatus = !status || s.status === status;
+            return matchName && matchPhone && matchStatus;
+        });
+
+        // 临时替换students进行筛选显示
+        const originalRender = renderTable;
+        tbody.innerHTML = '';
+        filtered.forEach((s, i) => {
+            const statusClass = s.status === '正常'
+                ? 'bg-green-50 text-green-600'
+                : 'bg-red-50 text-red-500';
+            const avatarColors = ['bg-blue-100 text-blue-600','bg-green-100 text-green-600','bg-purple-100 text-purple-600','bg-orange-100 text-orange-600','bg-pink-100 text-pink-600'];
+            const ac = avatarColors[i % avatarColors.length];
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-index', students.indexOf(s));
+            tr.setAttribute('data-row', i + 1);
+            tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
+            tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, students.indexOf(s)); };
+            tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(students.indexOf(s), e); };
+            tr.innerHTML = `
+                <td class="px-4 py-3">
+                    <input type="checkbox" data-index="${students.indexOf(s)}" onchange="toggleRowSelection(${students.indexOf(s)}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>
+                        <span class="text-sm font-medium text-gray-900">${s.name}</span>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.phone.substring(0,3)}****${s.phone.substring(7)}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.gender}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.age}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.courses}门</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.certs}张</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${formatTime(s.time)}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">${s.regDate}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="viewStudent(${students.indexOf(s)})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                    <button onclick="viewMaterials(${students.indexOf(s)})" class="text-green-600 hover:text-green-700 text-sm font-medium">资料</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // 更新页脚显示
+        document.getElementById('recordCount').textContent = filtered.length;
+        const pageInfo = document.getElementById('pageInfo');
+        if (pageInfo) pageInfo.textContent = `共 ${filtered.length} 条（筛选结果）`;
+
+        showToast('success', '搜索完成', `找到 ${filtered.length} 条匹配的记录`);
+    }
+
+    function resetSearch() {
+        document.getElementById('searchName').value = '';
+        document.getElementById('searchPhone').value = '';
+        document.getElementById('searchStartDate').value = '';
+        document.getElementById('searchEndDate').value = '';
+        document.getElementById('searchStatus').value = '';
+        renderTable();
+        showToast('info', '已重置', '筛选条件已重置');
+    }
+
+    // 导入学员弹窗
+    function openImportModal() {
+        const modal = document.getElementById('importModal');
+        modal.classList.remove('hidden');
+        // 重置状态
+        document.getElementById('importFile').value = '';
+        document.getElementById('importPreview').classList.add('hidden');
+        document.getElementById('submitImportBtn').disabled = true;
+        document.getElementById('submitImportBtn').className = 'px-5 py-2 bg-gray-300 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed';
+    }
+
+    function closeImportModal() {
+        const modal = document.getElementById('importModal');
+        modal.classList.add('hidden');
+    }
+
+    let importData = [];
+
+    function handleImportFile(input) {
+        const file = input.files[0];
+        if (file) {
+            // 模拟解析文件
+            importData = [
+                { name: '李明', phone: '13812345678', gender: '男', age: 35 },
+                { name: '王芳', phone: '13987654321', gender: '女', age: 28 },
+                { name: '张伟', phone: '15811112222', gender: '男', age: 42 },
+                { name: '刘洋', phone: '15922223333', gender: '女', age: 31 },
+                { name: '陈静', phone: '13633334444', gender: '女', age: 38 }
+            ];
+
+            // 显示预览
+            const tbody = document.getElementById('importTableBody');
+            tbody.innerHTML = '';
+            importData.forEach((item, i) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-50';
+                tr.innerHTML = `
+                    <td class="px-4 py-2 text-sm text-gray-700">${item.name}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">${item.phone}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">${item.gender}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">${item.age}</td>
+                    <td class="px-4 py-2"><span class="inline-block px-2 py-0.5 bg-green-50 text-green-600 text-xs font-medium rounded-md">正常</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('importCount').textContent = `共 ${importData.length} 条数据`;
+            document.getElementById('importPreview').classList.remove('hidden');
+            
+            // 启用导入按钮
+            document.getElementById('submitImportBtn').disabled = false;
+            document.getElementById('submitImportBtn').className = 'px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors';
+        }
+    }
+
+    function submitImport() {
+        if (importData.length === 0) {
+            alert('请先上传文件');
+            return;
+        }
+
+        // 添加导入的数据
+        importData.forEach(item => {
+            students.unshift({
+                name: item.name,
+                phone: item.phone,
+                gender: item.gender,
+                age: item.age,
+                courses: 0,
+                certs: 0,
+                time: 0,
+                regDate: new Date().toISOString().split('T')[0],
+                status: '正常'
+            });
+        });
+
+        // 重新渲染表格
+        tbody.innerHTML = '';
+        students.forEach((s, i) => {
+            const statusClass = s.status === '正常'
+                ? 'bg-green-50 text-green-600'
+                : 'bg-red-50 text-red-500';
+            const avatarColors = ['bg-blue-100 text-blue-600','bg-green-100 text-green-600','bg-purple-100 text-purple-600','bg-orange-100 text-orange-600','bg-pink-100 text-pink-600'];
+            const ac = avatarColors[i % avatarColors.length];
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-row', i + 1);
+            tr.className = 'hover:bg-blue-50/30 transition-colors';
+            tr.innerHTML = `
+                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>
+                        <span class="text-sm font-medium text-gray-900">${s.name}</span>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.phone.substring(0,3)}****${s.phone.substring(7)}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.gender}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.age}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.courses}门</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.certs}张</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${formatTime(s.time)}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">${s.regDate}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                    <button onclick="viewMaterials(${i})" class="text-green-600 hover:text-green-700 text-sm font-medium">资料</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // 更新统计
+        document.querySelector('.grid-cols-4 div:first-child .text-2xl').textContent = students.length.toLocaleString();
+
+        alert(`成功导入 ${importData.length} 名学员！`);
+        closeImportModal();
+    }
+
+    // 下载模板
+    function downloadTemplate() {
+        // 创建CSV内容
+        const headers = ['学员姓名', '手机号', '性别', '年龄', '身份证号', '邮箱', '学历', '职业', '地址', '备注'];
+        const content = headers.join(',') + '\n';
+
+        // 创建Blob
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+
+        // 创建下载链接
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', '学员导入模板.csv');
+        link.style.visibility = 'hidden';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast('success', '模板下载成功！', '请使用模板填写数据后导入');
+    }
+
+    // ========== Toast 通知系统 ==========
+    function showToast(type, title, message, duration = 4000) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const toastId = 'toast_' + Date.now();
+
+        const icons = {
+            success: 'ri:checkbox-circle-line',
+            error: 'ri:error-warning-line',
+            warning: 'ri:alert-line',
+            info: 'ri:information-line'
+        };
+        const colors = {
+            success: 'bg-green-50 border-green-200 text-green-800',
+            error: 'bg-red-50 border-red-200 text-red-800',
+            warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+            info: 'bg-blue-50 border-blue-200 text-blue-800'
+        };
+        const iconColors = {
+            success: 'text-green-500',
+            error: 'text-red-500',
+            warning: 'text-yellow-500',
+            info: 'text-blue-500'
+        };
+
+        toast.id = toastId;
+        toast.className = `flex items-start gap-3 p-4 rounded-xl border shadow-lg ${colors[type]} pointer-events-auto animate-[slideIn_0.3s_ease-out]`;
+        toast.innerHTML = `
+            <span class="iconify ${iconColors[type]} text-xl flex-shrink-0" data-icon="${icons[type]}"></span>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold">${title}</p>
+                ${message ? `<p class="text-xs opacity-80 mt-0.5">${message}</p>` : ''}
+            </div>
+            <button onclick="hideToast('${toastId}')" class="flex-shrink-0 opacity-60 hover:opacity-100 transition-opacity">
+                <span class="iconify text-lg" data-icon="ri:close-line"></span>
+            </button>
+        `;
+
+        container.appendChild(toast);
+
+        // 自动关闭
+        setTimeout(() => hideToast(toastId), duration);
+
+        return toastId;
+    }
+
+    function hideToast(toastId) {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+            toast.classList.add('animate-[fadeOut_0.3s_ease-out]');
+            setTimeout(() => toast.remove(), 300);
+        }
+    }
+
+    // ========== 右键菜单功能 ==========
+    let contextMenuIndex = -1;
+
+    function showContextMenu(e, index) {
+        contextMenuIndex = index;
+        const menu = document.getElementById('contextMenu');
+        menu.classList.remove('hidden');
+
+        // 计算菜单位置
+        const rect = e.target.getBoundingClientRect();
+        let x = rect.right;
+        let y = rect.top;
+
+        // 边界检测
+        const menuWidth = 180;
+        const menuHeight = 200;
+        if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10;
+        if (y + menuHeight > window.innerHeight) y = window.innerHeight - menuHeight - 10;
+
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+    }
+
+    function hideContextMenu() {
+        document.getElementById('contextMenu').classList.add('hidden');
+    }
+
+    function ctxViewStudent() {
+        if (contextMenuIndex >= 0) {
+            viewStudent(contextMenuIndex);
+        }
+        hideContextMenu();
+    }
+
+    function ctxEditStudent() {
+        showToast('info', '编辑功能', '该功能开发中...');
+        hideContextMenu();
+    }
+
+    function ctxMaterials() {
+        if (contextMenuIndex >= 0) {
+            viewMaterials(contextMenuIndex);
+        }
+        hideContextMenu();
+    }
+
+    function ctxDeleteStudent() {
+        if (contextMenuIndex >= 0) {
+            const s = students[contextMenuIndex];
+            if (confirm(`确定要删除学员"${s.name}"吗？`)) {
+                students.splice(contextMenuIndex, 1);
+                renderTable();
+                updateStats();
+                showToast('success', '删除成功', `学员"${s.name}"已删除`);
+            }
+        }
+        hideContextMenu();
+    }
+
+    // 点击其他地方关闭右键菜单
+    document.addEventListener('click', hideContextMenu);
+
+    // ========== 全局快捷搜索 (Ctrl+K) ==========
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            openGlobalSearch();
+        }
+        if (e.key === 'Escape') {
+            closeGlobalSearch();
+            hideContextMenu();
+        }
+    });
+
+    function openGlobalSearch() {
+        const modal = document.getElementById('globalSearchModal');
+        modal.classList.remove('hidden');
+        document.getElementById('globalSearchInput').focus();
+    }
+
+    function closeGlobalSearch() {
+        document.getElementById('globalSearchModal').classList.add('hidden');
+        document.getElementById('globalSearchInput').value = '';
+        document.getElementById('globalSearchResults').innerHTML = `
+            <div class="p-4 text-center text-gray-400 text-sm">
+                <span class="iconify text-3xl mb-2" data-icon="ri:search-eye-line"></span>
+                <p>输入关键词开始搜索</p>
+            </div>
+        `;
+    }
+
+    function handleGlobalSearch(query) {
+        const resultsContainer = document.getElementById('globalSearchResults');
+
+        if (!query.trim()) {
+            resultsContainer.innerHTML = `
+                <div class="p-4 text-center text-gray-400 text-sm">
+                    <span class="iconify text-3xl mb-2" data-icon="ri:search-eye-line"></span>
+                    <p>输入关键词开始搜索</p>
+                </div>
+            `;
+            return;
+        }
+
+        const q = query.toLowerCase();
+        const results = students.filter(s =>
+            s.name.toLowerCase().includes(q) ||
+            s.phone.includes(q) ||
+            s.idCard?.toLowerCase().includes(q) ||
+            s.email?.toLowerCase().includes(q)
+        );
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="p-8 text-center text-gray-400 text-sm">
+                    <span class="iconify text-3xl mb-2" data-icon="ri:search-line"></span>
+                    <p>未找到匹配"${query}"的学员</p>
+                    <button onclick="openAddStudentModal(); closeGlobalSearch();" class="mt-3 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm hover:bg-blue-100 transition-colors">
+                        新增学员"${query}"
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        let html = `<div class="p-2">`;
+        results.slice(0, 8).forEach((s, i) => {
+            const realIndex = students.indexOf(s);
+            html += `
+                <div onclick="selectSearchResult(${realIndex})" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-xs font-bold">${s.name.charAt(0)}</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">${s.name}</p>
+                        <p class="text-xs text-gray-400">${s.phone} · ${s.gender} · ${s.age}岁</p>
+                    </div>
+                    <span class="iconify text-gray-300" data-icon="ri:arrow-right-s-line"></span>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        html += `<div class="px-4 py-2 text-xs text-gray-400 border-t border-gray-100">找到 ${results.length} 个结果</div>`;
+        resultsContainer.innerHTML = html;
+    }
+
+    function selectSearchResult(index) {
+        closeGlobalSearch();
+        viewStudent(index);
+    }
+
+    // ========== 批量选择与操作 ==========
+    let selectedRows = new Set();
+
+    function showBatchActions() {
+        document.getElementById('tableToolbar').classList.remove('hidden');
+    }
+
+    function toggleRowSelection(index, e) {
+        if (e && e.target.type === 'checkbox') {
+            e.stopPropagation();
+        }
+
+        const checkbox = document.querySelector(`input[data-index="${index}"]`);
+        if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+        }
+
+        if (checkbox && checkbox.checked) {
+            selectedRows.add(index);
+        } else {
+            selectedRows.delete(index);
+        }
+
+        updateSelectedUI();
+    }
+
+    function toggleSelectAll() {
+        const selectAllHeader = document.getElementById('selectAllHeader');
+        const selectAll = document.getElementById('selectAll');
+
+        if (selectAllHeader) {
+            selectAllHeader.checked = selectAllHeader.checked;
+        }
+        if (selectAll) {
+            selectAll.checked = selectAllHeader ? selectAllHeader.checked : selectAll.checked;
+        }
+
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach((cb, i) => {
+            cb.checked = selectAllHeader ? selectAllHeader.checked : selectAll.checked;
+            const rowIndex = parseInt(cb.getAttribute('data-index'));
+            if (cb.checked) {
+                selectedRows.add(rowIndex);
+            } else {
+                selectedRows.delete(rowIndex);
+            }
+        });
+
+        updateSelectedUI();
+    }
+
+    function updateSelectedUI() {
+        const count = selectedRows.size;
+        document.getElementById('selectedCount').textContent = count;
+
+        const selectAllHeader = document.getElementById('selectAllHeader');
+        if (selectAllHeader) {
+            selectAllHeader.checked = count === students.length && students.length > 0;
+        }
+    }
+
+    function batchDelete() {
+        if (selectedRows.size === 0) {
+            showToast('warning', '请先选择学员', '至少选择一个学员进行操作');
+            return;
+        }
+
+        const names = Array.from(selectedRows).map(i => students[i].name).join('、');
+        if (confirm(`确定要删除选中的 ${selectedRows.size} 名学员吗？\n${names}`)) {
+            const indices = Array.from(selectedRows).sort((a, b) => b - a);
+            indices.forEach(i => students.splice(i, 1));
+            selectedRows.clear();
+            renderTable();
+            updateStats();
+            hideBatchToolbar();
+            showToast('success', '批量删除成功', `已删除 ${indices.length} 名学员`);
+        }
+    }
+
+    function batchExport() {
+        if (selectedRows.size === 0) {
+            showToast('warning', '请先选择学员', '至少选择一个学员进行导出');
+            return;
+        }
+        showToast('info', '正在导出...', `已选择 ${selectedRows.size} 名学员数据`);
+        setTimeout(() => {
+            showToast('success', '导出成功', '学员数据已导出为Excel文件');
+        }, 1500);
+    }
+
+    function batchChangeStatus(status) {
+        if (selectedRows.size === 0) {
+            showToast('warning', '请先选择学员', '至少选择一个学员进行操作');
+            return;
+        }
+
+        const indices = Array.from(selectedRows).sort((a, b) => b - a);
+        indices.forEach(i => students[i].status = status);
+        renderTable();
+        showToast('success', '状态更新成功', `已将 ${indices.length} 名学员状态更新为"${status}"`);
+    }
+
+    function hideBatchToolbar() {
+        document.getElementById('tableToolbar').classList.add('hidden');
+        selectedRows.clear();
+        document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = false);
+        updateSelectedUI();
+    }
+
+    function exportSelectedOrAll() {
+        if (selectedRows.size > 0) {
+            batchExport();
+        } else {
+            showToast('info', '正在导出全部...', '共 ' + students.length + ' 条数据');
+            setTimeout(() => {
+                showToast('success', '导出成功', '学员数据已导出为Excel文件');
+            }, 1500);
+        }
+    }
+
+    function renderTable() {
+        tbody.innerHTML = '';
+        students.forEach((s, i) => {
+            const statusClass = s.status === '正常'
+                ? 'bg-green-50 text-green-600'
+                : 'bg-red-50 text-red-500';
+            const avatarColors = ['bg-blue-100 text-blue-600','bg-green-100 text-green-600','bg-purple-100 text-purple-600','bg-orange-100 text-orange-600','bg-pink-100 text-pink-600'];
+            const ac = avatarColors[i % avatarColors.length];
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-index', i);
+            tr.setAttribute('data-row', i + 1);
+            tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
+            tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, i); };
+            tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(i, e); };
+            tr.innerHTML = `
+                <td class="px-4 py-3">
+                    <input type="checkbox" data-index="${i}" onchange="toggleRowSelection(${i}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>
+                        <span class="text-sm font-medium text-gray-900">${s.name}</span>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.phone.substring(0,3)}****${s.phone.substring(7)}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.gender}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.age}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.courses}门</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${s.certs}张</td>
+                <td class="px-4 py-3 text-sm text-gray-700">${formatTime(s.time)}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">${s.regDate}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                    <button onclick="viewMaterials(${i})" class="text-green-600 hover:text-green-700 text-sm font-medium">资料</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // 更新分页
+        initPagination();
+        // 更新记录数
+        document.getElementById('recordCount').textContent = students.length;
+    }
+
+    function updateStats() {
+        document.querySelector('.grid-cols-4 div:first-child .text-2xl').textContent = students.length.toLocaleString();
+        document.getElementById('recordCount').textContent = students.length;
+    }
+
+    // ========== 键盘快捷键 ==========
+    document.addEventListener('keydown', function(e) {
+        // 忽略输入框内的快捷键
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            if (e.key === 'Escape') {
+                e.target.blur();
+            }
+            return;
+        }
+
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key.toLowerCase()) {
+                case 'n':
+                    e.preventDefault();
+                    openAddStudentModal();
+                    break;
+                case 'e':
+                    e.preventDefault();
+                    if (selectedRows.size === 1) {
+                        showToast('info', '编辑功能', '该功能开发中...');
+                    } else if (selectedRows.size === 0) {
+                        showToast('info', '提示', '请先选择一个学员');
+                    }
+                    break;
+                case 'd':
+                    e.preventDefault();
+                    if (selectedRows.size > 0) {
+                        batchDelete();
+                    }
+                    break;
+                case 'f':
+                    e.preventDefault();
+                    openGlobalSearch();
+                    break;
+            }
+        }
+    });
+
+    // ========== 保存筛选条件 ==========
+    let savedFilters = JSON.parse(localStorage.getItem('studentFilters') || '[]');
+
+    function saveCurrentFilter() {
+        const name = document.querySelector('input[placeholder="学员姓名"]')?.value || '';
+        const phone = document.querySelector('input[placeholder="手机号"]')?.value || '';
+        const status = document.querySelector('select')?.value || '全部';
+
+        if (!name && !phone && status === '全部') {
+            showToast('warning', '请先填写筛选条件', '至少填写一个筛选条件后再保存');
+            return;
+        }
+
+        const filterName = prompt('请输入筛选条件名称：', `筛选条件${savedFilters.length + 1}`);
+        if (!filterName) return;
+
+        savedFilters.push({ name: filterName, nameInput: name, phoneInput: phone, statusSelect: status });
+        localStorage.setItem('studentFilters', JSON.stringify(savedFilters));
+        showToast('success', '筛选条件已保存', `"${filterName}"已保存，可快速应用`);
+        renderSavedFilters();
+    }
+
+    function renderSavedFilters() {
+        const container = document.getElementById('savedFiltersContainer');
+        if (!container) return;
+
+        if (savedFilters.length === 0) {
+            container.innerHTML = '<span class="text-xs text-gray-400">暂无保存的筛选条件</span>';
+            return;
+        }
+
+        let html = '<div class="flex flex-wrap gap-2">';
+        savedFilters.forEach((f, i) => {
+            html += `
+                <button onclick="applyFilter(${i})" class="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs hover:bg-blue-100 transition-colors">
+                    <span>${f.name}</span>
+                    <span onclick="deleteFilter(event, ${i})" class="ml-1 hover:text-red-500">×</span>
+                </button>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function applyFilter(index) {
+        const f = savedFilters[index];
+        const nameInput = document.querySelector('input[placeholder="学员姓名"]');
+        const phoneInput = document.querySelector('input[placeholder="手机号"]');
+        const statusSelect = document.querySelector('select');
+
+        if (nameInput) nameInput.value = f.nameInput || '';
+        if (phoneInput) phoneInput.value = f.phoneInput || '';
+        if (statusSelect) statusSelect.value = f.statusSelect || '全部';
+
+        showToast('success', '已应用筛选条件', `"${f.name}"已应用`);
+    }
+
+    function deleteFilter(e, index) {
+        e.stopPropagation();
+        const name = savedFilters[index].name;
+        if (confirm(`确定要删除筛选条件"${name}"吗？`)) {
+            savedFilters.splice(index, 1);
+            localStorage.setItem('studentFilters', JSON.stringify(savedFilters));
+            renderSavedFilters();
+            showToast('success', '已删除筛选条件', `"${name}"已删除`);
+        }
+    }
+
+    // ========== 快速筛选标签 ==========
+    function applyQuickFilter(type) {
+        const nameInput = document.querySelector('input[placeholder="学员姓名"]');
+        const phoneInput = document.querySelector('input[placeholder="手机号"]');
+        const statusSelect = document.querySelector('select');
+
+        switch(type) {
+            case 'new':
+                if (nameInput) nameInput.value = '';
+                if (phoneInput) phoneInput.value = '';
+                if (statusSelect) statusSelect.value = '全部';
+                showToast('info', '本周新增学员', '正在筛选本周新增的学员');
+                break;
+            case 'active':
+                showToast('info', '活跃学员', '正在筛选近30天活跃的学员');
+                break;
+            case 'expiring':
+                showToast('info', '即将过期', '正在筛选学习即将到期的学员');
+                break;
+            case 'certified':
+                showToast('info', '已获证书', '正在筛选已获得证书的学员');
+                break;
+            case 'nocourse':
+                showToast('info', '未购课', '正在筛选未购买课程的学员');
+                break;
+        }
+    }
+
+    // ========== 分页器优化 ==========
+    function initPagination() {
+        const pagingRows = document.querySelectorAll('tbody tr[data-row]');
+        const totalRows = pagingRows.length;
+        const totalPages = Math.ceil(totalRows / PAGE_SIZE);
+        currentPage = Math.min(currentPage, totalPages || 1);
+        renderPagination(currentPage);
+    }
+
+    function goToPage() {
+        const input = document.getElementById('pageInput');
+        if (!input) return;
+        const page = parseInt(input.value);
+        const totalPages = Math.ceil(students.length / PAGE_SIZE);
+        if (page >= 1 && page <= totalPages) {
+            renderPagination(page);
+        } else {
+            showToast('warning', '无效页码', `请输入1-${totalPages}之间的数字`);
+        }
+    }
+
+    function changePageSize() {
+        // 简化实现，实际项目中应该重新渲染表格
+        showToast('info', '提示', '每页显示条目已更新');
+    }
+
+    // 初始化保存的筛选条件
+    renderSavedFilters();
+
+    // ========== 悬浮操作按钮 (FAB) ==========
+    let fabOpen = false;
+    function toggleFab() {
+        fabOpen = !fabOpen;
+        const menu = document.getElementById('fabMenu');
+        const icon = document.getElementById('fabIcon');
+
+        if (fabOpen) {
+            menu.classList.remove('hidden');
+            menu.classList.add('flex');
+            icon.style.transform = 'rotate(45deg)';
+        } else {
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    function fabAction(type) {
+        toggleFab();
+        switch(type) {
+            case 'student':
+                openAddStudentModal();
+                break;
+            case 'course':
+                showToast('info', '新增课程', '即将打开课程新增页面');
+                break;
+            case 'teacher':
+                showToast('info', '新增讲师', '即将打开讲师新增页面');
+                break;
+            case 'question':
+                showToast('info', '新增题目', '即将打开题目新增页面');
+                break;
+        }
+    }
+
+    // ========== 列设置保存功能 ==========
+    let columnSettings = JSON.parse(localStorage.getItem('studentColumnSettings')) || {
+        columns: {
+            checkbox: true,
+            index: true,
+            name: true,
+            phone: true,
+            gender: true,
+            age: true,
+            courses: true,
+            certs: true,
+            time: true,
+            regDate: true,
+            status: true,
+            actions: true
+        }
+    };
+
+    function toggleColumn(column) {
+        columnSettings.columns[column] = !columnSettings.columns[column];
+        localStorage.setItem('studentColumnSettings', JSON.stringify(columnSettings));
+        showToast('success', '列设置已保存', '表格列设置已更新');
+        renderTable();
+    }
+
+    function resetColumns() {
+        columnSettings = {
+            columns: {
+                checkbox: true,
+                index: true,
+                name: true,
+                phone: true,
+                gender: true,
+                age: true,
+                courses: true,
+                certs: true,
+                time: true,
+                regDate: true,
+                status: true,
+                actions: true
+            }
+        };
+        localStorage.setItem('studentColumnSettings', JSON.stringify(columnSettings));
+        showToast('success', '已重置列设置', '表格列已恢复默认');
+        renderTable();
+    }
+
+    // 快捷键提示初始化
+    function initShortcutHints() {
+        const hint = document.createElement('div');
+        hint.className = 'fixed bottom-4 left-4 z-[9997] bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100 text-xs text-gray-500';
+        hint.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">K</kbd> 搜索</span>
+                <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">N</kbd> 新增</span>
+            </div>
+        `;
+        hint.style.display = 'none';
+        hint.id = 'shortcutHint';
+
+        let hintTimeout;
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                hint.style.display = 'flex';
+                clearTimeout(hintTimeout);
+                hintTimeout = setTimeout(() => {
+                    hint.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        document.body.appendChild(hint);
+    }
+
+    initShortcutHints();
+
+    // 页面加载完成后显示欢迎提示
+    window.addEventListener('load', function() {
+        showToast('info', '欢迎使用学员管理系统', '按 Ctrl+K 快速搜索，Ctrl+N 新增学员');
+    });
     </script>
 
     <script>

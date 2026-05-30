@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>证书管理 - 叁竹培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+        * { font-family: 'Microsoft YaHei', 'Inter', sans-serif; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .animate-\[slideIn_0\.3s_ease-out\] { animation: slideIn 0.3s ease-out; }
+        .animate-\[fadeOut_0\.3s_ease-out\] { animation: fadeOut 0.3s ease-out; }
+        .animate-\[fadeIn_0\.15s_ease-out\] { animation: fadeIn 0.15s ease-out; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
+        <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                <span class="iconify text-white text-lg" data-icon="ri:plant-line"></span>
+            </div>
+            <span class="text-white font-bold text-base">叁竹培训系统</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span>
+                <span class="text-sm">工作台</span>
+            </a>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:team-line"></span>
+                        <span class="text-sm">学员中心</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="student-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
+                        <span class="text-sm">学员管理</span>
+                    </a>
+                    <a href="certificate-manage.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:award-line"></span>
+                        <span class="text-sm">证书管理</span>
+                    </a>
+                    <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:search-line"></span>
+                        <span class="text-sm">证书查询</span>
+                    </a>
+                    <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
+                        <span class="text-sm">学习记录</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:book-open-line"></span>
+                        <span class="text-sm">课程中心</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="course-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
+                        <span class="text-sm">课程管理</span>
+                    </a>
+                    <a href="category-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                        <span class="text-sm">课程分类</span>
+                    </a>
+                    <a href="teacher-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
+                        <span class="text-sm">讲师管理</span>
+                    </a>
+                    <a href="share-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:share-line"></span>
+                        <span class="text-sm">课程分享</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:shopping-cart-line"></span>
+                        <span class="text-sm">订单中心</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="order-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span>
+                        <span class="text-sm">订单管理</span>
+                    </a>
+                    <a href="refund-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span>
+                        <span class="text-sm">退款管理</span>
+                    </a>
+                    <a href="invoice-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:receipt-line"></span>
+                        <span class="text-sm">发票管理</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:questionnaire-line"></span>
+                        <span class="text-sm">题库中心</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="question-bank.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:questionnaire-line"></span>
+                        <span class="text-sm">题库管理</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:article-line"></span>
+                        <span class="text-sm">内容中心</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="article-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:article-line"></span>
+                        <span class="text-sm">资讯管理</span>
+                    </a>
+                    <a href="article-category.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
+                        <span class="text-sm">资讯分类</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                    <div class="flex items-center">
+                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:settings-3-line"></span>
+                        <span class="text-sm">系统设置</span>
+                    </div>
+                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+                </button>
+                <div class="menu-items pl-6">
+                    <a href="user-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
+                        <span class="text-sm">用户管理</span>
+                    </a>
+                    <a href="message-center.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span>
+                        <span class="text-sm">消息中心</span>
+                    </a>
+                    <a href="system-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span>
+                        <span class="text-sm">基础设置</span>
+                    </a>
+                    <a href="payment-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:bank-card-line"></span>
+                        <span class="text-sm">支付配置</span>
+                    </a>
+                    <a href="sms-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:message-3-line"></span>
+                        <span class="text-sm">短信配置</span>
+                    </a>
+                    <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
+                        <span class="text-sm">角色权限</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- 顶部栏 -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-bold text-gray-900">证书管理</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:notification-3-line"></span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="h-6 w-px bg-gray-200"></div>
+                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-sm font-bold">管</span>
+                    </div>
+                    <span class="text-sm text-gray-700">管理员</span>
+                    <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容 -->
+        <main class="flex-1 overflow-y-auto p-6">
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">证书总数</p>
+                            <p id="totalCount" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-blue-500 text-xl" data-icon="ri:award-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">有效证书</p>
+                            <p id="validCount" class="text-2xl font-bold text-green-600">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-green-500 text-xl" data-icon="ri:checkbox-circle-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">即将过期</p>
+                            <p id="expiringCount" class="text-2xl font-bold text-orange-600">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-orange-500 text-xl" data-icon="ri:alarm-warning-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border shadow-sm p-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">已过期</p>
+                            <p id="expiredCount" class="text-2xl font-bold text-red-600">0</p>
+                        </div>
+                        <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                            <span class="iconify text-red-500 text-xl" data-icon="ri:close-circle-line"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 搜索筛选区 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">关键词搜索</label>
+                        <div class="relative">
+                            <span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="ri:search-line"></span>
+                            <input type="text" id="searchKeyword" placeholder="学员姓名/证书名称" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">证书状态</label>
+                        <select id="searchStatus" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-500">
+                            <option value="">全部</option>
+                            <option value="有效">有效</option>
+                            <option value="过期">过期</option>
+                            <option value="待生效">待生效</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">证书级别</label>
+                        <select id="searchLevel" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-500">
+                            <option value="">全部</option>
+                            <option value="初级">初级</option>
+                            <option value="中级">中级</option>
+                            <option value="高级">高级</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button onclick="searchCerts()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">搜索</button>
+                        <button onclick="resetSearch()" class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作栏 + 表格 -->
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b flex justify-between items-center">
+                    <span id="pageInfo" class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">0</span> 条记录</span>
+                    <button onclick="exportCerts()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <span class="iconify" data-icon="ri:download-line"></span>导出Excel
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-100 bg-gray-50/50">
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">学员姓名</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">手机号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">证书名称</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">级别</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">颁证机构</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">有效期</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">状态</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 font-medium">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certTableBody" class="divide-y divide-gray-50">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页 -->
+                <div class="px-6 py-4 border-t flex items-center justify-between">
+                    <span id="pageInfoBottom" class="text-sm text-gray-500">第 1 / 1 页，共 0 条</span>
+                    <div id="paginationBtns" class="flex items-center gap-1">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 查看证书详情弹窗 -->
+    <div id="viewModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeViewModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-10 lg:inset-x-[20%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0" id="viewModalContent">
+            <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
+                <h2 class="text-lg font-bold text-gray-900">证书详情</h2>
+                <button onclick="closeViewModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 rounded-xl p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4">学员信息</h3>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div id="viewAvatar" class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span class="text-blue-600 text-lg font-bold">刘</span>
+                            </div>
+                            <div>
+                                <p id="viewName" class="font-bold text-gray-900 text-base">刘秀英</p>
+                                <p id="viewPhone" class="text-sm text-gray-500">138****2201</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-400">性别</span><span id="viewGender" class="text-gray-700">女</span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">年龄</span><span id="viewAge" class="text-gray-700">42岁</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-5 lg:col-span-2">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4">证书基本信息</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><span class="text-gray-400">证书名称</span><p id="viewCertName" class="text-gray-900 font-medium mt-1">养老护理员职业技能等级证书</p></div>
+                            <div><span class="text-gray-400">证书编号</span><p id="viewCertNo" class="text-gray-900 font-medium mt-1">SZ202506150001</p></div>
+                            <div><span class="text-gray-400">证书级别</span><p id="viewLevel" class="text-gray-900 font-medium mt-1">中级</p></div>
+                            <div><span class="text-gray-400">颁证机构</span><p id="viewOrg" class="text-gray-900 font-medium mt-1">叁竹职业技能鉴定中心</p></div>
+                            <div><span class="text-gray-400">颁发时间</span><p id="viewIssueDate" class="text-gray-900 font-medium mt-1">2025-06-15</p></div>
+                            <div><span class="text-gray-400">有效期</span><p id="viewValidPeriod" class="text-gray-900 font-medium mt-1">2025-06-15 至 2028-06-14</p></div>
+                            <div><span class="text-gray-400">证书状态</span><p id="viewStatus" class="font-medium mt-1"></p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-sm font-semibold text-gray-900 mb-3">证书图片</h3>
+                    <div class="bg-gray-50 rounded-xl p-5">
+                        <div id="viewCertImage" class="flex justify-center">
+                            <img id="certImagePreview" src="" alt="证书图片" class="max-w-full max-h-96 object-contain rounded-lg border border-gray-200">
+                        </div>
+                        <div id="viewNoImage" class="hidden text-center py-12">
+                            <span class="iconify text-5xl text-gray-300 mx-auto" data-icon="ri:image-line"></span>
+                            <p class="text-gray-400 mt-4">暂无证书图片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑证书弹窗 -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeEditModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-10 lg:inset-x-[25%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0" id="editModalContent">
+            <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
+                <h2 class="text-lg font-bold text-gray-900">编辑证书</h2>
+                <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="bg-gray-50 rounded-xl p-5 mb-6">
+                    <h3 class="text-sm font-semibold text-gray-900 mb-4">学员信息</h3>
+                    <div class="flex items-center gap-4">
+                        <div id="editAvatar" class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 text-base font-bold">刘</span>
+                        </div>
+                        <div>
+                            <p id="editName" class="font-bold text-gray-900">刘秀英</p>
+                            <p id="editPhone" class="text-sm text-gray-500">138****2201</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="editCertId">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">证书名称 <span class="text-red-500">*</span></label>
+                            <input type="text" id="editCertName" required class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">证书编号</label>
+                            <input type="text" id="editCertNo" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm bg-gray-50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">证书级别 <span class="text-red-500">*</span></label>
+                            <select id="editLevel" required class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <option value="">请选择级别</option>
+                                <option value="初级">初级</option>
+                                <option value="中级">中级</option>
+                                <option value="高级">高级</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">颁证机构</label>
+                            <input type="text" id="editOrg" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">颁发时间</label>
+                            <input type="date" id="editIssueDate" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">证书状态</label>
+                            <select id="editStatus" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <option value="有效">有效</option>
+                                <option value="过期">过期</option>
+                                <option value="待生效">待生效</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">有效开始日期</label>
+                            <input type="date" id="editValidStart" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 mb-1.5">有效结束日期</label>
+                            <input type="date" id="editValidEnd" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 mb-1.5">证书图片</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                            <input type="file" id="editCertImage" accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="handleImageUpload(this)">
+                            <div id="imageUploadArea" class="cursor-pointer" onclick="document.getElementById('editCertImage').click()">
+                                <span class="iconify text-4xl text-gray-400" data-icon="ri:image-add-line"></span>
+                                <p class="text-sm text-gray-500 mt-2">点击上传证书图片</p>
+                                <p class="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</p>
+                            </div>
+                            <div id="imagePreviewArea" class="hidden">
+                                <img id="editImagePreview" src="" alt="预览" class="max-w-full max-h-48 mx-auto rounded-lg border border-gray-200">
+                                <p id="editImageName" class="text-sm text-gray-600 mt-2"></p>
+                                <button type="button" onclick="removeImage()" class="text-red-500 text-sm mt-2 hover:text-red-700">
+                                    <span class="iconify inline-block mr-1" data-icon="ri:delete-bin-line"></span>删除图片
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="px-6 py-4 border-t flex justify-end gap-3">
+                <button onclick="closeEditModal()" class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+                <button onclick="saveCert()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片预览弹窗 -->
+    <div id="imagePreviewModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80" onclick="closeImagePreview()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-8">
+            <button onclick="closeImagePreview()" class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white hover:bg-white/20 rounded-full transition-colors">
+                <span class="iconify text-2xl" data-icon="ri:close-line"></span>
+            </button>
+            <img id="largeImagePreview" src="" alt="证书图片" class="max-w-full max-h-full object-contain rounded-lg">
+        </div>
+    </div>
+
+    <script>
+    // 证书Mock数据
+    const certsData = [
+        { id: 1, studentName: '刘秀英', phone: '13822015001', gender: '女', age: 42, certName: '养老护理员职业技能等级证书', certNo: 'SZ202506150001', level: '中级', org: '叁竹职业技能鉴定中心', issueDate: '2025-06-15', validStart: '2025-06-15', validEnd: '2028-06-14', status: '有效', image: 'https://neeko-copilot.bytedance.net/api/text_to_image?prompt=certificate%20of%20elderly%20care%20worker%20professional%20skill%20level%20award%20formal%20document&image_size=landscape_16_9' },
+        { id: 2, studentName: '陈建华', phone: '13955023002', gender: '男', age: 38, certName: '老年人能力评估师职业技能等级证书', certNo: 'SZ202507020001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2025-07-02', validStart: '2025-07-02', validEnd: '2028-07-01', status: '有效', image: '' },
+        { id: 3, studentName: '王丽萍', phone: '13688033003', gender: '女', age: 45, certName: '养老护理员职业技能等级证书', certNo: 'SZ202507200001', level: '高级', org: '国家职业技能鉴定中心', issueDate: '2025-07-20', validStart: '2025-07-20', validEnd: '2028-07-19', status: '有效', image: 'https://neeko-copilot.bytedance.net/api/text_to_image?prompt=certificate%20of%20elderly%20care%20worker%20professional%20skill%20level%20award%20formal%20document%20advanced%20level&image_size=landscape_16_9' },
+        { id: 4, studentName: '赵国强', phone: '15866043004', gender: '男', age: 35, certName: '健康照护师职业技能等级证书', certNo: 'SZ202508050001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2025-08-05', validStart: '2025-08-05', validEnd: '2026-06-04', status: '即将过期', image: '' },
+        { id: 5, studentName: '孙美华', phone: '13977053005', gender: '女', age: 50, certName: '养老护理员职业技能等级证书', certNo: 'SZ202508180001', level: '中级', org: '国家职业技能鉴定中心', issueDate: '2024-08-18', validStart: '2024-08-18', validEnd: '2027-08-17', status: '有效', image: '' },
+        { id: 6, studentName: '周建国', phone: '13844063006', gender: '男', age: 48, certName: '营养配餐员职业技能等级证书', certNo: 'SZ202509030001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2023-09-03', validStart: '2023-09-03', validEnd: '2026-09-02', status: '过期', image: '' },
+        { id: 7, studentName: '李芳', phone: '13633073007', gender: '女', age: 33, certName: '老年人能力评估师职业技能等级证书', certNo: 'SZ202509150001', level: '高级', org: '国家职业技能鉴定中心', issueDate: '2025-09-15', validStart: '2025-09-15', validEnd: '2028-09-14', status: '有效', image: '' },
+        { id: 8, studentName: '张伟', phone: '15811083008', gender: '男', age: 40, certName: '养老护理员职业技能等级证书', certNo: 'SZ202510010001', level: '中级', org: '叁竹职业技能鉴定中心', issueDate: '2025-10-01', validStart: '2025-10-01', validEnd: '2028-09-30', status: '有效', image: '' },
+        { id: 9, studentName: '吴秀兰', phone: '13922093009', gender: '女', age: 52, certName: '健康照护师职业技能等级证书', certNo: 'SZ202510120001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2025-10-12', validStart: '2026-01-01', validEnd: '2029-12-31', status: '待生效', image: '' },
+        { id: 10, studentName: '郑明华', phone: '13655013010', gender: '男', age: 44, certName: '养老护理员职业技能等级证书', certNo: 'SZ202510250001', level: '高级', org: '国家职业技能鉴定中心', issueDate: '2022-10-25', validStart: '2022-10-25', validEnd: '2025-10-24', status: '过期', image: '' },
+        { id: 11, studentName: '黄丽珍', phone: '13888023111', gender: '女', age: 37, certName: '营养配餐员职业技能等级证书', certNo: 'SZ202511080001', level: '中级', org: '叁竹职业技能鉴定中心', issueDate: '2025-11-08', validStart: '2025-11-08', validEnd: '2028-11-07', status: '有效', image: '' },
+        { id: 12, studentName: '林志强', phone: '13966033112', gender: '男', age: 29, certName: '老年人能力评估师职业技能等级证书', certNo: 'SZ202511200001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2025-11-20', validStart: '2025-11-20', validEnd: '2028-11-19', status: '有效', image: '' },
+        { id: 13, studentName: '何玉兰', phone: '15877043113', gender: '女', age: 46, certName: '养老护理员职业技能等级证书', certNo: 'SZ202512030001', level: '中级', org: '国家职业技能鉴定中心', issueDate: '2025-12-03', validStart: '2025-12-03', validEnd: '2028-12-02', status: '有效', image: '' },
+        { id: 14, studentName: '马建华', phone: '13699053114', gender: '男', age: 41, certName: '健康照护师职业技能等级证书', certNo: 'SZ202512150001', level: '高级', org: '国家职业技能鉴定中心', issueDate: '2025-12-15', validStart: '2025-12-15', validEnd: '2028-12-14', status: '有效', image: '' },
+        { id: 15, studentName: '胡秀英', phone: '13811063115', gender: '女', age: 55, certName: '养老护理员职业技能等级证书', certNo: 'SZ202601020001', level: '初级', org: '叁竹职业技能鉴定中心', issueDate: '2026-01-02', validStart: '2026-01-02', validEnd: '2029-01-01', status: '有效', image: '' },
+    ];
+
+    let filteredData = [...certsData];
+    let currentPage = 1;
+    const PAGE_SIZE = 10;
+
+    // 页面初始化
+    function init() {
+        updateStatistics();
+        renderTable();
+    }
+
+    // 更新统计数据
+    function updateStatistics() {
+        const total = certsData.length;
+        const valid = certsData.filter(c => c.status === '有效').length;
+        const today = new Date();
+        const thirtyDaysLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const expiring = certsData.filter(c => {
+            if (c.status !== '有效') return false;
+            const endDate = new Date(c.validEnd);
+            return endDate >= today && endDate <= thirtyDaysLater;
+        }).length;
+        const expired = certsData.filter(c => c.status === '过期').length;
+
+        document.getElementById('totalCount').textContent = total;
+        document.getElementById('validCount').textContent = valid;
+        document.getElementById('expiringCount').textContent = expiring;
+        document.getElementById('expiredCount').textContent = expired;
+    }
+
+    // 渲染表格
+    function renderTable() {
+        const tbody = document.getElementById('certTableBody');
+        tbody.innerHTML = '';
+
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const end = start + PAGE_SIZE;
+        const pageData = filteredData.slice(start, end);
+
+        pageData.forEach((cert, index) => {
+            const levelClass = cert.level === '初级' ? 'bg-blue-50 text-blue-600' :
+                              cert.level === '中级' ? 'bg-purple-50 text-purple-600' :
+                              'bg-orange-50 text-orange-600';
+            const statusClass = cert.status === '有效' ? 'bg-green-50 text-green-600' :
+                               cert.status === '过期' ? 'bg-red-50 text-red-500' :
+                               'bg-yellow-50 text-yellow-600';
+            const avatarColors = ['bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-orange-100 text-orange-600'];
+            const ac = avatarColors[index % avatarColors.length];
+
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-blue-50/30 transition-colors';
+            tr.innerHTML = `
+                <td class="px-4 py-3 text-sm text-gray-500">${start + index + 1}</td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center">
+                            <span class="${ac.split(' ')[1]} text-xs font-bold">${cert.studentName.charAt(0)}</span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">${cert.studentName}</span>
+                    </div>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-700">${cert.phone.substring(0,3)}****${cert.phone.substring(7)}</td>
+                <td class="px-4 py-3 text-sm text-gray-900">${cert.certName}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${levelClass} text-xs font-medium rounded-md">${cert.level}</span></td>
+                <td class="px-4 py-3 text-sm text-gray-700">${cert.org}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">${cert.validEnd}</td>
+                <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${cert.status}</span></td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="viewCert(${cert.id})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                    <button onclick="editCert(${cert.id})" class="text-green-600 hover:text-green-700 text-sm font-medium">编辑</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        updatePagination();
+    }
+
+    // 更新分页
+    function updatePagination() {
+        const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+        document.getElementById('pageInfo').innerHTML = `共 <span class="font-semibold text-gray-900">${filteredData.length}</span> 条记录`;
+        document.getElementById('pageInfoBottom').textContent = `第 ${currentPage} / ${totalPages || 1} 页，共 ${filteredData.length} 条`;
+
+        const paginationBtns = document.getElementById('paginationBtns');
+        let html = '';
+        html += `<button onclick="goToPage(${currentPage - 1})" class="px-3 py-1.5 text-sm border rounded-lg ${currentPage === 1 ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+        
+        for (let i = 1; i <= totalPages; i++) {
+            if (totalPages <= 5 || i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+                html += `<button onclick="goToPage(${i})" class="px-3 py-1.5 text-sm border rounded-lg ${i === currentPage ? 'bg-[#1890FF] text-white border-[#1890FF]' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}">${i}</button>`;
+            } else if (i === 2 || i === totalPages - 1) {
+                html += `<span class="px-2">...</span>`;
+            }
+        }
+        
+        html += `<button onclick="goToPage(${currentPage + 1})" class="px-3 py-1.5 text-sm border rounded-lg ${currentPage === totalPages ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+        paginationBtns.innerHTML = html;
+    }
+
+    // 跳转页面
+    function goToPage(page) {
+        const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderTable();
+    }
+
+    // 搜索证书
+    function searchCerts() {
+        const keyword = document.getElementById('searchKeyword').value.toLowerCase();
+        const status = document.getElementById('searchStatus').value;
+        const level = document.getElementById('searchLevel').value;
+
+        filteredData = certsData.filter(cert => {
+            const matchKeyword = !keyword || 
+                cert.studentName.toLowerCase().includes(keyword) || 
+                cert.certName.toLowerCase().includes(keyword);
+            const matchStatus = !status || cert.status === status;
+            const matchLevel = !level || cert.level === level;
+            return matchKeyword && matchStatus && matchLevel;
+        });
+
+        currentPage = 1;
+        renderTable();
+    }
+
+    // 重置搜索
+    function resetSearch() {
+        document.getElementById('searchKeyword').value = '';
+        document.getElementById('searchStatus').value = '';
+        document.getElementById('searchLevel').value = '';
+        filteredData = [...certsData];
+        currentPage = 1;
+        renderTable();
+    }
+
+    // 查看证书详情
+    function viewCert(id) {
+        const cert = certsData.find(c => c.id === id);
+        if (!cert) return;
+
+        const modal = document.getElementById('viewModal');
+        const content = document.getElementById('viewModalContent');
+
+        document.getElementById('viewAvatar').innerHTML = `<span class="text-blue-600 text-lg font-bold">${cert.studentName.charAt(0)}</span>`;
+        document.getElementById('viewName').textContent = cert.studentName;
+        document.getElementById('viewPhone').textContent = cert.phone.substring(0,3) + '****' + cert.phone.substring(7);
+        document.getElementById('viewGender').textContent = cert.gender;
+        document.getElementById('viewAge').textContent = cert.age + '岁';
+        document.getElementById('viewCertName').textContent = cert.certName;
+        document.getElementById('viewCertNo').textContent = cert.certNo;
+        document.getElementById('viewLevel').textContent = cert.level;
+        document.getElementById('viewOrg').textContent = cert.org;
+        document.getElementById('viewIssueDate').textContent = cert.issueDate;
+        document.getElementById('viewValidPeriod').textContent = `${cert.validStart} 至 ${cert.validEnd}`;
+
+        const statusClass = cert.status === '有效' ? 'text-green-600' : cert.status === '过期' ? 'text-red-500' : 'text-yellow-600';
+        document.getElementById('viewStatus').textContent = cert.status;
+        document.getElementById('viewStatus').className = `font-medium mt-1 ${statusClass}`;
+
+        if (cert.image) {
+            document.getElementById('viewCertImage').classList.remove('hidden');
+            document.getElementById('viewNoImage').classList.add('hidden');
+            document.getElementById('certImagePreview').src = cert.image;
+        } else {
+            document.getElementById('viewCertImage').classList.add('hidden');
+            document.getElementById('viewNoImage').classList.remove('hidden');
+        }
+
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+    function closeViewModal() {
+        const modal = document.getElementById('viewModal');
+        const content = document.getElementById('viewModalContent');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    // 编辑证书
+    function editCert(id) {
+        const cert = certsData.find(c => c.id === id);
+        if (!cert) return;
+
+        const modal = document.getElementById('editModal');
+        const content = document.getElementById('editModalContent');
+
+        document.getElementById('editCertId').value = cert.id;
+        document.getElementById('editAvatar').innerHTML = `<span class="text-blue-600 text-base font-bold">${cert.studentName.charAt(0)}</span>`;
+        document.getElementById('editName').textContent = cert.studentName;
+        document.getElementById('editPhone').textContent = cert.phone.substring(0,3) + '****' + cert.phone.substring(7);
+        document.getElementById('editCertName').value = cert.certName;
+        document.getElementById('editCertNo').value = cert.certNo;
+        document.getElementById('editLevel').value = cert.level;
+        document.getElementById('editOrg').value = cert.org;
+        document.getElementById('editIssueDate').value = cert.issueDate;
+        document.getElementById('editStatus').value = cert.status;
+        document.getElementById('editValidStart').value = cert.validStart;
+        document.getElementById('editValidEnd').value = cert.validEnd;
+
+        if (cert.image) {
+            document.getElementById('imageUploadArea').classList.add('hidden');
+            document.getElementById('imagePreviewArea').classList.remove('hidden');
+            document.getElementById('editImagePreview').src = cert.image;
+            document.getElementById('editImageName').textContent = '已上传证书图片';
+        } else {
+            document.getElementById('imageUploadArea').classList.remove('hidden');
+            document.getElementById('imagePreviewArea').classList.add('hidden');
+        }
+
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+    function closeEditModal() {
+        const modal = document.getElementById('editModal');
+        const content = document.getElementById('editModalContent');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    // 处理图片上传
+    function handleImageUpload(input) {
+        const file = input.files[0];
+        if (file) {
+            document.getElementById('imageUploadArea').classList.add('hidden');
+            document.getElementById('imagePreviewArea').classList.remove('hidden');
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('editImagePreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('editImageName').textContent = file.name;
+        }
+    }
+
+    // 删除图片
+    function removeImage() {
+        document.getElementById('editCertImage').value = '';
+        document.getElementById('imageUploadArea').classList.remove('hidden');
+        document.getElementById('imagePreviewArea').classList.add('hidden');
+    }
+
+    // 保存证书
+    function saveCert() {
+        const id = document.getElementById('editCertId').value;
+        const certName = document.getElementById('editCertName').value;
+        const level = document.getElementById('editLevel').value;
+
+        if (!certName || !level) {
+            alert('请填写必填项：证书名称和证书级别');
+            return;
+        }
+
+        const cert = certsData.find(c => c.id === parseInt(id));
+        if (cert) {
+            cert.certName = certName;
+            cert.certNo = document.getElementById('editCertNo').value;
+            cert.level = level;
+            cert.org = document.getElementById('editOrg').value;
+            cert.issueDate = document.getElementById('editIssueDate').value;
+            cert.status = document.getElementById('editStatus').value;
+            cert.validStart = document.getElementById('editValidStart').value;
+            cert.validEnd = document.getElementById('editValidEnd').value;
+
+            const imagePreview = document.getElementById('editImagePreview').src;
+            if (imagePreview && !imagePreview.includes('placeholder')) {
+                cert.image = imagePreview;
+            }
+        }
+
+        closeEditModal();
+        updateStatistics();
+        searchCerts();
+        alert('证书信息保存成功！');
+    }
+
+    // 导出证书
+    function exportCerts() {
+        alert(`正在导出 ${filteredData.length} 条证书记录...`);
+    }
+
+    // 图片预览
+    function previewImage(src) {
+        if (src) {
+            document.getElementById('largeImagePreview').src = src;
+            document.getElementById('imagePreviewModal').classList.remove('hidden');
+        }
+    }
+
+    function closeImagePreview() {
+        document.getElementById('imagePreviewModal').classList.add('hidden');
+    }
+
+    // 初始化页面
+    init();
+    </script>
+
+    <script>
+        document.querySelectorAll('.menu-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const menuGroup = this.closest('.menu-group');
+                const menuItems = menuGroup.querySelector('.menu-items');
+                const arrow = this.querySelector('.menu-arrow');
+                
+                const isExpanded = menuItems.style.display !== 'none';
+                
+                if (isExpanded) {
+                    menuItems.style.display = 'none';
+                    arrow.textContent = '›';
+                } else {
+                    menuItems.style.display = 'block';
+                    arrow.textContent = '‹';
+                }
+            });
+        });
+
+        document.querySelectorAll('.menu-items').forEach(items => {
+            items.style.display = 'block';
+        });
+    </script>
+
+    <!-- Toast 通知容器 -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- 悬浮操作按钮 (FAB) -->
+    <div id="fabContainer" class="fixed bottom-6 right-6 z-[9998] flex flex-col items-end gap-3">
+        <div id="fabMenu" class="flex flex-col items-end gap-2 mb-2 hidden">
+            <button onclick="fabAction('certificate')" class="flex items-center gap-3 px-4 py-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <span class="iconify text-blue-500" data-icon="ri:file-3-line"></span>
+                <span class="text-sm font-medium">新增证书</span>
+            </button>
+        </div>
+        <button id="fabMain" onclick="toggleFab()" class="w-14 h-14 bg-[#1890FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110">
+            <span id="fabIcon" class="iconify text-2xl transition-transform duration-300" data-icon="ri:add-line"></span>
+        </button>
+    </div>
+
+    <script>
+    function showToast(type, title, message, duration = 4000) {
+        var container = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
+        var toastId = 'toast_' + Date.now();
+        var icons = { success: 'ri:checkbox-circle-line', error: 'ri:error-warning-line', warning: 'ri:alert-line', info: 'ri:information-line' };
+        var colors = { success: 'bg-green-50 border-green-200 text-green-800', error: 'bg-red-50 border-red-200 text-red-800', warning: 'bg-yellow-50 border-yellow-200 text-yellow-800', info: 'bg-blue-50 border-blue-200 text-blue-800' };
+        var iconColors = { success: 'text-green-500', error: 'text-red-500', warning: 'text-yellow-500', info: 'text-blue-500' };
+        toast.id = toastId;
+        toast.className = 'pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg ' + colors[type] + ' animate-[slideIn_0.3s_ease-out]';
+        toast.innerHTML = '<span class="iconify text-xl ' + iconColors[type] + '" data-icon="' + icons[type] + '"></span><div class="flex-1"><div class="font-medium text-sm">' + title + '</div><div class="text-xs opacity-80 mt-0.5">' + message + '</div></div><button onclick="dismissToast(\'' + toastId + '\')" class="opacity-60 hover:opacity-100 transition-opacity"><span class="iconify text-lg" data-icon="ri:close-line"></span></button>';
+        container.appendChild(toast);
+        setTimeout(function() { var el = document.getElementById(toastId); if(el) { el.style.animation = 'fadeOut 0.3s ease-out forwards'; setTimeout(function() { el.remove(); }, 300); } }, duration);
+    }
+    function dismissToast(id) { var el = document.getElementById(id); if(el) { el.style.animation = 'fadeOut 0.3s ease-out forwards'; setTimeout(function() { el.remove(); }, 300); } }
+
+    var fabOpen = false;
+    function toggleFab() { fabOpen = !fabOpen; var menu = document.getElementById('fabMenu'); var icon = document.getElementById('fabIcon'); if (fabOpen) { menu.classList.remove('hidden'); menu.classList.add('flex'); icon.style.transform = 'rotate(45deg)'; } else { menu.classList.add('hidden'); menu.classList.remove('flex'); icon.style.transform = 'rotate(0deg)'; } }
+    function fabAction(type) { toggleFab(); showToast('info', '功能提示', '该功能即将上线'); }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') { if (e.key === 'Escape') e.target.blur(); return; }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); showToast('info', '快捷搜索', '按 Ctrl+K 打开全局搜索'); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); fabAction('certificate'); }
+    });
+
+    function initShortcutHints() {
+        var hint = document.createElement('div');
+        hint.className = 'fixed bottom-4 left-4 z-[9997] bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100 text-xs text-gray-500';
+        hint.innerHTML = '<div class="flex items-center gap-3"><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">K</kbd> 搜索</span><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">N</kbd> 新增</span></div>';
+        hint.style.display = 'none'; hint.id = 'shortcutHint';
+        var hintTimeout;
+        document.addEventListener('keydown', function(e) { if (e.ctrlKey || e.metaKey) { hint.style.display = 'flex'; clearTimeout(hintTimeout); hintTimeout = setTimeout(function() { hint.style.display = 'none'; }, 3000); } });
+        document.body.appendChild(hint);
+    }
+    initShortcutHints();
+    window.addEventListener('load', function() { showToast('info', '欢迎使用证书管理', '按 Ctrl+N 快速新增证书'); });
+    </script>
+</body>
+</html>

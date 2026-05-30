@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>个人中心 - 叁竹培训</title>
   <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/global.css">
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
   <style>
-    .page-body { margin-top: var(--header-height); background: var(--color-gray-50); min-height: calc(100vh - var(--header-height)); }
-    .page-container { max-width: var(--max-width); margin: 0 auto; padding: 24px 20px; }
 
     .user-banner {
       background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, var(--color-accent-purple) 100%);
@@ -357,41 +356,343 @@
       .uc-course-action { flex-direction: row; }
       .cert-list, .fav-grid { grid-template-columns: 1fr; }
       .tab-nav-item { padding: 12px 16px; font-size: 14px; }
+      .share-fixed-btn { display: block; }
+    }
+
+    .qb-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+    .qb-stat-card { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; text-align: center; border: 1px solid var(--border-light); transition: all 0.3s ease; }
+    .qb-stat-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-4px); }
+    .qb-stat-icon { width: 56px; height: 56px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .qb-stat-icon-fire { background: linear-gradient(135deg, #fdecea 0%, #f9e4e1 100%); }
+    .qb-stat-icon-fire .iconify { color: #e74c3c; font-size: 28px; }
+    .qb-stat-icon-chart { background: linear-gradient(135deg, #eaf2fa 0%, #d4e8f5 100%); }
+    .qb-stat-icon-chart .iconify { color: #3498db; font-size: 28px; }
+    .qb-stat-icon-medal { background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); }
+    .qb-stat-icon-medal .iconify { color: #f39c12; font-size: 28px; }
+    .qb-stat-icon-calendar { background: linear-gradient(135deg, #fdecea 0%, #fadbd8 100%); }
+    .qb-stat-icon-calendar .iconify { color: #e74c3c; font-size: 28px; }
+    .qb-stat-num { font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+    .qb-stat-label { font-size: 14px; color: var(--text-secondary); }
+
+    .qb-mistakes-card { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border: 1px solid var(--border-light); transition: all 0.3s ease; cursor: pointer; }
+    .qb-mistakes-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .qb-mistakes-icon { width: 48px; height: 48px; border-radius: var(--radius-md); background: linear-gradient(135deg, #fdecea 0%, #fadbd8 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .qb-mistakes-icon .iconify { color: #e74c3c; font-size: 24px; }
+    .qb-mistakes-info { flex: 1; }
+    .qb-mistakes-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .qb-mistakes-desc { font-size: 14px; color: var(--text-secondary); }
+    .qb-mistakes-count { color: #e74c3c; font-weight: 600; }
+    .qb-mistakes-btn { padding: 8px 20px; background: linear-gradient(135deg, #fdecea 0%, #fadbd8 100%); color: #e74c3c; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease; }
+    .qb-mistakes-btn:hover { transform: scale(1.05); }
+
+    .qb-section-title { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
+    .qb-topics-list { display: flex; flex-direction: column; gap: 16px; }
+    .qb-topic-card { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 20px; border: 1px solid var(--border-light); transition: all 0.3s ease; }
+    .qb-topic-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .qb-topic-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .qb-topic-info { display: flex; align-items: center; gap: 12px; }
+    .qb-topic-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; }
+    .qb-topic-icon-green { background: linear-gradient(135deg, #e8f5ec 0%, #d4edda 100%); }
+    .qb-topic-icon-green .iconify { color: #2e9e5a; font-size: 20px; }
+    .qb-topic-icon-blue { background: linear-gradient(135deg, #eaf2fa 0%, #d4e8f5 100%); }
+    .qb-topic-icon-blue .iconify { color: #3498db; font-size: 20px; }
+    .qb-topic-icon-yellow { background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); }
+    .qb-topic-icon-yellow .iconify { color: #f39c12; font-size: 20px; }
+    .qb-topic-icon-purple { background: linear-gradient(135deg, #f5eef8 0%, #e8daef 100%); }
+    .qb-topic-icon-purple .iconify { color: #9b59b6; font-size: 20px; }
+    .qb-topic-icon-teal { background: linear-gradient(135deg, #e8f8f5 0%, #d1f2eb 100%); }
+    .qb-topic-icon-teal .iconify { color: #1abc9c; font-size: 20px; }
+    .qb-topic-name { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .qb-topic-rate { font-size: 14px; font-weight: 600; }
+    .qb-topic-rate-green { color: #2e9e5a; }
+    .qb-topic-rate-blue { color: #3498db; }
+    .qb-topic-rate-yellow { color: #f39c12; }
+    .qb-topic-rate-purple { color: #9b59b6; }
+    .qb-topic-rate-teal { color: #1abc9c; }
+    .qb-topic-progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .qb-topic-progress-text { font-size: 13px; color: var(--text-secondary); }
+    .qb-progress-fill-orange { background: linear-gradient(90deg, #e67e22 0%, #f39c12 100%); }
+
+    .qb-header-section { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; margin-bottom: 24px; border: 1px solid var(--border-light); }
+    .qb-stats-row { display: flex; gap: 40px; }
+    .qb-stat-item { display: flex; align-items: center; gap: 16px; flex: 1; }
+    .qb-stat-icon { width: 52px; height: 52px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .qb-stat-icon-fire { background: linear-gradient(135deg, #fdecea 0%, #f9e4e1 100%); }
+    .qb-stat-icon-fire .iconify { color: #e74c3c; font-size: 26px; }
+    .qb-stat-icon-chart { background: linear-gradient(135deg, #eaf2fa 0%, #d4e8f5 100%); }
+    .qb-stat-icon-chart .iconify { color: #3498db; font-size: 26px; }
+    .qb-stat-icon-medal { background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); }
+    .qb-stat-icon-medal .iconify { color: #f39c12; font-size: 26px; }
+    .qb-stat-icon-calendar { background: linear-gradient(135deg, #fdecea 0%, #fadbd8 100%); }
+    .qb-stat-icon-calendar .iconify { color: #e74c3c; font-size: 26px; }
+    .qb-stat-content { display: flex; flex-direction: column; }
+    .qb-stat-num { font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+    .qb-stat-label { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+    .qb-content-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+    .qb-main-area { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); border: 1px solid var(--border-light); overflow: hidden; }
+
+    .qb-nav-tabs { display: flex; border-bottom: 1px solid var(--border-light); background: var(--color-gray-50); }
+    .qb-nav-tab { padding: 16px 24px; font-size: 15px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .qb-nav-tab:hover { color: var(--color-primary); }
+    .qb-nav-tab.active { color: var(--color-primary); font-weight: 600; border-bottom-color: var(--color-primary); background: white; }
+    .qb-nav-tab .iconify { font-size: 18px; }
+    .qb-badge { background: #e74c3c; color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+
+    .qb-tab-content { display: none; padding: 24px; }
+    .qb-tab-content.active { display: block; }
+
+    .qb-mistakes-list { display: flex; flex-direction: column; gap: 16px; }
+    .qb-mistake-card { background: var(--color-gray-50); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-light); }
+    .qb-mistake-num { font-size: 13px; color: var(--color-gray-400); margin-bottom: 8px; }
+    .qb-mistake-question { font-size: 15px; color: var(--text-primary); font-weight: 500; margin-bottom: 12px; line-height: 1.6; }
+    .qb-mistake-answer { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .qb-mistake-label { font-size: 13px; color: var(--text-secondary); }
+    .qb-mistake-wrong { font-size: 13px; color: #e74c3c; font-weight: 500; }
+    .qb-mistake-correct { font-size: 13px; color: var(--color-primary); font-weight: 500; }
+    .qb-mistake-actions { display: flex; gap: 12px; }
+
+    .qb-btn { padding: 8px 20px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none; }
+    .qb-btn-primary { background: var(--color-primary); color: white; }
+    .qb-btn-primary:hover { background: var(--color-primary-dark); }
+    .qb-btn-default { background: white; color: var(--text-secondary); border: 1px solid var(--border-light); }
+    .qb-btn-default:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .qb-btn-block { width: 100%; }
+
+    .qb-topics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .qb-topic-card { background: white; border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border-light); transition: all 0.3s ease; }
+    .qb-topic-card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+    .qb-topic-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .qb-topic-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .qb-topic-icon-green { background: linear-gradient(135deg, #e8f5ec 0%, #d4edda 100%); }
+    .qb-topic-icon-green .iconify { color: #2e9e5a; font-size: 22px; }
+    .qb-topic-icon-blue { background: linear-gradient(135deg, #eaf2fa 0%, #d4e8f5 100%); }
+    .qb-topic-icon-blue .iconify { color: #3498db; font-size: 22px; }
+    .qb-topic-icon-yellow { background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); }
+    .qb-topic-icon-yellow .iconify { color: #f39c12; font-size: 22px; }
+    .qb-topic-icon-purple { background: linear-gradient(135deg, #f5eef8 0%, #e8daef 100%); }
+    .qb-topic-icon-purple .iconify { color: #9b59b6; font-size: 22px; }
+    .qb-topic-icon-teal { background: linear-gradient(135deg, #e8f8f5 0%, #d1f2eb 100%); }
+    .qb-topic-icon-teal .iconify { color: #1abc9c; font-size: 22px; }
+    .qb-topic-icon-orange { background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); }
+    .qb-topic-icon-orange .iconify { color: #e67e22; font-size: 22px; }
+    .qb-topic-info { flex: 1; min-width: 0; }
+    .qb-topic-name { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .qb-topic-meta { font-size: 12px; color: var(--text-secondary); }
+    .qb-topic-rate { font-size: 16px; font-weight: 700; }
+    .qb-topic-rate-green { color: #2e9e5a; }
+    .qb-topic-rate-blue { color: #3498db; }
+    .qb-topic-rate-yellow { color: #f39c12; }
+    .qb-topic-rate-purple { color: #9b59b6; }
+    .qb-topic-rate-teal { color: #1abc9c; }
+    .qb-topic-rate-orange { color: #e67e22; }
+    .qb-topic-progress { margin-bottom: 16px; }
+    .qb-progress-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+
+    .qb-practice-container { max-width: 800px; margin: 0 auto; }
+    .qb-practice-header { margin-bottom: 24px; }
+    .qb-practice-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .qb-practice-topic { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .qb-practice-progress { font-size: 14px; color: var(--text-secondary); }
+    .qb-practice-progress-bar { width: 100%; height: 6px; background: var(--color-gray-200); border-radius: 3px; overflow: hidden; }
+    .qb-practice-progress-fill { height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light)); border-radius: 3px; transition: width 0.3s ease; }
+
+    .qb-question-card { background: var(--color-gray-50); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 24px; border: 1px solid var(--border-light); }
+    .qb-question-type { margin-bottom: 16px; }
+    .qb-question-badge { display: inline-block; padding: 4px 12px; background: var(--color-primary); color: white; font-size: 12px; border-radius: 4px; font-weight: 500; }
+    .qb-question-text { font-size: 18px; color: var(--text-primary); font-weight: 500; line-height: 1.7; margin-bottom: 24px; }
+    .qb-options { display: flex; flex-direction: column; gap: 12px; }
+    .qb-option { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: white; border: 2px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease; }
+    .qb-option:hover { border-color: var(--color-primary); background: var(--color-gray-50); }
+    .qb-option.selected { border-color: var(--color-primary); background: rgba(5, 150, 105, 0.08); }
+    .qb-option.correct { border-color: var(--color-primary); background: rgba(5, 150, 105, 0.12); }
+    .qb-option.wrong { border-color: #e74c3c; background: rgba(231, 76, 60, 0.08); }
+    .qb-option-letter { width: 32px; height: 32px; border-radius: 50%; background: var(--color-gray-200); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: var(--text-secondary); flex-shrink: 0; transition: all 0.2s ease; }
+    .qb-option.selected .qb-option-letter { background: var(--color-primary); color: white; }
+    .qb-option.correct .qb-option-letter { background: var(--color-primary); color: white; }
+    .qb-option.wrong .qb-option-letter { background: #e74c3c; color: white; }
+    .qb-option-text { font-size: 15px; color: var(--text-primary); }
+
+    .qb-analysis-card { background: white; border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 24px; margin-top: 20px; }
+    .qb-analysis-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .qb-analysis-header .iconify { color: var(--color-primary); }
+    .qb-analysis-content { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); }
+    .qb-analysis-answer { display: flex; gap: 24px; }
+    .qb-analysis-correct { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--color-primary); font-weight: 500; }
+    .qb-analysis-correct .iconify { font-size: 18px; }
+    .qb-analysis-your { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; }
+    .qb-analysis-your.correct { color: var(--color-primary); }
+    .qb-analysis-your.wrong { color: #e74c3c; }
+    .qb-analysis-your .iconify { font-size: 18px; }
+
+    .qb-practice-actions { display: flex; justify-content: center; gap: 16px; margin-top: 24px; }
+    .qb-practice-actions .qb-btn { padding: 12px 32px; font-size: 15px; }
+
+    .share-page-layout { display: flex; flex-direction: column; gap: 24px; }
+    .share-stats-section-green { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border-radius: var(--radius-lg); padding: 32px; position: relative; overflow: hidden; }
+    .share-stats-section-green::before { content: ''; position: absolute; top: -30%; right: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%); border-radius: 50%; }
+    .share-stats-grid-pc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; position: relative; z-index: 1; }
+    .share-stat-card-pc { display: flex; align-items: center; gap: 16px; }
+    .share-stat-icon-pc { width: 56px; height: 56px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .share-stat-icon-pc .iconify { color: white; font-size: 28px; }
+    .share-stat-data { display: flex; flex-direction: column; }
+    .share-stat-num-pc { font-size: 32px; font-weight: 700; color: white; line-height: 1.2; }
+    .share-stat-label-pc { font-size: 14px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+    .share-content-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+    .share-main-area { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); border: 1px solid var(--border-light); overflow: hidden; }
+    .share-section { padding: 24px; }
+    .share-section-title { font-size: 17px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .share-section-title .iconify { color: var(--color-primary); font-size: 22px; }
+
+    .share-records-table { display: flex; flex-direction: column; }
+    .share-record-row { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border-light); gap: 20px; }
+    .share-record-row:last-child { border-bottom: none; }
+    .share-record-row:hover { background: var(--color-gray-50); margin: 0 -24px; padding-left: 24px; padding-right: 24px; }
+    .share-record-course { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
+    .share-record-course img { width: 100px; height: 60px; border-radius: var(--radius-sm); object-fit: cover; }
+    .share-record-info { flex: 1; min-width: 0; }
+    .share-record-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .share-record-meta { font-size: 13px; color: var(--text-secondary); }
+    .share-record-stats { display: flex; gap: 32px; }
+    .share-record-stat { text-align: center; }
+    .share-record-stat-num { display: block; font-size: 18px; font-weight: 700; color: var(--text-primary); }
+    .share-record-stat-label { font-size: 12px; color: var(--text-secondary); }
+    .share-record-reward .share-record-stat-num { color: var(--color-primary); }
+    .share-record-actions { display: flex; gap: 8px; }
+    .share-action-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--color-gray-100); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .share-action-btn:hover { background: var(--color-primary); color: white; }
+    .share-action-btn:hover .iconify { color: white; }
+    .share-action-btn .iconify { color: var(--text-secondary); font-size: 18px; }
+
+    .share-sidebar { display: flex; flex-direction: column; gap: 20px; }
+    .share-reward-card-green { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; border: 1px solid var(--border-light); }
+    .share-reward-header { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .share-reward-header .iconify { color: var(--color-primary); font-size: 22px; }
+    .share-reward-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; }
+    .share-reward-desc strong { color: var(--color-primary); }
+    .share-reward-btn-green { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25); }
+    .share-reward-btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35); }
+    .share-reward-btn-green .iconify { font-size: 18px; }
+
+    .share-rules-card-green { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; border: 1px solid var(--border-light); }
+    .share-rules-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .share-rules-title .iconify { color: var(--color-primary); font-size: 18px; }
+    .share-rules-list { list-style: none; padding: 0; margin: 0; }
+    .share-rules-list li { font-size: 13px; color: var(--text-secondary); padding: 8px 0; padding-left: 20px; position: relative; }
+    .share-rules-list li::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; background: var(--color-primary); border-radius: 50%; }
+
+    .share-fixed-btn { display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; }
+    .share-btn-primary { padding: 14px 36px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white; border-radius: var(--radius-md); font-size: 15px; font-weight: 600; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+    .share-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(5, 150, 105, 0.45); }
+    .share-btn-primary .iconify { font-size: 18px; }
+
+    .share-modal { position: fixed; inset: 0; z-index: 200; display: none; }
+    .share-modal.active { display: block; }
+    .share-modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .share-modal-content { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: white; border-radius: 24px 24px 0 0; padding: 24px; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateX(-50%) translateY(100%); } to { transform: translateX(-50%) translateY(0); } }
+    .share-modal-drag { width: 40px; height: 4px; background: var(--color-gray-300); border-radius: 2px; margin: 0 auto 20px; }
+    .share-modal-title { font-size: 20px; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 24px; }
+    .share-modal-channels { display: flex; justify-content: space-around; margin-bottom: 24px; }
+    .share-channel-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s ease; }
+    .share-channel-item:hover { transform: scale(1.05); }
+    .share-channel-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .share-channel-icon .iconify { font-size: 28px; color: white; }
+    .share-channel-wechat { background: linear-gradient(135deg, #07c160 0%, #06ad56 100%); }
+    .share-channel-moments { background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%); }
+    .share-channel-qq { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+    .share-channel-qzone { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+    .share-channel-name { font-size: 13px; color: var(--text-secondary); }
+    .share-modal-divider { height: 1px; background: var(--border-light); margin-bottom: 16px; }
+    .share-modal-copy { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-md); cursor: pointer; transition: background 0.2s ease; }
+    .share-modal-copy:hover { background: var(--color-gray-50); }
+    .share-copy-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--color-gray-100); display: flex; align-items: center; justify-content: center; }
+    .share-copy-icon .iconify { color: var(--text-secondary); font-size: 20px; }
+    .share-copy-info { flex: 1; }
+    .share-copy-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .share-copy-desc { font-size: 13px; color: var(--text-secondary); }
+    .share-copy-arrow { color: var(--color-gray-400); font-size: 20px; }
+    .share-modal-cancel { width: 100%; padding: 14px; background: var(--color-gray-100); color: var(--text-secondary); border-radius: var(--radius-md); font-size: 15px; font-weight: 500; border: none; cursor: pointer; margin-top: 16px; transition: background 0.2s ease; }
+    .share-modal-cancel:hover { background: var(--color-gray-200); }
+
+    .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 300; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-content { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); color: white; padding: 12px 24px; border-radius: 100px; font-size: 14px; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .toast-icon { color: #2ecc71; font-size: 18px; }
+
+    @media (max-width: 1199px) {
+      .qb-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .qb-topics-grid { grid-template-columns: repeat(2, 1fr); }
+      .share-stats-grid-pc { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .share-content-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 767px) {
+      .qb-stats-row { flex-wrap: wrap; gap: 16px; }
+      .qb-stat-item { flex: 1 1 45%; }
+      .qb-topics-grid { grid-template-columns: 1fr; }
+      .qb-practice-actions { flex-wrap: wrap; }
+      .qb-practice-actions .qb-btn { flex: 1; min-width: 120px; }
+      .share-stats-grid-pc { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .share-stat-num-pc { font-size: 24px; }
+      .share-record-row { flex-wrap: wrap; }
+      .share-record-stats { gap: 16px; width: 100%; justify-content: space-around; padding-top: 12px; border-top: 1px dashed var(--border-light); margin-top: 8px; }
+      .share-modal-content { max-width: 100%; border-radius: 16px 16px 0 0; }
+      .tab-nav-item { padding: 12px 8px; font-size: 13px; }
+      .tab-nav-item .iconify { font-size: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <header class="header" id="header">
+  <header class="header" id="mainHeader">
     <div class="header-inner">
       <div class="logo-area">
-        <div class="logo-icon">
-          <span class="iconify" data-icon="mdi:bamboo" style="color: white; font-size: 24px;"></span>
-        </div>
+        <div class="logo-icon"><span class="iconify" data-icon="mdi:bamboo" style="color: white; font-size: 24px;"></span></div>
         <span class="logo-text">叁竹培训</span>
       </div>
-      <div class="cat-trigger">
-        <span class="iconify" data-icon="mdi:menu" style="font-size: 18px;"></span>
-        <span>课程分类</span>
-      </div>
+      <div class="cat-trigger"><span class="iconify" data-icon="mdi:menu" style="font-size: 18px;"></span><span>课程分类</span></div>
       <div class="search-box">
         <select class="search-cat-select">
           <option>全部课程</option>
-          <option selected>养老护理员</option>
+          <option>养老护理员</option>
           <option>老年人能力评估师</option>
           <option>健康照护师</option>
           <option>营养配餐员</option>
         </select>
         <input class="search-input" type="text" placeholder="搜索课程、讲师、证书..." id="searchInput">
-        <button class="search-btn" onclick="handleSearch()">
-          <span class="iconify" data-icon="mdi:magnify" style="color: white; font-size: 22px;"></span>
-        </button>
+        <button class="search-btn" onclick="handleSearch()"><span class="iconify" data-icon="mdi:magnify" style="color: white; font-size: 22px;"></span></button>
       </div>
       <nav class="header-nav">
-        <a href="user-center.html">我的学习</a>
-        <a href="#" class="btn-login">登录</a>
-        <a href="#" class="btn-register">注册</a>
+        <a href="index.html">首页</a>
+        <a href="course-list.html">课程中心</a>
+        <a href="user-center.html" class="active">我的学习</a>
+        <a href="profile.html">个人信息</a>
       </nav>
+      <div class="header-actions" id="headerActions">
+        <a href="login.html" class="btn-login">登录</a>
+        <a href="register.html" class="btn-register">注册</a>
+      </div>
+      <div class="user-menu" id="userMenu" style="display: none;">
+        <div class="user-avatar-mini" id="userAvatarMini" title="用户">
+          <span class="iconify" data-icon="mdi:account-circle" style="font-size: 32px; color: white;"></span>
+        </div>
+        <div class="user-dropdown">
+          <div class="dropdown-item" onclick="goToProfile()">
+            <span class="iconify" data-icon="mdi:account-circle"></span>
+            个人中心
+          </div>
+          <div class="dropdown-item" onclick="goToLearning()">
+            <span class="iconify" data-icon="mdi:book-open"></span>
+            我的学习
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item logout" onclick="handleLogout()">
+            <span class="iconify" data-icon="mdi:logout"></span>
+            退出登录
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -402,7 +703,7 @@
           <span class="iconify" data-icon="mdi:account-circle"></span>
         </div>
         <div class="user-info">
-          <div class="user-name">张女士</div>
+          <div class="user-name">王女士</div>
           <div class="user-desc">养老护理从业者 · 已学习 128 课时</div>
         </div>
         <div class="user-stats">
@@ -432,18 +733,584 @@
           <span class="iconify" data-icon="mdi:book-open-page-variant"></span>
           我的课程
         </span>
-        <span class="tab-nav-item" onclick="switchTab(this, 'panel-certs')">
-          <span class="iconify" data-icon="mdi:certificate"></span>
-          我的证书
-        </span>
-        <span class="tab-nav-item" onclick="switchTab(this, 'panel-favs')">
-          <span class="iconify" data-icon="mdi:heart"></span>
-          收藏夹
-        </span>
         <span class="tab-nav-item" onclick="switchTab(this, 'panel-orders')">
           <span class="iconify" data-icon="mdi:receipt"></span>
           我的订单
         </span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-question-bank')">
+          <span class="iconify" data-icon="mdi:head-question"></span>
+          我的题库
+        </span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-favs')">
+          <span class="iconify" data-icon="mdi:heart"></span>
+          我的收藏
+        </span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-shares')">
+          <span class="iconify" data-icon="mdi:share"></span>
+          我的分享
+        </span>
+        <span class="tab-nav-item" onclick="switchTab(this, 'panel-certs')">
+          <span class="iconify" data-icon="mdi:certificate"></span>
+          我的证书
+        </span>
+      </div>
+
+      <div class="tab-panel" id="panel-question-bank">
+        <div class="qb-header-section">
+          <div class="qb-stats-row">
+            <div class="qb-stat-item">
+              <div class="qb-stat-icon qb-stat-icon-fire">
+                <span class="iconify" data-icon="solar:fire-linear"></span>
+              </div>
+              <div class="qb-stat-content">
+                <div class="qb-stat-num">23</div>
+                <div class="qb-stat-label">今日刷题</div>
+              </div>
+            </div>
+            <div class="qb-stat-item">
+              <div class="qb-stat-icon qb-stat-icon-chart">
+                <span class="iconify" data-icon="solar:chart-2-linear"></span>
+              </div>
+              <div class="qb-stat-content">
+                <div class="qb-stat-num">1,286</div>
+                <div class="qb-stat-label">累计刷题</div>
+              </div>
+            </div>
+            <div class="qb-stat-item">
+              <div class="qb-stat-icon qb-stat-icon-medal">
+                <span class="iconify" data-icon="solar:medal-star-linear"></span>
+              </div>
+              <div class="qb-stat-content">
+                <div class="qb-stat-num">89%</div>
+                <div class="qb-stat-label">最高正确率</div>
+              </div>
+            </div>
+            <div class="qb-stat-item">
+              <div class="qb-stat-icon qb-stat-icon-calendar">
+                <span class="iconify" data-icon="solar:calendar-mark-linear"></span>
+              </div>
+              <div class="qb-stat-content">
+                <div class="qb-stat-num">15</div>
+                <div class="qb-stat-label">连续打卡</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qb-content-grid">
+          <div class="qb-main-area">
+            <div class="qb-nav-tabs">
+              <div class="qb-nav-tab active" onclick="switchQbTab(this, 'qb-mistakes')">
+                <span class="iconify" data-icon="solar:close-circle-linear"></span>
+                我的错题 <span class="qb-badge">47</span>
+              </div>
+              <div class="qb-nav-tab" onclick="switchQbTab(this, 'qb-topics')">
+                <span class="iconify" data-icon="solar:book-linear"></span>
+                已刷专题
+              </div>
+              <div class="qb-nav-tab" onclick="switchQbTab(this, 'qb-practice')">
+                <span class="iconify" data-icon="solar:pencil-linear"></span>
+                答题练习
+              </div>
+            </div>
+
+            <div class="qb-tab-content active" id="qb-mistakes">
+              <div class="qb-mistakes-list">
+                <div class="qb-mistake-card">
+                  <div class="qb-mistake-num">第 12 题</div>
+                  <div class="qb-mistake-question">老年人服用硝化甘油片后，可能出现的不良反应不包括以下哪项？</div>
+                  <div class="qb-mistake-answer">
+                    <span class="qb-mistake-label">您的答案：</span>
+                    <span class="qb-mistake-wrong">C. 便秘</span>
+                    <span class="qb-mistake-correct">正确答案：A</span>
+                  </div>
+                  <div class="qb-mistake-actions">
+                    <button class="qb-btn qb-btn-primary" onclick="startPractice('12')">立即复习</button>
+                    <button class="qb-btn qb-btn-default">查看解析</button>
+                  </div>
+                </div>
+
+                <div class="qb-mistake-card">
+                  <div class="qb-mistake-num">第 28 题</div>
+                  <div class="qb-mistake-question">关于老年人血压测量的注意事项，描述错误的是？</div>
+                  <div class="qb-mistake-answer">
+                    <span class="qb-mistake-label">您的答案：</span>
+                    <span class="qb-mistake-wrong">B. 测量前应保持安静休息5分钟</span>
+                    <span class="qb-mistake-correct">正确答案：D</span>
+                  </div>
+                  <div class="qb-mistake-actions">
+                    <button class="qb-btn qb-btn-primary" onclick="startPractice('28')">立即复习</button>
+                    <button class="qb-btn qb-btn-default">查看解析</button>
+                  </div>
+                </div>
+
+                <div class="qb-mistake-card">
+                  <div class="qb-mistake-num">第 35 题</div>
+                  <div class="qb-mistake-question">老年人出现噎食时，紧急处理措施正确的是？</div>
+                  <div class="qb-mistake-answer">
+                    <span class="qb-mistake-label">您的答案：</span>
+                    <span class="qb-mistake-wrong">A. 立即拍背</span>
+                    <span class="qb-mistake-correct">正确答案：C</span>
+                  </div>
+                  <div class="qb-mistake-actions">
+                    <button class="qb-btn qb-btn-primary" onclick="startPractice('35')">立即复习</button>
+                    <button class="qb-btn qb-btn-default">查看解析</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="qb-tab-content" id="qb-topics">
+              <div class="qb-topics-grid">
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-green">
+                      <span class="iconify" data-icon="solar:book-linear"></span>
+                    </div>
+                    <div class="qb-topic-info">
+                      <div class="qb-topic-name">日常生活照料</div>
+                      <div class="qb-topic-meta">120题 · 86人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-green">92%</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 86/120 题</span>
+                      <span>72%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-green" style="width: 72%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-primary qb-btn-block" onclick="startPracticeTopic('daily-care')">继续刷题</button>
+                </div>
+
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-blue">
+                      <span class="iconify" data-icon="solar:heart-pulse-linear"></span>
+                    </div>
+                    <div class="qb-topic-info">
+                      <div class="qb-topic-name">基础护理知识</div>
+                      <div class="qb-topic-meta">200题 · 156人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-blue">85%</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 156/200 题</span>
+                      <span>78%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-blue" style="width: 78%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-primary qb-btn-block" onclick="startPracticeTopic('nursing')">继续刷题</button>
+                </div>
+
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-yellow">
+                      <span class="iconify" data-icon="solar:shield-check-linear"></span>
+                    </div>
+                    <div class="qb-topic-info">
+                      <div class="qb-topic-name">安全与急救</div>
+                      <div class="qb-topic-meta">100题 · 65人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-yellow">78%</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 65/100 题</span>
+                      <span>65%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-yellow" style="width: 65%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-primary qb-btn-block" onclick="startPracticeTopic('safety')">继续刷题</button>
+                </div>
+
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-purple">
+                      <span class="iconify" data-icon="solar:users-group-rounded-linear"></span>
+                    </div>
+                    <div class="qb-topic-info">
+                      <div class="qb-topic-name">心理护理与沟通</div>
+                      <div class="qb-topic-meta">80题 · 48人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-purple">89%</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 48/80 题</span>
+                      <span>60%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-purple" style="width: 60%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-primary qb-btn-block" onclick="startPracticeTopic('psychology')">继续刷题</button>
+                </div>
+
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-teal">
+                      <span class="iconify" data-icon="solar:buildings-linear"></span>
+                    </div>
+                    <div class="qb-topic-info">
+                      <div class="qb-topic-name">养老机构管理</div>
+                      <div class="qb-topic-meta">60题 · 35人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-teal">71%</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 35/60 题</span>
+                      <span>58%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-teal" style="width: 58%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-primary qb-btn-block" onclick="startPracticeTopic('management')">继续刷题</button>
+                </div>
+
+                <div class="qb-topic-card">
+                  <div class="qb-topic-header">
+                    <div class="qb-topic-icon qb-topic-icon-orange">
+                      <span class="iconify" data-icon="solar:lightbulb-linear"></span>
+                    </div>
+                    <div class="qb-topic-topic-info">
+                      <div class="qb-topic-name">康复护理技能</div>
+                      <div class="qb-topic-meta">90题 · 0人已刷</div>
+                    </div>
+                    <span class="qb-topic-rate qb-topic-rate-orange">未开始</span>
+                  </div>
+                  <div class="qb-topic-progress">
+                    <div class="qb-progress-info">
+                      <span>已刷 0/90 题</span>
+                      <span>0%</span>
+                    </div>
+                    <div class="qb-progress-bar">
+                      <div class="qb-progress-fill qb-progress-fill-orange" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <button class="qb-btn qb-btn-default qb-btn-block" onclick="startPracticeTopic('rehab')">开始刷题</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="qb-tab-content" id="qb-practice">
+              <div class="qb-practice-container">
+                <div class="qb-practice-header">
+                  <div class="qb-practice-info">
+                    <span class="qb-practice-topic">日常生活照料</span>
+                    <span class="qb-practice-progress">第 <span id="currentQuestionNum">1</span> / 10 题</span>
+                  </div>
+                  <div class="qb-practice-progress-bar">
+                    <div class="qb-practice-progress-fill" id="practiceProgressFill" style="width: 10%"></div>
+                  </div>
+                </div>
+
+                <div class="qb-question-card">
+                  <div class="qb-question-type">
+                    <span class="qb-question-badge">单选题</span>
+                  </div>
+                  <div class="qb-question-text" id="questionText">
+                    老年人服用硝化甘油片后，可能出现的不良反应不包括以下哪项？
+                  </div>
+                  <div class="qb-options" id="questionOptions">
+                    <div class="qb-option" data-option="A" onclick="selectOption(this)">
+                      <span class="qb-option-letter">A</span>
+                      <span class="qb-option-text">头痛</span>
+                    </div>
+                    <div class="qb-option" data-option="B" onclick="selectOption(this)">
+                      <span class="qb-option-letter">B</span>
+                      <span class="qb-option-text">面部潮红</span>
+                    </div>
+                    <div class="qb-option" data-option="C" onclick="selectOption(this)">
+                      <span class="qb-option-letter">C</span>
+                      <span class="qb-option-text">便秘</span>
+                    </div>
+                    <div class="qb-option" data-option="D" onclick="selectOption(this)">
+                      <span class="qb-option-letter">D</span>
+                      <span class="qb-option-text">低血压</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="qb-analysis-card" id="analysisCard" style="display: none;">
+                  <div class="qb-analysis-header">
+                    <span class="iconify" data-icon="solar:book-open-linear"></span>
+                    题目解析
+                  </div>
+                  <div class="qb-analysis-content" id="analysisContent">
+                    硝化甘油片常见的不良反应包括头痛、面部潮红、低血压等，而便秘不是其常见不良反应。本题考察对老年人用药护理的掌握程度。
+                  </div>
+                  <div class="qb-analysis-answer">
+                    <div class="qb-analysis-correct">
+                      <span class="iconify" data-icon="solar:check-circle-bold"></span>
+                      正确答案：C
+                    </div>
+                    <div class="qb-analysis-your" id="yourAnswerDisplay">
+                      <span class="iconify" data-icon="solar:x-circle-bold"></span>
+                      <span id="yourAnswerText">您的答案：C (错误)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="qb-practice-actions">
+                  <button class="qb-btn qb-btn-default" id="prevBtn" onclick="prevQuestion()" disabled>
+                    <span class="iconify" data-icon="solar:alt-arrow-left-linear"></span>
+                    上一题
+                  </button>
+                  <button class="qb-btn qb-btn-default" id="submitBtn" onclick="submitAnswer()">
+                    提交答案
+                  </button>
+                  <button class="qb-btn qb-btn-primary" id="nextBtn" onclick="nextQuestion()" style="display: none;">
+                    下一题
+                    <span class="iconify" data-icon="solar:alt-arrow-right-linear"></span>
+                  </button>
+                  <button class="qb-btn qb-btn-primary" id="finishBtn" onclick="finishPractice()" style="display: none;">
+                    完成练习
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-shares">
+        <div class="share-page-layout">
+          <div class="share-stats-section-green">
+            <div class="share-stats-grid-pc">
+              <div class="share-stat-card-pc">
+                <div class="share-stat-icon-pc">
+                  <span class="iconify" data-icon="solar:share-circle-linear"></span>
+                </div>
+                <div class="share-stat-data">
+                  <div class="share-stat-num-pc">12</div>
+                  <div class="share-stat-label-pc">分享次数</div>
+                </div>
+              </div>
+              <div class="share-stat-card-pc">
+                <div class="share-stat-icon-pc">
+                  <span class="iconify" data-icon="solar:eye-linear"></span>
+                </div>
+                <div class="share-stat-data">
+                  <div class="share-stat-num-pc">28</div>
+                  <div class="share-stat-label-pc">点击访问</div>
+                </div>
+              </div>
+              <div class="share-stat-card-pc">
+                <div class="share-stat-icon-pc">
+                  <span class="iconify" data-icon="solar:user-check-linear"></span>
+                </div>
+                <div class="share-stat-data">
+                  <div class="share-stat-num-pc">3</div>
+                  <div class="share-stat-label-pc">成功转化</div>
+                </div>
+              </div>
+              <div class="share-stat-card-pc">
+                <div class="share-stat-icon-pc">
+                  <span class="iconify" data-icon="solar:ticket-linear"></span>
+                </div>
+                <div class="share-stat-data">
+                  <div class="share-stat-num-pc">¥150</div>
+                  <div class="share-stat-label-pc">累计奖励</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-content-grid">
+            <div class="share-main-area">
+              <div class="share-section">
+                <h3 class="share-section-title">
+                  <span class="iconify" data-icon="solar:list-check-linear"></span>
+                  分享记录
+                </h3>
+                <div class="share-records-table">
+                  <div class="share-record-row">
+                    <div class="share-record-course">
+                      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=120&h=80&fit=crop" alt="">
+                      <div class="share-record-info">
+                        <div class="share-record-title">养老护理员（初级）考证培训</div>
+                        <div class="share-record-meta">分享于 2025-01-15 14:30</div>
+                      </div>
+                    </div>
+                    <div class="share-record-stats">
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">8</span>
+                        <span class="share-record-stat-label">访问</span>
+                      </div>
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">1</span>
+                        <span class="share-record-stat-label">购买</span>
+                      </div>
+                      <div class="share-record-stat share-record-reward">
+                        <span class="share-record-stat-num">¥50</span>
+                        <span class="share-record-stat-label">奖励</span>
+                      </div>
+                    </div>
+                    <div class="share-record-actions">
+                      <button class="share-action-btn" onclick="copyShareLink('https://example.com/share/123')">
+                        <span class="iconify" data-icon="solar:copy-linear"></span>
+                      </button>
+                      <button class="share-action-btn" onclick="openShareModal()">
+                        <span class="iconify" data-icon="solar:share-linear"></span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="share-record-row">
+                    <div class="share-record-course">
+                      <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=120&h=80&fit=crop" alt="">
+                      <div class="share-record-info">
+                        <div class="share-record-title">老年人能力评估师认证培训</div>
+                        <div class="share-record-meta">分享于 2025-01-14 09:20</div>
+                      </div>
+                    </div>
+                    <div class="share-record-stats">
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">12</span>
+                        <span class="share-record-stat-label">访问</span>
+                      </div>
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">2</span>
+                        <span class="share-record-stat-label">购买</span>
+                      </div>
+                      <div class="share-record-stat share-record-reward">
+                        <span class="share-record-stat-num">¥100</span>
+                        <span class="share-record-stat-label">奖励</span>
+                      </div>
+                    </div>
+                    <div class="share-record-actions">
+                      <button class="share-action-btn" onclick="copyShareLink('https://example.com/share/124')">
+                        <span class="iconify" data-icon="solar:copy-linear"></span>
+                      </button>
+                      <button class="share-action-btn" onclick="openShareModal()">
+                        <span class="iconify" data-icon="solar:share-linear"></span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="share-record-row">
+                    <div class="share-record-course">
+                      <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=120&h=80&fit=crop" alt="">
+                      <div class="share-record-info">
+                        <div class="share-record-title">健康管理师培训课程</div>
+                        <div class="share-record-meta">分享于 2025-01-12 16:45</div>
+                      </div>
+                    </div>
+                    <div class="share-record-stats">
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">5</span>
+                        <span class="share-record-stat-label">访问</span>
+                      </div>
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">0</span>
+                        <span class="share-record-stat-label">购买</span>
+                      </div>
+                      <div class="share-record-stat">
+                        <span class="share-record-stat-num">-</span>
+                        <span class="share-record-stat-label">奖励</span>
+                      </div>
+                    </div>
+                    <div class="share-record-actions">
+                      <button class="share-action-btn" onclick="copyShareLink('https://example.com/share/125')">
+                        <span class="iconify" data-icon="solar:copy-linear"></span>
+                      </button>
+                      <button class="share-action-btn" onclick="openShareModal()">
+                        <span class="iconify" data-icon="solar:share-linear"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="share-sidebar">
+              <div class="share-reward-card-green">
+                <div class="share-reward-header">
+                  <span class="iconify" data-icon="solar:gift-bold"></span>
+                  分享奖励
+                </div>
+                <div class="share-reward-desc">
+                  成功邀请好友购买课程，可获得课程价格 <strong>10%</strong> 的优惠券奖励
+                </div>
+                <button class="share-reward-btn-green" onclick="openShareModal()">
+                  <span class="iconify" data-icon="solar:share-bold"></span>
+                  立即分享
+                </button>
+              </div>
+
+              <div class="share-rules-card-green">
+                <h4 class="share-rules-title">
+                  <span class="iconify" data-icon="solar:info-circle-linear"></span>
+                  分享规则
+                </h4>
+                <ul class="share-rules-list">
+                  <li>分享课程链接给好友</li>
+                  <li>好友点击免费试看课程片段</li>
+                  <li>好友购买后获得10%优惠券</li>
+                  <li>奖励24小时内发放</li>
+                  <li>优惠券有效期30天</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-fixed-btn">
+        <button class="share-btn-primary" onclick="openShareModal()"><span class="iconify" data-icon="mdi:share"></span>立即分享课程</button>
+      </div>
+
+      <div class="share-modal" id="shareModal">
+        <div class="share-modal-overlay" onclick="closeShareModal()"></div>
+        <div class="share-modal-content">
+          <div class="share-modal-drag"></div>
+          <h3 class="share-modal-title">分享到</h3>
+          <div class="share-modal-channels">
+            <div class="share-channel-item" onclick="shareToWechat()">
+              <div class="share-channel-icon share-channel-wechat"><span class="iconify" data-icon="fab:weixin"></span></div>
+              <span class="share-channel-name">微信好友</span>
+            </div>
+            <div class="share-channel-item" onclick="shareToMoments()">
+              <div class="share-channel-icon share-channel-moments"><span class="iconify" data-icon="fab:weibo"></span></div>
+              <span class="share-channel-name">朋友圈</span>
+            </div>
+            <div class="share-channel-item" onclick="shareToQQ()">
+              <div class="share-channel-icon share-channel-qq"><span class="iconify" data-icon="fab:qq"></span></div>
+              <span class="share-channel-name">QQ好友</span>
+            </div>
+            <div class="share-channel-item" onclick="shareToQzone()">
+              <div class="share-channel-icon share-channel-qzone"><span class="iconify" data-icon="solar:globe-linear"></span></div>
+              <span class="share-channel-name">QQ空间</span>
+            </div>
+          </div>
+          <div class="share-modal-divider"></div>
+          <div class="share-modal-copy" onclick="copyShareLink()">
+            <div class="share-copy-icon"><span class="iconify" data-icon="solar:copy-linear"></span></div>
+            <div class="share-copy-info">
+              <div class="share-copy-title">复制链接</div>
+              <div class="share-copy-desc">复制分享链接到剪贴板</div>
+            </div>
+            <span class="iconify share-copy-arrow" data-icon="solar:alt-arrow-right-linear"></span>
+          </div>
+          <button class="share-modal-cancel" onclick="closeShareModal()">取消</button>
+        </div>
+      </div>
+
+      <div class="toast" id="copyToast">
+        <div class="toast-content">
+          <span class="iconify toast-icon" data-icon="solar:check-circle-bold"></span>
+          <span id="toastMessage">链接已复制到剪贴板</span>
+        </div>
       </div>
 
       <div class="tab-panel active" id="panel-courses">
@@ -765,6 +1632,28 @@
   </footer>
 
   <script>
+    (function() {
+      var isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      var navLogin = document.getElementById('navLogin');
+      var navRegister = document.getElementById('navRegister');
+      var navLogout = document.getElementById('navLogout');
+      var navProfile = document.getElementById('navProfile');
+      if (isLoggedIn) {
+        if (navLogin) navLogin.style.display = 'none';
+        if (navRegister) navRegister.style.display = 'none';
+        if (navLogout) navLogout.style.display = 'inline-block';
+        if (navProfile) navProfile.style.display = 'inline-block';
+      }
+    })();
+
+    function logout() {
+      if (confirm('确定要退出登录吗？')) {
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('loginUser');
+        window.location.href = 'login.html';
+      }
+    }
+
     function switchTab(el, panelId) {
       document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -786,6 +1675,169 @@
         header.classList.remove('scrolled');
       }
     });
+
+    function openShareModal() {
+      var modal = document.getElementById('shareModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShareModal() {
+      var modal = document.getElementById('shareModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function showToast(message) {
+      var toast = document.getElementById('copyToast');
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('show');
+      setTimeout(function() {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function shareToWechat() {
+      if (navigator.share) {
+        navigator.share({
+          title: '叁竹培训 - 养老护理课程',
+          text: '推荐您学习这个优质课程',
+          url: window.location.origin + '/html/website/eldercare/home.html?from=shared'
+        });
+      } else {
+        copyShareLink();
+      }
+      closeShareModal();
+    }
+
+    function shareToMoments() {
+      showToast('已复制链接，快去分享到朋友圈吧');
+      closeShareModal();
+    }
+
+    function shareToQQ() {
+      showToast('已复制链接，快去分享给QQ好友吧');
+      closeShareModal();
+    }
+
+    function shareToQzone() {
+      showToast('已复制链接，快去分享到QQ空间吧');
+      closeShareModal();
+    }
+
+    function copyShareLink(url) {
+      if (!url) {
+        url = window.location.origin + '/html/website/eldercare/home.html?from=shared&course=养老护理员';
+      }
+      var input = document.createElement('input');
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      showToast('链接已复制到剪贴板');
+      closeShareModal();
+    }
+
+    function switchQbTab(el, tabId) {
+      var panel = el.closest('.qb-main-area');
+      panel.querySelectorAll('.qb-nav-tab').forEach(function(t) { t.classList.remove('active'); });
+      panel.querySelectorAll('.qb-tab-content').forEach(function(c) { c.classList.remove('active'); });
+      el.classList.add('active');
+      panel.querySelector('#' + tabId).classList.add('active');
+    }
+
+    function selectOption(el) {
+      var options = document.querySelectorAll('.qb-option');
+      options.forEach(function(o) { o.classList.remove('selected'); });
+      el.classList.add('selected');
+    }
+
+    function submitAnswer() {
+      var selected = document.querySelector('.qb-option.selected');
+      if (!selected) {
+        showToast('请选择一个答案');
+        return;
+      }
+      var options = document.querySelectorAll('.qb-option');
+      options.forEach(function(o) {
+        if (o.dataset.option === 'C') {
+          o.classList.add('correct');
+        } else if (o.classList.contains('selected') && !o.classList.contains('correct')) {
+          o.classList.add('wrong');
+        }
+      });
+      document.getElementById('analysisCard').style.display = 'block';
+      document.getElementById('submitBtn').style.display = 'none';
+      var currentQ = parseInt(document.getElementById('currentQuestionNum').textContent);
+      if (currentQ >= 10) {
+        document.getElementById('finishBtn').style.display = 'inline-flex';
+        document.getElementById('nextBtn').style.display = 'none';
+      } else {
+        document.getElementById('nextBtn').style.display = 'inline-flex';
+      }
+      document.getElementById('prevBtn').disabled = false;
+    }
+
+    function prevQuestion() {
+      var currentQ = parseInt(document.getElementById('currentQuestionNum').textContent);
+      if (currentQ > 1) {
+        currentQ--;
+        document.getElementById('currentQuestionNum').textContent = currentQ;
+        document.getElementById('practiceProgressFill').style.width = (currentQ * 10) + '%';
+        resetQuestionState();
+      }
+      if (currentQ === 1) {
+        document.getElementById('prevBtn').disabled = true;
+      }
+    }
+
+    function nextQuestion() {
+      var currentQ = parseInt(document.getElementById('currentQuestionNum').textContent);
+      if (currentQ < 10) {
+        currentQ++;
+        document.getElementById('currentQuestionNum').textContent = currentQ;
+        document.getElementById('practiceProgressFill').style.width = (currentQ * 10) + '%';
+        resetQuestionState();
+      }
+      if (currentQ >= 10) {
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('finishBtn').style.display = 'inline-flex';
+      }
+      document.getElementById('prevBtn').disabled = false;
+    }
+
+    function resetQuestionState() {
+      document.querySelectorAll('.qb-option').forEach(function(o) {
+        o.classList.remove('selected', 'correct', 'wrong');
+      });
+      document.getElementById('analysisCard').style.display = 'none';
+      document.getElementById('submitBtn').style.display = 'inline-flex';
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('finishBtn').style.display = 'none';
+    }
+
+    function finishPractice() {
+      showToast('恭喜完成练习！');
+      resetQuestionState();
+      document.getElementById('currentQuestionNum').textContent = '1';
+      document.getElementById('practiceProgressFill').style.width = '10%';
+      document.getElementById('prevBtn').disabled = true;
+    }
+
+    function startPractice(questionId) {
+      var qbTab = document.querySelector('[onclick*="qb-practice"]');
+      if (qbTab) {
+        switchQbTab(qbTab, 'qb-practice');
+      }
+    }
+
+    function startPracticeTopic(topicId) {
+      var qbTab = document.querySelector('[onclick*="qb-practice"]');
+      if (qbTab) {
+        switchQbTab(qbTab, 'qb-practice');
+      }
+    }
   </script>
 
 </body>

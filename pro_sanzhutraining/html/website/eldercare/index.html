@@ -7,55 +7,66 @@
   <link rel="stylesheet" href="css/design-tokens.css">
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
   <style>
-    .header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); z-index: 1000; box-shadow: 0 4px 20px rgba(46,158,90,0.3); }
+    .header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); z-index: var(--z-fixed); box-shadow: 0 4px 20px rgba(5,150,105,0.25); transition: box-shadow var(--transition-normal); }
+    .header.scrolled { box-shadow: 0 6px 24px rgba(5,150,105,0.3); }
     .header-inner { max-width: var(--max-width); margin: 0 auto; height: 100%; display: flex; align-items: center; padding: 0 20px; gap: 24px; }
-    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .logo-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; }
-    .logo-text { font-size: 20px; font-weight: 700; color: var(--text-white); }
-    .cat-trigger { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; cursor: pointer; padding: 8px 16px; border-radius: var(--radius-md); background: rgba(255,255,255,0.1); }
+    .logo-text { font-size: 20px; font-weight: 700; color: var(--text-white); white-space: nowrap; }
+    .cat-trigger { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; cursor: pointer; white-space: nowrap; padding: 8px 16px; border-radius: var(--radius-md); background: rgba(255,255,255,0.1); transition: all 0.2s; }
     .cat-trigger:hover { background: rgba(255,255,255,0.2); }
-    .search-box { flex: 1; max-width: 500px; display: flex; height: 42px; border-radius: var(--radius-xl); overflow: hidden; background: var(--text-white); }
+    .search-box { flex: 1; max-width: 500px; display: flex; height: 42px; border-radius: var(--radius-xl); overflow: hidden; background: var(--text-white); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .search-cat-select { padding: 0 16px; font-size: 14px; color: var(--text-regular); background: var(--color-gray-50); border: none; border-right: 1px solid var(--border-color); cursor: pointer; }
     .search-input { flex: 1; border: none; outline: none; padding: 0 16px; font-size: 15px; }
-    .search-btn { width: 56px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .header-nav { display: flex; align-items: center; gap: 16px; }
-    .header-nav a { color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; padding: 8px 12px; border-radius: var(--radius-md); }
+    .search-btn { width: 56px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .search-btn:hover { background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1a6838 100%); }
+    .header-nav { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .header-nav a { color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; padding: 8px 12px; border-radius: var(--radius-md); transition: all 0.2s; }
     .header-nav a:hover { color: var(--text-white); background: rgba(255,255,255,0.15); }
-    .header-nav .btn-login { padding: 8px 20px; border: 1.5px solid rgba(255,255,255,0.6); }
-    .header-nav .btn-register { padding: 8px 20px; background: rgba(255,255,255,0.2); font-weight: 600; }
-
+    .header-nav a.active { color: var(--text-white); background: rgba(255,255,255,0.2); }
+    .header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .header-actions .btn-login { padding: 8px 20px; border: 1.5px solid rgba(255,255,255,0.6); border-radius: var(--radius-md); color: rgba(255,255,255,0.95); font-weight: 500; transition: all 0.2s; }
+    .header-actions .btn-login:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.9); }
+    .header-actions .btn-register { padding: 8px 20px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); color: var(--text-white); font-weight: 600; transition: all 0.2s; }
+    .header-actions .btn-register:hover { background: rgba(255,255,255,0.3); }
+    .user-menu { display: flex; align-items: center; gap: 12px; flex-shrink: 0; position: relative; }
+    .user-avatar-mini { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .user-avatar-mini:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+    .user-dropdown { display: none; position: absolute; top: calc(100% + 8px); right: 0; min-width: 180px; background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card-hover); border: 1px solid var(--border-light); overflow: hidden; z-index: 1001; }
+    .user-menu:hover .user-dropdown { display: block; }
+    .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 14px; color: var(--text-regular); cursor: pointer; transition: all 0.2s; }
+    .dropdown-item:hover { background: var(--color-gray-50); color: var(--color-primary); }
+    .dropdown-item.logout:hover { background: rgba(239,68,68,0.08); color: #ef4444; }
+    .dropdown-divider { height: 1px; background: var(--border-light); }
     .page-body { margin-top: var(--header-height); padding: 24px 0; background: var(--color-gray-50); min-height: calc(100vh - var(--header-height)); }
     .page-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
     .three-col { display: flex; gap: 20px; }
     .col-left { width: var(--sidebar-width); flex-shrink: 0; }
     .col-main { flex: 1; min-width: 0; }
     .col-right { width: var(--aside-width); flex-shrink: 0; }
-
     .category-nav { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; border: 1px solid var(--border-light); }
     .category-nav-title { font-size: 15px; font-weight: 700; color: var(--text-primary); padding: 18px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
     .category-nav-title::before { content: ''; width: 4px; height: 18px; background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border-radius: var(--radius-sm); }
     .category-list { padding: 6px 0; }
-    .category-item-title { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; font-size: 15px; font-weight: 500; color: var(--text-primary); cursor: pointer; border-left: 3px solid transparent; }
+    .category-item-title { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; font-size: 15px; font-weight: 500; color: var(--text-primary); cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; }
     .category-item-title:hover, .category-item-title.active { color: var(--color-primary); background: var(--color-primary-50); border-left-color: var(--color-primary); }
     .category-children { display: none; padding: 6px 0 10px; }
     .category-item.expanded .category-children { display: block; }
-    .category-children a { display: block; padding: 10px 18px 10px 34px; font-size: 14px; color: var(--text-regular); }
+    .category-children a { display: block; padding: 10px 18px 10px 34px; font-size: 14px; color: var(--text-regular); transition: color 0.2s; }
     .category-children a:hover { color: var(--color-primary); }
-
     .banner-section { margin-bottom: var(--spacing-xl); }
     .banner-carousel { position: relative; border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 16/6; }
-    .banner-slides { display: flex; transition: opacity 0.6s ease; height: 100%; }
+    .banner-slides { display: flex; height: 100%; }
     .banner-slide { min-width: 100%; height: 100%; display: flex; align-items: center; padding: 40px 60px; position: relative; opacity: 0; transition: opacity 0.6s ease; }
     .banner-slide.active { opacity: 1; }
-    .banner-slide::before { content: ''; position: absolute; inset: 0; background-size: cover; background-position: center; }
-    .banner-slide:nth-child(1)::before { background-image: url('https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&h=600&fit=crop'); }
-    .banner-slide:nth-child(2)::before { background-image: url('https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&h=600&fit=crop'); }
-    .banner-slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,80,40,0.85) 0%, rgba(0,60,30,0.6) 50%, rgba(0,80,40,0.7) 100%); }
+    .banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .banner-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,80,40,0.85) 0%, rgba(0,60,30,0.6) 50%, rgba(0,80,40,0.7) 100%); }
     .banner-content { position: relative; z-index: 1; max-width: 520px; }
     .banner-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; background: rgba(255,255,255,0.18); color: var(--text-white); font-size: 13px; border-radius: var(--radius-full); margin-bottom: 18px; }
     .banner-title { font-size: 36px; font-weight: 800; color: var(--text-white); margin-bottom: 14px; }
     .banner-desc { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 28px; }
-    .banner-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: var(--text-white); font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(46,158,90,0.4); }
+    .banner-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: var(--text-white); font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(46,158,90,0.4); transition: all 0.3s; }
+    .banner-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,158,90,0.5); }
     .banner-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: all 0.25s ease; }
     .banner-arrow:hover { background: rgba(255,255,255,0.35); transform: translateY(-50%) scale(1.1); }
     .banner-arrow.prev { left: 20px; }
@@ -64,17 +75,43 @@
     .banner-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s ease; }
     .banner-dot:hover { background: rgba(255,255,255,0.6); transform: scale(1.15); }
     .banner-dot.active { width: 32px; border-radius: var(--radius-full); background: var(--text-white); animation: dotPulse 1.5s ease-in-out infinite; }
-
+    .live-section { margin-bottom: var(--spacing-xl); }
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .section-title { font-size: 22px; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
     .section-title::before { content: ''; width: 5px; height: 24px; background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border-radius: var(--radius-sm); }
-    .section-more { font-size: 15px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-
+    .section-more { font-size: 15px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .section-more:hover { color: var(--color-primary); }
+    .live-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: thin; scrollbar-color: var(--color-gray-300) transparent; }
+    .live-scroll::-webkit-scrollbar { height: 6px; }
+    .live-scroll::-webkit-scrollbar-track { background: transparent; }
+    .live-scroll::-webkit-scrollbar-thumb { background: var(--color-gray-300); border-radius: var(--radius-full); }
+    .live-card { flex-shrink: 0; width: 280px; background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: transform var(--transition-normal), box-shadow var(--transition-normal); position: relative; }
+    .live-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 2px solid transparent; border-radius: var(--radius-lg); transition: border-color var(--transition-normal); pointer-events: none; z-index: 1; }
+    .live-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card-hover); }
+    .live-card:hover::before { border-color: var(--color-primary); }
+    .live-card-avatar { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; }
+    .live-card-avatar img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
+    .live-card:hover .live-card-avatar img { transform: scale(1.06); }
+    .live-card-avatar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%); }
+    .live-indicator { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 6px; padding: 5px 14px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: #fff; font-size: 12px; font-weight: 700; border-radius: var(--radius-full); box-shadow: 0 2px 8px rgba(239,68,68,0.4); z-index: 10; }
+    .live-indicator .dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: livePulse 1.5s infinite; }
+    .live-avatar-overlay { position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 8px; z-index: 10; }
+    .live-teacher-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.8); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .live-teacher-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .live-watch-count { display: flex; align-items: center; gap: 4px; padding: 5px 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; font-size: 12px; border-radius: var(--radius-full); }
+    .live-card-info { padding: 18px; }
+    .live-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .live-card:hover .live-card-title { color: var(--color-primary); }
+    .live-card-meta { display: flex; align-items: center; justify-content: space-between; }
+    .live-card-teacher { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); }
+    .live-card-time { font-size: 13px; color: var(--text-secondary); padding: 6px 12px; background: var(--color-gray-50); border-radius: var(--radius-md); }
+    .live-card-time.upcoming { background: var(--color-primary-50); color: var(--color-primary); }
+    .live-card-time.live { background: rgba(239,68,68,0.1); color: #EF4444; }
     .course-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .course-card { background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: all 0.3s; border-left: 3px solid transparent; }
-    .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-card-hover); border-left-color: var(--color-primary); }
+    .course-card { background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-fast); border-left: 3px solid transparent; }
+    .course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card-hover); border-left-color: var(--color-primary); }
     .course-card-cover { position: relative; aspect-ratio: 16/9; overflow: hidden; }
-    .course-card-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .course-card-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-slow); }
     .course-card:hover .course-card-cover img { transform: scale(1.08); }
     .course-badge { position: absolute; top: 12px; left: 12px; padding: 5px 12px; font-size: 12px; font-weight: 700; border-radius: var(--radius-sm); color: var(--text-white); }
     .badge-free { background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%); }
@@ -85,104 +122,53 @@
     .course-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .course-card-meta { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; }
     .course-card-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-    .stars svg { width: 14px; height: 14px; }
     .rating-num { font-size: 14px; color: #F59E0B; font-weight: 700; }
     .course-price { font-size: 20px; font-weight: 800; color: var(--color-price); }
     .course-price-original { font-size: 13px; color: var(--text-muted); text-decoration: line-through; margin-left: 6px; }
-
-    .live-section { margin-bottom: var(--spacing-xl); }
-    .live-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: thin; scrollbar-color: var(--color-gray-300) transparent; }
-    .live-scroll::-webkit-scrollbar { height: 6px; }
-    .live-scroll::-webkit-scrollbar-track { background: transparent; }
-    .live-scroll::-webkit-scrollbar-thumb { background: var(--color-gray-300); border-radius: var(--radius-full); }
-    .live-scroll::-webkit-scrollbar-thumb:hover { background: var(--color-gray-400); }
-    .live-card { flex-shrink: 0; width: 280px; background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--border-light); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
-    .live-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 2px solid transparent; border-radius: var(--radius-lg); transition: border-color 0.3s ease; pointer-events: none; z-index: 1; }
-    .live-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card-hover); }
-    .live-card:hover::before { border-color: var(--color-primary); }
-    .live-card-avatar { width: 100%; aspect-ratio: 16/10; position: relative; overflow: hidden; }
-    .live-card-avatar img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .live-card:hover .live-card-avatar img { transform: scale(1.06); }
-    .live-card-avatar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%); }
-    .live-indicator { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 6px; padding: 5px 14px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: #fff; font-size: 12px; font-weight: 700; border-radius: var(--radius-full); box-shadow: 0 2px 8px rgba(239,68,68,0.4); z-index: 10; }
-    .live-indicator .dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: livePulse 1.5s infinite; }
-    @keyframes livePulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
-    .live-avatar-overlay { position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 8px; z-index: 10; }
-    .live-teacher-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.8); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-    .live-teacher-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .live-watch-count { display: flex; align-items: center; gap: 4px; padding: 5px 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; font-size: 12px; border-radius: var(--radius-full); }
-    .live-card-info { padding: 18px; }
-    .live-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.2s ease; }
-    .live-card:hover .live-card-title { color: var(--color-primary); }
-    .live-card-meta { display: flex; align-items: center; justify-content: space-between; }
-    .live-card-teacher { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-secondary); }
-    .live-card-time { font-size: 13px; color: var(--text-secondary); padding: 6px 12px; background: var(--color-gray-50); border-radius: var(--radius-md); }
-    .live-card-time.upcoming { background: var(--color-primary-50); color: var(--color-primary); }
-    .live-card-time.live { background: rgba(239,68,68,0.1); color: #EF4444; }
-
-    .featured-section { margin-bottom: var(--spacing-xl); }
-    .featured-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .featured-card { background: var(--color-bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); cursor: pointer; }
-    .featured-card-cover { aspect-ratio: 16/10; overflow: hidden; }
-    .featured-card-cover img { width: 100%; height: 100%; object-fit: cover; }
-    .featured-card-body { padding: 18px 16px 16px; }
-    .featured-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
-    .featured-card-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; overflow: hidden; }
-    .featured-card-price { display: flex; align-items: center; gap: 10px; }
-    .price-tag { padding: 4px 12px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; font-size: 12px; font-weight: 700; border-radius: var(--radius-md); }
-    .featured-price { font-size: 22px; font-weight: 800; color: var(--color-price); }
-
     .aside-block { background: var(--color-bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 20px; overflow: hidden; }
-    .aside-block-title { font-size: 15px; font-weight: 700; color: var(--text-primary); padding: 16px 18px; border-bottom: 1px solid var(--border-light); }
-    .login-card { padding: 24px 18px; text-align: center; }
-    .login-avatar { width: 64px; height: 64px; margin: 0 auto 14px; background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--color-primary); }
-    .login-card p { font-size: 15px; color: var(--text-regular); margin-bottom: 20px; }
-    .login-btns { display: flex; gap: 12px; justify-content: center; }
-    .login-btns button { flex: 1; padding: 10px 16px; font-size: 14px; border-radius: var(--radius-md); }
-    .btn-primary { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; border: none; }
-    .btn-outline { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); }
-
-    .rec-course-item { display: flex; gap: 12px; padding: 14px 18px; cursor: pointer; }
+    .aside-block-title { font-size: 15px; font-weight: 700; color: var(--text-primary); padding: 16px 18px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; }
+    .aside-block-title::before { content: ''; width: 4px; height: 16px; background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border-radius: var(--radius-sm); }
+    .rec-course-item { display: flex; gap: 12px; padding: 14px 18px; cursor: pointer; transition: background 0.2s; }
     .rec-course-item:hover { background: var(--color-gray-50); }
     .rec-course-item + .rec-course-item { border-top: 1px solid var(--border-light); }
-    .rec-course-thumb { width: 88px; height: 58px; border-radius: var(--radius-md); overflow: hidden; }
+    .rec-course-thumb { width: 88px; height: 58px; border-radius: var(--radius-md); overflow: hidden; flex-shrink: 0; }
     .rec-course-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .rec-course-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .rec-course-info { flex: 1; min-width: 0; }
+    .rec-course-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .rec-course-price { font-size: 16px; font-weight: 800; color: var(--color-price); }
-
-    .rank-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; cursor: pointer; }
+    .rank-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; cursor: pointer; transition: background 0.2s; }
     .rank-item:hover { background: var(--color-gray-50); }
-    .rank-num { width: 26px; height: 26px; font-size: 14px; font-weight: 800; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .rank-num { width: 26px; height: 26px; font-size: 14px; font-weight: 800; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .rank-num.top1 { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #fff; }
     .rank-num.top2 { background: linear-gradient(135deg, #9CA3AF 0%, #6B7280 100%); color: #fff; }
     .rank-num.top3 { background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%); color: #fff; }
     .rank-num.normal { background: var(--color-gray-100); color: var(--text-muted); }
     .rank-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--text-primary); }
     .rank-count { font-size: 12px; color: var(--text-muted); }
-
     .promo-card { padding: 20px 18px; background: linear-gradient(135deg, var(--color-primary-50) 0%, #F0FDF4 100%); text-align: center; }
     .promo-card-title { font-size: 17px; font-weight: 800; color: var(--color-primary); margin-bottom: 8px; }
     .promo-card-desc { font-size: 13px; color: var(--text-regular); margin-bottom: 16px; }
-    .promo-card-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 24px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; font-size: 14px; font-weight: 700; border-radius: var(--radius-md); }
-
+    .promo-card-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 24px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; font-size: 14px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s; }
+    .promo-card-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(46,158,90,0.3); }
     .footer { background: var(--color-gray-900); color: var(--text-white); margin-top: var(--spacing-2xl); padding-top: 48px; }
     .footer-inner { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
     .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(4,1fr); gap: 40px; margin-bottom: 32px; }
-    .footer-logo { font-size: 24px; font-weight: 800; margin-bottom: 14px; }
-    .footer-brand p { font-size: 14px; color: var(--color-gray-400); }
+    .footer-logo { font-size: 24px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .footer-brand p { font-size: 14px; color: var(--color-gray-400); margin-bottom: 8px; }
     .footer-col-title { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
-    .footer-links a { display: block; font-size: 14px; color: var(--color-gray-400); margin-bottom: 10px; }
+    .footer-links a { display: block; font-size: 14px; color: var(--color-gray-400); margin-bottom: 10px; transition: color 0.2s; }
     .footer-links a:hover { color: var(--text-white); }
     .footer-bottom { border-top: 1px solid var(--color-gray-700); padding-top: 24px; padding-bottom: 32px; display: flex; justify-content: space-between; font-size: 14px; color: var(--color-gray-500); }
-
-    @media (max-width: 1200px) { .course-grid, .featured-grid { grid-template-columns: repeat(3,1fr); } }
+    @keyframes dotPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes livePulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+    @media (max-width: 1200px) { .course-grid { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 1199px) { .col-left { display: none; } }
-    @media (max-width: 991px) { .col-right { display: none; } .course-grid, .featured-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 767px) { .course-grid, .featured-grid { grid-template-columns: 1fr; } .banner-title { font-size: 24px; } }
+    @media (max-width: 991px) { .col-right { display: none; } .course-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 767px) { .course-grid { grid-template-columns: 1fr; } .banner-title { font-size: 24px; } }
   </style>
 </head>
 <body>
-  <header class="header">
+  <header class="header" id="mainHeader">
     <div class="header-inner">
       <div class="logo-area">
         <div class="logo-icon"><span class="iconify" data-icon="mdi:bamboo" style="color: white; font-size: 24px;"></span></div>
@@ -190,15 +176,40 @@
       </div>
       <div class="cat-trigger"><span class="iconify" data-icon="mdi:menu" style="font-size: 18px;"></span><span>课程分类</span></div>
       <div class="search-box">
-        <select class="search-cat-select"><option>全部课程</option><option>养老护理员</option><option>老年人能力评估师</option><option>健康照护师</option><option>营养配餐员</option></select>
+        <select class="search-cat-select">
+          <option>全部课程</option>
+          <option>养老护理员</option>
+          <option>长期照护师</option>
+          <option>老年人能力评估师</option>
+          <option>医疗护理员</option>
+          <option>健康管理师</option>
+          <option>营养配餐员</option>
+          <option>其他培训</option>
+        </select>
         <input class="search-input" type="text" placeholder="搜索课程、讲师、证书..." id="searchInput">
         <button class="search-btn" onclick="handleSearch()"><span class="iconify" data-icon="mdi:magnify" style="color: white; font-size: 22px;"></span></button>
       </div>
       <nav class="header-nav">
+        <a href="index.html" class="active">首页</a>
+        <a href="course-list.html">课程中心</a>
         <a href="user-center.html">我的学习</a>
-        <a href="#" class="btn-login">登录</a>
-        <a href="#" class="btn-register">注册</a>
+        <a href="profile.html">个人信息</a>
       </nav>
+      <div class="header-actions" id="headerActions">
+        <a href="login.html" class="btn-login">登录</a>
+        <a href="register.html" class="btn-register">注册</a>
+      </div>
+      <div class="user-menu" id="userMenu" style="display: none;">
+        <div class="user-avatar-mini" id="userAvatarMini" title="用户">
+          <span class="iconify" data-icon="mdi:account-circle" style="font-size: 32px; color: white;"></span>
+        </div>
+        <div class="user-dropdown">
+          <div class="dropdown-item" onclick="goToProfile()"><span class="iconify" data-icon="mdi:account-circle"></span>个人中心</div>
+          <div class="dropdown-item" onclick="goToLearning()"><span class="iconify" data-icon="mdi:book-open"></span>我的学习</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item logout" onclick="handleLogout()"><span class="iconify" data-icon="mdi:logout"></span>退出登录</div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -209,11 +220,60 @@
           <nav class="category-nav">
             <div class="category-nav-title">培训分类</div>
             <ul class="category-list">
-              <li class="category-item expanded"><div class="category-item-title active" onclick="toggleCategory(this)">养老护理员<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div><div class="category-children"><a href="course-list.html" class="active">初级养老护理员</a><a href="course-list.html">中级养老护理员</a><a href="course-list.html">高级养老护理员</a></div></li>
-              <li class="category-item"><div class="category-item-title" onclick="toggleCategory(this)">老年人能力评估师<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div><div class="category-children"><a href="course-list.html">初级评估师</a><a href="course-list.html">中级评估师</a></div></li>
-              <li class="category-item"><div class="category-item-title" onclick="toggleCategory(this)">健康照护师<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div><div class="category-children"><a href="course-list.html">基础照护</a><a href="course-list.html">高级照护</a></div></li>
-              <li class="category-item"><div class="category-item-title" onclick="toggleCategory(this)">营养配餐员<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div><div class="category-children"><a href="course-list.html">老年营养基础</a><a href="course-list.html">特殊膳食配餐</a></div></li>
-              <li class="category-item"><div class="category-item-title" onclick="toggleCategory(this)">继续教育<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div><div class="category-children"><a href="course-list.html">年度继续教育</a><a href="course-list.html">专业技能提升</a></div></li>
+              <li class="category-item expanded">
+                <div class="category-item-title active" onclick="toggleCategory(this)">养老护理员<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html" class="active">初级养老护理员</a>
+                  <a href="course-list.html">中级养老护理员</a>
+                  <a href="course-list.html">高级养老护理员</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">长期照护师<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">初级长期照护师</a>
+                  <a href="course-list.html">中级长期照护师</a>
+                  <a href="course-list.html">高级长期照护师</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">老年人能力评估师<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">初级评估师</a>
+                  <a href="course-list.html">中级评估师</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">医疗护理员<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">基础医疗护理</a>
+                  <a href="course-list.html">专科医疗护理</a>
+                  <a href="course-list.html">急救护理</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">健康管理师<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">健康管理基础</a>
+                  <a href="course-list.html">慢病管理</a>
+                  <a href="course-list.html">健康评估</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">营养配餐员<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">基础营养</a>
+                  <a href="course-list.html">老年营养</a>
+                </div>
+              </li>
+              <li class="category-item">
+                <div class="category-item-title" onclick="toggleCategory(this)">其他培训<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></div>
+                <div class="category-children">
+                  <a href="course-list.html">职业道德</a>
+                  <a href="course-list.html">法律法规</a>
+                  <a href="course-list.html">行业专题</a>
+                </div>
+              </li>
             </ul>
           </nav>
         </aside>
@@ -221,132 +281,379 @@
         <main class="col-main">
           <section class="banner-section">
             <div class="banner-carousel">
-              <div class="banner-slides" id="bannerSlides">
-                <div class="banner-slide active"><div class="banner-content"><span class="banner-tag"><span class="iconify" data-icon="mdi:star" style="font-size: 16px;"></span>政府补贴课程</span><h2 class="banner-title">养老护理员职业资格认证培训</h2><p class="banner-desc">人社部认证 · 在线学习 · 持证上岗 · 政府补贴低至免费</p><a href="course-list.html" class="banner-cta">立即报名<span class="iconify" data-icon="mdi:arrow-right" style="font-size: 18px;"></span></a></div></div>
-                <div class="banner-slide"><div class="banner-content"><span class="banner-tag"><span class="iconify" data-icon="mdi:sparkles" style="font-size: 16px;"></span>新课上架</span><h2 class="banner-title">老年人能力评估师培训</h2><p class="banner-desc">国家新兴职业 · 评估师缺口大 · 线上学习灵活安排</p><a href="course-list.html" class="banner-cta">了解详情<span class="iconify" data-icon="mdi:arrow-right" style="font-size: 18px;"></span></a></div></div>
+              <div class="banner-slides">
+                <div class="banner-slide active">
+                  <img class="banner-bg" src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1600&h=600&fit=crop" alt="养老护理员培训">
+                  <div class="banner-overlay"></div>
+                  <div class="banner-content">
+                    <span class="banner-tag"><span class="iconify" data-icon="mdi:trending-up"></span>热门课程</span>
+                    <h1 class="banner-title">养老护理员<br/>职业技能培训</h1>
+                    <p class="banner-desc">专业认证课程，名师授课，助您快速掌握养老护理核心技能，开启职业新篇章</p>
+                    <a href="course-list.html" class="banner-cta">立即报名<span class="iconify" data-icon="mdi:arrow-right"></span></a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <img class="banner-bg" src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1600&h=600&fit=crop" alt="老年人能力评估师">
+                  <div class="banner-overlay"></div>
+                  <div class="banner-content">
+                    <span class="banner-tag"><span class="iconify" data-icon="mdi:video"></span>在线直播</span>
+                    <h1 class="banner-title">老年人能力评估师<br/>精品课程</h1>
+                    <p class="banner-desc">权威认证体系，系统化课程设计，助您成为专业评估师</p>
+                    <a href="course-list.html" class="banner-cta">了解详情<span class="iconify" data-icon="mdi:arrow-right"></span></a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <img class="banner-bg" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&h=600&fit=crop" alt="长期照护师">
+                  <div class="banner-overlay"></div>
+                  <div class="banner-content">
+                    <span class="banner-tag"><span class="iconify" data-icon="mdi:star"></span>新课上线</span>
+                    <h1 class="banner-title">长期照护师<br/>系统化培训课程</h1>
+                    <p class="banner-desc">全新课程体系，资深护理专家全程授课，理论结合实践</p>
+                    <a href="course-list.html" class="banner-cta">立即学习<span class="iconify" data-icon="mdi:arrow-right"></span></a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <img class="banner-bg" src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=600&fit=crop" alt="健康管理师">
+                  <div class="banner-overlay"></div>
+                  <div class="banner-content">
+                    <span class="banner-tag"><span class="iconify" data-icon="mdi:file-certificate"></span>证书认证</span>
+                    <h1 class="banner-title">健康管理师<br/>国家职业资格认证</h1>
+                    <p class="banner-desc">权威证书，全国通用，提升您的职业竞争力</p>
+                    <a href="course-list.html" class="banner-cta">查看详情<span class="iconify" data-icon="mdi:arrow-right"></span></a>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <img class="banner-bg" src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=1600&h=600&fit=crop" alt="医疗护理员">
+                  <div class="banner-overlay"></div>
+                  <div class="banner-content">
+                    <span class="banner-tag"><span class="iconify" data-icon="mdi:hand-heart"></span>实操培训</span>
+                    <h1 class="banner-title">医疗护理员<br/>实操技能实训</h1>
+                    <p class="banner-desc">小班教学，一对一指导，让您在实践中掌握专业技能</p>
+                    <a href="course-list.html" class="banner-cta">预约试听<span class="iconify" data-icon="mdi:arrow-right"></span></a>
+                  </div>
+                </div>
               </div>
-              <button class="banner-arrow prev" onclick="slideBanner(-1)"><span class="iconify" data-icon="mdi:chevron-left" style="color: white; font-size: 28px;"></span></button>
-              <button class="banner-arrow next" onclick="slideBanner(1)"><span class="iconify" data-icon="mdi:chevron-right" style="color: white; font-size: 28px;"></span></button>
-              <div class="banner-dots"><span class="banner-dot active" onclick="goToSlide(0)"></span><span class="banner-dot" onclick="goToSlide(1)"></span></div>
+              <div class="banner-arrow prev" onclick="prevSlide()"><span class="iconify" data-icon="mdi:chevron-left" style="color: white; font-size: 28px;"></span></div>
+              <div class="banner-arrow next" onclick="nextSlide()"><span class="iconify" data-icon="mdi:chevron-right" style="color: white; font-size: 28px;"></span></div>
+              <div class="banner-dots">
+                <span class="banner-dot active" onclick="goToSlide(0)"></span>
+                <span class="banner-dot" onclick="goToSlide(1)"></span>
+                <span class="banner-dot" onclick="goToSlide(2)"></span>
+                <span class="banner-dot" onclick="goToSlide(3)"></span>
+                <span class="banner-dot" onclick="goToSlide(4)"></span>
+              </div>
             </div>
           </section>
 
           <section class="live-section">
             <div class="section-header">
-              <h2 class="section-title">直播公开课</h2>
-              <a href="course-list.html" class="section-more">更多<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></a>
+              <h2 class="section-title"><span class="iconify" data-icon="mdi:broadcast" style="color: #EF4444;"></span>直播课程</h2>
+              <span class="section-more" onclick="location.href='course-list.html'">查看更多<span class="iconify" data-icon="mdi:chevron-right"></span></span>
             </div>
             <div class="live-scroll">
-              <div class="live-card" onclick="window.location.href='live-class.html'">
+              <div class="live-card" onclick="location.href='live-class.html'">
                 <div class="live-card-avatar">
-                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=560&h=350&fit=crop" alt="直播课程">
+                  <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=560&h=350&fit=crop" alt="直播课程">
                   <span class="live-indicator"><span class="dot"></span>直播中</span>
                   <div class="live-avatar-overlay">
-                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="讲师头像"></div>
-                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 14px;"></span>2.3k</span>
+                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop" alt="讲师头像"></div>
+                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 12px;"></span>1,258</span>
                   </div>
                 </div>
                 <div class="live-card-info">
-                  <div class="live-card-title">老年人日常生活照护实操要点详解</div>
+                  <h3 class="live-card-title">养老护理员实操技能提升班</h3>
                   <div class="live-card-meta">
-                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account" style="font-size: 16px;"></span>李芳老师</span>
+                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account"></span>王明华</span>
                     <span class="live-card-time live">正在直播</span>
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='live-class.html'">
+              <div class="live-card" onclick="location.href='live-class.html'">
                 <div class="live-card-avatar">
-                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=560&h=350&fit=crop" alt="直播课程">
+                  <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=560&h=350&fit=crop" alt="直播课程">
+                  <span class="live-indicator"><span class="dot"></span>直播中</span>
                   <div class="live-avatar-overlay">
-                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="讲师头像"></div>
-                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 14px;"></span>1.8k</span>
+                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop" alt="讲师头像"></div>
+                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 12px;"></span>986</span>
                   </div>
                 </div>
                 <div class="live-card-info">
-                  <div class="live-card-title">老年人能力评估标准解读与实操技巧</div>
+                  <h3 class="live-card-title">老年人能力评估实务讲解</h3>
                   <div class="live-card-meta">
-                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account" style="font-size: 16px;"></span>王建国老师</span>
-                    <span class="live-card-time upcoming">明天 20:00</span>
+                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account"></span>李芳</span>
+                    <span class="live-card-time live">正在直播</span>
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='live-class.html'">
+              <div class="live-card" onclick="location.href='live-class.html'">
                 <div class="live-card-avatar">
-                  <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=560&h=350&fit=crop" alt="直播课程">
+                  <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
-                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="讲师头像"></div>
-                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 14px;"></span>1.2k</span>
+                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=80&h=80&fit=crop" alt="讲师头像"></div>
+                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 12px;"></span>今日 14:00</span>
                   </div>
                 </div>
                 <div class="live-card-info">
-                  <div class="live-card-title">养老机构安全管理规范与应急预案</div>
+                  <h3 class="live-card-title">健康照护师考前冲刺班</h3>
                   <div class="live-card-meta">
-                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account" style="font-size: 16px;"></span>张丽华老师</span>
-                    <span class="live-card-time upcoming">周三 19:30</span>
+                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account"></span>张伟</span>
+                    <span class="live-card-time upcoming">明日 14:00</span>
                   </div>
                 </div>
               </div>
-              <div class="live-card" onclick="window.location.href='live-class.html'">
+              <div class="live-card" onclick="location.href='live-class.html'">
                 <div class="live-card-avatar">
-                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=560&h=350&fit=crop" alt="直播课程">
+                  <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=560&h=350&fit=crop" alt="直播课程">
                   <div class="live-avatar-overlay">
-                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" alt="讲师头像"></div>
-                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 14px;"></span>980</span>
+                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop" alt="讲师头像"></div>
+                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 12px;"></span>今日 19:30</span>
                   </div>
                 </div>
                 <div class="live-card-info">
-                  <div class="live-card-title">老年人营养膳食搭配指南与实践</div>
+                  <h3 class="live-card-title">营养配餐员实操课程</h3>
                   <div class="live-card-meta">
-                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account" style="font-size: 16px;"></span>陈晓红老师</span>
-                    <span class="live-card-time upcoming">周四 20:00</span>
-                  </div>
-                </div>
-              </div>
-              <div class="live-card" onclick="window.location.href='live-class.html'">
-                <div class="live-card-avatar">
-                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=560&h=350&fit=crop" alt="直播课程">
-                  <div class="live-avatar-overlay">
-                    <div class="live-teacher-avatar"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="讲师头像"></div>
-                    <span class="live-watch-count"><span class="iconify" data-icon="mdi:eye" style="font-size: 14px;"></span>760</span>
-                  </div>
-                </div>
-                <div class="live-card-info">
-                  <div class="live-card-title">老年常见疾病照护要点与案例分析</div>
-                  <div class="live-card-meta">
-                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account" style="font-size: 16px;"></span>刘志远老师</span>
-                    <span class="live-card-time upcoming">周五 19:00</span>
+                    <span class="live-card-teacher"><span class="iconify" data-icon="mdi:account"></span>陈静</span>
+                    <span class="live-card-time upcoming">今晚 19:30</span>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section class="featured-section">
-            <div class="section-header"><h2 class="section-title">精选课程</h2><a href="course-list.html" class="section-more">更多<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></a></div>
-            <div class="featured-grid">
-              <div class="featured-card" onclick="window.location.href='course-detail.html'"><div class="featured-card-cover"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="课程"><span class="course-badge badge-subsidy">政府补贴</span></div><div class="featured-card-body"><div class="featured-card-title">老年人能力评估师认证培训</div><div class="featured-card-desc">掌握老年人能力评估标准与方法</div><div class="featured-card-price"><span class="price-tag">政府补贴价</span><span class="featured-price">¥980</span></div></div></div>
-              <div class="featured-card" onclick="window.location.href='course-detail.html'"><div class="featured-card-cover"><img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=400&h=250&fit=crop" alt="课程"><span class="course-badge badge-hot">热销</span></div><div class="featured-card-body"><div class="featured-card-title">健康照护师（中级）技能提升</div><div class="featured-card-desc">提升专业照护能力，掌握高级护理技能</div><div class="featured-card-price"><span class="price-tag">热门课程</span><span class="featured-price">¥1280</span></div></div></div>
-              <div class="featured-card" onclick="window.location.href='course-detail.html'"><div class="featured-card-cover"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=250&fit=crop" alt="课程"><span class="course-badge badge-new">新课</span></div><div class="featured-card-body"><div class="featured-card-title">老年营养与膳食指导精品课</div><div class="featured-card-desc">科学搭配老年膳食，满足特殊营养需求</div><div class="featured-card-price"><span class="price-tag">新课特惠</span><span class="featured-price">¥420</span></div></div></div>
-              <div class="featured-card" onclick="window.location.href='course-detail.html'"><div class="featured-card-cover"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=250&fit=crop" alt="课程"><span class="course-badge badge-subsidy">政府补贴</span></div><div class="featured-card-body"><div class="featured-card-title">养老护理员（初级）考证培训</div><div class="featured-card-desc">系统学习养老护理基础知识与实操技能</div><div class="featured-card-price"><span class="price-tag">政府补贴价</span><span class="featured-price">¥680</span></div></div></div>
+          <section class="course-section" style="margin-bottom: var(--spacing-xl);">
+            <div class="section-header">
+              <h2 class="section-title"><span class="iconify" data-icon="mdi:fire" style="color: #EF4444;"></span>热门课程</h2>
+              <span class="section-more" onclick="location.href='course-list.html'">查看更多<span class="iconify" data-icon="mdi:chevron-right"></span></span>
             </div>
-          </section>
-
-          <section style="margin-bottom: var(--spacing-xl);">
-            <div class="section-header"><h2 class="section-title">热门课程</h2><a href="course-list.html" class="section-more">更多<span class="iconify" data-icon="mdi:chevron-right" style="font-size: 18px;"></span></a></div>
             <div class="course-grid">
-              <div class="course-card" onclick="window.location.href='course-detail.html'"><div class="course-card-cover"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=225&fit=crop" alt="课程"><span class="course-badge badge-subsidy">政府补贴</span></div><div class="course-card-body"><div class="course-card-title">养老护理员（初级）考证培训</div><div class="course-card-meta">李芳老师 · 48课时</div><div class="course-card-rating"><div class="stars"><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span></div><span class="rating-num">4.9</span></div><div class="course-price">¥680<span class="course-price-original">¥1200</span></div></div></div>
-              <div class="course-card" onclick="window.location.href='course-detail.html'"><div class="course-card-cover"><img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=400&h=225&fit=crop" alt="课程"><span class="course-badge badge-hot">热销</span></div><div class="course-card-body"><div class="course-card-title">养老护理员（中级）技能提升培训</div><div class="course-card-meta">王建国老师 · 56课时</div><div class="course-card-rating"><div class="stars"><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star-outline" style="color: #D1D5DB;"></span></div><span class="rating-num">4.7</span></div><div class="course-price">¥980<span class="course-price-original">¥1600</span></div></div></div>
-              <div class="course-card" onclick="window.location.href='course-detail.html'"><div class="course-card-cover"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=225&fit=crop" alt="课程"><span class="course-badge badge-free">免费</span></div><div class="course-card-body"><div class="course-card-title">养老护理入门：职业道德与服务意识</div><div class="course-card-meta">张丽华老师 · 6课时</div><div class="course-card-rating"><div class="stars"><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span></div><span class="rating-num">4.9</span></div><div class="course-price">¥0</div></div></div>
-              <div class="course-card" onclick="window.location.href='course-detail.html'"><div class="course-card-cover"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=225&fit=crop" alt="课程"><span class="course-badge badge-new">新课</span></div><div class="course-card-body"><div class="course-card-title">老年人能力评估师（初级）</div><div class="course-card-meta">陈晓红老师 · 42课时</div><div class="course-card-rating"><div class="stars"><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span><span class="iconify" data-icon="mdi:star-half" style="color: #F59E0B;"></span></div><span class="rating-num">4.5</span></div><div class="course-price">¥1080<span class="course-price-original">¥1800</span></div></div></div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=225&fit=crop" alt="养老护理员">
+                  <span class="course-badge badge-hot">热门</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">养老护理员（初级）考证培训</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 2,856人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.9</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(1,284评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥299</span>
+                    <span class="course-price-original">¥599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=400&h=225&fit=crop" alt="老年人能力评估师">
+                  <span class="course-badge badge-new">新课</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">老年人能力评估师（中级）培训</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 1,523人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.8</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(856评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥499</span>
+                    <span class="course-price-original">¥899</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=225&fit=crop" alt="健康照护师">
+                  <span class="course-badge badge-subsidy">补贴</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">健康照护师职业技能培训</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 986人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.7</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(523评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥399</span>
+                    <span class="course-price-original">¥799</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=225&fit=crop" alt="营养配餐员">
+                  <span class="course-badge badge-free">免费</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">营养配餐员入门课程</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 5,234人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.6</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(2,156评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price" style="color: var(--color-success);">免费</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="course-section" style="margin-bottom: var(--spacing-xl);">
+            <div class="section-header">
+              <h2 class="section-title"><span class="iconify" data-icon="mdi:book-open-page-variant" style="color: var(--color-primary);"></span>最新课程</h2>
+              <span class="section-more" onclick="location.href='course-list.html'">查看更多<span class="iconify" data-icon="mdi:chevron-right"></span></span>
+            </div>
+            <div class="course-grid">
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=225&fit=crop" alt="养老护理进阶">
+                  <span class="course-badge badge-new">新课</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">养老护理员高级技能提升</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 756人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.9</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(328评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥599</span>
+                    <span class="course-price-original">¥999</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=225&fit=crop" alt="评估师实务">
+                  <span class="course-badge badge-hot">热门</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">老年人能力评估实务操作</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 1,128人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.8</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(612评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥449</span>
+                    <span class="course-price-original">¥799</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=225&fit=crop" alt="急救技能">
+                  <span class="course-badge badge-subsidy">补贴</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">养老护理急救技能培训</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 2,345人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.7</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(1,023评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥199</span>
+                    <span class="course-price-original">¥399</span>
+                  </div>
+                </div>
+              </div>
+              <div class="course-card" onclick="location.href='course-detail.html'">
+                <div class="course-card-cover">
+                  <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=225&fit=crop" alt="营养学基础">
+                  <span class="course-badge badge-new">新课</span>
+                </div>
+                <div class="course-card-body">
+                  <h3 class="course-card-title">老年人营养学基础课程</h3>
+                  <p class="course-card-meta"><span class="iconify" data-icon="mdi:account-group" style="font-size: 14px;"></span> 1,567人在学</p>
+                  <div class="course-card-rating">
+                    <span class="iconify" data-icon="mdi:star" style="color: #F59E0B;"></span>
+                    <span class="rating-num">4.8</span>
+                    <span style="color: var(--text-muted); font-size: 13px;">(745评价)</span>
+                  </div>
+                  <div class="course-card-footer" style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="course-price">¥349</span>
+                    <span class="course-price-original">¥699</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </main>
 
         <aside class="col-right">
-          <div class="aside-block"><div class="login-card"><div class="login-avatar"><span class="iconify" data-icon="mdi:account-circle" style="font-size: 40px;"></span></div><p>登录后查看学习进度</p><div class="login-btns"><button class="btn-primary">登录</button><button class="btn-outline">注册</button></div></div></div>
-          <div class="aside-block"><div class="aside-block-title">推荐课程</div><div><div class="rec-course-item"><div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=200&h=120&fit=crop" alt="推荐课程"></div><div class="rec-course-info"><div class="rec-course-title">养老护理员考前冲刺班</div><div class="rec-course-price">¥380</div></div></div><div class="rec-course-item"><div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=200&h=120&fit=crop" alt="推荐课程"></div><div class="rec-course-info"><div class="rec-course-title">老年常见疾病照护</div><div class="rec-course-price">¥280</div></div></div><div class="rec-course-item"><div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=120&fit=crop" alt="推荐课程"></div><div class="rec-course-info"><div class="rec-course-title">养老护理实操技能训练</div><div class="rec-course-price">¥450</div></div></div></div></div>
-          <div class="aside-block"><div class="aside-block-title">热门排行</div><div><div class="rank-item"><span class="rank-num top1">1</span><span class="rank-title">养老护理员考证培训</span><span class="rank-count">1.2万</span></div><div class="rank-item"><span class="rank-num top2">2</span><span class="rank-title">老年人能力评估师</span><span class="rank-count">8900</span></div><div class="rank-item"><span class="rank-num top3">3</span><span class="rank-title">健康照护基础课程</span><span class="rank-count">6700</span></div><div class="rank-item"><span class="rank-num normal">4</span><span class="rank-title">老年营养配餐指南</span><span class="rank-count">5200</span></div><div class="rank-item"><span class="rank-num normal">5</span><span class="rank-title">养老机构管理实务</span><span class="rank-count">4100</span></div></div></div>
-          <div class="aside-block"><div class="promo-card"><div class="promo-card-title">新人专享福利</div><div class="promo-card-desc">注册即送200元课程优惠券</div><div class="promo-card-btn">立即领取<span class="iconify" data-icon="mdi:gift" style="font-size: 16px;"></span></div></div></div>
+          <div class="aside-block">
+            <div class="aside-block-title">推荐课程</div>
+            <div class="rec-course-item" onclick="location.href='course-detail.html'">
+              <div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=176&h=116&fit=crop" alt=""></div>
+              <div class="rec-course-info">
+                <h4 class="rec-course-title">养老护理员考证培训</h4>
+                <span class="rec-course-price">¥299</span>
+              </div>
+            </div>
+            <div class="rec-course-item" onclick="location.href='course-detail.html'">
+              <div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=176&h=116&fit=crop" alt=""></div>
+              <div class="rec-course-info">
+                <h4 class="rec-course-title">老年人能力评估师</h4>
+                <span class="rec-course-price">¥499</span>
+              </div>
+            </div>
+            <div class="rec-course-item" onclick="location.href='course-detail.html'">
+              <div class="rec-course-thumb"><img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=176&h=116&fit=crop" alt=""></div>
+              <div class="rec-course-info">
+                <h4 class="rec-course-title">健康照护师培训</h4>
+                <span class="rec-course-price">¥399</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="aside-block">
+            <div class="aside-block-title">学习排行榜</div>
+            <div class="rank-item" onclick="location.href='course-detail.html'">
+              <span class="rank-num top1">1</span>
+              <span class="rank-title">养老护理员精讲</span>
+              <span class="rank-count">3.2k学过</span>
+            </div>
+            <div class="rank-item" onclick="location.href='course-detail.html'">
+              <span class="rank-num top2">2</span>
+              <span class="rank-title">评估师实务</span>
+              <span class="rank-count">2.8k学过</span>
+            </div>
+            <div class="rank-item" onclick="location.href='course-detail.html'">
+              <span class="rank-num top3">3</span>
+              <span class="rank-title">健康照护入门</span>
+              <span class="rank-count">2.5k学过</span>
+            </div>
+            <div class="rank-item" onclick="location.href='course-detail.html'">
+              <span class="rank-num normal">4</span>
+              <span class="rank-title">急救技能培训</span>
+              <span class="rank-count">2.1k学过</span>
+            </div>
+            <div class="rank-item" onclick="location.href='course-detail.html'">
+              <span class="rank-num normal">5</span>
+              <span class="rank-title">营养配餐基础</span>
+              <span class="rank-count">1.9k学过</span>
+            </div>
+          </div>
+
+          <div class="aside-block">
+            <div class="promo-card">
+              <h3 class="promo-card-title">限时优惠</h3>
+              <p class="promo-card-desc">新用户首单立减100元，团购更享8折优惠</p>
+              <div class="promo-card-btn" onclick="location.href='course-list.html'">
+                <span class="iconify" data-icon="mdi:gift"></span>立即领取
+              </div>
+            </div>
+          </div>
         </aside>
       </div>
     </div>
@@ -355,24 +662,132 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-grid">
-        <div class="footer-brand"><div class="footer-logo"><span class="iconify" data-icon="mdi:bamboo" style="font-size: 28px;"></span>叁竹培训</div><p>专注养老行业培训认证，提供专业、系统的职业培训课程。</p></div>
-        <div><div class="footer-col-title">课程中心</div><div class="footer-links"><a href="course-list.html">养老护理员</a><a href="course-list.html">老年人能力评估师</a><a href="course-list.html">健康照护师</a><a href="course-list.html">营养配餐员</a></div></div>
-        <div><div class="footer-col-title">关于我们</div><div class="footer-links"><a href="#">公司简介</a><a href="#">师资团队</a><a href="#">合作伙伴</a><a href="#">联系我们</a></div></div>
-        <div><div class="footer-col-title">帮助支持</div><div class="footer-links"><a href="#">常见问题</a><a href="#">学习指南</a><a href="#">证书查询</a><a href="#">意见反馈</a></div></div>
-        <div><div class="footer-col-title">关注我们</div><div class="footer-links"><a href="#">微信公众号</a><a href="#">官方微博</a><a href="#">抖音账号</a><a href="#">客服热线</a></div></div>
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="iconify" data-icon="mdi:bamboo" style="color: var(--color-primary);"></span>叁竹培训</div>
+          <p>专业养老行业培训认证平台</p>
+          <p>让学习更简单，让就业更轻松</p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">关于我们</h4>
+          <div class="footer-links">
+            <a href="#">公司简介</a>
+            <a href="#">联系我们</a>
+            <a href="#">加入我们</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">课程服务</h4>
+          <div class="footer-links">
+            <a href="course-list.html">课程中心</a>
+            <a href="#">师资团队</a>
+            <a href="#">学习帮助</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">合作加盟</h4>
+          <div class="footer-links">
+            <a href="#">机构入驻</a>
+            <a href="#">品牌授权</a>
+            <a href="#">合作案例</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">联系我们</h4>
+          <div class="footer-links">
+            <a href="#">客服电话：400-888-8888</a>
+            <a href="#">邮箱：info@sanzhu.com</a>
+            <a href="#">地址：北京市朝阳区建国路88号</a>
+          </div>
+        </div>
       </div>
-      <div class="footer-bottom"><span>Copyright 2024 叁竹培训 版权所有</span><span>沪ICP备xxxxxxxx号</span></div>
+      <div class="footer-bottom">
+        <span>© 2024 叁竹培训 版权所有</span>
+        <span>京ICP备12345678号-1</span>
+      </div>
     </div>
   </footer>
 
   <script>
-    function toggleCategory(el) { el.parentElement.classList.toggle('expanded'); }
     let currentSlide = 0;
-    function slideBanner(direction) { const slides = document.querySelectorAll('.banner-slide'); currentSlide += direction; if (currentSlide < 0) currentSlide = slides.length - 1; if (currentSlide >= slides.length) currentSlide = 0; updateBanner(); }
-    function goToSlide(index) { currentSlide = index; updateBanner(); }
-    function updateBanner() { document.querySelectorAll('.banner-slide').forEach((slide, i) => slide.classList.toggle('active', i === currentSlide)); document.querySelectorAll('.banner-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide)); }
-    function handleSearch() { const keyword = document.getElementById('searchInput').value; if (keyword.trim()) window.location.href = `search.html?q=${encodeURIComponent(keyword)}`; }
-    document.getElementById('searchInput').addEventListener('keyup', e => { if (e.key === 'Enter') handleSearch(); });
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots = document.querySelectorAll('.banner-dot');
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateSlide();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateSlide();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlide();
+    }
+
+    setInterval(nextSlide, 5000);
+
+    function toggleCategory(element) {
+      const categoryItem = element.parentElement;
+      categoryItem.classList.toggle('expanded');
+    }
+
+    function handleSearch() {
+      const keyword = document.getElementById('searchInput').value;
+      if (keyword.trim()) {
+        location.href = 'course-list.html?search=' + encodeURIComponent(keyword);
+      }
+    }
+
+    function goToProfile() {
+      location.href = 'profile.html';
+    }
+
+    function goToLearning() {
+      location.href = 'user-center.html';
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('currentUser');
+      location.reload();
+    }
+
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      const headerActions = document.getElementById('headerActions');
+      const userMenu = document.getElementById('userMenu');
+
+      if (isLoggedIn) {
+        headerActions.style.display = 'none';
+        userMenu.style.display = 'flex';
+      } else {
+        headerActions.style.display = 'flex';
+        userMenu.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('load', checkLoginStatus);
+
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('mainHeader');
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
   </script>
 </body>
 </html>

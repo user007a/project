@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>叁竹培训 - 常见问题</title>
+  <link rel="stylesheet" href="css/tokens.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
   <style>
@@ -17,14 +18,16 @@
 </head>
 <body class="bg-[#f5f5f5] min-h-screen">
 
-<div class="w-full max-w-[375px] mx-auto min-h-screen bg-[#f5f5f5] relative">
+<div class="w-full max-w-[750px] mx-auto min-h-screen bg-[#f5f5f5] relative">
 
   <!-- 顶部Header -->
-  <div class="bg-gradient-to-br from-[#2e9e5a] to-[#1e7e42] px-4 pt-10 pb-4 rounded-b-[40px]">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center cursor-pointer" onclick="history.back()">
+  <div class="bg-gradient-to-br from-[#2e9e5a] to-[#1e7e42] px-4 pt-10 pb-5 rounded-b-3xl relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-white/[0.05] rounded-full"></div>
+    <div class="flex items-center gap-3 relative z-10">
+      <a href="profile.html" class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all hover:bg-white/30 shadow-lg shadow-black/10">
         <span class="iconify text-white text-lg" data-icon="solar:arrow-left-linear"></span>
-      </div>
+      </a>
       <h1 class="text-white font-bold text-base">常见问题</h1>
     </div>
   </div>
@@ -32,10 +35,10 @@
   <!-- 分类Tab -->
   <div class="sticky top-0 z-40 bg-white px-4 py-3 shadow-sm">
     <div class="flex gap-2 overflow-x-auto no-scrollbar" id="faqTabs">
-      <div class="faq-tab flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all whitespace-nowrap bg-[#e8f5ec] text-[#2e9e5a] font-semibold" data-cat="course">课程相关</div>
-      <div class="faq-tab flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all whitespace-nowrap bg-[#f5f5f5] text-[#666]" data-cat="payment">支付相关</div>
-      <div class="faq-tab flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all whitespace-nowrap bg-[#f5f5f5] text-[#666]" data-cat="cert">证书相关</div>
-      <div class="faq-tab flex-shrink-0 px-4 py-1.5 rounded-full text-sm cursor-pointer transition-all whitespace-nowrap bg-[#f5f5f5] text-[#666]" data-cat="other">其他</div>
+      <div class="faq-tab active" data-cat="course">课程相关</div>
+      <div class="faq-tab" data-cat="payment">支付相关</div>
+      <div class="faq-tab" data-cat="cert">证书相关</div>
+      <div class="faq-tab" data-cat="other">其他</div>
     </div>
   </div>
 
@@ -217,11 +220,9 @@
   tabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
       tabs.forEach(function(t) {
-        t.classList.remove('bg-[#e8f5ec]', 'text-[#2e9e5a]', 'font-semibold');
-        t.classList.add('bg-[#f5f5f5]', 'text-[#666]');
+        t.classList.remove('active');
       });
-      this.classList.remove('bg-[#f5f5f5]', 'text-[#666]');
-      this.classList.add('bg-[#e8f5ec]', 'text-[#2e9e5a]', 'font-semibold');
+      this.classList.add('active');
 
       var cat = this.dataset.cat;
       items.forEach(function(item) {
