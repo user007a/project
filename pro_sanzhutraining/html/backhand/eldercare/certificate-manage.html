@@ -308,9 +308,14 @@
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b flex justify-between items-center">
                     <span id="pageInfo" class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">0</span> 条记录</span>
-                    <button onclick="exportCerts()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-                        <span class="iconify" data-icon="ri:download-line"></span>导出Excel
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="openAddCertModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                            <span class="iconify" data-icon="ri:add-line"></span>新增证书
+                        </button>
+                        <button onclick="exportCerts()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                            <span class="iconify" data-icon="ri:download-line"></span>导出证书
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -339,6 +344,121 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 新增证书弹窗 -->
+    <div id="addCertModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeAddCertModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-y-10 lg:inset-x-[20%] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0" id="addCertModalContent">
+            <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
+                <h2 class="text-lg font-bold text-gray-900">新增证书</h2>
+                <button onclick="closeAddCertModal()" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:close-line"></span>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- 学员信息 -->
+                    <div class="bg-gray-50 rounded-xl p-5">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4">学员信息</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">学员姓名 <span class="text-red-500">*</span></label>
+                                <input type="text" id="addStudentName" placeholder="请输入学员姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">手机号 <span class="text-red-500">*</span></label>
+                                <input type="tel" id="addStudentPhone" placeholder="请输入手机号" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">性别</label>
+                                <select id="addStudentGender" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                    <option value="">请选择</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">年龄</label>
+                                <input type="number" id="addStudentAge" placeholder="请输入年龄" min="1" max="120" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 证书基本信息 -->
+                    <div class="bg-gray-50 rounded-xl p-5 lg:col-span-2">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-4">证书基本信息</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">证书名称 <span class="text-red-500">*</span></label>
+                                <input type="text" id="addCertName" placeholder="请输入证书名称" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">证书编号</label>
+                                <input type="text" id="addCertNo" placeholder="自动生成" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm bg-gray-50" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">证书级别 <span class="text-red-500">*</span></label>
+                                <select id="addCertLevel" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                    <option value="">请选择级别</option>
+                                    <option value="初级">初级</option>
+                                    <option value="中级">中级</option>
+                                    <option value="高级">高级</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">颁证机构</label>
+                                <input type="text" id="addCertOrg" placeholder="请输入颁证机构" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">颁发时间</label>
+                                <input type="date" id="addIssueDate" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">证书状态</label>
+                                <select id="addCertStatus" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                    <option value="有效">有效</option>
+                                    <option value="待生效">待生效</option>
+                                    <option value="过期">过期</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">有效开始日期</label>
+                                <input type="date" id="addValidStart" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1.5">有效结束日期</label>
+                                <input type="date" id="addValidEnd" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 证书图片 -->
+                <div class="mt-6">
+                    <h3 class="text-sm font-semibold text-gray-900 mb-3">证书图片</h3>
+                    <div class="bg-gray-50 rounded-xl p-5">
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                            <input type="file" id="addCertImage" accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="handleAddImageUpload(this)">
+                            <div id="addImageUploadArea" class="cursor-pointer" onclick="document.getElementById('addCertImage').click()">
+                                <span class="iconify text-4xl text-gray-400" data-icon="ri:image-add-line"></span>
+                                <p class="text-sm text-gray-500 mt-2">点击上传证书图片</p>
+                                <p class="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式</p>
+                            </div>
+                            <div id="addImagePreviewArea" class="hidden">
+                                <img id="addImagePreview" src="" alt="预览" class="max-w-full max-h-48 mx-auto rounded-lg border border-gray-200">
+                                <p id="addImageName" class="text-sm text-gray-600 mt-2"></p>
+                                <button type="button" onclick="removeAddImage()" class="text-red-500 text-sm mt-2 hover:text-red-700">
+                                    <span class="iconify inline-block mr-1" data-icon="ri:delete-bin-line"></span>删除图片
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t flex justify-end gap-3 flex-shrink-0">
+                <button onclick="closeAddCertModal()" class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+                <button onclick="saveNewCert()" class="px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">保存</button>
+            </div>
+        </div>
     </div>
 
     <!-- 查看证书详情弹窗 -->
@@ -577,12 +697,7 @@
             tr.innerHTML = `
                 <td class="px-4 py-3 text-sm text-gray-500">${start + index + 1}</td>
                 <td class="px-4 py-3">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center">
-                            <span class="${ac.split(' ')[1]} text-xs font-bold">${cert.studentName.charAt(0)}</span>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900">${cert.studentName}</span>
-                    </div>
+                    <span class="text-sm font-medium text-gray-900">${cert.studentName}</span>
                 </td>
                 <td class="px-4 py-3 text-sm text-gray-700">${cert.phone.substring(0,3)}****${cert.phone.substring(7)}</td>
                 <td class="px-4 py-3 text-sm text-gray-900">${cert.certName}</td>
@@ -592,7 +707,8 @@
                 <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${cert.status}</span></td>
                 <td class="px-4 py-3 text-right">
                     <button onclick="viewCert(${cert.id})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
-                    <button onclick="editCert(${cert.id})" class="text-green-600 hover:text-green-700 text-sm font-medium">编辑</button>
+                    <button onclick="editCert(${cert.id})" class="text-green-600 hover:text-green-700 text-sm font-medium mr-3">编辑</button>
+                    <button onclick="deleteCert(${cert.id})" class="text-red-500 hover:text-red-600 text-sm font-medium">删除</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -814,6 +930,103 @@
     // 导出证书
     function exportCerts() {
         alert(`正在导出 ${filteredData.length} 条证书记录...`);
+    }
+
+    // 新增证书弹窗
+    function openAddCertModal() {
+        const modal = document.getElementById('addCertModal');
+        const content = document.getElementById('addCertModalContent');
+        // 清空表单
+        document.getElementById('addStudentName').value = '';
+        document.getElementById('addStudentPhone').value = '';
+        document.getElementById('addStudentGender').value = '';
+        document.getElementById('addStudentAge').value = '';
+        document.getElementById('addCertName').value = '';
+        document.getElementById('addCertNo').value = 'SZ' + new Date().getFullYear() + String(new Date().getMonth()+1).padStart(2,'0') + String(new Date().getDate()).padStart(2,'0') + String(certsData.length + 1).padStart(4,'0');
+        document.getElementById('addCertLevel').value = '';
+        document.getElementById('addCertOrg').value = '';
+        document.getElementById('addIssueDate').value = '';
+        document.getElementById('addCertStatus').value = '有效';
+        document.getElementById('addValidStart').value = '';
+        document.getElementById('addValidEnd').value = '';
+        document.getElementById('addCertImage').value = '';
+        document.getElementById('addImageUploadArea').classList.remove('hidden');
+        document.getElementById('addImagePreviewArea').classList.add('hidden');
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+    function closeAddCertModal() {
+        const modal = document.getElementById('addCertModal');
+        const content = document.getElementById('addCertModalContent');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    function handleAddImageUpload(input) {
+        const file = input.files[0];
+        if (file) {
+            document.getElementById('addImageUploadArea').classList.add('hidden');
+            document.getElementById('addImagePreviewArea').classList.remove('hidden');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('addImagePreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('addImageName').textContent = file.name;
+        }
+    }
+
+    function removeAddImage() {
+        document.getElementById('addCertImage').value = '';
+        document.getElementById('addImageUploadArea').classList.remove('hidden');
+        document.getElementById('addImagePreviewArea').classList.add('hidden');
+    }
+
+    function saveNewCert() {
+        const studentName = document.getElementById('addStudentName').value.trim();
+        const phone = document.getElementById('addStudentPhone').value.trim();
+        const certName = document.getElementById('addCertName').value.trim();
+        const level = document.getElementById('addCertLevel').value;
+
+        if (!studentName) { alert('请输入学员姓名'); return; }
+        if (!phone) { alert('请输入手机号'); return; }
+        if (!certName) { alert('请输入证书名称'); return; }
+        if (!level) { alert('请选择证书级别'); return; }
+
+        const newCert = {
+            id: certsData.length + 1,
+            studentName: studentName,
+            phone: phone,
+            gender: document.getElementById('addStudentGender').value || '未填写',
+            age: parseInt(document.getElementById('addStudentAge').value) || 0,
+            certName: certName,
+            certNo: document.getElementById('addCertNo').value,
+            level: level,
+            org: document.getElementById('addCertOrg').value || '未填写',
+            issueDate: document.getElementById('addIssueDate').value || new Date().toISOString().split('T')[0],
+            validStart: document.getElementById('addValidStart').value || new Date().toISOString().split('T')[0],
+            validEnd: document.getElementById('addValidEnd').value || '',
+            status: document.getElementById('addCertStatus').value,
+            image: ''
+        };
+
+        const previewSrc = document.getElementById('addImagePreview').src;
+        if (previewSrc && !previewSrc.includes('about:blank')) {
+            newCert.image = previewSrc;
+        }
+
+        certsData.unshift(newCert);
+        filteredData = [...certsData];
+        currentPage = 1;
+        updateStatistics();
+        renderTable();
+        closeAddCertModal();
+        showToast('success', '新增成功', '证书已成功添加');
     }
 
     // 图片预览

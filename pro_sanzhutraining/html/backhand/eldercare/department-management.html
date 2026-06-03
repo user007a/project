@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑讲师 - 叁竹培训系统</title>
+    <title>部门管理 - 叁竹培训系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: -apple-system, 'Microsoft YaHei', 'PingFang SC', sans-serif; }
+        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -18,11 +18,10 @@
 </head>
 <body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
 
+    <!-- 侧边栏 -->
     <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
         <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
-            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                <span class="iconify text-white text-lg" data-icon="ri:plant-line"></span>
-            </div>
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"><span class="iconify text-white text-lg" data-icon="ri:plant-line"></span></div>
             <span class="text-white font-bold text-base">叁竹培训系统</span>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -110,7 +109,7 @@
                     <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
                 </button>
                 <div class="menu-items pl-6">
-                    <a href="teacher-list.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
+                    <a href="teacher-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
                         <span class="text-sm">讲师管理</span>
                     </a>
@@ -170,6 +169,14 @@
                         <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
                         <span class="text-sm">用户管理</span>
                     </a>
+                    <a href="department-management.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:building-line"></span>
+                        <span class="text-sm">部门管理</span>
+                    </a>
+                    <a href="institution-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:building-2-line"></span>
+                        <span class="text-sm">子机构管理</span>
+                    </a>
                     <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
                         <span class="text-sm">角色权限</span>
@@ -196,218 +203,200 @@
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0">
+        <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
             <div class="flex items-center gap-4">
-                <button onclick="goBack()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <span class="iconify text-gray-600" data-icon="ri:arrow-left-line"></span>
-                </button>
-                <h1 class="text-lg font-bold text-gray-900">编辑讲师</h1>
+                <h1 class="text-lg font-bold text-gray-900">部门管理</h1>
             </div>
             <div class="flex items-center gap-4">
-                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <span class="iconify text-xl" data-icon="ri:notification-3-line"></span>
-                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
+                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors"><span class="iconify text-xl" data-icon="ri:notification-3-line"></span><span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span></button>
                 <div class="h-6 w-px bg-gray-200"></div>
-                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-blue-600 text-sm font-bold">管</span>
-                    </div>
-                    <span class="text-sm text-gray-700">管理员</span>
-                    <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
-                </div>
+                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors"><div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 text-sm font-bold">管</span></div><span class="text-sm text-gray-700">管理员</span><span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span></div>
             </div>
         </header>
 
         <main class="flex-1 overflow-y-auto p-6">
-            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
-                <form id="teacherForm" class="p-6">
-                    <div class="flex flex-col lg:flex-row gap-6 mb-6">
-                        <div class="lg:w-48 flex flex-col items-center">
-                            <div class="relative">
-                                <div class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center">
-                                    <span class="iconify text-gray-400 text-4xl" data-icon="ri:user-line"></span>
-                                </div>
-                                <button type="button" class="absolute -bottom-1 -right-1 w-8 h-8 bg-[#1890FF] text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
-                                    <span class="iconify" data-icon="ri:camera-line"></span>
-                                </button>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-3">支持 JPG、PNG 格式，大小不超过 2MB</p>
-                        </div>
-                        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 列表视图 -->
+            <div id="listView">
+                <!-- 操作栏 -->
+                <div class="flex items-center justify-between mb-6">
+                    <button onclick="showForm()" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新增部门</button>
+                </div>
+
+                <!-- 数据表格 -->
+                <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-100">
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">序号</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">部门名称</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">部门主管</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">创建时间</th>
+                                    <th class="px-6 py-4 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-48">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">1</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">技术部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">王管理</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-01-01</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('tech')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">2</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">运营部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">李运营</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-01-15</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('ops')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">3</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">内容部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">张编辑</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-02-01</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('content')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">4</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">教务部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">刘助教</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-03-01</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('edu')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">5</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">客服部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">赵客服</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-03-15</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('cs')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">6</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">财务部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-700">周财务</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-04-01</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('finance')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                                <tr class="hover:bg-blue-50/30 transition-all">
+                                    <td class="px-6 py-4 text-sm text-gray-500">7</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">教研部</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">-</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">2024-05-01</td>
+                                    <td class="px-6 py-4 text-right"><div class="flex items-center justify-end gap-2"><button onclick="showForm('research')" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">编辑</button><button class="text-red-600 hover:text-red-800 text-sm">删除</button></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新增/编辑部门表单 -->
+            <div id="formView" class="hidden">
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="showList()" class="p-2 text-gray-400 hover:text-gray-600 transition-colors"><span class="iconify text-2xl" data-icon="ri:arrow-left-line"></span></button>
+                    <h2 class="text-xl font-bold text-gray-900" id="formTitle">新增部门</h2>
+                </div>
+                <div class="max-w-2xl">
+                    <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                        <div class="p-6 space-y-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">讲师姓名 *</label>
-                                <input type="text" id="teacherName" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm transition-all" value="王德明" placeholder="请输入讲师姓名">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">部门名称 <span class="text-red-500">*</span></label>
+                                <input type="text" id="deptName" placeholder="请输入部门名称" class="w-full border border-gray-200 px-4 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">职称</label>
-                                <select id="title" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm text-gray-600 transition-all">
-                                    <option value="">请选择职称</option>
-                                    <option value="高级护理师" selected>高级护理师</option>
-                                    <option value="资深护理师">资深护理师</option>
-                                    <option value="主管护师">主管护师</option>
-                                    <option value="护师">护师</option>
-                                    <option value="副主任护师">副主任护师</option>
-                                    <option value="资深评估师">资深评估师</option>
-                                    <option value="高级评估师">高级评估师</option>
-                                    <option value="评估师">评估师</option>
-                                    <option value="健康管理师">健康管理师</option>
-                                    <option value="高级营养师">高级营养师</option>
-                                    <option value="营养师">营养师</option>
-                                    <option value="康复治疗师">康复治疗师</option>
-                                    <option value="社工师">社工师</option>
-                                    <option value="中医师">中医师</option>
-                                    <option value="管理咨询师">管理咨询师</option>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">部门主管</label>
+                                <select id="deptLeader" class="w-full border border-gray-200 px-4 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-700">
+                                    <option value="">请选择部门主管</option>
+                                    <option value="wang">王管理</option>
+                                    <option value="li">李运营</option>
+                                    <option value="zhang">张编辑</option>
+                                    <option value="liu">刘助教</option>
+                                    <option value="zhao">赵客服</option>
+                                    <option value="zhou">周财务</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">专业方向</label>
-                                <select id="major" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm text-gray-600 transition-all">
-                                    <option value="">请选择专业方向</option>
-                                    <option value="养老护理" selected>养老护理</option>
-                                    <option value="能力评估">能力评估</option>
-                                    <option value="健康照护">健康照护</option>
-                                    <option value="营养配餐">营养配餐</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">联系电话 *</label>
-                                <input type="tel" id="phone" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm transition-all" value="13800138001" placeholder="请输入联系电话">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">电子邮箱</label>
-                                <input type="email" id="email" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm transition-all" value="wangdeming@example.com" placeholder="请输入电子邮箱">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">状态</label>
-                                <div class="flex items-center gap-4">
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="status" value="内部" checked class="w-4 h-4 text-[#1890FF] focus:ring-[#1890FF]">
-                                        <span class="text-sm text-gray-700">内部</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="status" value="外派" class="w-4 h-4 text-[#1890FF] focus:ring-[#1890FF]">
-                                        <span class="text-sm text-gray-700">外派</span>
-                                    </label>
-                                </div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">部门描述</label>
+                                <textarea id="deptDesc" rows="4" placeholder="请输入部门描述" class="w-full border border-gray-200 px-4 py-2.5 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none"></textarea>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="border-t pt-6">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-4">个人简介</h3>
-                        <textarea id="bio" rows="4" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-[#1890FF] text-sm transition-all resize-none" placeholder="请输入讲师个人简介">从事养老护理教学15年，省养老护理技能大赛评委，具有丰富的教学经验和实践经验。</textarea>
-                    </div>
-
-                    <div class="border-t pt-6 mt-6">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-4">工作简历</h3>
-                        <div class="space-y-4">
-                            <div id="workResumeList" class="space-y-3">
-                                <!-- 已上传工作简历展示 -->
-                                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <span class="iconify text-blue-500 text-xl" data-icon="ri:file-pdf-line"></span>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-700">工作简历_王德明.pdf</p>
-                                        <p class="text-xs text-gray-400">上传于 2026-05-20</p>
-                                    </div>
-                                    <button type="button" class="text-gray-400 hover:text-red-500 transition-colors">
-                                        <span class="iconify text-lg" data-icon="ri:delete-bin-line"></span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 cursor-pointer transition-all">
-                                    <span class="iconify" data-icon="ri:upload-cloud-line"></span>
-                                    <span>上传工作简历</span>
-                                    <input type="file" class="hidden" accept=".pdf,.doc,.docx" multiple>
-                                </label>
-                                <span class="text-xs text-gray-400">支持 PDF、DOC、DOCX 格式，单个文件不超过 10MB</span>
-                            </div>
+                        <div class="px-6 py-4 bg-gray-50 border-t flex items-center justify-end gap-3">
+                            <button onclick="showList()" class="px-6 py-2.5 border border-gray-200 text-gray-600 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors">取消</button>
+                            <button onclick="saveDepartment()" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
                         </div>
                     </div>
-
-                    <div class="border-t pt-6 mt-6">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-4">所获证书</h3>
-                        <div class="space-y-4">
-                            <div id="certificateList" class="space-y-3">
-                                <!-- 已上传证书展示 -->
-                                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <span class="iconify text-blue-500 text-xl" data-icon="ri:file-pdf-line"></span>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-700">高级护理师职业资格证书.pdf</p>
-                                        <p class="text-xs text-gray-400">上传于 2026-05-20</p>
-                                    </div>
-                                    <button type="button" class="text-gray-400 hover:text-red-500 transition-colors">
-                                        <span class="iconify text-lg" data-icon="ri:delete-bin-line"></span>
-                                    </button>
-                                </div>
-                                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <span class="iconify text-green-500 text-xl" data-icon="ri:image-line"></span>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-700">养老护理技能大赛获奖证书.jpg</p>
-                                        <p class="text-xs text-gray-400">上传于 2026-05-15</p>
-                                    </div>
-                                    <button type="button" class="text-gray-400 hover:text-red-500 transition-colors">
-                                        <span class="iconify text-lg" data-icon="ri:delete-bin-line"></span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:border-gray-300 cursor-pointer transition-all">
-                                    <span class="iconify" data-icon="ri:upload-cloud-line"></span>
-                                    <span>上传文件</span>
-                                    <input type="file" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple>
-                                </label>
-                                <span class="text-xs text-gray-400">支持 PDF、DOC、JPG、PNG 格式，单个文件不超过 10MB</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t pt-6 mt-6">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-4">授课课程</h3>
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <span class="iconify text-blue-500" data-icon="ri:book-open-line"></span>
-                                    <span class="text-sm text-gray-700">养老护理基础</span>
-                                </div>
-                                <span class="text-xs text-gray-400">初级课程</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <span class="iconify text-blue-500" data-icon="ri:book-open-line"></span>
-                                    <span class="text-sm text-gray-700">老年常见疾病护理</span>
-                                </div>
-                                <span class="text-xs text-gray-400">中级课程</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <span class="iconify text-blue-500" data-icon="ri:book-open-line"></span>
-                                    <span class="text-sm text-gray-700">康复护理技术</span>
-                                </div>
-                                <span class="text-xs text-gray-400">高级课程</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end gap-3 mt-8 pt-6 border-t">
-                        <button type="button" onclick="goBack()" class="px-5 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
-                        <button type="submit" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">保存</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        function goBack() {
-            window.location.href = 'teacher-list.html';
+        function showForm(id) {
+            document.getElementById('listView').classList.add('hidden');
+            document.getElementById('formView').classList.remove('hidden');
+            if (id) {
+                document.getElementById('formTitle').textContent = '编辑部门';
+                // 简单的示例数据填充
+                const names = {
+                    'tech': '技术部',
+                    'ops': '运营部',
+                    'content': '内容部',
+                    'edu': '教务部',
+                    'cs': '客服部',
+                    'finance': '财务部',
+                    'research': '教研部'
+                };
+                const leaders = {
+                    'tech': 'wang',
+                    'ops': 'li',
+                    'content': 'zhang',
+                    'edu': 'liu',
+                    'cs': 'zhao',
+                    'finance': 'zhou',
+                    'research': ''
+                };
+                document.getElementById('deptName').value = names[id] || '';
+                document.getElementById('deptLeader').value = leaders[id] || '';
+                document.getElementById('deptDesc').value = '负责公司的相关业务运营';
+            } else {
+                document.getElementById('formTitle').textContent = '新增部门';
+                document.getElementById('deptName').value = '';
+                document.getElementById('deptLeader').value = '';
+                document.getElementById('deptDesc').value = '';
+            }
         }
-
-        document.getElementById('teacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('保存成功！');
-            goBack();
+        function showList() {
+            document.getElementById('formView').classList.add('hidden');
+            document.getElementById('listView').classList.remove('hidden');
+        }
+        function saveDepartment() {
+            const name = document.getElementById('deptName').value;
+            if (!name) {
+                alert('请输入部门名称');
+                return;
+            }
+            showToast('success', '保存成功', '部门信息已保存');
+            setTimeout(showList, 1000);
+        }
+        
+        document.querySelectorAll('.menu-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const menuGroup = this.closest('.menu-group');
+                const menuItems = menuGroup.querySelector('.menu-items');
+                const arrow = this.querySelector('.menu-arrow');
+                
+                const isExpanded = menuItems.style.display !== 'none';
+                
+                if (isExpanded) {
+                    menuItems.style.display = 'none';
+                    arrow.textContent = '›';
+                } else {
+                    menuItems.style.display = 'block';
+                    arrow.textContent = '‹';
+                }
+            });
         });
     </script>
 
@@ -431,13 +420,12 @@
 document.addEventListener('keydown', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') { if (e.key === 'Escape') e.target.blur(); return; }
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); showToast('info', '快捷搜索', '按 Ctrl+K 打开全局搜索'); }
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); document.getElementById('teacherForm').dispatchEvent(new Event('submit')); }
     });
 
     function initShortcutHints() {
         var hint = document.createElement('div');
         hint.className = 'fixed bottom-4 left-4 z-[9997] bg-white px-3 py-2 rounded-lg shadow-lg border border-gray-100 text-xs text-gray-500';
-        hint.innerHTML = '<div class="flex items-center gap-3"><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">K</kbd> 搜索</span><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">S</kbd> 保存</span></div>';
+        hint.innerHTML = '<div class="flex items-center gap-3"><span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">Ctrl</kbd>+<kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono">K</kbd> 搜索</span></div>';
         hint.style.display = 'none'; hint.id = 'shortcutHint';
         var hintTimeout;
         document.addEventListener('keydown', function(e) { if (e.ctrlKey || e.metaKey) { hint.style.display = 'flex'; clearTimeout(hintTimeout); hintTimeout = setTimeout(function() { hint.style.display = 'none'; }, 3000); } });

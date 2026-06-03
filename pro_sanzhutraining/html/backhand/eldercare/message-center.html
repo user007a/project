@@ -169,6 +169,14 @@
                         <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
                         <span class="text-sm">用户管理</span>
                     </a>
+                    <a href="department-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:building-line"></span>
+                        <span class="text-sm">部门管理</span>
+                    </a>
+                    <a href="institution-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:building-2-line"></span>
+                        <span class="text-sm">子机构管理</span>
+                    </a>
                     <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
                         <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
                         <span class="text-sm">角色权限</span>
@@ -241,7 +249,7 @@
 
             <!-- 筛选区 -->
             <div class="bg-white p-5 rounded-xl border shadow-sm mb-6">
-                <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center justify-between flex-wrap gap-3">
                     <div class="flex items-center gap-3 flex-wrap">
                         <select class="border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-600">
                             <option>全部类型</option>
@@ -257,14 +265,17 @@
                             <option>已读</option>
                         </select>
                     </div>
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"><span class="iconify" data-icon="ri:check-double-line"></span>标记全部已读</button>
+                    <div class="flex items-center gap-2">
+                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"><span class="iconify" data-icon="ri:check-double-line"></span>标记全部已读</button>
+                        <button onclick="showTemplate()" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"><span class="iconify" data-icon="ri:file-text-line"></span>消息模板</button>
+                    </div>
                 </div>
             </div>
 
             <!-- 消息列表 -->
             <div class="space-y-3">
                 <!-- 1 - 未读 -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                <div data-type="系统通知" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-blue-600 text-lg" data-icon="ri:notification-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -278,7 +289,7 @@
                     </div>
                 </div>
                 <!-- 2 - 未读 -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                <div data-type="订单提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-emerald-600 text-lg" data-icon="ri:shopping-cart-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -290,7 +301,7 @@
                     </div>
                 </div>
                 <!-- 3 - 未读 -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                <div data-type="学员提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-purple-600 text-lg" data-icon="ri:user-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -302,7 +313,7 @@
                     </div>
                 </div>
                 <!-- 4 - 未读 -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                <div data-type="审核提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-orange-600 text-lg" data-icon="ri:file-list-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -314,7 +325,7 @@
                     </div>
                 </div>
                 <!-- 5 - 未读 -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
+                <div data-type="课程提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-cyan-600 text-lg" data-icon="ri:book-open-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -326,7 +337,7 @@
                     </div>
                 </div>
                 <!-- 6-23 已读消息（无蓝色左边框） -->
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="订单提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-emerald-500 text-lg" data-icon="ri:shopping-cart-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -337,7 +348,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="学员提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-purple-500 text-lg" data-icon="ri:user-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -348,7 +359,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="审核提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-orange-500 text-lg" data-icon="ri:file-list-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -359,7 +370,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="系统通知" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-blue-500 text-lg" data-icon="ri:notification-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -370,7 +381,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="课程提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-cyan-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-cyan-500 text-lg" data-icon="ri:book-open-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -381,7 +392,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="订单提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-emerald-500 text-lg" data-icon="ri:shopping-cart-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -392,7 +403,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="学员提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-purple-500 text-lg" data-icon="ri:user-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -403,7 +414,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="审核提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-orange-500 text-lg" data-icon="ri:file-list-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -414,7 +425,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="系统通知" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-blue-500 text-lg" data-icon="ri:notification-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -425,7 +436,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="订单提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-emerald-500 text-lg" data-icon="ri:shopping-cart-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -436,7 +447,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="学员提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-purple-500 text-lg" data-icon="ri:user-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -447,7 +458,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="课程提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-cyan-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-cyan-500 text-lg" data-icon="ri:book-open-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -458,7 +469,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="审核提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-orange-500 text-lg" data-icon="ri:file-list-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -469,7 +480,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="系统通知" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-blue-500 text-lg" data-icon="ri:notification-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -480,7 +491,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="订单提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-emerald-500 text-lg" data-icon="ri:shopping-cart-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -491,7 +502,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="学员提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-purple-500 text-lg" data-icon="ri:user-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -502,7 +513,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="课程提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-cyan-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-cyan-500 text-lg" data-icon="ri:book-open-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -513,7 +524,7 @@
                         <div class="flex items-center gap-2 flex-shrink-0"><span class="px-2 py-1 bg-gray-50 text-gray-400 rounded text-xs">已读</span></div>
                     </div>
                 </div>
-                <div onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                <div data-type="审核提醒" onclick="openDetail(this)" class="bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                     <div class="px-6 py-4 flex items-center gap-4">
                         <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><span class="iconify text-orange-500 text-lg" data-icon="ri:file-list-3-line"></span></div>
                         <div class="flex-1 min-w-0">
@@ -549,20 +560,136 @@
                 </div>
                 <div class="px-6 py-4 border-t flex items-center justify-between flex-shrink-0">
                     <button class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"><span class="iconify" data-icon="ri:check-line"></span>标记已读</button>
-                    <a href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">去查看</a>
+                    <a href="#" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">去查看</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息模板详情页 -->
+    <div id="templateModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeTemplate()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col relative shadow-xl">
+                <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
+                    <h3 class="text-lg font-bold text-gray-900">消息模板管理</h3>
+                    <button onclick="closeTemplate()" class="p-1 text-gray-400 hover:text-gray-600 transition-colors"><span class="iconify text-xl" data-icon="ri:close-line"></span></button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-6 space-y-5">
+                    <!-- 分类名称 -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">分类名称</label>
+                        <input type="text" placeholder="请输入分类名称" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm" value="系统通知">
+                    </div>
+                    
+                    <!-- 模板内容 -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">模板内容</label>
+                        <textarea rows="6" placeholder="请输入消息模板内容，支持变量如：{{userName}}、{{courseName}}、{{orderNo}}等" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none">尊敬的{{userName}}，您购买的课程「{{courseName}}」已成功开通，订单号：{{orderNo}}，请及时学习。</textarea>
+                    </div>
+                    
+                    <!-- 消息转到菜单 -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">消息转到菜单</label>
+                        <select class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-600">
+                            <option>请选择跳转菜单</option>
+                            <option>工作台</option>
+                            <option>学员管理</option>
+                            <option>课程管理</option>
+                            <option>订单管理</option>
+                            <option>讲师管理</option>
+                            <option>证书管理</option>
+                            <option>用户管理</option>
+                            <option>系统设置</option>
+                        </select>
+                    </div>
+                    
+                    <!-- 菜单定位查询条件 -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">菜单定位查询条件</label>
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">查询字段</label>
+                                    <input type="text" placeholder="如：orderId" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">字段值来源</label>
+                                    <select class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-600">
+                                        <option>消息变量</option>
+                                        <option>固定值</option>
+                                        <option>URL参数</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">参数映射关系</label>
+                                <input type="text" placeholder="如：orderNo=orderId" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 模板变量说明 -->
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <p class="text-xs font-semibold text-blue-600 mb-2">可用变量</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{userName}}</span>
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{courseName}}</span>
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{orderNo}}</span>
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{amount}}</span>
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{date}}</span>
+                            <span class="px-2 py-1 bg-white border border-blue-200 text-blue-600 rounded text-xs">{{time}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
+                    <button onclick="closeTemplate()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+                    <button onclick="saveTemplate()" class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存模板</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 消息类型到页面的映射关系
+        const messageTypeToPage = {
+            '系统通知': 'system-settings.html',
+            '订单提醒': 'order-list.html',
+            '学员提醒': 'student-list.html',
+            '课程提醒': 'course-list.html',
+            '审核提醒': 'refund-list.html'
+        };
+
         function openDetail(el) {
+            const messageType = el.dataset.type || '系统通知';
+            const targetPage = messageTypeToPage[messageType] || 'dashboard.html';
+            
+            // 更新"去查看"按钮的href
+            const goToLink = document.querySelector('#detailModal a[href]');
+            if (goToLink) {
+                goToLink.href = targetPage;
+            }
+            
             document.getElementById('detailModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
         function closeDetail() {
             document.getElementById('detailModal').classList.add('hidden');
             document.body.style.overflow = '';
+        }
+        
+        // 消息模板函数
+        function showTemplate() {
+            document.getElementById('templateModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeTemplate() {
+            document.getElementById('templateModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        function saveTemplate() {
+            alert('消息模板已保存');
+            closeTemplate();
         }
 
         document.querySelectorAll('.menu-toggle').forEach(toggle => {

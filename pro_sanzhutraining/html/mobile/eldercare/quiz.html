@@ -463,12 +463,85 @@
       }
     ];
 
+    // Mock错题数据
+    var wrongQuestions = [
+      {
+        id: 101,
+        type: 'single',
+        typeName: '单选',
+        text: '协助老年人翻身时，护理员的手法应？',
+        options: [
+          { letter: 'A', text: '用力拉拽' },
+          { letter: 'B', text: '托住肩部和臀部' },
+          { letter: 'C', text: '只推背部' },
+          { letter: 'D', text: '抓住手臂翻转' }
+        ],
+        answer: ['B'],
+        analysis: '协助老年人翻身时，应托住肩部和臀部，动作轻柔缓慢，避免用力拉拽或只推某一部位，以防造成关节脱位或皮肤损伤。'
+      },
+      {
+        id: 102,
+        type: 'single',
+        typeName: '单选',
+        text: '老年人发生噎食时，首先应采取的措施是？',
+        options: [
+          { letter: 'A', text: '立即喂水' },
+          { letter: 'B', text: '拍打背部' },
+          { letter: 'C', text: '海姆立克急救法' },
+          { letter: 'D', text: '等待自行缓解' }
+        ],
+        answer: ['C'],
+        analysis: '老年人发生噎食时，应立即采用海姆立克急救法（腹部冲击法），帮助排出异物。拍打背部可辅助，但不能作为首选措施。喂水可能加重窒息，等待自行缓解极其危险。'
+      },
+      {
+        id: 103,
+        type: 'judge',
+        typeName: '判断',
+        text: '为老年人梳头时，应从发根向发梢方向梳理。',
+        options: [
+          { letter: 'A', text: '正确' },
+          { letter: 'B', text: '错误' }
+        ],
+        answer: ['B'],
+        analysis: '为老年人梳头时，应从发梢向发根方向梳理，先梳开发梢的打结处，再逐渐向上梳理至发根，避免从发根向下拉扯导致疼痛或断发。'
+      },
+      {
+        id: 104,
+        type: 'multi',
+        typeName: '多选',
+        text: '以下哪些是老年人跌倒的危险因素？',
+        options: [
+          { letter: 'A', text: '地面湿滑' },
+          { letter: 'B', text: '视力下降' },
+          { letter: 'C', text: '药物副作用' },
+          { letter: 'D', text: '适量运动' }
+        ],
+        answer: ['A', 'B', 'C'],
+        analysis: '老年人跌倒的危险因素包括：环境因素（地面湿滑、照明不足）、生理因素（视力下降、平衡能力减退）、药物因素（镇静催眠药、降压药等副作用）。适量运动是预防跌倒的保护因素，不是危险因素。'
+      },
+      {
+        id: 105,
+        type: 'single',
+        typeName: '单选',
+        text: '老年人热水袋保暖时，水温不应超过？',
+        options: [
+          { letter: 'A', text: '40°C' },
+          { letter: 'B', text: '50°C' },
+          { letter: 'C', text: '60°C' },
+          { letter: 'D', text: '70°C' }
+        ],
+        answer: ['B'],
+        analysis: '老年人皮肤感觉迟钝，热水袋水温不应超过50°C，且应加布套包裹，避免直接接触皮肤，以防烫伤。'
+      }
+    ];
+
     // 状态管理
     var currentIndex = 0;
     var userAnswers = {};   // { questionId: ['A'] or ['A','B'] }
     var answeredState = {}; // { questionId: true } — 已判定
     var startTime = Date.now();
     var isSubmitted = false;
+    var isWrongMode = false; // 错题模式
 
     // 专题名称映射
     var topicNames = {
@@ -485,8 +558,19 @@
     // 初始化
     function init() {
       var params = new URLSearchParams(window.location.search);
+      var mode = params.get('mode');
       var topicId = params.get('topic') || '1';
-      document.getElementById('headerTitle').textContent = topicNames[topicId] || '基础护理知识';
+
+      if (mode === 'wrong') {
+        // 错题模式：使用错题数据
+        isWrongMode = true;
+        questions = wrongQuestions;
+        document.getElementById('headerTitle').textContent = '我的错题';
+        document.getElementById('headerSubmit').style.display = 'none';
+      } else {
+        document.getElementById('headerTitle').textContent = topicNames[topicId] || '基础护理知识';
+      }
+
       startTime = Date.now();
       renderQuestion();
     }
@@ -708,12 +792,20 @@
 
     // 返回题库
     function backToBank() {
-      window.location.href = 'question-bank.html';
+      if (isWrongMode) {
+        window.location.href = 'my-question-bank.html';
+      } else {
+        window.location.href = 'question-bank.html';
+      }
     }
 
     // 返回
     function goBack() {
-      window.location.href = 'question-bank.html';
+      if (isWrongMode) {
+        window.location.href = 'my-question-bank.html';
+      } else {
+        window.location.href = 'question-bank.html';
+      }
     }
 
     // 启动
