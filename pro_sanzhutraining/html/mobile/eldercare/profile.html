@@ -25,11 +25,15 @@
     <div class="flex items-center gap-3 mb-5 relative z-10">
       <!-- 用户头像添加光晕效果 -->
       <div class="relative">
-        <div class="w-14 h-14 rounded-full border-2 border-white/20 shadow-lg shadow-black/10 overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" alt="用户头像" class="w-full h-full object-cover">
+        <div class="w-14 h-14 rounded-full border-2 border-white/20 shadow-lg shadow-black/10 overflow-hidden cursor-pointer" onclick="uploadAvatar()" id="avatarContainer">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" alt="用户头像" class="w-full h-full object-cover" id="avatarImg">
         </div>
         <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-400 border-2 border-white animate-pulse"></div>
+        <div class="absolute inset-0 rounded-full bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity" id="avatarOverlay">
+          <span class="iconify text-white text-lg" data-icon="solar:camera-bold"></span>
+        </div>
       </div>
+      <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
       <div class="flex-1">
         <div class="text-white text-lg font-bold">王同学</div>
         <div class="text-white/70 text-xs mt-0.5">138****6789</div>
@@ -153,9 +157,9 @@
         <span class="iconify text-[#2e9e5a] text-2xl" data-icon="solar:phone-calling-linear"></span>
       </div>
       <h3 class="text-base font-bold text-[#333] mb-2">联系客服</h3>
-      <p class="text-sm text-[#666] mb-1">客服热线：<strong class="text-[#2e9e5a]">151-1148-0531</strong></p>
+      <p class="text-sm text-[#666] mb-1">客服热线：<strong class="text-[#2e9e5a]" id="profilePhone">400-XXX-XXXX</strong></p>
       <p class="text-xs text-gray-400 mb-4">工作时间：周一至周五 9:00-18:00</p>
-      <p class="text-xs text-gray-400 mb-5">节假日除外，紧急问题请发送邮件至<br>user007a@126.com</p>
+      <p class="text-xs text-gray-400 mb-5">节假日除外，紧急问题请发送邮件至<br><span id="profileEmail">contact@example.com</span></p>
       <button class="w-full h-10 rounded-full bg-gradient-to-r from-[#2e9e5a] to-[#1e7e42] text-white text-sm font-medium active:scale-[0.98] transition-all shadow-lg hover:shadow-xl" onclick="hideContactModal()">我知道了</button>
     </div>
   </div>
@@ -199,6 +203,69 @@
 </div>
 
 <script>
+  // 页面加载时初始化
+  document.addEventListener('DOMContentLoaded', function() {
+    // 从localStorage加载保存的头像
+    var savedAvatar = localStorage.getItem('userAvatar');
+    if (savedAvatar) {
+      document.getElementById('avatarImg').src = savedAvatar;
+    }
+    
+    // 添加头像悬浮效果
+    var container = document.getElementById('avatarContainer');
+    var overlay = document.getElementById('avatarOverlay');
+    container.addEventListener('mouseenter', function() {
+      overlay.style.opacity = '1';
+    });
+    container.addEventListener('mouseleave', function() {
+      overlay.style.opacity = '0';
+    });
+  });
+
+  function uploadAvatar() {
+    document.getElementById('avatarInput').click();
+  }
+
+  function handleAvatarUpload(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+
+    // 验证文件类型
+    if (!file.type.startsWith('image/')) {
+      alert('请选择图片文件');
+      return;
+    }
+
+    // 验证文件大小（最大2MB）
+    if (file.size > 2 * 1024 * 1024) {
+      alert('图片大小不能超过2MB');
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = document.getElementById('avatarImg');
+      img.src = e.target.result;
+      
+      // 保存到localStorage
+      localStorage.setItem('userAvatar', e.target.result);
+      
+      // 提示上传成功
+      showToast('头像上传成功');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function showToast(message) {
+    var toast = document.createElement('div');
+    toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded-full text-sm z-[2000] animate-bounce';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(function() {
+      toast.remove();
+    }, 2000);
+  }
+
   function showContactModal() {
     document.getElementById('contactModal').classList.remove('hidden');
     document.getElementById('contactModal').classList.add('flex');

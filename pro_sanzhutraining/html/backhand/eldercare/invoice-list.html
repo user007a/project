@@ -8,7 +8,7 @@
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -206,7 +206,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">订单中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">发票管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">发票管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -324,7 +325,7 @@
                         </div>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button onclick="searchInvoices()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">搜索</button>
+                        <button onclick="searchInvoices()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-[#1890FF] transition-colors">搜索</button>
                         <button onclick="resetSearch()" class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
                     </div>
                 </div>
@@ -333,269 +334,36 @@
             <!-- 操作栏 + 数据表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b bg-gray-50/50 flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="w-4 h-4 text-blue-500 rounded focus:ring-blue-500">
-                            <span class="text-sm text-gray-500">全选</span>
-                        </label>
-                        <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">12</span> 条记录</span>
+                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">23</span> 条发票记录</span>
+                    <div class="flex items-center gap-3">
+                        <button onclick="exportInvoices()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
+                            <span class="iconify" data-icon="ri:download-line"></span>导出发票
+                        </button>
                     </div>
-                    <button onclick="batchInvoice()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-                        <span class="iconify" data-icon="ri:file-text-line"></span>批量开票
-                    </button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-100">
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-12">
-                                    <input type="checkbox" id="headerCheckbox" onchange="toggleSelectAll()" class="w-4 h-4 text-blue-500 rounded focus:ring-blue-500">
-                                </th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-12">序号</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">用户</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票公司名称</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票抬头</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票金额</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票类型</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票状态</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">开票时间</th>
-                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">操作</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-12 whitespace-nowrap">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">用户</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票公司名称</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票抬头</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票金额</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票类型</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票状态</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">开票时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">操作</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100" id="invoiceTableBody">
-                            <!-- 发票数据 -->
-                            <tr data-id="INV001" data-status="pending" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">1</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">刘秀英</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">北京养老服务有限公司</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">北京养老服务有限公司</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-21 09:15</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV001')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV001')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="approveInvoice('INV001')" class="px-2 py-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded text-xs font-medium transition-colors">通过</button>
-                                        <button onclick="rejectInvoice('INV001')" class="px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded text-xs font-medium transition-colors">拒绝</button>
-                                        <button onclick="downloadPDF('INV001')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV002" data-status="approved" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">2</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">陈建华</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">上海康护集团</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">上海康护集团</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税专用发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已通过</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-20 14:30</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV002')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV002')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="downloadPDF('INV002')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV003" data-status="issued" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">3</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">王丽萍</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">广州颐养院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">广州颐养院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥580.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">已开票</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-19 10:20</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV003')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="downloadPDF('INV003')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV004" data-status="rejected" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">4</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">赵国强</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">深圳养老服务中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">深圳养老服务中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,680.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税专用发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium">已拒绝</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-18 16:45</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV004')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV004')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV005" data-status="pending" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">5</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">孙美华</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">杭州康泰养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">杭州康泰养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥780.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-17 11:00</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV005')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV005')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="approveInvoice('INV005')" class="px-2 py-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded text-xs font-medium transition-colors">通过</button>
-                                        <button onclick="rejectInvoice('INV005')" class="px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded text-xs font-medium transition-colors">拒绝</button>
-                                        <button onclick="downloadPDF('INV005')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV006" data-status="approved" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">6</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">周建国</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">成都养老协会</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">成都养老协会</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥880.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已通过</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-16 08:30</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV006')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="downloadPDF('INV006')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV007" data-status="issued" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">7</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">李芳</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">武汉康悦护理中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">武汉康悦护理中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥380.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">已开票</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-15 13:20</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV007')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="downloadPDF('INV007')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV008" data-status="pending" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">8</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">张伟</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">南京颐年养老服务</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">南京颐年养老服务</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,180.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税专用发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-14 09:50</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV008')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV008')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="approveInvoice('INV008')" class="px-2 py-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded text-xs font-medium transition-colors">通过</button>
-                                        <button onclick="rejectInvoice('INV008')" class="px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded text-xs font-medium transition-colors">拒绝</button>
-                                        <button onclick="downloadPDF('INV008')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV009" data-status="pending" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">9</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">吴秀兰</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">西安养老服务公司</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">西安养老服务公司</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥680.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-13 15:10</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV009')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV009')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="approveInvoice('INV009')" class="px-2 py-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded text-xs font-medium transition-colors">通过</button>
-                                        <button onclick="rejectInvoice('INV009')" class="px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded text-xs font-medium transition-colors">拒绝</button>
-                                        <button onclick="downloadPDF('INV009')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV010" data-status="approved" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">10</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">郑明华</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重庆康乐养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">重庆康乐养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,480.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税专用发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">已通过</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-12 10:30</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV010')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="downloadPDF('INV010')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV011" data-status="pending" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">11</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">黄丽珍</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">青岛养老服务中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">青岛养老服务中心</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium">待审核</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-11 14:20</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV011')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="editInvoice('INV011')" class="px-2 py-1 text-orange-500 hover:text-orange-700 hover:bg-orange-50 rounded text-xs font-medium transition-colors">编辑</button>
-                                        <button onclick="approveInvoice('INV011')" class="px-2 py-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded text-xs font-medium transition-colors">通过</button>
-                                        <button onclick="rejectInvoice('INV011')" class="px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded text-xs font-medium transition-colors">拒绝</button>
-                                        <button onclick="downloadPDF('INV011')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr data-id="INV012" data-status="issued" class="hover:bg-blue-50/30 transition-all">
-                                <td class="px-4 py-3.5"><input type="checkbox" class="invoice-checkbox w-4 h-4 text-blue-500 rounded focus:ring-blue-500"></td>
-                                <td class="px-4 py-3.5 text-sm text-gray-400">12</td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">林志强</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">天津康寿养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-700">天津康寿养老院</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥780.00</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">增值税普通发票</span></td>
-                                <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">已开票</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-500">2026-05-10 08:45</span></td>
-                                <td class="px-4 py-3.5 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <button onclick="viewDetail('INV012')" class="px-2 py-1 text-[#1890FF] hover:text-blue-700 hover:bg-blue-50 rounded text-xs font-medium transition-colors">查看</button>
-                                        <button onclick="downloadPDF('INV012')" class="px-2 py-1 text-purple-500 hover:text-purple-700 hover:bg-purple-50 rounded text-xs font-medium transition-colors">下载PDF</button>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <!-- 分页 -->
                 <div class="px-6 py-4 border-t flex items-center justify-between">
-                    <span id="pageInfo" class="text-sm text-gray-500">第 1 / 3 页，共 23 条</span>
+                    <span id="pageInfo" class="text-sm text-gray-500">第 1 / 1 页，共 0 条</span>
                     <div id="paginationBtns" class="flex items-center gap-1">
-                        <button class="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed" disabled>上一页</button>
-                        <button class="px-3 py-1.5 text-sm bg-[#1890FF] text-white rounded">1</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">2</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">3</button>
-                        <button class="px-3 py-1.5 text-sm text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">下一页</button>
                     </div>
                 </div>
             </div>
@@ -615,7 +383,7 @@
             </div>
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button onclick="closeDetail()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">返回</button>
-                <button onclick="downloadPDFFromDetail()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">下载PDF</button>
+                <button onclick="downloadPDFFromDetail()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-[#1890FF] transition-colors">下载PDF</button>
             </div>
         </div>
     </div>
@@ -654,7 +422,7 @@
             </div>
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button onclick="closeEdit()" class="px-5 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">取消</button>
-                <button onclick="saveEdit()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">保存</button>
+                <button onclick="saveEdit()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-[#1890FF] transition-colors">保存</button>
             </div>
         </div>
     </div>
@@ -672,16 +440,175 @@
             'INV009': { id: 'INV009', user: '吴秀兰', companyName: '西安养老服务公司', invoiceTitle: '西安养老服务公司', amount: '680.00', type: '增值税普通发票', status: '待审核', time: '2026-05-13 15:10', orderId: 'SZ20260513009', course: '养老护理员（初级）', taxNumber: '91610101MA00000000', address: '西安市碑林区东大街100号', phone: '029-90123456', bank: '光大银行西安分行', account: '6226620000000000000' },
             'INV010': { id: 'INV010', user: '郑明华', companyName: '重庆康乐养老院', invoiceTitle: '重庆康乐养老院', amount: '1,480.00', type: '增值税专用发票', status: '已通过', time: '2026-05-12 10:30', orderId: 'SZ20260512010', course: '老年人能力评估师（高级）', taxNumber: '91500101MA00000000', address: '重庆市渝中区解放碑步行街100号', phone: '023-01234567', bank: '民生银行重庆分行', account: '6226220000000000000' },
             'INV011': { id: 'INV011', user: '黄丽珍', companyName: '青岛养老服务中心', invoiceTitle: '青岛养老服务中心', amount: '980.00', type: '增值税普通发票', status: '待审核', time: '2026-05-11 14:20', orderId: 'SZ20260511011', course: '养老护理员（中级）', taxNumber: '91370201MA00000000', address: '青岛市市南区香港中路100号', phone: '0532-12345678', bank: '华夏银行青岛分行', account: '6226300000000000000' },
-            'INV012': { id: 'INV012', user: '林志强', companyName: '天津康寿养老院', invoiceTitle: '天津康寿养老院', amount: '780.00', type: '增值税普通发票', status: '已开票', time: '2026-05-10 08:45', orderId: 'SZ20260510012', course: '健康照护师（初级）', taxNumber: '91120101MA00000000', address: '天津市和平区南京路100号', phone: '022-23456789', bank: '兴业银行天津分行', account: '6229090000000000000' }
+            'INV012': { id: 'INV012', user: '林志强', companyName: '天津康寿养老院', invoiceTitle: '天津康寿养老院', amount: '780.00', type: '增值税普通发票', status: '已开票', time: '2026-05-10 08:45', orderId: 'SZ20260510012', course: '健康照护师（初级）', taxNumber: '91120101MA00000000', address: '天津市和平区南京路100号', phone: '022-23456789', bank: '兴业银行天津分行', account: '6229090000000000000' },
+            'INV013': { id: 'INV013', user: '何晓燕', companyName: '苏州养老服务中心', invoiceTitle: '苏州养老服务中心', amount: '880.00', type: '增值税专用发票', status: '已通过', time: '2026-05-09 11:30', orderId: 'SZ20260509013', course: '养老护理员（初级）', taxNumber: '91320501MA00000000', address: '苏州市姑苏区人民路100号', phone: '0512-34567890', bank: '江苏银行苏州分行', account: '6228760000000000000' },
+            'INV014': { id: 'INV014', user: '马海涛', companyName: '宁波康乐养老院', invoiceTitle: '宁波康乐养老院', amount: '580.00', type: '增值税普通发票', status: '待审核', time: '2026-05-08 15:45', orderId: 'SZ20260508014', course: '老年人能力评估师（初级）', taxNumber: '91330201MA00000000', address: '宁波市海曙区中山路100号', phone: '0574-45678901', bank: '宁波银行', account: '6228500000000000000' },
+            'INV015': { id: 'INV015', user: '罗秀英', companyName: '无锡养老协会', invoiceTitle: '无锡养老协会', amount: '1,280.00', type: '增值税专用发票', status: '已开票', time: '2026-05-07 10:15', orderId: 'SZ20260507015', course: '养老护理员（高级）', taxNumber: '91320201MA00000000', address: '无锡市梁溪区人民中路100号', phone: '0510-56789012', bank: '交通银行无锡分行', account: '6222620000000000001' },
+            'INV016': { id: 'INV016', user: '高伟', companyName: '长沙养老服务中心', invoiceTitle: '长沙养老服务中心', amount: '680.00', type: '增值税普通发票', status: '待审核', time: '2026-05-06 14:00', orderId: 'SZ20260506016', course: '健康照护师（初级）', taxNumber: '91430101MA00000000', address: '长沙市芙蓉区五一大道100号', phone: '0731-67890123', bank: '招商银行长沙分行', account: '6225880000000000001' },
+            'INV017': { id: 'INV017', user: '郭敏', companyName: '大连康泰养老院', invoiceTitle: '大连康泰养老院', amount: '980.00', type: '增值税专用发票', status: '已通过', time: '2026-05-05 09:20', orderId: 'SZ20260505017', course: '养老护理员（中级）', taxNumber: '91210201MA00000000', address: '大连市中山区人民路100号', phone: '0411-78901234', bank: '中信银行大连分行', account: '6226900000000000001' },
+            'INV018': { id: 'INV018', user: '胡军', companyName: '厦门养老服务中心', invoiceTitle: '厦门养老服务中心', amount: '780.00', type: '增值税普通发票', status: '已开票', time: '2026-05-04 13:30', orderId: 'SZ20260504018', course: '老年人能力评估师（中级）', taxNumber: '91350201MA00000000', address: '厦门市思明区中山路100号', phone: '0592-89012345', bank: '浦发银行厦门分行', account: '6217920000000000001' },
+            'INV019': { id: 'INV019', user: '朱芳', companyName: '佛山康乐养老院', invoiceTitle: '佛山康乐养老院', amount: '1,380.00', type: '增值税专用发票', status: '待审核', time: '2026-05-03 16:00', orderId: 'SZ20260503019', course: '养老护理员（高级）', taxNumber: '91440601MA00000000', address: '佛山市禅城区祖庙路100号', phone: '0757-90123456', bank: '民生银行佛山分行', account: '6226220000000000001' },
+            'INV020': { id: 'INV020', user: '许强', companyName: '郑州养老服务中心', invoiceTitle: '郑州养老服务中心', amount: '580.00', type: '增值税普通发票', status: '已拒绝', time: '2026-05-02 10:45', orderId: 'SZ20260502020', course: '健康照护师（初级）', taxNumber: '91410101MA00000000', address: '郑州市金水区花园路100号', phone: '0371-01234567', bank: '光大银行郑州分行', account: '6226620000000000001' },
+            'INV021': { id: 'INV021', user: '徐丽', companyName: '沈阳康悦护理中心', invoiceTitle: '沈阳康悦护理中心', amount: '880.00', type: '增值税普通发票', status: '已通过', time: '2026-05-01 14:20', orderId: 'SZ20260501021', course: '营养配餐员（中级）', taxNumber: '91210101MA00000000', address: '沈阳市和平区中山路100号', phone: '024-12345678', bank: '华夏银行沈阳分行', account: '6226300000000000001' },
+            'INV022': { id: 'INV022', user: '孙伟', companyName: '合肥养老协会', invoiceTitle: '合肥养老协会', amount: '1,080.00', type: '增值税专用发票', status: '已开票', time: '2026-04-30 09:00', orderId: 'SZ20260430022', course: '养老护理员（中级）', taxNumber: '91340101MA00000000', address: '合肥市蜀山区长江西路100号', phone: '0551-23456789', bank: '兴业银行合肥分行', account: '6229090000000000001' },
+            'INV023': { id: 'INV023', user: '沈芳', companyName: '昆明养老服务中心', invoiceTitle: '昆明养老服务中心', amount: '780.00', type: '增值税普通发票', status: '待审核', time: '2026-04-29 15:30', orderId: 'SZ20260429023', course: '老年人能力评估师（初级）', taxNumber: '91530101MA00000000', address: '昆明市五华区正义路100号', phone: '0871-34567890', bank: '交通银行昆明分行', account: '6222620000000000002' }
         };
 
         let currentDetailId = '';
         let currentEditId = '';
 
-        function toggleSelectAll() {
-            const checkboxes = document.querySelectorAll('.invoice-checkbox');
-            const selectAll = document.getElementById('selectAll');
-            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        // 分页变量
+        let currentPage = 1;
+        const pageSize = 10;
+        let filteredData = [];
+        let totalPages = 1;
+
+        // 初始化分页
+        function initPagination() {
+            // 确保数据已定义
+            if (typeof invoiceData === 'undefined') {
+                console.error('invoiceData is undefined');
+                return;
+            }
+            
+            filteredData = Object.keys(invoiceData).map(key => ({ id: key, ...invoiceData[key] }));
+            // 默认按时间倒序
+            filteredData.sort((a, b) => new Date(b.time) - new Date(a.time));
+            totalPages = Math.ceil(filteredData.length / pageSize);
+            if (totalPages < 1) totalPages = 1;
+            renderTable();
+            renderPagination();
+        }
+
+        // 渲染表格
+        function renderTable() {
+            const tbody = document.getElementById('invoiceTableBody');
+            // 清空表格
+            tbody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            const avatarColors = [
+                'bg-blue-100 text-blue-600',
+                'bg-green-100 text-green-600',
+                'bg-purple-100 text-purple-600',
+                'bg-orange-100 text-orange-600',
+                'bg-pink-100 text-pink-600',
+                'bg-cyan-100 text-cyan-600',
+                'bg-indigo-100 text-indigo-600',
+                'bg-red-100 text-red-600'
+            ];
+
+            let html = '';
+            pageData.forEach((data, index) => {
+                const statusClass = getStatusClass(data.status);
+                const globalIndex = startIndex + index + 1;
+                const nameChar = data.user.charAt(0);
+                const colorIndex = globalIndex % avatarColors.length;
+                const avatarClass = avatarColors[colorIndex];
+
+                html += `
+                    <tr class="hover:bg-blue-50/30 transition-colors" data-id="${data.id}" data-status="${data.status}">
+                        <td class="px-4 py-3 text-sm text-gray-500 w-12">${globalIndex}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 ${avatarClass} rounded-full flex items-center justify-center text-xs font-medium">${nameChar}</span>
+                                <span class="text-sm font-medium text-gray-900">${data.user}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3"><span class="text-sm text-gray-900">${data.companyName}</span></td>
+                        <td class="px-4 py-3"><span class="text-sm text-gray-700">${data.invoiceTitle}</span></td>
+                        <td class="px-4 py-3"><span class="text-sm font-semibold text-gray-900">¥${data.amount}</span></td>
+                        <td class="px-4 py-3"><span class="text-sm text-gray-600">${data.type}</span></td>
+                        <td class="px-4 py-3"><span class="${statusClass}">${data.status}</span></td>
+                        <td class="px-4 py-3"><span class="text-sm text-gray-500">${data.time}</span></td>
+                        <td class="px-4 py-3 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="viewDetail('${data.id}')" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium transition-colors">查看</button>
+                                ${data.status === '待审核' ? `
+                                    <button onclick="approveInvoice('${data.id}')" class="text-green-600 hover:text-green-700 text-sm font-medium transition-colors">通过</button>
+                                    <button onclick="rejectInvoice('${data.id}')" class="text-red-500 hover:text-red-600 text-sm font-medium transition-colors">拒绝</button>
+                                ` : data.status === '已通过' ? `
+                                    <button onclick="editInvoice('${data.id}')" class="text-orange-500 hover:text-orange-600 text-sm font-medium transition-colors">编辑</button>
+                                    <button onclick="downloadPDF('${data.id}')" class="text-purple-500 hover:text-purple-600 text-sm font-medium transition-colors">下载PDF</button>
+                                ` : data.status === '已开票' ? `
+                                    <button onclick="editInvoice('${data.id}')" class="text-orange-500 hover:text-orange-600 text-sm font-medium transition-colors">编辑</button>
+                                    <button onclick="downloadPDF('${data.id}')" class="text-purple-500 hover:text-purple-600 text-sm font-medium transition-colors">下载PDF</button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+
+            // 更新统计
+            document.querySelector('.bg-gradient-to-br.from-blue-50.to-blue-100 .text-2xl').textContent = filteredData.length;
+            const approvedCount = filteredData.filter(d => d.status === '已通过' || d.status === '已开票').length;
+            document.querySelector('.bg-gradient-to-br.from-green-50.to-green-100 .text-2xl').textContent = approvedCount;
+            const pendingCount = filteredData.filter(d => d.status === '待审核').length;
+            document.querySelector('.bg-gradient-to-br.from-yellow-50.to-yellow-100 .text-2xl').textContent = pendingCount;
+        }
+
+        // 获取状态样式
+        function getStatusClass(status) {
+            const classes = {
+                '待审核': 'px-2 py-1 bg-yellow-50 text-yellow-700 rounded text-xs font-medium',
+                '已通过': 'px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium',
+                '已开票': 'px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium',
+                '已拒绝': 'px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium'
+            };
+            return classes[status] || 'px-2 py-1 bg-gray-50 text-gray-700 rounded text-xs font-medium';
+        }
+
+        // 渲染分页
+        function renderPagination() {
+            const pageInfo = document.getElementById('pageInfo');
+            const paginationBtns = document.getElementById('paginationBtns');
+
+            pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页，共 ${filteredData.length} 条`;
+
+            let html = '';
+            html += `<button onclick="prevPage()" class="px-3 py-1.5 text-sm border rounded-lg ${currentPage === 1 ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+
+            // 显示所有页码（参考学员管理页面样式）
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="goToPage(${i})" class="px-3 py-1.5 text-sm border rounded-lg ${i === currentPage ? 'bg-[#1890FF] text-white border-[#1890FF]' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}">${i}</button>`;
+            }
+
+            html += `<button onclick="nextPage()" class="px-3 py-1.5 text-sm border rounded-lg ${currentPage === totalPages ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+
+            paginationBtns.innerHTML = html;
+        }
+
+        // 上一页
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                renderPagination();
+            }
+        }
+
+        // 下一页
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                renderPagination();
+            }
+        }
+
+        // 跳转到指定页
+        function goToPage(page) {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+                renderPagination();
+            }
         }
 
         function viewDetail(id) {
@@ -943,32 +870,6 @@
             return result;
         }
 
-        function batchInvoice() {
-            const checkboxes = document.querySelectorAll('.invoice-checkbox:checked');
-            if (checkboxes.length === 0) {
-                alert('请先选择要批量开票的发票');
-                return;
-            }
-            
-            if (confirm(`确定要为选中的 ${checkboxes.length} 张发票批量开票吗？`)) {
-                checkboxes.forEach(cb => {
-                    const row = cb.closest('tr');
-                    const id = row.dataset.id;
-                    const data = invoiceData[id];
-                    data.status = '已开票';
-                    
-                    row.setAttribute('data-status', 'issued');
-                    const statusSpan = row.querySelector('td:nth-child(8) span');
-                    statusSpan.textContent = '已开票';
-                    statusSpan.className = 'px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium';
-                    
-                    cb.checked = false;
-                });
-                document.getElementById('selectAll').checked = false;
-                alert('批量开票成功');
-            }
-        }
-
         function searchInvoices() {
             const user = document.getElementById('searchUser').value.toLowerCase();
             const company = document.getElementById('searchCompany').value.toLowerCase();
@@ -976,17 +877,19 @@
             const type = document.getElementById('searchType').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
-            
-            const rows = document.querySelectorAll('#invoiceTableBody tr');
-            rows.forEach(row => {
-                const rowUser = row.querySelector('td:nth-child(3) span').textContent.toLowerCase();
-                const rowCompany = row.querySelector('td:nth-child(4) span').textContent.toLowerCase();
-                const rowStatus = row.dataset.status;
-                const rowType = row.querySelector('td:nth-child(7) span').textContent;
-                const rowTime = row.querySelector('td:nth-child(9) span').textContent.split(' ')[0];
-                
+
+            // 筛选数据
+            filteredData = Object.keys(invoiceData).map(key => ({ id: key, ...invoiceData[key] }));
+
+            filteredData = filteredData.filter(data => {
+                const rowUser = data.user.toLowerCase();
+                const rowCompany = data.companyName.toLowerCase();
+                const rowStatus = data.status;
+                const rowType = data.type;
+                const rowTime = data.time.split(' ')[0];
+
                 let match = true;
-                
+
                 if (user && !rowUser.includes(user)) match = false;
                 if (company && !rowCompany.includes(company)) match = false;
                 if (status !== 'all' && rowStatus !== status) match = false;
@@ -996,9 +899,20 @@
                 }
                 if (startDate && rowTime < startDate) match = false;
                 if (endDate && rowTime > endDate) match = false;
-                
-                row.style.display = match ? '' : 'none';
+
+                return match;
             });
+
+            // 按时间倒序
+            filteredData.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            // 重置到第一页
+            currentPage = 1;
+            totalPages = Math.ceil(filteredData.length / pageSize);
+            if (totalPages < 1) totalPages = 1;
+
+            renderTable();
+            renderPagination();
         }
 
         function resetSearch() {
@@ -1008,9 +922,17 @@
             document.getElementById('searchType').value = 'all';
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
-            
-            const rows = document.querySelectorAll('#invoiceTableBody tr');
-            rows.forEach(row => row.style.display = '');
+
+            // 恢复所有数据
+            filteredData = Object.keys(invoiceData).map(key => ({ id: key, ...invoiceData[key] }));
+            filteredData.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            currentPage = 1;
+            totalPages = Math.ceil(filteredData.length / pageSize);
+            if (totalPages < 1) totalPages = 1;
+
+            renderTable();
+            renderPagination();
         }
 
         function getStatusColor(status) {
@@ -1021,6 +943,76 @@
                 case '已拒绝': return 'red';
                 default: return 'gray';
             }
+        }
+
+        // 初始化标志，防止重复初始化
+        let initialized = false;
+        
+        // 初始化分页
+        function initializePage() {
+            if (initialized) return;
+            initialized = true;
+            
+            console.log('Initializing pagination...');
+            console.log('invoiceData:', invoiceData);
+            initPagination();
+        }
+
+        // 导出发票
+        function exportInvoices() {
+            const headers = ['序号', '用户', '开票公司名称', '开票抬头', '纳税人识别号', '地址', '电话', '开户银行', '银行账号', '开票金额', '开票类型', '开票状态', '开票时间'];
+            
+            const data = filteredData.map((invoice, index) => [
+                index + 1,
+                invoice.user,
+                invoice.companyName,
+                invoice.invoiceTitle,
+                invoice.taxNumber || '',
+                invoice.address || '',
+                invoice.phone || '',
+                invoice.bank || '',
+                invoice.account || '',
+                '¥' + invoice.amount,
+                invoice.type,
+                invoice.status,
+                invoice.time
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '发票列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // 确保DOM加载完成后再初始化
+        document.addEventListener('DOMContentLoaded', initializePage);
+
+        // 也在脚本加载完成后尝试初始化（防止DOMContentLoaded已触发）
+        if (document.readyState !== 'loading') {
+            initializePage();
         }
 
         document.querySelectorAll('.menu-toggle').forEach(toggle => {

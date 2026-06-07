@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -197,7 +197,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">课程中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">题库管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">题库管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -217,7 +218,7 @@
                             <p class="text-2xl font-bold text-gray-900 mt-1">10,362</p>
                             <p class="text-xs text-green-500 mt-1 font-medium">↑2.8%</p>
                         </div>
-                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors"><span class="iconify text-xl" data-icon="ri:questionnaire-line"></span></div>
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-[#1890FF] group-hover:text-white transition-colors"><span class="iconify text-xl" data-icon="ri:questionnaire-line"></span></div>
                     </div>
                 </div>
                 <div class="bg-white p-5 rounded-xl border shadow-sm group hover:shadow-md transition-shadow">
@@ -293,40 +294,38 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button class="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">搜索</button>
+                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">搜索</button>
                         <button class="px-5 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">重置</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <button onclick="openEditModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新建题目</button>
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"><span class="iconify" data-icon="ri:upload-line"></span>题库导入</button>
-                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"><span class="iconify" data-icon="ri:download-line"></span>题库导出</button>
-                </div>
-                <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">23</span> 道题目</span>
-            </div>
-
             <!-- 数据表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b flex items-center justify-between">
+                    <div></div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="openEditModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新建题目</button>
+                        <button onclick="importQuestionBank()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"><span class="iconify" data-icon="ri:upload-line"></span>题库导入</button>
+                        <button onclick="exportQuestionBank()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors"><span class="iconify" data-icon="ri:download-line"></span>题库导出</button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-100">
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-10">序号</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">题目内容</th>
-                                <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[70px] whitespace-nowrap">类型</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[140px] whitespace-nowrap">所属课程</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[100px] whitespace-nowrap">创建时间</th>
-                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[100px] whitespace-nowrap">操作</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-12 whitespace-nowrap">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">题目内容</th>
+                                <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[70px] whitespace-nowrap">类型</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[140px] whitespace-nowrap">所属课程</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[100px] whitespace-nowrap">创建时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[100px] whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <!-- 1 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="1">
-                                <td class="px-4 py-3 text-sm text-gray-500">1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 w-10">1</td>
                                 <td class="px-4 py-3 max-w-[300px]"><p class="text-sm text-gray-900 line-clamp-1">养老护理员为老人翻身时，应间隔多长时间？</p></td>
                                 <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-medium">单选</span></td>
 
@@ -336,7 +335,7 @@
                             </tr>
                             <!-- 2 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="2">
-                                <td class="px-4 py-3 text-sm text-gray-500">2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 w-10">2</td>
                                 <td class="px-4 py-3 max-w-[300px]"><p class="text-sm text-gray-900 line-clamp-1">以下哪些属于老年人能力评估的维度？</p></td>
                                 <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-purple-50 text-purple-600 rounded text-xs font-medium">多选</span></td>
 
@@ -652,7 +651,7 @@
                 <!-- 底部 -->
                 <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
                     <button onclick="closeEditModal()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
-                    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
+                    <button class="px-6 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
                 </div>
             </div>
         </div>
@@ -708,6 +707,118 @@
         }
 
         renderPagination(1);
+
+        // 导入题库
+        function importQuestionBank() {
+            alert('请先下载导入模板，填写数据后再导入！');
+            downloadQuestionBankTemplate();
+        }
+
+        // 下载题库导入模板
+        function downloadQuestionBankTemplate() {
+            const headers = ['题目内容', '题目类型', '选项A', '选项B', '选项C', '选项D', '正确答案', '所属课程', '难度等级'];
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            csvContent += ['老年人每日饮水量应不少于多少毫升？', '单选', '1000ml', '1500ml', '2000ml', '2500ml', 'C', '养老护理员（初级）培训班', '初级'].map(escapeCsvField).join(',') + '\n';
+            csvContent += ['老年人跌倒后应立即搀扶起来。', '判断', '', '', '', '', '错误', '养老护理员（初级）培训班', '初级'].map(escapeCsvField).join(',') + '\n';
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '题库导入模板.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // 题库完整数据
+        const questions = [
+            { id: 1, content: '养老护理员为老人翻身时，应间隔多长时间？', type: '单选', optionA: '1小时', optionB: '2小时', optionC: '3小时', optionD: '4小时', answer: 'B', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-20' },
+            { id: 2, content: '以下哪些属于老年人能力评估的维度？', type: '多选', optionA: '日常生活活动', optionB: '精神状态', optionC: '感知觉与沟通', optionD: '社会参与', answer: 'ABCD', course: '老年人能力评估师(初级)', level: '初级', createTime: '2026-05-19' },
+            { id: 3, content: '老年人正常的脉搏范围是多少？', type: '单选', optionA: '50-70次/分钟', optionB: '60-100次/分钟', optionC: '70-110次/分钟', optionD: '80-120次/分钟', answer: 'B', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-18' },
+            { id: 4, content: '老年人跌倒后应立即搀扶起来。', type: '判断', optionA: '', optionB: '', optionC: '', optionD: '', answer: '错误', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-17' },
+            { id: 5, content: '老年人常见的压疮好发部位不包括？', type: '单选', optionA: '骶尾部', optionB: '足跟', optionC: '肘部', optionD: '面部', answer: 'D', course: '养老护理员(中级)', level: '中级', createTime: '2026-05-16' },
+            { id: 6, content: '老年抑郁症的主要表现有哪些？', type: '多选', optionA: '情绪低落', optionB: '兴趣减退', optionC: '睡眠障碍', optionD: '食欲改变', answer: 'ABCD', course: '老年心理健康师', level: '初级', createTime: '2026-05-15' },
+            { id: 7, content: '老年人每日饮水量应不少于____毫升。', type: '填空', optionA: '', optionB: '', optionC: '', optionD: '', answer: '1500', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-14' },
+            { id: 8, content: '以下哪种情况不属于老年人的异常行为？', type: '单选', optionA: '反复询问同一问题', optionB: '夜间频繁醒来', optionC: '按时吃饭睡觉', optionD: '情绪突然改变', answer: 'C', course: '老年心理健康师', level: '初级', createTime: '2026-05-13' },
+            { id: 9, content: '为老年人测量血压时，袖带松紧度以能伸入一指为宜。', type: '判断', optionA: '', optionB: '', optionC: '', optionD: '', answer: '正确', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-12' },
+            { id: 10, content: '老年人用药原则包括哪些？', type: '多选', optionA: '遵医嘱用药', optionB: '注意药物相互作用', optionC: '观察不良反应', optionD: '自行调整剂量', answer: 'ABC', course: '养老护理员(中级)', level: '中级', createTime: '2026-05-11' },
+            { id: 11, content: '以下哪种食物富含蛋白质？', type: '单选', optionA: '米饭', optionB: '瘦肉', optionC: '黄瓜', optionD: '面条', answer: 'B', course: '老年人营养膳食', level: '初级', createTime: '2026-05-10' },
+            { id: 12, content: '老年人进行户外活动时，应避免在强光下暴晒。', type: '判断', optionA: '', optionB: '', optionC: '', optionD: '', answer: '正确', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-09' },
+            { id: 13, content: '老年人常见的安全隐患有哪些？', type: '多选', optionA: '跌倒', optionB: '烫伤', optionC: '误吸', optionD: '走失', answer: 'ABCD', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-08' },
+            { id: 14, content: '测量老年人体温最常用的方法是____。', type: '填空', optionA: '', optionB: '', optionC: '', optionD: '', answer: '腋下测温', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-07' },
+            { id: 15, content: '以下哪种不是老年人常见的慢性疾病？', type: '单选', optionA: '高血压', optionB: '糖尿病', optionC: '肺炎', optionD: '骨质疏松', answer: 'C', course: '养老护理员(中级)', level: '中级', createTime: '2026-05-06' },
+            { id: 16, content: '老年人的睡眠特点包括哪些？', type: '多选', optionA: '睡眠时间减少', optionB: '睡眠浅', optionC: '夜间易醒', optionD: '白天嗜睡', answer: 'ABCD', course: '老年心理健康师', level: '初级', createTime: '2026-05-05' },
+            { id: 17, content: '为老年人更换尿布时，应先清洁会阴部再更换。', type: '判断', optionA: '', optionB: '', optionC: '', optionD: '', answer: '正确', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-04' },
+            { id: 18, content: '老年人的心理需求包括哪些方面？', type: '多选', optionA: '安全需求', optionB: '尊重需求', optionC: '社交需求', optionD: '自我实现需求', answer: 'ABCD', course: '老年心理健康师', level: '中级', createTime: '2026-05-03' },
+            { id: 19, content: '以下哪种沟通方式不适合与老年人交流？', type: '单选', optionA: '语速缓慢', optionB: '声音洪亮', optionC: '使用专业术语', optionD: '耐心倾听', answer: 'C', course: '养老护理员(初级)', level: '初级', createTime: '2026-05-02' },
+            { id: 20, content: '老年人发生噎食时，应立即采用____急救法。', type: '填空', optionA: '', optionB: '', optionC: '', optionD: '', answer: '海姆立克', course: '养老护理员(中级)', level: '中级', createTime: '2026-05-01' },
+            { id: 21, content: '以下哪些是老年人的生理特点？', type: '多选', optionA: '视力下降', optionB: '听力减退', optionC: '记忆力减退', optionD: '反应迟钝', answer: 'ABCD', course: '养老护理员(初级)', level: '初级', createTime: '2026-04-30' },
+            { id: 22, content: '为老年人洗头时，水温应控制在38-40℃。', type: '判断', optionA: '', optionB: '', optionC: '', optionD: '', answer: '正确', course: '养老护理员(初级)', level: '初级', createTime: '2026-04-29' },
+            { id: 23, content: '老年人康复训练的原则不包括？', type: '单选', optionA: '循序渐进', optionB: '因人而异', optionC: '强迫训练', optionD: '劳逸结合', answer: 'C', course: '老年人康复护理', level: '中级', createTime: '2026-04-28' }
+        ];
+
+        // 导出题库
+        function exportQuestionBank() {
+            const headers = ['序号', '题目内容', '题目类型', '选项A', '选项B', '选项C', '选项D', '正确答案', '所属课程', '难度等级', '创建时间'];
+            
+            const data = questions.map((q, index) => [
+                index + 1,
+                q.content,
+                q.type,
+                q.optionA,
+                q.optionB,
+                q.optionC,
+                q.optionD,
+                q.answer,
+                q.course,
+                q.level,
+                q.createTime
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '题库_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
 
         document.querySelectorAll('.menu-toggle').forEach(toggle => {
             toggle.addEventListener('click', function() {

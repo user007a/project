@@ -14,18 +14,16 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-<div class="w-full max-w-[750px] min-h-screen bg-white relative overflow-hidden flex flex-col">
+<div class="page-container">
 
   <!-- 顶部绿色渐变装饰区 -->
-  <div class="h-16 bg-gradient-to-br from-[#2e9e5a] to-[#1e7e42] rounded-b-3xl relative overflow-hidden">
+  <div class="page-header h-16" style="padding-bottom: 16px;">
     <div class="absolute top-4 left-5 text-white/80 text-xs">2026年05月28日</div>
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/[0.06] rounded-full"></div>
-    <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-white/[0.04] rounded-full"></div>
   </div>
 
   <!-- 白色圆角卡片 -->
   <div class="px-6 -mt-10 flex-1">
-    <div class="bg-white rounded-3xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100">
+    <div class="card" style="padding: 24px;">
 
       <!-- Logo + 标题 + slogan -->
       <div class="flex flex-col items-center mb-6">
@@ -48,26 +46,22 @@
       <!-- 输入框区域 -->
       <div class="space-y-5">
         <!-- 手机号/用户名 -->
-        <div class="relative" id="phoneGroup">
-          <div class="input-wrapper" style="position: relative;">
-            <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl transition-colors duration-200" data-icon="solar:phone-bold" style="z-index: 1;"></span>
-            <input id="phoneInput" class="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-[#2e9e5a] focus:bg-emerald-50/30 transition-all duration-200 text-sm text-gray-900 placeholder:text-gray-400 placeholder:text-sm" placeholder="手机号码 / 用户名" type="text" style="transition: all 0.3s ease;"/>
-          </div>
-          <div class="text-xs text-red-500 mt-2 ml-1 hidden error-message" id="phoneError">
-            <span class="iconify inline-block align-middle mr-1" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
+        <div class="input-field" id="phoneGroup">
+          <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl" data-icon="solar:phone-bold"></span>
+          <input id="phoneInput" type="text" placeholder="手机号码 / 用户名" />
+          <div class="input-hint error hidden" id="phoneError">
+            <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
             请输入正确的11位手机号
           </div>
         </div>
 
         <!-- 密码 -->
-        <div class="relative" id="passwordGroup">
-          <div class="input-wrapper" style="position: relative;">
-            <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl transition-colors duration-200" data-icon="solar:lock-password-bold" style="z-index: 1;"></span>
-            <input id="passwordInput" class="w-full pl-12 pr-12 py-4 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-[#2e9e5a] focus:bg-emerald-50/30 transition-all duration-200 text-sm text-gray-900 placeholder:text-gray-400 placeholder:text-sm" placeholder="请输入密码" type="password" autocomplete="current-password" style="transition: all 0.3s ease;"/>
-            <span class="iconify absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-500 text-xl cursor-pointer hover:text-[#2e9e5a] transition-colors active:scale-90" data-icon="solar:eye-bold" id="togglePwd"></span>
-          </div>
-          <div class="text-xs text-red-500 mt-2 ml-1 hidden error-message" id="passwordError">
-            <span class="iconify inline-block align-middle mr-1" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
+        <div class="input-field" id="passwordGroup">
+          <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl" data-icon="solar:lock-password-bold"></span>
+          <input id="passwordInput" type="password" placeholder="请输入密码" autocomplete="current-password" />
+          <span class="iconify absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-500 text-xl cursor-pointer hover:text-[#2e9e5a] transition-colors" data-icon="solar:eye-bold" id="togglePwd"></span>
+          <div class="input-hint error hidden" id="passwordError">
+            <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
             请输入密码
           </div>
         </div>
@@ -83,7 +77,7 @@
       </div>
 
       <!-- 登录按钮 -->
-      <button id="btnLogin" class="w-full mt-6 bg-gradient-to-r from-[#3db870] to-[#2e9e5a] text-white text-center py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl hover:from-[#2e9e5a] hover:to-[#1e7e42] active:scale-[0.98] transition-all duration-200 relative overflow-hidden">
+      <button id="btnLogin" class="btn btn-primary w-full mt-6">
         <span class="login-btn-text">登 录</span>
         <span class="spinner hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
       </button>
@@ -98,15 +92,11 @@
     </div>
 
     <!-- 快速登录分隔线 -->
-    <div class="flex items-center gap-4 py-5">
-      <div class="flex-1 h-px bg-gray-200"></div>
-      <span class="text-xs text-gray-500">快速登录</span>
-      <div class="flex-1 h-px bg-gray-200"></div>
-    </div>
+    <div class="divider">快速登录</div>
 
     <!-- 微信授权登录 -->
-    <button id="btnWechat" class="flex items-center justify-center gap-3 w-[85%] mx-auto bg-white text-[#2e9e5a] border-2 border-[#2e9e5a] py-3 rounded-full font-semibold shadow-sm hover:shadow-md hover:bg-emerald-50 active:scale-95 transition-all duration-200 relative overflow-hidden">
-      <span class="iconify text-2xl" data-icon="ri:wechat-fill"></span>
+    <button id="btnWechat" class="btn btn-outline-primary w-[85%] mx-auto">
+      <span class="iconify text-xl" data-icon="ri:wechat-fill"></span>
       <span class="wechat-btn-text">微信授权登录</span>
       <span class="wechat-spinner hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 border-2 border-[#2e9e5a]/30 border-t-[#2e9e5a] rounded-full animate-spin"></span>
     </button>

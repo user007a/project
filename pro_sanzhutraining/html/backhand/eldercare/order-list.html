@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -205,7 +205,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">订单中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">订单管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">订单管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -362,7 +363,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100">
-                    <button onclick="doSearch()" class="inline-flex items-center gap-1.5 px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">
+                    <button onclick="doSearch()" class="inline-flex items-center gap-1.5 px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors shadow-sm">
                         <span class="iconify" data-icon="ri:search-line"></span>搜索
                     </button>
                     <button onclick="doReset()" class="inline-flex items-center gap-1.5 px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
@@ -376,7 +377,7 @@
                 <div class="px-6 py-4 border-b bg-gray-50/50 flex justify-between items-center">
                     <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">23</span> 笔订单</span>
                     <div class="flex items-center gap-3">
-                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <button onclick="exportOrders()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
                             <span class="iconify" data-icon="ri:download-line"></span>导出订单
                         </button>
                     </div>
@@ -386,17 +387,17 @@
                         <thead>
                             <tr class="border-b border-gray-100">
 							    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">序号</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">订单号</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">学员姓名</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">业务人员</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">订单来源</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">课程名称</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">金额</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">支付方式</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">订单状态</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">是否开票</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">下单时间</th>
-                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">操作</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">订单号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">学员姓名</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">业务人员</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">订单来源</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">课程名称</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">金额</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">支付方式</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">订单状态</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">是否开票</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">下单时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">操作</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -404,7 +405,7 @@
                             <tr data-row="1" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">1</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260521001</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">刘秀英</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">刘</span><span class="text-sm text-gray-900">刘秀英</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">张经理</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
@@ -419,7 +420,7 @@
                             <tr data-row="2" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">2</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260520002</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">陈建华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-medium">陈</span><span class="text-sm text-gray-900">陈建华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">李主任</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
@@ -434,7 +435,7 @@
                             <tr data-row="3" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">3</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260519003</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">王丽萍</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">王</span><span class="text-sm text-gray-900">王丽萍</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">王主管</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
@@ -449,7 +450,7 @@
                             <tr data-row="4" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">4</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260518004</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">赵国强</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xs font-medium">赵</span><span class="text-sm text-gray-900">赵国强</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">刘老师</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
@@ -464,7 +465,7 @@
                             <tr data-row="5" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">5</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260517005</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">孙美华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">孙</span><span class="text-sm text-gray-900">孙美华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">陈专员</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
@@ -479,7 +480,7 @@
                             <tr data-row="6" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">6</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260516006</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">周建国</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">周</span><span class="text-sm text-gray-900">周建国</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">张经理</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
@@ -494,7 +495,7 @@
                             <tr data-row="7" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">7</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260515007</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">李芳</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">李</span><span class="text-sm text-gray-900">李芳</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">李主任</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
@@ -509,7 +510,7 @@
                             <tr data-row="8" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">8</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260514008</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">张伟</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">张</span><span class="text-sm text-gray-900">张伟</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">王主管</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥1,180</span></td>
@@ -523,7 +524,7 @@
                             <tr data-row="9" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">9</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260513009</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">吴秀兰</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">吴</span><span class="text-sm text-gray-900">吴秀兰</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">刘老师</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
@@ -538,7 +539,7 @@
                             <tr data-row="10" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">10</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260512010</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">郑明华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">郑</span><span class="text-sm text-gray-900">郑明华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">陈专员</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
@@ -553,7 +554,7 @@
                             <tr data-row="11" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">11</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260511011</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">黄丽珍</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-medium">黄</span><span class="text-sm text-gray-900">黄丽珍</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">张经理</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm font-semibold text-gray-900">¥980</span></td>
@@ -567,7 +568,7 @@
                             <tr data-row="12" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">12</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260510012</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">林志强</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-medium">林</span><span class="text-sm text-gray-900">林志强</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">李主任</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
@@ -582,7 +583,7 @@
                             <tr data-row="13" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">13</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260509013</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">何玉兰</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">何</span><span class="text-sm text-gray-900">何玉兰</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">王主管</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
@@ -597,7 +598,7 @@
                             <tr data-row="14" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">14</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260508014</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">马建华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xs font-medium">马</span><span class="text-sm text-gray-900">马建华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">刘老师</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（高级）</span></td>
@@ -612,7 +613,7 @@
                             <tr data-row="15" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">15</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260507015</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">胡秀英</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">胡</span><span class="text-sm text-gray-900">胡秀英</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">陈专员</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（中级）</span></td>
@@ -627,7 +628,7 @@
                             <tr data-row="16" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">16</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260506016</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">杨国庆</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">杨</span><span class="text-sm text-gray-900">杨国庆</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">张经理</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
@@ -642,7 +643,7 @@
                             <tr data-row="17" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">17</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260505017</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">朱丽华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-medium">朱</span><span class="text-sm text-gray-900">朱丽华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">李主任</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（中级）</span></td>
@@ -657,7 +658,7 @@
                             <tr data-row="18" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">18</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260504018</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">徐明</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">徐</span><span class="text-sm text-gray-900">徐明</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">王主管</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（初级）</span></td>
@@ -672,7 +673,7 @@
                             <tr data-row="19" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">19</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260503019</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">高秀兰</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">高</span><span class="text-sm text-gray-900">高秀兰</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">刘老师</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（中级）</span></td>
@@ -687,7 +688,7 @@
                             <tr data-row="20" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">20</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260502020</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">宋建国</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">宋</span><span class="text-sm text-gray-900">宋建国</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">陈专员</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">营养配餐员（初级）</span></td>
@@ -702,7 +703,7 @@
                             <tr data-row="21" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">21</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260501021</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">邓芳</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-xs font-medium">邓</span><span class="text-sm text-gray-900">邓芳</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">张经理</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium">代理商</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">养老护理员（初级）</span></td>
@@ -717,7 +718,7 @@
                             <tr data-row="22" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">22</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260430022</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">曹明华</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-medium">曹</span><span class="text-sm text-gray-900">曹明华</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">李主任</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium">学员分享</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">老年人能力评估师（高级）</span></td>
@@ -732,7 +733,7 @@
                             <tr data-row="23" class="hover:bg-blue-50/30 transition-all">
                                 <td class="px-4 py-3.5 text-sm text-gray-400">23</td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700 font-mono">SZ20260429023</span></td>
-                                <td class="px-4 py-3.5"><span class="text-sm text-gray-900">韩秀珍</span></td>
+                                <td class="px-4 py-3.5"><div class="flex items-center gap-2"><span class="w-7 h-7 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">韩</span><span class="text-sm text-gray-900">韩秀珍</span></div></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">王主管</span></td>
                                 <td class="px-4 py-3.5"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">业务员</span></td>
                                 <td class="px-4 py-3.5"><span class="text-sm text-gray-700">健康照护师（初级）</span></td>
@@ -969,7 +970,7 @@
             <!-- 弹窗底部 -->
             <div class="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
                 <button onclick="closeInvoiceModal()" class="px-5 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">取消</button>
-                <button onclick="submitInvoice()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">提交申请</button>
+                <button onclick="submitInvoice()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors shadow-sm">提交申请</button>
             </div>
         </div>
     </div>
@@ -1018,7 +1019,7 @@
             </div>
             <div class="px-6 py-4 border-t bg-gray-50 flex justify-end gap-3">
                 <button onclick="closeEdit()" class="px-5 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">取消</button>
-                <button onclick="saveEdit()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">保存</button>
+                <button onclick="saveEdit()" class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors shadow-sm">保存</button>
             </div>
         </div>
     </div>
@@ -1226,6 +1227,84 @@
         });
 
         renderPagination(1);
+
+        // 订单完整数据
+        const orders = [
+            { id: 1, orderNo: 'SZ20260521001', createTime: '2026-05-21 09:15', payTime: '2026-05-21 09:16', payMethod: '微信支付', studentName: '刘秀英', phone: '13822015001', salesman: '张经理', course: '养老护理员（初级）', price: '¥680.00', discount: '¥0.00', amount: '¥680.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 2, orderNo: 'SZ20260521002', createTime: '2026-05-21 10:30', payTime: '2026-05-21 10:31', payMethod: '支付宝', studentName: '陈建华', phone: '13955023002', salesman: '李主任', course: '养老护理员（中级）', price: '¥980.00', discount: '¥0.00', amount: '¥980.00', source: '业务员', status: '已完成', invoiced: '否' },
+            { id: 3, orderNo: 'SZ20260521003', createTime: '2026-05-21 11:45', payTime: '2026-05-21 11:46', payMethod: '微信支付', studentName: '王丽萍', phone: '13688033003', salesman: '王主管', course: '老年人能力评估师（初级）', price: '¥880.00', discount: '¥0.00', amount: '¥880.00', source: '代理商', status: '已完成', invoiced: '是' },
+            { id: 4, orderNo: 'SZ20260521004', createTime: '2026-05-21 14:00', payTime: '2026-05-21 14:01', payMethod: '支付宝', studentName: '赵国强', phone: '15866043004', salesman: '刘老师', course: '养老护理员（初级）', price: '¥680.00', discount: '¥0.00', amount: '¥680.00', source: '学员分享', status: '已完成', invoiced: '否' },
+            { id: 5, orderNo: 'SZ20260521005', createTime: '2026-05-21 15:30', payTime: '2026-05-21 15:31', payMethod: '微信支付', studentName: '孙美华', phone: '13977053005', salesman: '陈专员', course: '健康照护师（初级）', price: '¥780.00', discount: '¥0.00', amount: '¥780.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 6, orderNo: 'SZ20260521006', createTime: '2026-05-21 16:45', payTime: '2026-05-21 16:46', payMethod: '支付宝', studentName: '周建国', phone: '13844063006', salesman: '张经理', course: '营养配餐员（初级）', price: '¥580.00', discount: '¥0.00', amount: '¥580.00', source: '代理商', status: '已完成', invoiced: '否' },
+            { id: 7, orderNo: 'SZ20260521007', createTime: '2026-05-21 17:20', payTime: '2026-05-21 17:21', payMethod: '微信支付', studentName: '李芳', phone: '13633073007', salesman: '李主任', course: '养老护理员（高级）', price: '¥1580.00', discount: '¥0.00', amount: '¥1580.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 8, orderNo: 'SZ20260521008', createTime: '2026-05-21 18:00', payTime: '2026-05-21 18:01', payMethod: '支付宝', studentName: '张伟', phone: '15811083008', salesman: '王主管', course: '老年人心理照护专题', price: '¥680.00', discount: '¥0.00', amount: '¥680.00', source: '学员分享', status: '已完成', invoiced: '否' },
+            { id: 9, orderNo: 'SZ20260521009', createTime: '2026-05-21 19:30', payTime: '2026-05-21 19:31', payMethod: '微信支付', studentName: '吴秀兰', phone: '13922093009', salesman: '刘老师', course: '居家养老服务规范', price: '¥580.00', discount: '¥0.00', amount: '¥580.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 10, orderNo: 'SZ20260521010', createTime: '2026-05-21 20:15', payTime: '2026-05-21 20:16', payMethod: '支付宝', studentName: '郑明华', phone: '13655013010', salesman: '陈专员', course: '老年人应急救护', price: '¥780.00', discount: '¥0.00', amount: '¥780.00', source: '代理商', status: '已完成', invoiced: '否' },
+            { id: 11, orderNo: 'SZ20260521011', createTime: '2026-05-21 21:00', payTime: '', payMethod: '', studentName: '黄丽珍', phone: '13888023111', salesman: '张经理', course: '失能老人照护专项', price: '¥1180.00', discount: '¥0.00', amount: '¥1180.00', source: '业务员', status: '待支付', invoiced: '否' },
+            { id: 12, orderNo: 'SZ20260521012', createTime: '2026-05-21 22:00', payTime: '', payMethod: '', studentName: '林志强', phone: '13966033112', salesman: '李主任', course: '养老护理实操技能', price: '¥1280.00', discount: '¥0.00', amount: '¥1280.00', source: '学员分享', status: '待支付', invoiced: '否' },
+            { id: 13, orderNo: 'SZ20260521013', createTime: '2026-05-22 09:00', payTime: '2026-05-22 09:01', payMethod: '微信支付', studentName: '何玉兰', phone: '15877043113', salesman: '王主管', course: '老年人能力评估师（中级）', price: '¥1180.00', discount: '¥0.00', amount: '¥1180.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 14, orderNo: 'SZ20260521014', createTime: '2026-05-22 10:30', payTime: '2026-05-22 10:31', payMethod: '支付宝', studentName: '马建华', phone: '13699053114', salesman: '刘老师', course: '健康照护师（中级）', price: '¥1080.00', discount: '¥0.00', amount: '¥1080.00', source: '代理商', status: '已完成', invoiced: '否' },
+            { id: 15, orderNo: 'SZ20260521015', createTime: '2026-05-22 11:45', payTime: '2026-05-22 11:46', payMethod: '微信支付', studentName: '胡秀英', phone: '13811063115', salesman: '陈专员', course: '营养配餐员（中级）', price: '¥880.00', discount: '¥0.00', amount: '¥880.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 16, orderNo: 'SZ20260521016', createTime: '2026-05-22 14:00', payTime: '2026-05-22 14:01', payMethod: '支付宝', studentName: '杨国庆', phone: '13944073116', salesman: '张经理', course: '养老护理员（初级）', price: '¥680.00', discount: '¥0.00', amount: '¥680.00', source: '学员分享', status: '已完成', invoiced: '否' },
+            { id: 17, orderNo: 'SZ20260521017', createTime: '2026-05-22 15:30', payTime: '2026-05-22 15:31', payMethod: '微信支付', studentName: '朱丽华', phone: '13677083117', salesman: '李主任', course: '老年人能力评估师（高级）', price: '¥1680.00', discount: '¥0.00', amount: '¥1680.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 18, orderNo: 'SZ20260521018', createTime: '2026-05-22 16:45', payTime: '', payMethod: '', studentName: '徐明', phone: '15833093118', salesman: '王主管', course: '认知症老人照护', price: '¥880.00', discount: '¥0.00', amount: '¥880.00', source: '代理商', status: '待支付', invoiced: '否' },
+            { id: 19, orderNo: 'SZ20260521019', createTime: '2026-05-22 17:20', payTime: '2026-05-22 17:21', payMethod: '微信支付', studentName: '高秀兰', phone: '13988013119', salesman: '刘老师', course: '健康照护师（高级）', price: '¥1480.00', discount: '¥0.00', amount: '¥1480.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 20, orderNo: 'SZ20260521020', createTime: '2026-05-22 18:00', payTime: '', payMethod: '', studentName: '宋建国', phone: '13622013120', salesman: '陈专员', course: '养老机构管理实务', price: '¥1280.00', discount: '¥0.00', amount: '¥1280.00', source: '学员分享', status: '待支付', invoiced: '否' },
+            { id: 21, orderNo: 'SZ20260521021', createTime: '2026-05-22 19:30', payTime: '2026-05-22 19:31', payMethod: '支付宝', studentName: '邓芳', phone: '13855023121', salesman: '张经理', course: '老年人康复训练指导', price: '¥980.00', discount: '¥0.00', amount: '¥980.00', source: '业务员', status: '已完成', invoiced: '是' },
+            { id: 22, orderNo: 'SZ20260521022', createTime: '2026-05-22 20:15', payTime: '2026-05-22 20:16', payMethod: '微信支付', studentName: '曹明华', phone: '13988033122', salesman: '李主任', course: '养老护理员（中级）', price: '¥980.00', discount: '¥0.00', amount: '¥980.00', source: '代理商', status: '已完成', invoiced: '否' },
+            { id: 23, orderNo: 'SZ20260521023', createTime: '2026-05-22 21:00', payTime: '2026-05-22 21:01', payMethod: '支付宝', studentName: '韩秀珍', phone: '13611043123', salesman: '王主管', course: '老年人权益保障法规', price: '¥380.00', discount: '¥0.00', amount: '¥380.00', source: '业务员', status: '已完成', invoiced: '是' }
+        ];
+
+        // 导出订单
+        function exportOrders() {
+            const headers = ['序号', '订单号', '下单时间', '支付时间', '支付方式', '学员姓名', '手机号', '业务人员', '订单来源', '课程名称', '课程价格', '优惠金额', '实付金额', '订单状态', '是否开票'];
+            
+            const data = orders.map((order, index) => [
+                index + 1,
+                order.orderNo,
+                order.createTime,
+                order.payTime || '',
+                order.payMethod || '',
+                order.studentName,
+                order.phone,
+                order.salesman,
+                order.source,
+                order.course,
+                order.price,
+                order.discount,
+                order.amount,
+                order.status,
+                order.invoiced
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '订单列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
     </script>
 
     <script>

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -205,7 +205,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">系统设置</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">部门管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">部门管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -218,9 +219,31 @@
         <main class="flex-1 overflow-y-auto p-6">
             <!-- 列表视图 -->
             <div id="listView">
+                <!-- 搜索筛选区 -->
+                <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">部门名称</label>
+                            <input type="text" placeholder="搜索部门名称" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">部门主管</label>
+                            <input type="text" placeholder="搜索部门主管" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">创建时间</label>
+                            <input type="date" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-600">
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">搜索</button>
+                            <button class="px-5 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">重置</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 操作栏 -->
                 <div class="flex items-center justify-between mb-6">
-                    <button onclick="showForm()" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新增部门</button>
+                    <button onclick="showForm()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新增部门</button>
                 </div>
 
                 <!-- 数据表格 -->
@@ -229,11 +252,11 @@
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-100">
-                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">序号</th>
-                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">部门名称</th>
-                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">部门主管</th>
-                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30">创建时间</th>
-                                    <th class="px-6 py-4 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-48">操作</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">序号</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">部门名称</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">部门主管</th>
+                                    <th class="px-6 py-4 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">创建时间</th>
+                                    <th class="px-6 py-4 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-48">操作</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -324,7 +347,7 @@
                         </div>
                         <div class="px-6 py-4 bg-gray-50 border-t flex items-center justify-end gap-3">
                             <button onclick="showList()" class="px-6 py-2.5 border border-gray-200 text-gray-600 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors">取消</button>
-                            <button onclick="saveDepartment()" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
+                            <button onclick="saveDepartment()" class="px-6 py-2.5 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
                         </div>
                     </div>
                 </div>

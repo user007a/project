@@ -39,7 +39,7 @@
         </div>
         <div>
           <div class="text-sm text-gray-400">咨询热线</div>
-          <div class="text-lg font-bold text-gray-800">400-888-9999</div>
+          <div class="text-lg font-bold text-gray-800" id="servicePhone">400-XXX-XXXX</div>
         </div>
       </div>
       <button class="px-4 py-2 bg-green-50 text-green-600 rounded-full text-sm font-medium flex items-center gap-1" onclick="callPhone()">
@@ -233,7 +233,12 @@
   }
 
   function callPhone() {
-    alert('正在拨打咨询热线：400-888-9999');
+    var phone = document.getElementById('servicePhone').textContent;
+    if (phone && phone !== '400-XXX-XXXX') {
+      window.location.href = 'tel:' + phone.replace(/-/g, '');
+    } else {
+      alert('客服电话暂未配置');
+    }
   }
 
   function toggleFaq(header) {

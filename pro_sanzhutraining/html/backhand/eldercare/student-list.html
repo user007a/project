@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Microsoft YaHei', 'Inter', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -269,7 +269,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">学员中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">学员管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">学员管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -367,7 +368,7 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button onclick="performSearch()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-1">
+                        <button onclick="performSearch()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors flex items-center gap-1">
                             <span class="iconify" data-icon="ri:search-line"></span>搜索
                         </button>
                         <button onclick="resetSearch()" class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
@@ -377,46 +378,16 @@
 
             <!-- 操作栏 + 表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
-                <div id="tableToolbar" class="px-6 py-4 border-b flex justify-between items-center hidden">
-                    <div class="flex items-center gap-3">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
-                            <span class="text-sm text-gray-600">全选</span>
-                        </label>
-                        <span class="text-sm text-gray-500">已选 <span id="selectedCount" class="font-semibold text-blue-600">0</span> 项</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="batchDelete()" class="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">
-                            <span class="iconify mr-1" data-icon="ri:delete-bin-line"></span>批量删除
-                        </button>
-                        <button onclick="batchExport()" class="px-4 py-2 bg-green-50 text-green-600 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors">
-                            <span class="iconify mr-1" data-icon="ri:download-line"></span>批量导出
-                        </button>
-                        <button onclick="batchChangeStatus('正常')" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
-                            <span class="iconify mr-1" data-icon="ri:checkbox-circle-line"></span>批量启用
-                        </button>
-                        <button onclick="batchChangeStatus('禁用')" class="px-4 py-2 bg-orange-50 text-orange-600 rounded-lg text-sm font-medium hover:bg-orange-100 transition-colors">
-                            <span class="iconify mr-1" data-icon="ri:close-circle-line"></span>批量禁用
-                        </button>
-                    </div>
-                </div>
                 <div class="px-6 py-4 border-b flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <span class="text-sm text-gray-500">共 <span id="recordCount" class="font-semibold text-gray-900">23</span> 条记录</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="showBatchActions()" class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
-                                <span class="iconify" data-icon="ri:checkbox-line"></span>批量操作
-                            </button>
-                        </div>
-                    </div>
+                    <div></div>
                     <div class="flex items-center gap-3">
-                        <button onclick="openAddStudentModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-                            <span class="iconify" data-icon="ri:user-add-line"></span>新增学员
+                        <button onclick="openAddStudentModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
+                            <span class="iconify" data-icon="ri:add-line"></span>新增学员
                         </button>
-                        <button onclick="openImportModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                        <button onclick="importStudents()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
                             <span class="iconify" data-icon="ri:upload-line"></span>导入学员
                         </button>
-                        <button onclick="exportSelectedOrAll()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <button onclick="exportSelectedOrAll()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
                             <span class="iconify" data-icon="ri:download-line"></span>导出学员
                         </button>
                     </div>
@@ -425,10 +396,7 @@
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-100 bg-gray-50/50">
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium w-10">
-                                    <input type="checkbox" id="selectAllHeader" onchange="toggleSelectAll()" class="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
-                                </th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium w-12 whitespace-nowrap">序号</th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">学员姓名</th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">手机号</th>
                                 <th class="px-4 py-3 text-left text-xs text-gray-400 font-medium">已购课程</th>
@@ -609,6 +577,13 @@
                                 <input type="text" id="editName" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">性别</label>
+                                <select id="editGender" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm bg-white">
+                                    <option>男</option>
+                                    <option>女</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1.5">证件类型</label>
                                 <select id="editIdType" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm bg-white">
                                     <option>居民身份证</option>
@@ -723,6 +698,10 @@
                                 <input type="text" id="editIdInfo" placeholder="请输入身份信息" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">详细地址</label>
+                                <input type="text" id="editAddress" placeholder="请输入详细地址" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1.5">报考职业分类代码及名称</label>
                                 <input type="text" id="editCareerCode" placeholder="请输入职业分类代码及名称" class="w-full border border-gray-200 px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
@@ -794,7 +773,7 @@
             <!-- 弹窗底部 -->
             <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
                 <button onclick="closeEditModal()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
-                <button onclick="saveEditStudent()" class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
+                <button onclick="saveEditStudent()" class="px-6 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
             </div>
         </div>
     </div>
@@ -807,7 +786,7 @@
             <div class="px-6 py-4 border-b flex items-center justify-between flex-shrink-0">
                 <h2 class="text-lg font-bold text-gray-900">资料详情</h2>
                 <div class="flex items-center gap-3">
-                    <button id="editBtn" onclick="toggleEditMode()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                    <button id="editBtn" onclick="toggleEditMode()" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
                         <span class="iconify mr-1" data-icon="ri:edit-line"></span>编辑
                     </button>
                     <button id="saveBtn" onclick="saveMaterials()" class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors hidden">
@@ -1330,7 +1309,7 @@
             <!-- 弹窗底部 -->
             <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
                 <button onclick="closeAddStudentModal()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
-                <button onclick="submitAddStudent()" class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">确认新增</button>
+                <button onclick="submitAddStudent()" class="px-6 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">确认新增</button>
             </div>
         </div>
     </div>
@@ -1394,29 +1373,29 @@
     <script>
     // 学员Mock数据
     const students = [
-        { name:'刘秀英', phone:'13822015001', gender:'女', age:42, courses:3, certs:2, time:1860, regDate:'2025-06-15', status:'正常' },
-        { name:'陈建华', phone:'13955023002', gender:'男', age:38, courses:2, certs:1, time:920, regDate:'2025-07-02', status:'正常' },
-        { name:'王丽萍', phone:'13688033003', gender:'女', age:45, courses:4, certs:3, time:3210, regDate:'2025-07-20', status:'正常' },
-        { name:'赵国强', phone:'15866043004', gender:'男', age:35, courses:1, certs:0, time:320, regDate:'2025-08-05', status:'正常' },
-        { name:'孙美华', phone:'13977053005', gender:'女', age:50, courses:3, certs:2, time:2450, regDate:'2025-08-18', status:'正常' },
-        { name:'周建国', phone:'13844063006', gender:'男', age:48, courses:2, certs:1, time:1580, regDate:'2025-09-03', status:'正常' },
-        { name:'李芳', phone:'13633073007', gender:'女', age:33, courses:5, certs:3, time:3780, regDate:'2025-09-15', status:'正常' },
-        { name:'张伟', phone:'15811083008', gender:'男', age:40, courses:1, certs:0, time:560, regDate:'2025-10-01', status:'正常' },
-        { name:'吴秀兰', phone:'13922093009', gender:'女', age:52, courses:2, certs:1, time:1200, regDate:'2025-10-12', status:'禁用' },
-        { name:'郑明华', phone:'13655013010', gender:'男', age:44, courses:3, certs:2, time:2100, regDate:'2025-10-25', status:'正常' },
-        { name:'黄丽珍', phone:'13888023111', gender:'女', age:37, courses:4, certs:2, time:2890, regDate:'2025-11-08', status:'正常' },
-        { name:'林志强', phone:'13966033112', gender:'男', age:29, courses:2, certs:1, time:780, regDate:'2025-11-20', status:'正常' },
-        { name:'何玉兰', phone:'15877043113', gender:'女', age:46, courses:3, certs:2, time:1950, regDate:'2025-12-03', status:'正常' },
-        { name:'马建华', phone:'13699053114', gender:'男', age:41, courses:1, certs:0, time:450, regDate:'2025-12-15', status:'正常' },
-        { name:'胡秀英', phone:'13811063115', gender:'女', age:55, courses:2, certs:1, time:1650, regDate:'2026-01-02', status:'正常' },
-        { name:'杨国庆', phone:'13944073116', gender:'男', age:36, courses:3, certs:1, time:2340, regDate:'2026-01-18', status:'正常' },
-        { name:'朱丽华', phone:'13677083117', gender:'女', age:43, courses:4, certs:3, time:3520, regDate:'2026-02-05', status:'正常' },
-        { name:'徐明', phone:'15833093118', gender:'男', age:31, courses:2, certs:0, time:680, regDate:'2026-02-20', status:'禁用' },
-        { name:'高秀兰', phone:'13988013119', gender:'女', age:49, courses:3, certs:2, time:2680, regDate:'2026-03-08', status:'正常' },
-        { name:'宋建国', phone:'13622013120', gender:'男', age:47, courses:1, certs:0, time:390, regDate:'2026-03-22', status:'正常' },
-        { name:'邓芳', phone:'13855023121', gender:'女', age:34, courses:5, certs:3, time:3640, regDate:'2026-04-10', status:'正常' },
-        { name:'曹明华', phone:'13988033122', gender:'男', age:39, courses:2, certs:1, time:1120, regDate:'2026-04-25', status:'正常' },
-        { name:'韩秀珍', phone:'13611043123', gender:'女', age:51, courses:3, certs:2, time:2270, regDate:'2026-05-08', status:'禁用' },
+        { name:'刘秀英', phone:'13822015001', gender:'女', age:42, courses:3, certs:2, time:1860, regDate:'2025-06-15', status:'正常', idType:'居民身份证', idCard:'110101198306151234', birthDate:'1983-06-15', source:'社会人员', education:'大专', province:'北京市', city:'北京市', nation:'汉族', politics:'群众', workUnit:'北京养老服务中心', postCode:'100000', occupation:'护理员', workDate:'2010-03-01', workYears:15, idAddress:'北京市东城区XX街道XX号', idInfo:'', address:'北京市朝阳区XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'具有初中以上学历，从事养老护理工作3年以上', remark:'无' },
+        { name:'陈建华', phone:'13955023002', gender:'男', age:38, courses:2, certs:1, time:920, regDate:'2025-07-02', status:'正常', idType:'居民身份证', idCard:'110102198707022345', birthDate:'1987-07-02', source:'企业职工', education:'高中/中专', province:'北京市', city:'北京市', nation:'汉族', politics:'共青团员', workUnit:'北京康护集团', postCode:'100010', occupation:'护理主管', workDate:'2008-08-15', workYears:17, idAddress:'北京市西城区XX路XX号', idInfo:'', address:'北京市海淀区XX大厦XX室', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'护理员', oldLevel:'中级', oldCertNo:'2015001234', oldIssueDate:'2015-06-15', applyCondition:'持有中级养老护理员证书，从事相关工作5年以上', remark:'表现优秀' },
+        { name:'王丽萍', phone:'13688033003', gender:'女', age:45, courses:4, certs:3, time:3210, regDate:'2025-07-20', status:'正常', idType:'居民身份证', idCard:'310101197805203456', birthDate:'1978-05-20', source:'社会人员', education:'本科', province:'上海市', city:'上海市', nation:'汉族', politics:'中共党员', workUnit:'上海养老研究院', postCode:'200000', occupation:'研究员', workDate:'2002-09-01', workYears:23, idAddress:'上海市黄浦区XX街XX号', idInfo:'', address:'上海市浦东新区XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'护士', oldLevel:'初级', oldCertNo:'2005006789', oldIssueDate:'2005-12-20', applyCondition:'护理学专业本科毕业，具有护士执业资格', remark:'重点培养对象' },
+        { name:'赵国强', phone:'15866043004', gender:'男', age:35, courses:1, certs:0, time:320, regDate:'2025-08-05', status:'正常', idType:'居民身份证', idCard:'330101199003054567', birthDate:'1990-03-05', source:'在校学生', education:'大专', province:'浙江省', city:'杭州市', nation:'汉族', politics:'共青团员', workUnit:'', postCode:'310000', occupation:'', workDate:'', workYears:0, idAddress:'浙江省杭州市XX区XX路XX号', idInfo:'', address:'浙江省杭州市XX大学', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'养老服务专业在读学生', remark:'应届毕业生' },
+        { name:'孙美华', phone:'13977053005', gender:'女', age:50, courses:3, certs:2, time:2450, regDate:'2025-08-18', status:'正常', idType:'居民身份证', idCard:'440101197308185678', birthDate:'1973-08-18', source:'社会人员', education:'初中', province:'广东省', city:'广州市', nation:'汉族', politics:'群众', workUnit:'广州养老院', postCode:'510000', occupation:'护理员', workDate:'1995-05-01', workYears:30, idAddress:'广东省广州市XX区XX街XX号', idInfo:'', address:'广东省广州市XX小区XX栋', careerCode:'4-10-01-02 养老护理员', certType:'专项能力考核', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事养老护理工作10年以上', remark:'资深护理员' },
+        { name:'周建国', phone:'13844063006', gender:'男', age:48, courses:2, certs:1, time:1580, regDate:'2025-09-03', status:'正常', idType:'居民身份证', idCard:'320101197511036789', birthDate:'1975-11-03', source:'企业职工', education:'高中/中专', province:'江苏省', city:'南京市', nation:'汉族', politics:'群众', workUnit:'南京护理服务公司', postCode:'210000', occupation:'护理员', workDate:'1998-07-15', workYears:27, idAddress:'江苏省南京市XX区XX路XX号', idInfo:'', address:'江苏省南京市XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'具有相关工作经验', remark:'' },
+        { name:'李芳', phone:'13633073007', gender:'女', age:33, courses:5, certs:3, time:3780, regDate:'2025-09-15', status:'正常', idType:'居民身份证', idCard:'370101199212157890', birthDate:'1992-12-15', source:'企业职工', education:'大专', province:'山东省', city:'济南市', nation:'汉族', politics:'中共党员', workUnit:'山东养老集团', postCode:'250000', occupation:'培训师', workDate:'2015-03-01', workYears:10, idAddress:'山东省济南市XX区XX街XX号', idInfo:'', address:'山东省济南市XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'护理员', oldLevel:'高级', oldCertNo:'2018001234', oldIssueDate:'2018-09-10', applyCondition:'持有高级养老护理员证书', remark:'优秀培训师' },
+        { name:'张伟', phone:'15811083008', gender:'男', age:40, courses:1, certs:0, time:560, regDate:'2025-10-01', status:'正常', idType:'居民身份证', idCard:'510101198309208901', birthDate:'1983-09-20', source:'退役军人', education:'高中/中专', province:'四川省', city:'成都市', nation:'汉族', politics:'中共党员', workUnit:'成都退役军人服务中心', postCode:'610000', occupation:'', workDate:'', workYears:0, idAddress:'四川省成都市XX区XX路XX号', idInfo:'', address:'四川省成都市XX街道XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'退役军人优先', remark:'退役军人' },
+        { name:'吴秀兰', phone:'13922093009', gender:'女', age:52, courses:2, certs:1, time:1200, regDate:'2025-10-12', status:'禁用', idType:'居民身份证', idCard:'420101197104109012', birthDate:'1971-04-10', source:'社会人员', education:'小学', province:'湖北省', city:'武汉市', nation:'汉族', politics:'群众', workUnit:'武汉养老院', postCode:'430000', occupation:'护理员', workDate:'1990-06-01', workYears:35, idAddress:'湖北省武汉市XX区XX街XX号', idInfo:'', address:'湖北省武汉市XX小区XX栋', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事养老护理工作20年以上', remark:'因个人原因暂停' },
+        { name:'郑明华', phone:'13655013010', gender:'男', age:44, courses:3, certs:2, time:2100, regDate:'2025-10-25', status:'正常', idType:'居民身份证', idCard:'110103197901250123', birthDate:'1979-01-25', source:'社会人员', education:'本科', province:'北京市', city:'北京市', nation:'汉族', politics:'民主党派', workUnit:'北京老年大学', postCode:'100020', occupation:'教师', workDate:'2004-09-01', workYears:21, idAddress:'北京市朝阳区XX路XX号', idInfo:'', address:'北京市丰台区XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'教师', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'具有相关专业背景', remark:'' },
+        { name:'黄丽珍', phone:'13888023111', gender:'女', age:37, courses:4, certs:2, time:2890, regDate:'2025-11-08', status:'正常', idType:'居民身份证', idCard:'330201198607081234', birthDate:'1986-07-08', source:'企业职工', education:'大专', province:'浙江省', city:'宁波市', nation:'汉族', politics:'共青团员', workUnit:'宁波护理机构', postCode:'315000', occupation:'护理主管', workDate:'2010-08-01', workYears:15, idAddress:'浙江省宁波市XX区XX街XX号', idInfo:'', address:'浙江省宁波市XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'护理员', oldLevel:'中级', oldCertNo:'2014005678', oldIssueDate:'2014-08-15', applyCondition:'持有中级证书，从事管理工作3年以上', remark:'晋升潜力大' },
+        { name:'林志强', phone:'13966033112', gender:'男', age:29, courses:2, certs:1, time:780, regDate:'2025-11-20', status:'正常', idType:'居民身份证', idCard:'350101199405152345', birthDate:'1994-05-15', source:'在校学生', education:'本科', province:'福建省', city:'福州市', nation:'汉族', politics:'共青团员', workUnit:'', postCode:'350000', occupation:'', workDate:'', workYears:0, idAddress:'福建省福州市XX区XX路XX号', idInfo:'', address:'福建省福州市XX大学', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'养老服务专业应届毕业生', remark:'优秀毕业生' },
+        { name:'何玉兰', phone:'15877043113', gender:'女', age:46, courses:3, certs:2, time:1950, regDate:'2025-12-03', status:'正常', idType:'居民身份证', idCard:'440301197702203456', birthDate:'1977-02-20', source:'社会人员', education:'高中/中专', province:'广东省', city:'深圳市', nation:'汉族', politics:'群众', workUnit:'深圳养老院', postCode:'518000', occupation:'护理员', workDate:'1996-03-01', workYears:29, idAddress:'广东省深圳市XX区XX街XX号', idInfo:'', address:'广东省深圳市XX小区XX栋', careerCode:'4-10-01-02 养老护理员', certType:'专项能力考核', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事相关工作15年以上', remark:'' },
+        { name:'马建华', phone:'13699053114', gender:'男', age:41, courses:1, certs:0, time:450, regDate:'2025-12-15', status:'正常', idType:'居民身份证', idCard:'320501198206054567', birthDate:'1982-06-05', source:'企业职工', education:'大专', province:'江苏省', city:'苏州市', nation:'汉族', politics:'群众', workUnit:'苏州护理服务公司', postCode:'215000', occupation:'护理员', workDate:'2005-09-01', workYears:20, idAddress:'江苏省苏州市XX区XX路XX号', idInfo:'', address:'江苏省苏州市XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'具有护理相关经验', remark:'新入职' },
+        { name:'胡秀英', phone:'13811063115', gender:'女', age:55, courses:2, certs:1, time:1650, regDate:'2026-01-02', status:'正常', idType:'居民身份证', idCard:'110104196811155678', birthDate:'1968-11-15', source:'社会人员', education:'初中', province:'北京市', city:'北京市', nation:'汉族', politics:'群众', workUnit:'北京敬老院', postCode:'100030', occupation:'护理员', workDate:'1990-08-01', workYears:35, idAddress:'北京市宣武区XX街XX号', idInfo:'', address:'北京市西城区XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事养老护理工作25年以上', remark:'即将退休' },
+        { name:'杨国庆', phone:'13944073116', gender:'男', age:36, courses:3, certs:1, time:2340, regDate:'2026-01-18', status:'正常', idType:'居民身份证', idCard:'310106198710016789', birthDate:'1987-10-01', source:'退役军人', education:'高中/中专', province:'上海市', city:'上海市', nation:'汉族', politics:'中共党员', workUnit:'上海退役军人事务局', postCode:'200030', occupation:'', workDate:'', workYears:0, idAddress:'上海市徐汇区XX路XX号', idInfo:'', address:'上海市长宁区XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'退役军人优先', remark:'退役军人' },
+        { name:'朱丽华', phone:'13677083117', gender:'女', age:43, courses:4, certs:3, time:3520, regDate:'2026-02-05', status:'正常', idType:'居民身份证', idCard:'440106198003157890', birthDate:'1980-03-15', source:'社会人员', education:'本科', province:'广东省', city:'广州市', nation:'汉族', politics:'中共党员', workUnit:'广州护理学院', postCode:'510080', occupation:'讲师', workDate:'2005-07-01', workYears:20, idAddress:'广东省广州市天河区XX路XX号', idInfo:'', address:'广东省广州市XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'护士', oldLevel:'护师', oldCertNo:'2006001234', oldIssueDate:'2006-05-20', applyCondition:'具有护师资格，从事教学工作10年以上', remark:'骨干教师' },
+        { name:'徐明', phone:'15833093118', gender:'男', age:31, courses:2, certs:0, time:680, regDate:'2026-02-20', status:'禁用', idType:'居民身份证', idCard:'330106199208208901', birthDate:'1992-08-20', source:'企业职工', education:'大专', province:'浙江省', city:'杭州市', nation:'汉族', politics:'群众', workUnit:'杭州护理公司', postCode:'310005', occupation:'护理员', workDate:'2015-06-01', workYears:10, idAddress:'浙江省杭州市西湖区XX街XX号', idInfo:'', address:'浙江省杭州市XX小区XX栋', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'具有护理相关经验', remark:'试用期' },
+        { name:'高秀兰', phone:'13988013119', gender:'女', age:49, courses:3, certs:2, time:2680, regDate:'2026-03-08', status:'正常', idType:'居民身份证', idCard:'320106197401109012', birthDate:'1974-01-10', source:'社会人员', education:'高中/中专', province:'江苏省', city:'南京市', nation:'汉族', politics:'群众', workUnit:'南京养老院', postCode:'210005', occupation:'护理主管', workDate:'1996-05-01', workYears:29, idAddress:'江苏省南京市鼓楼区XX路XX号', idInfo:'', address:'江苏省南京市XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'护理员', oldLevel:'高级', oldCertNo:'2012005678', oldIssueDate:'2012-08-15', applyCondition:'持有高级养老护理员证书，从事管理工作5年以上', remark:'优秀主管' },
+        { name:'宋建国', phone:'13622013120', gender:'男', age:47, courses:1, certs:0, time:390, regDate:'2026-03-22', status:'正常', idType:'居民身份证', idCard:'370106197604250123', birthDate:'1976-04-25', source:'社会人员', education:'大专', province:'山东省', city:'济南市', nation:'汉族', politics:'群众', workUnit:'', postCode:'250005', occupation:'', workDate:'', workYears:0, idAddress:'山东省济南市历下区XX街XX号', idInfo:'', address:'山东省济南市XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'转行人员，有相关兴趣', remark:'新学员' },
+        { name:'邓芳', phone:'13855023121', gender:'女', age:34, courses:5, certs:3, time:3640, regDate:'2026-04-10', status:'正常', idType:'居民身份证', idCard:'420106198909051234', birthDate:'1989-09-05', source:'企业职工', education:'本科', province:'湖北省', city:'武汉市', nation:'汉族', politics:'中共党员', workUnit:'武汉护理集团', postCode:'430005', occupation:'培训经理', workDate:'2014-07-01', workYears:11, idAddress:'湖北省武汉市江汉区XX路XX号', idInfo:'', address:'湖北省武汉市XX小区XX栋', careerCode:'4-10-01-02 养老护理员', certType:'职业技能等级认定', oldCareer:'护士', oldLevel:'护师', oldCertNo:'2015001234', oldIssueDate:'2015-06-15', applyCondition:'护理学专业本科，具有护师资格', remark:'核心骨干' },
+        { name:'曹明华', phone:'13988033122', gender:'男', age:39, courses:2, certs:1, time:1120, regDate:'2026-04-25', status:'正常', idType:'居民身份证', idCard:'510106198405152345', birthDate:'1984-05-15', source:'企业职工', education:'大专', province:'四川省', city:'成都市', nation:'汉族', politics:'共青团员', workUnit:'成都护理中心', postCode:'610005', occupation:'护理员', workDate:'2007-08-01', workYears:18, idAddress:'四川省成都市锦江区XX街XX号', idInfo:'', address:'四川省成都市XX花园XX号', careerCode:'4-10-01-02 养老护理员', certType:'职业技能鉴定', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事护理工作10年以上', remark:'' },
+        { name:'韩秀珍', phone:'13611043123', gender:'女', age:51, courses:3, certs:2, time:2270, regDate:'2026-05-08', status:'禁用', idType:'居民身份证', idCard:'110105197207203456', birthDate:'1972-07-20', source:'社会人员', education:'初中', province:'北京市', city:'北京市', nation:'汉族', politics:'群众', workUnit:'北京养老中心', postCode:'100040', occupation:'护理员', workDate:'1993-04-01', workYears:32, idAddress:'北京市海淀区XX路XX号', idInfo:'', address:'北京市朝阳区XX小区XX号楼', careerCode:'4-10-01-02 养老护理员', certType:'专项能力考核', oldCareer:'', oldLevel:'', oldCertNo:'', oldIssueDate:'', applyCondition:'从事养老护理工作20年以上', remark:'病假中' },
     ];
 
     // 课程进度模拟
@@ -1441,14 +1420,13 @@
         tr.setAttribute('data-row', i + 1);
         tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
         tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, i); };
-        tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(i, e); };
         tr.innerHTML = `
+            <td class="px-4 py-3 text-sm text-gray-500 w-10">${i+1}</td>
             <td class="px-4 py-3">
-                <input type="checkbox" data-index="${i}" onchange="toggleRowSelection(${i}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
-            <td class="px-4 py-3">
-                <span class="text-sm font-medium text-gray-900">${s.name}</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 ${ac} rounded-full flex items-center justify-center text-xs font-medium">${s.name.charAt(0)}</span>
+                    <span class="text-sm font-medium text-gray-900">${s.name}</span>
+                </div>
             </td>
             <td class="px-4 py-3 text-sm text-gray-700">${s.phone.substring(0,3)}****${s.phone.substring(7)}</td>
             <td class="px-4 py-3 text-sm text-gray-700">${s.courses}门</td>
@@ -1457,7 +1435,7 @@
             <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
             <td class="px-4 py-3 text-right">
                 <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
-                <button onclick="editStudent(${i})" class="text-orange-500 hover:text-orange-600 text-sm font-medium mr-3">编辑</button>
+                <button onclick="editStudent(${i}); event.stopPropagation();" class="text-orange-500 hover:text-orange-600 text-sm font-medium mr-3">编辑</button>
                 <button onclick="viewMaterials(${i})" class="text-green-600 hover:text-green-700 text-sm font-medium mr-3">资料</button>
                 <button onclick="deleteStudent(${i})" class="text-red-500 hover:text-red-600 text-sm font-medium">删除</button>
             </td>
@@ -1559,6 +1537,7 @@
         const content = document.getElementById('editModalContent');
 
         document.getElementById('editName').value = s.name;
+        document.getElementById('editPhone').value = s.phone || '';
         document.getElementById('editIdType').value = s.idType || '居民身份证';
         document.getElementById('editIdCard').value = s.idCard || '';
         document.getElementById('editBirthDate').value = s.birthDate || '';
@@ -1607,6 +1586,7 @@
     function saveEditStudent() {
         const s = students[currentEditIdx];
         s.name = document.getElementById('editName').value;
+        s.phone = document.getElementById('editPhone').value;
         s.idType = document.getElementById('editIdType').value;
         s.idCard = document.getElementById('editIdCard').value;
         s.birthDate = document.getElementById('editBirthDate').value;
@@ -1996,12 +1976,8 @@
             tr.setAttribute('data-row', i + 1);
             tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
             tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, students.indexOf(s)); };
-            tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(students.indexOf(s), e); };
             tr.innerHTML = `
-                <td class="px-4 py-3">
-                    <input type="checkbox" data-index="${students.indexOf(s)}" onchange="toggleRowSelection(${students.indexOf(s)}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3 text-sm text-gray-500 w-10">${i+1}</td>
                 <td class="px-4 py-3">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>
@@ -2093,7 +2069,7 @@
             
             // 启用导入按钮
             document.getElementById('submitImportBtn').disabled = false;
-            document.getElementById('submitImportBtn').className = 'px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors';
+            document.getElementById('submitImportBtn').className = 'px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors';
         }
     }
 
@@ -2130,7 +2106,7 @@
             tr.setAttribute('data-row', i + 1);
             tr.className = 'hover:bg-blue-50/30 transition-colors';
             tr.innerHTML = `
-                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3 text-sm text-gray-500 w-10">${i+1}</td>
                 <td class="px-4 py-3">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>
@@ -2147,6 +2123,7 @@
                 <td class="px-4 py-3"><span class="inline-block px-2 py-0.5 ${statusClass} text-xs font-medium rounded-md">${s.status}</span></td>
                 <td class="px-4 py-3 text-right">
                     <button onclick="viewStudent(${i})" class="text-[#1890FF] hover:text-blue-700 text-sm font-medium mr-3">查看</button>
+                    <button onclick="editStudent(${i}); event.stopPropagation();" class="text-orange-500 hover:text-orange-700 text-sm font-medium mr-3">编辑</button>
                     <button onclick="viewMaterials(${i})" class="text-green-600 hover:text-green-700 text-sm font-medium">资料</button>
                 </td>
             `;
@@ -2162,14 +2139,24 @@
 
     // 下载模板
     function downloadTemplate() {
-        // 创建CSV内容
-        const headers = ['学员姓名', '手机号', '身份证号', '邮箱', '学历', '职业', '地址', '备注'];
-        const content = headers.join(',') + '\n';
+        const headers = ['姓名', '性别', '证件类型', '身份证号码', '出生日期', '考生来源', '文化程度', '居住地（省份）', '居住地（市）', '民族', '政治面貌', '联系电话', '工作单位', '邮政编码', '从事职业', '参加工作日期', '职业年限', '身份地址', '身份信息', '详细地址', '报考职业分类代码及名称', '鉴定分类', '原职业', '原等级', '原证书号', '原发证日期', '申报条件', '报名备注'];
+        
+        function escapeCsvField(field) {
+            if (field == null) return '';
+            const str = String(field);
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        }
+        
+        let content = '\uFEFF';
+        content += headers.map(escapeCsvField).join(',') + '\n';
+        content += ['张三', '男', '居民身份证', '110101199001011234', '1990-01-01', '社会人员', '大专', '北京市', '北京市', '汉族', '群众', '13800138001', '北京养老服务中心', '100000', '护理员', '2015-03-01', 10, '北京市东城区XX街道XX号', '', '北京市朝阳区XX小区XX号楼', '4-10-01-02 养老护理员', '职业技能等级认定', '', '', '', '', '具有初中以上学历，从事养老护理工作3年以上', '备注信息示例'].map(escapeCsvField).join(',') + '\n';
+        content += ['李四', '女', '居民身份证', '110102199102022345', '1991-02-02', '企业职工', '本科', '上海市', '上海市', '汉族', '中共党员', '13900139002', '上海康护集团', '200000', '护理主管', '2012-07-01', 13, '上海市黄浦区XX路XX号', '', '上海市浦东新区XX花园XX号', '4-10-01-02 养老护理员', '职业技能鉴定', '护理员', '中级', '2018001234', '2018-06-15', '持有中级养老护理员证书，从事管理工作3年以上', ''].map(escapeCsvField).join(',') + '\n';
 
-        // 创建Blob
         const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
 
-        // 创建下载链接
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
 
@@ -2473,10 +2460,74 @@
             showToast('warning', '请先选择学员', '至少选择一个学员进行导出');
             return;
         }
-        showToast('info', '正在导出...', `已选择 ${selectedRows.size} 名学员数据`);
-        setTimeout(() => {
-            showToast('success', '导出成功', '学员数据已导出为Excel文件');
-        }, 1500);
+        
+        const headers = ['序号', '姓名', '性别', '证件类型', '身份证号码', '出生日期', '考生来源', '文化程度', '居住地（省份）', '居住地（市）', '民族', '政治面貌', '联系电话', '工作单位', '邮政编码', '从事职业', '参加工作日期', '职业年限', '身份地址', '身份信息', '详细地址', '报考职业分类代码及名称', '鉴定分类', '原职业', '原等级', '原证书号', '原发证日期', '申报条件', '报名备注'];
+        
+        const data = [];
+        selectedRows.forEach((index) => {
+            const s = students[index];
+            data.push([
+                data.length + 1,
+                s.name,
+                s.gender || '',
+                s.idType || '',
+                s.idCard || '',
+                s.birthDate || '',
+                s.source || '',
+                s.education || '',
+                s.province || '',
+                s.city || '',
+                s.nation || '',
+                s.politics || '',
+                s.phone || '',
+                s.workUnit || '',
+                s.postCode || '',
+                s.occupation || '',
+                s.workDate || '',
+                s.workYears || 0,
+                s.idAddress || '',
+                s.idInfo || '',
+                s.address || '',
+                s.careerCode || '',
+                s.certType || '',
+                s.oldCareer || '',
+                s.oldLevel || '',
+                s.oldCertNo || '',
+                s.oldIssueDate || '',
+                s.applyCondition || '',
+                s.remark || ''
+            ]);
+        });
+        
+        function escapeCsvField(field) {
+            if (field == null) return '';
+            const str = String(field);
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        }
+        
+        let csvContent = '\uFEFF';
+        csvContent += headers.map(escapeCsvField).join(',') + '\n';
+        data.forEach(row => {
+            csvContent += row.map(escapeCsvField).join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', '学员列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showToast('success', '导出成功', `已导出 ${selectedRows.size} 名学员数据`);
     }
 
     function batchChangeStatus(status) {
@@ -2502,10 +2553,69 @@
         if (selectedRows.size > 0) {
             batchExport();
         } else {
-            showToast('info', '正在导出全部...', '共 ' + students.length + ' 条数据');
-            setTimeout(() => {
-                showToast('success', '导出成功', '学员数据已导出为Excel文件');
-            }, 1500);
+            const headers = ['序号', '姓名', '性别', '证件类型', '身份证号码', '出生日期', '考生来源', '文化程度', '居住地（省份）', '居住地（市）', '民族', '政治面貌', '联系电话', '工作单位', '邮政编码', '从事职业', '参加工作日期', '职业年限', '身份地址', '身份信息', '详细地址', '报考职业分类代码及名称', '鉴定分类', '原职业', '原等级', '原证书号', '原发证日期', '申报条件', '报名备注'];
+            
+            const data = students.map((s, index) => [
+                index + 1,
+                s.name,
+                s.gender || '',
+                s.idType || '',
+                s.idCard || '',
+                s.birthDate || '',
+                s.source || '',
+                s.education || '',
+                s.province || '',
+                s.city || '',
+                s.nation || '',
+                s.politics || '',
+                s.phone || '',
+                s.workUnit || '',
+                s.postCode || '',
+                s.occupation || '',
+                s.workDate || '',
+                s.workYears || 0,
+                s.idAddress || '',
+                s.idInfo || '',
+                s.address || '',
+                s.careerCode || '',
+                s.certType || '',
+                s.oldCareer || '',
+                s.oldLevel || '',
+                s.oldCertNo || '',
+                s.oldIssueDate || '',
+                s.applyCondition || '',
+                s.remark || ''
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '学员列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showToast('success', '导出成功', '学员数据已导出为Excel文件');
         }
     }
 
@@ -2522,12 +2632,8 @@
             tr.setAttribute('data-row', i + 1);
             tr.className = 'hover:bg-blue-50/30 transition-colors cursor-pointer';
             tr.oncontextmenu = function(e) { e.preventDefault(); showContextMenu(e, i); };
-            tr.onclick = function(e) { if(e.target.type !== 'checkbox') toggleRowSelection(i, e); };
             tr.innerHTML = `
-                <td class="px-4 py-3">
-                    <input type="checkbox" data-index="${i}" onchange="toggleRowSelection(${i}, event)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer">
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
+                <td class="px-4 py-3 text-sm text-gray-500 w-10">${i+1}</td>
                 <td class="px-4 py-3">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 ${ac.split(' ')[0]} rounded-full flex items-center justify-center"><span class="${ac.split(' ')[1]} text-xs font-bold">${s.name.charAt(0)}</span></div>

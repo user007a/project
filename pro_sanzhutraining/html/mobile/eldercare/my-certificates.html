@@ -24,12 +24,11 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-[#f5f5f5] font-sans text-[#333]">
-  <div class="max-w-[750px] mx-auto min-h-screen relative pb-16">
+<body class="bg-gray-100 font-sans text-[#333]">
+  <div class="page-container">
 
     <!-- 顶部绿色渐变Header -->
-    <div class="bg-gradient-to-br from-brand to-brand-dark rounded-b-3xl px-4 pt-10 pb-5 relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+    <div class="page-header">
       <div class="flex items-center gap-3 relative z-10">
         <a href="profile.html" class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all hover:bg-white/30 shadow-lg shadow-black/10">
           <span class="iconify text-white text-lg" data-icon="solar:arrow-left-linear"></span>
@@ -45,9 +44,9 @@
         <span class="text-sm font-medium text-[#333]">已获得证书</span>
       </div>
       
-      <div class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300">
+      <div class="card card-hover" onclick="previewCertificate('https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=300&fit=crop', '养老护理员职业技能等级证书', '初级', '人力资源和社会保障部', '2024-03-15', 'JN20240315001')">
         <div class="flex">
-          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
+          <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden rounded-tl-xl rounded-bl-xl">
             <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=260&h=200&fit=crop" alt="养老护理员初级职业技能等级证书" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             <span class="absolute top-1.5 left-1.5 text-[10px] px-1.5 py-0.5 rounded bg-accent-orange text-white font-medium shadow-sm">初级</span>
@@ -66,7 +65,7 @@
               <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
                 <span class="iconify text-xs" data-icon="solar:hash-linear"></span>JN20240315001
               </span>
-              <button class="course-item-btn course-item-btn-primary text-xs">
+              <button class="btn btn-primary btn-sm text-xs" onclick="event.stopPropagation(); previewCertificate('https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400&h=300&fit=crop', '养老护理员职业技能等级证书', '初级', '人力资源和社会保障部', '2024-03-15', 'JN20240315001')">
                 <span class="iconify text-[12px]" data-icon="solar:eye-linear"></span>查看
               </button>
             </div>
@@ -74,7 +73,7 @@
         </div>
       </div>
 
-      <div class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300">
+      <div class="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:shadow-gray-200/80 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300" onclick="previewCertificate('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop', '老年人能力评估师培训证书', '结业', '叁竹职业技能培训学校', '2024-05-20', 'SZ20240520008')">
         <div class="flex">
           <div class="w-[130px] min-h-[100px] flex-shrink-0 relative overflow-hidden">
             <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=260&h=200&fit=crop" alt="老年人能力评估师培训证书" class="w-full h-full object-cover">
@@ -95,7 +94,7 @@
               <span class="text-[11px] text-gray-400 flex items-center gap-0.5">
                 <span class="iconify text-xs" data-icon="solar:hash-linear"></span>SZ20240520008
               </span>
-              <button class="course-item-btn course-item-btn-secondary text-xs">
+              <button class="course-item-btn course-item-btn-secondary text-xs" onclick="event.stopPropagation(); previewCertificate('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop', '老年人能力评估师培训证书', '结业', '叁竹职业技能培训学校', '2024-05-20', 'SZ20240520008')">
                 <span class="iconify text-[12px]" data-icon="solar:eye-linear"></span>查看
               </button>
             </div>
@@ -103,6 +102,44 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- 证书预览弹窗 -->
+    <div id="certificateModal" class="fixed inset-0 z-[100] hidden">
+      <div class="absolute inset-0 bg-black/60" onclick="closeCertificateModal()"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
+        <div class="relative">
+          <img id="certPreviewImg" src="" alt="证书预览" class="w-full">
+          <button onclick="closeCertificateModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center">
+            <span class="iconify text-white" data-icon="solar:close-linear"></span>
+          </button>
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span id="certPreviewLevel" class="text-xs px-2 py-1 rounded-full bg-accent-orange text-white"></span>
+            <span id="certPreviewNo" class="text-xs text-gray-400"></span>
+          </div>
+          <h3 id="certPreviewTitle" class="font-bold text-base text-[#333] mb-2"></h3>
+          <div class="flex items-center gap-1 text-xs text-gray-400 mb-3">
+            <span class="iconify text-sm" data-icon="solar:school-linear"></span>
+            <span id="certPreviewIssuer"></span>
+          </div>
+          <div class="flex items-center gap-1 text-xs text-gray-400">
+            <span class="iconify text-sm" data-icon="solar:calendar-linear"></span>
+            <span id="certPreviewDate"></span>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button class="flex-1 py-3 bg-gray-100 text-[#333] rounded-xl font-medium text-sm flex items-center justify-center gap-2" onclick="downloadCertificate()">
+              <span class="iconify" data-icon="solar:download-bold"></span>
+              下载证书
+            </button>
+            <button class="flex-1 py-3 bg-[#2e9e5a] text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2" onclick="shareCertificate()">
+              <span class="iconify" data-icon="solar:share-bold"></span>
+              分享证书
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 底部5tab导航 -->
@@ -130,5 +167,49 @@
     </div>
 
   </div>
+<script>
+  // 证书预览功能
+  function previewCertificate(imgSrc, title, level, issuer, date, certNo) {
+    document.getElementById('certPreviewImg').src = imgSrc;
+    document.getElementById('certPreviewTitle').textContent = title;
+    document.getElementById('certPreviewLevel').textContent = level;
+    document.getElementById('certPreviewIssuer').textContent = issuer;
+    document.getElementById('certPreviewDate').textContent = date;
+    document.getElementById('certPreviewNo').textContent = '证书编号: ' + certNo;
+    
+    // 根据证书等级设置标签颜色
+    var levelTag = document.getElementById('certPreviewLevel');
+    levelTag.className = 'text-xs px-2 py-1 rounded-full text-white';
+    if (level === '初级') {
+      levelTag.classList.add('bg-accent-orange');
+    } else if (level === '中级') {
+      levelTag.classList.add('bg-accent-blue');
+    } else if (level === '高级') {
+      levelTag.classList.add('bg-accent-purple');
+    } else if (level === '结业') {
+      levelTag.classList.add('bg-accent-cyan');
+    } else {
+      levelTag.classList.add('bg-brand');
+    }
+    
+    document.getElementById('certificateModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCertificateModal() {
+    document.getElementById('certificateModal').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function downloadCertificate() {
+    alert('证书下载功能已触发，请在浏览器中保存图片');
+    closeCertificateModal();
+  }
+
+  function shareCertificate() {
+    alert('分享功能已触发，正在生成分享链接...');
+    closeCertificateModal();
+  }
+</script>
 </body>
 </html>

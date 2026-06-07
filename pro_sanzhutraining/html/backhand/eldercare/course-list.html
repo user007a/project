@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: -apple-system, 'Microsoft YaHei', 'PingFang SC', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -209,7 +209,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">课程中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">课程管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">课程管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -399,7 +400,7 @@
                             </div>
                         </div>
                         <div class="flex items-end gap-3">
-                            <button class="px-8 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all whitespace-nowrap">搜索</button>
+                            <button class="px-8 py-2.5 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all whitespace-nowrap">搜索</button>
                             <button class="px-6 py-2.5 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-300 transition-all"><span class="iconify mr-1.5 text-sm" data-icon="ri:refresh-cw-line"></span>重置</button>
                         </div>
                     </div>
@@ -411,13 +412,13 @@
                 <div class="px-6 py-4 border-b flex items-center justify-between">
                     <div></div>
                     <div class="flex items-center gap-3">
-                        <a href="course-form.html" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <a href="course-form.html" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
                             <span class="iconify" data-icon="ri:add-line"></span>新建课程
                         </a>
-                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                        <button onclick="importCourse()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
                             <span class="iconify" data-icon="ri:upload-line"></span>导入课程
                         </button>
-                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <button onclick="exportCourses()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
                             <span class="iconify" data-icon="ri:download-line"></span>导出课程
                         </button>
                     </div>
@@ -1032,29 +1033,26 @@
 
     <script>
         const courses = [
-            { name: '养老护理员（初级）培训班', category: '养老护理员', price: '¥680', hours: '32课时', teacher: '王德明', buyers: '586', desc: '本课程面向养老护理行业初学者，系统讲解养老护理基础知识与实操技能，涵盖老年人日常生活照料、基础护理操作、安全防护等内容，帮助学员掌握养老护理员初级岗位必备技能。' },
-            { name: '养老护理员（中级）培训班', category: '养老护理员', price: '¥980', hours: '48课时', teacher: '王德明', buyers: '312', desc: '在初级基础上深入学习养老护理专业知识，包括慢病管理、康复护理、心理疏导等中级技能，适合已有一定护理经验的从业人员提升专业水平。' },
-            { name: '养老护理员（高级）培训班', category: '养老护理员', price: '¥1,580', hours: '64课时', teacher: '李秀英', buyers: '186', desc: '面向高级养老护理人才培养，涵盖护理管理、团队协作、质量管控等高级内容，培养具备管理能力的高级护理人才。' },
-            { name: '老年人能力评估师（初级）', category: '能力评估师', price: '¥880', hours: '36课时', teacher: '张建国', buyers: '423', desc: '系统学习老年人能力评估基础知识，掌握日常生活活动能力、精神状态等评估方法与标准。' },
-            { name: '老年人能力评估师（中级）', category: '能力评估师', price: '¥1,180', hours: '52课时', teacher: '张建国', buyers: '278', desc: '深入学习老年人综合能力评估技术，掌握多维度评估工具应用和评估报告撰写。' },
-            { name: '老年人能力评估师（高级）', category: '能力评估师', price: '¥1,680', hours: '68课时', teacher: '陈慧芳', buyers: '145', desc: '面向高级评估师培养，学习评估体系设计、质量审核、评估团队管理等高级内容。' },
-            { name: '健康照护师（初级）培训班', category: '健康照护师', price: '¥780', hours: '32课时', teacher: '刘志强', buyers: '351', desc: '学习健康照护基本知识与技能，包括健康监测、基础照护、生活支持等内容。' },
-            { name: '健康照护师（中级）培训班', category: '健康照护师', price: '¥1,080', hours: '48课时', teacher: '杨美华', buyers: '223', desc: '提升健康照护专业技能，学习慢性病管理、康复辅助、心理健康照护等中级内容。' },
-            { name: '健康照护师（高级）培训班', category: '健康照护师', price: '¥1,480', hours: '64课时', teacher: '杨美华', buyers: '118', desc: '高级健康照护人才培养，涵盖照护方案设计、照护质量管理、团队培训等。' },
-            { name: '营养配餐员（初级）培训班', category: '营养配餐员', price: '¥580', hours: '28课时', teacher: '赵国平', buyers: '278', desc: '学习老年人营养基础知识与配餐技能，掌握老年人膳食搭配与营养管理。' },
-            { name: '营养配餐员（中级）培训班', category: '营养配餐员', price: '¥880', hours: '44课时', teacher: '孙丽娟', buyers: '165', desc: '深入学习老年营养学，掌握特殊膳食制作、营养评估与干预等中级技能。' },
-            { name: '养老护理实操技能强化班', category: '养老护理员', price: '¥1,280', hours: '56课时', teacher: '王德明', buyers: '203', desc: '专注于实操技能训练，通过大量模拟演练提升护理操作熟练度和应变能力。' },
-            { name: '老年人心理照护专题课程', category: '健康照护师', price: '¥680', hours: '24课时', teacher: '陈慧芳', buyers: '312', desc: '学习老年人心理特点与沟通技巧，掌握常见心理问题的识别与照护方法。' },
-            { name: '居家养老服务规范培训', category: '养老护理员', price: '¥580', hours: '20课时', teacher: '李秀英', buyers: '189', desc: '学习居家养老服务标准与规范，掌握上门服务流程与操作要点。' },
-            { name: '老年人应急救护技能培训', category: '健康照护师', price: '¥780', hours: '28课时', teacher: '刘志强', buyers: '267', desc: '学习老年人常见突发事件应急处置，包括心肺复苏、创伤救护等技能。' },
-            { name: '失能老人照护专项培训', category: '养老护理员', price: '¥1,180', hours: '52课时', teacher: '王德明', buyers: '156', desc: '针对失能老人照护需求，学习全面照护方案制定与实施，包括生活照料、康复训练等。' },
-            { name: '老年人营养与膳食管理', category: '营养配餐员', price: '¥680', hours: '32课时', teacher: '赵国平', buyers: '198', desc: '系统学习老年营养学理论与实践，掌握老年人膳食管理技能。' },
-            { name: '养老机构管理实务', category: '养老护理员', price: '¥1,280', hours: '48课时', teacher: '周明辉', buyers: '0', desc: '面向养老机构管理人员，学习运营管理、质量管控、人力资源管理等实务知识。' },
-            { name: '老年人康复训练指导', category: '健康照护师', price: '¥980', hours: '36课时', teacher: '刘志强', buyers: '0', desc: '学习老年人常见疾病的康复训练方法与指导技术。' },
-            { name: '认知症老人照护专题', category: '养老护理员', price: '¥880', hours: '32课时', teacher: '陈慧芳', buyers: '234', desc: '深入学习认知症老人照护方法，包括行为管理、环境营造、沟通技巧等。' },
-            { name: '老年人常见疾病防护', category: '健康照护师', price: '¥680', hours: '24课时', teacher: '杨美华', buyers: '345', desc: '学习老年人常见疾病的预防、识别与基础照护知识。' },
-            { name: '养老服务礼仪与沟通', category: '养老护理员', price: '¥480', hours: '16课时', teacher: '李秀英', buyers: '412', desc: '学习养老服务中的职业礼仪规范与高效沟通技巧。' },
-            { name: '老年人权益保障法规解读', category: '能力评估师', price: '¥380', hours: '12课时', teacher: '张建国', buyers: '267', desc: '解读老年人权益保障相关法律法规，增强法律意识与服务规范。' }
+            { id: 1, name: '养老护理员（初级）培训班', category: '养老护理员', type: '培训', level: '初级', teacher: '王德明', price: '¥680', hours: '32课时', totalHours: '32', validDays: '365', sort: '1', desc: '本课程面向养老护理行业初学者，系统讲解养老护理基础知识与实操技能，涵盖老年人日常生活照料、基础护理操作、安全防护等内容，帮助学员掌握养老护理员初级岗位必备技能。', suitable: '养老护理行业初学者、有志从事养老护理工作的人员', qa: '1. 问：没有护理经验可以学习吗？答：可以，本课程从零开始教学。2. 问：学完能直接上岗吗？答：通过考试后可获得初级护理员证书。', status: '已上架', isHot: false, isRecommend: true, canCert: true, isSubsidy: false, isRequired: false, isFree: false, buyers: '586', createTime: '2024-06-15' },
+            { id: 2, name: '养老护理员（中级）培训班', category: '养老护理员', type: '培训', level: '中级', teacher: '王德明', price: '¥980', hours: '48课时', totalHours: '48', validDays: '365', sort: '2', desc: '在初级基础上深入学习养老护理专业知识，包括慢病管理、康复护理、心理疏导等中级技能，适合已有一定护理经验的从业人员提升专业水平。', suitable: '有1年以上护理经验的从业人员', qa: '1. 问：需要什么基础才能学习？答：需要初级护理员证书或1年以上护理经验。', status: '已上架', isHot: true, isRecommend: true, canCert: true, isSubsidy: true, isRequired: true, isFree: false, buyers: '312', createTime: '2024-07-20' },
+            { id: 3, name: '养老护理员（高级）培训班', category: '养老护理员', type: '培训', level: '高级', teacher: '李秀英', price: '¥1,580', hours: '64课时', totalHours: '64', validDays: '365', sort: '3', desc: '面向高级养老护理人才培养，涵盖护理管理、团队协作、质量管控等高级内容，培养具备管理能力的高级护理人才。', suitable: '有3年以上护理经验的从业人员', qa: '1. 问：学完能担任管理岗位吗？答：通过考试后可胜任护理主管岗位。', status: '已上架', isHot: false, isRecommend: true, canCert: true, isSubsidy: true, isRequired: true, isFree: false, buyers: '186', createTime: '2024-08-10' },
+            { id: 4, name: '老年人能力评估师（初级）', category: '能力评估师', type: '培训', level: '初级', teacher: '张建国', price: '¥880', hours: '36课时', totalHours: '36', validDays: '365', sort: '4', desc: '系统学习老年人能力评估基础知识，掌握日常生活活动能力、精神状态等评估方法与标准。', suitable: '从事或准备从事老年人评估工作的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: false, isRequired: false, isFree: false, buyers: '423', createTime: '2024-09-05' },
+            { id: 5, name: '老年人能力评估师（中级）', category: '能力评估师', type: '培训', level: '中级', teacher: '张建国', price: '¥1,180', hours: '52课时', totalHours: '52', validDays: '365', sort: '5', desc: '深入学习老年人综合能力评估技术，掌握多维度评估工具应用和评估报告撰写。', suitable: '有初级评估师证书或2年以上评估经验', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: true, isRequired: true, isFree: false, buyers: '278', createTime: '2024-10-15' },
+            { id: 6, name: '老年人能力评估师（高级）', category: '能力评估师', type: '培训', level: '高级', teacher: '陈慧芳', price: '¥1,680', hours: '68课时', totalHours: '68', validDays: '365', sort: '6', desc: '面向高级评估师培养，学习评估体系设计、质量审核、评估团队管理等高级内容。', suitable: '有中级评估师证书或3年以上评估经验', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: true, isRequired: true, isFree: false, buyers: '145', createTime: '2024-11-20' },
+            { id: 7, name: '健康照护师（初级）培训班', category: '健康照护师', type: '培训', level: '初级', teacher: '刘志强', price: '¥780', hours: '32课时', totalHours: '32', validDays: '365', sort: '7', desc: '学习健康照护基本知识与技能，包括健康监测、基础照护、生活支持等内容。', suitable: '从事或准备从事健康照护工作的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: false, isRequired: false, isFree: false, buyers: '351', createTime: '2024-12-01' },
+            { id: 8, name: '健康照护师（中级）培训班', category: '健康照护师', type: '培训', level: '中级', teacher: '杨美华', price: '¥1,080', hours: '48课时', totalHours: '48', validDays: '365', sort: '8', desc: '提升健康照护专业技能，学习慢性病管理、康复辅助、心理健康照护等中级内容。', suitable: '有初级照护师证书或2年以上照护经验', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: true, isRequired: false, isFree: false, buyers: '223', createTime: '2025-01-15' },
+            { id: 9, name: '健康照护师（高级）培训班', category: '健康照护师', type: '培训', level: '高级', teacher: '杨美华', price: '¥1,480', hours: '64课时', totalHours: '64', validDays: '365', sort: '9', desc: '高级健康照护人才培养，涵盖照护方案设计、照护质量管理、团队培训等。', suitable: '有中级照护师证书或3年以上照护经验', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: true, isRequired: false, isFree: false, buyers: '118', createTime: '2025-02-20' },
+            { id: 10, name: '营养配餐员（初级）培训班', category: '营养配餐员', type: '培训', level: '初级', teacher: '赵国平', price: '¥580', hours: '28课时', totalHours: '28', validDays: '365', sort: '10', desc: '学习老年人营养基础知识与配餐技能，掌握老年人膳食搭配与营养管理。', suitable: '从事或准备从事营养配餐工作的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: false, isRequired: false, isFree: false, buyers: '278', createTime: '2025-03-10' },
+            { id: 11, name: '营养配餐员（中级）培训班', category: '营养配餐员', type: '培训', level: '中级', teacher: '孙丽娟', price: '¥880', hours: '44课时', totalHours: '44', validDays: '365', sort: '11', desc: '深入学习老年营养学，掌握特殊膳食制作、营养评估与干预等中级技能。', suitable: '有初级配餐员证书或2年以上配餐经验', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: true, isSubsidy: true, isRequired: false, isFree: false, buyers: '165', createTime: '2025-04-15' },
+            { id: 12, name: '养老护理实操技能强化班', category: '养老护理员', type: '培训', level: '初级', teacher: '王德明', price: '¥1,280', hours: '56课时', totalHours: '56', validDays: '180', sort: '12', desc: '专注于实操技能训练，通过大量模拟演练提升护理操作熟练度和应变能力。', suitable: '有一定护理基础想提升实操能力的人员', qa: '', status: '已上架', isHot: true, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '203', createTime: '2025-05-20' },
+            { id: 13, name: '老年人心理照护专题课程', category: '健康照护师', type: '专题', level: '', teacher: '陈慧芳', price: '¥680', hours: '24课时', totalHours: '24', validDays: '90', sort: '13', desc: '学习老年人心理特点与沟通技巧，掌握常见心理问题的识别与照护方法。', suitable: '所有养老护理从业人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '312', createTime: '2025-06-10' },
+            { id: 14, name: '居家养老服务规范培训', category: '养老护理员', type: '培训', level: '', teacher: '李秀英', price: '¥580', hours: '20课时', totalHours: '20', validDays: '90', sort: '14', desc: '学习居家养老服务标准与规范，掌握上门服务流程与操作要点。', suitable: '提供居家养老服务的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '189', createTime: '2025-07-15' },
+            { id: 15, name: '老年人应急救护技能培训', category: '健康照护师', type: '专题', level: '', teacher: '刘志强', price: '¥780', hours: '28课时', totalHours: '28', validDays: '90', sort: '15', desc: '学习老年人常见突发事件应急处置，包括心肺复苏、创伤救护等技能。', suitable: '所有养老护理从业人员', qa: '', status: '已上架', isHot: false, isRecommend: true, canCert: false, isSubsidy: false, isRequired: true, isFree: false, buyers: '267', createTime: '2025-08-20' },
+            { id: 16, name: '失能老人照护专项培训', category: '养老护理员', type: '专项', level: '', teacher: '王德明', price: '¥1,180', hours: '52课时', totalHours: '52', validDays: '180', sort: '16', desc: '针对失能老人照护需求，学习全面照护方案制定与实施，包括生活照料、康复训练等。', suitable: '有中级护理员证书的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: false, isSubsidy: true, isRequired: false, isFree: false, buyers: '156', createTime: '2025-09-10' },
+            { id: 17, name: '老年人营养与膳食管理', category: '营养配餐员', type: '专题', level: '', teacher: '赵国平', price: '¥680', hours: '32课时', totalHours: '32', validDays: '90', sort: '17', desc: '系统学习老年营养学理论与实践，掌握老年人膳食管理技能。', suitable: '从事老年人膳食管理的人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '198', createTime: '2025-10-15' },
+            { id: 18, name: '养老机构管理实务', category: '养老护理员', type: '培训', level: '', teacher: '周明辉', price: '¥1,280', hours: '48课时', totalHours: '48', validDays: '365', sort: '18', desc: '面向养老机构管理人员，学习运营管理、质量管控、人力资源管理等实务知识。', suitable: '养老机构管理人员或预备管理人员', qa: '', status: '草稿', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '0', createTime: '2024-12-20' },
+            { id: 19, name: '老年人康复训练指导', category: '健康照护师', type: '专题', level: '', teacher: '刘志强', price: '¥980', hours: '36课时', totalHours: '36', validDays: '180', sort: '19', desc: '学习老年人常见疾病的康复训练方法与指导技术。', suitable: '从事康复护理工作的人员', qa: '', status: '草稿', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '0', createTime: '2024-12-18' },
+            { id: 20, name: '认知症老人照护专题', category: '养老护理员', type: '专题', level: '', teacher: '陈慧芳', price: '¥880', hours: '32课时', totalHours: '32', validDays: '90', sort: '20', desc: '深入学习认知症老人照护方法，包括行为管理、环境营造、沟通技巧等。', suitable: '护理认知症老人的护理人员', qa: '', status: '已上架', isHot: false, isRecommend: false, canCert: false, isSubsidy: false, isRequired: false, isFree: false, buyers: '234', createTime: '2024-12-15' }
         ];
 
         function openDetail(index) {
@@ -1108,6 +1106,102 @@
         }
 
         renderPagination(1);
+
+        // 导入课程
+        function importCourse() {
+            alert('请先下载导入模板，填写数据后再导入！');
+            downloadCourseTemplate();
+        }
+
+        // 下载课程导入模板
+        function downloadCourseTemplate() {
+            const headers = ['课程名称', '课程类型', '课程分类', '课程简介', '课程时长', '难度等级', '讲师姓名', '课程状态', '创建时间'];
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            csvContent += ['养老护理员（初级）培训班', '职业技能', '养老护理员', '本课程面向养老护理行业初学者', '32课时', '初级', '王德明', '正常', '2026-05-01'].map(escapeCsvField).join(',') + '\n';
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '课程导入模板.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // 导出课程
+        function exportCourses() {
+            const headers = ['序号', '课程名称', '课程类型', '课程分类', '授课讲师', '课程价格', '课程简介', '适合人群', '课程常见问答', '课程时长', '总课时数', '学习有效期(天)', '排序权重', '难度等级', '课程状态', '是否热门', '是否推荐', '可申请证书', '是否政府补贴', '是否持证上岗必备', '是否免费', '购买人数', '创建时间'];
+            
+            const data = courses.map((course, index) => [
+                index + 1,
+                course.name,
+                course.type || '',
+                course.category,
+                course.teacher || '',
+                course.price,
+                course.desc || '',
+                course.suitable || '',
+                course.qa || '',
+                course.hours,
+                course.totalHours || '',
+                course.validDays || '',
+                course.sort || '',
+                course.level || '',
+                course.status,
+                course.isHot ? '是' : '否',
+                course.isRecommend ? '是' : '否',
+                course.canCert ? '是' : '否',
+                course.isSubsidy ? '是' : '否',
+                course.isRequired ? '是' : '否',
+                course.isFree ? '是' : '否',
+                course.buyers,
+                course.createTime || ''
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '课程列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
     </script>
 
     <script>

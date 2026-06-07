@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -205,7 +205,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">系统设置</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">用户管理</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">用户管理</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -255,38 +256,43 @@
                             </select>
                         </div>
                         <div class="flex items-end gap-2">
-                            <button class="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">搜索</button>
+                            <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">搜索</button>
                             <button class="px-5 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">重置</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 操作栏 -->
-                <div class="flex items-center justify-between mb-4">
-                    <button onclick="showForm()" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新建用户</button>
-                    <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">12</span> 位用户</span>
-                </div>
-
                 <!-- 数据表格 -->
                 <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b flex items-center justify-between">
+                        <span class="text-sm text-gray-500">共 <span class="font-semibold text-gray-900">10</span> 名用户</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="showForm()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新建用户</button>
+                            <button onclick="exportUsers()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
+                                <span class="iconify" data-icon="ri:download-line"></span>导出用户
+                            </button>
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-100">
-                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-12">序号</th>
-                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[120px]">用户名</th>
-                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[100px]">真实姓名</th>
-                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[130px] whitespace-nowrap">手机号</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[120px] whitespace-nowrap">所在部门</th>
-                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[120px] whitespace-nowrap">角色</th>
-                                    <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[80px] whitespace-nowrap">状态</th>
-                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[160px] whitespace-nowrap">最后登录时间</th>
-                                    <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/30 w-[160px]">操作</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-12">序号</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[60px]">头像</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[110px]">用户名</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[100px]">真实姓名</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[130px] whitespace-nowrap">手机号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[120px] whitespace-nowrap">所在部门</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[120px] whitespace-nowrap">角色</th>
+                                    <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[80px] whitespace-nowrap">状态</th>
+                                    <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[160px] whitespace-nowrap">最后登录时间</th>
+                                    <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[160px]">操作</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="1">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">1</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-red-100 rounded-full flex items-center justify-center"><span class="text-red-600 text-xs font-bold">王</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">admin_wang</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">王管理</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">138****1234</td>
@@ -298,6 +304,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="2">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">2</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center"><span class="text-green-600 text-xs font-bold">李</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">ops_li</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">李运营</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">139****5678</td>
@@ -309,6 +316,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="3">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">3</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center"><span class="text-purple-600 text-xs font-bold">张</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">editor_zhang</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">张编辑</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">136****9012</td>
@@ -320,6 +328,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="4">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">4</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-pink-100 rounded-full flex items-center justify-center"><span class="text-pink-600 text-xs font-bold">刘</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">ta_liu</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">刘助教</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">158****3456</td>
@@ -331,6 +340,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="5">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">5</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center"><span class="text-orange-600 text-xs font-bold">陈</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">audit_chen</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">陈审核</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">135****7890</td>
@@ -342,6 +352,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="6">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">6</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 text-xs font-bold">赵</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">cs_zhao</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">赵客服</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">137****2345</td>
@@ -353,6 +364,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="7">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">7</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center"><span class="text-green-600 text-xs font-bold">周</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">fin_zhou</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">周财务</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">159****6789</td>
@@ -364,6 +376,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="8">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">8</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center"><span class="text-gray-600 text-xs font-bold">吴</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-400">teacher_wu</td>
                                     <td class="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">吴讲师</td>
                                     <td class="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">136****0123</td>
@@ -375,6 +388,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="9">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">9</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 text-xs font-bold">郑</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">admin_zheng</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">郑管理</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">138****4567</td>
@@ -386,6 +400,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="10">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">10</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center"><span class="text-orange-600 text-xs font-bold">黄</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">ops_huang</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">黄运营</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">139****8901</td>
@@ -397,6 +412,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="11">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">11</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center"><span class="text-gray-600 text-xs font-bold">林</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-400">editor_lin</td>
                                     <td class="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">林编辑</td>
                                     <td class="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">158****2345</td>
@@ -408,6 +424,7 @@
                                 </tr>
                                 <tr class="hover:bg-blue-50/30 transition-all" data-row="12">
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">12</td>
+                                    <td class="px-4 py-3"><div class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center"><span class="text-blue-600 text-xs font-bold">何</span></div></td>
                                     <td class="px-4 py-3 text-sm font-medium text-gray-900">ta_he</td>
                                     <td class="px-4 py-3 text-sm text-gray-700">何助教</td>
                                     <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">135****5678</td>
@@ -445,7 +462,7 @@
                                         <span class="iconify text-gray-400 text-3xl" data-icon="ri:user-line"></span>
                                     </div>
                                     <div>
-                                        <label class="block px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-blue-700 transition-colors">
+                                        <label class="block px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-blue-700 transition-colors">
                                             <input type="file" accept="image/*" class="hidden" id="avatarInput" onchange="previewAvatar(event)">
                                             <span class="iconify mr-2" data-icon="ri:upload-line"></span>上传头像
                                         </label>
@@ -500,7 +517,7 @@
                                     <div class="flex items-center gap-3 mt-2">
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" checked class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1890FF]"></div>
                                             <span class="ml-3 text-sm text-gray-700">正常</span>
                                         </label>
                                     </div>
@@ -517,7 +534,7 @@
                         </div>
                         <div class="px-6 py-4 bg-gray-50 border-t flex items-center justify-end gap-3">
                             <button onclick="showList()" class="px-6 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
-                            <button class="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
+                            <button class="px-6 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">保存</button>
                         </div>
                     </div>
                 </div>
@@ -581,6 +598,65 @@
                 html += `<button onclick="renderPagination(${page + 1})" class="px-3 py-1.5 text-sm border rounded-lg ${page === totalPages ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${page === totalPages ? 'disabled' : ''}>下一页</button>`;
                 paginationBtns.innerHTML = html;
             }
+        }
+
+        // 用户完整数据
+        const users = [
+            { id: 1, username: 'admin', realName: '王德明', phone: '13800138001', email: 'admin@example.com', department: '技术部', role: '超级管理员', status: '正常', lastLogin: '2026-05-21 10:30' },
+            { id: 2, username: 'operator', realName: '李秀英', phone: '13800138002', email: 'operator@example.com', department: '运营部', role: '运营数据员', status: '正常', lastLogin: '2026-05-21 09:15' },
+            { id: 3, username: 'content', realName: '张建国', phone: '13800138003', email: 'content@example.com', department: '内容部', role: '运营数据员', status: '正常', lastLogin: '2026-05-20 16:45' },
+            { id: 4, username: 'edu', realName: '王丽华', phone: '13800138004', email: 'edu@example.com', department: '教务部', role: '运营数据员', status: '禁用', lastLogin: '2026-05-18 14:20' },
+            { id: 5, username: 'service', realName: '陈明远', phone: '13800138005', email: 'service@example.com', department: '客服部', role: '运营数据员', status: '正常', lastLogin: '2026-05-21 11:00' },
+            { id: 6, username: 'finance', realName: '杨美华', phone: '13800138006', email: 'finance@example.com', department: '财务部', role: '运营数据员', status: '正常', lastLogin: '2026-05-21 08:30' },
+            { id: 7, username: 'research', realName: '赵国强', phone: '13800138007', email: 'research@example.com', department: '教研部', role: '运营数据员', status: '正常', lastLogin: '2026-05-20 15:00' },
+            { id: 8, username: 'tech01', realName: '孙丽华', phone: '13800138008', email: 'tech01@example.com', department: '技术部', role: '运营数据员', status: '正常', lastLogin: '2026-05-21 09:00' },
+            { id: 9, username: 'tech02', realName: '周明辉', phone: '13800138009', email: 'tech02@example.com', department: '技术部', role: '运营数据员', status: '正常', lastLogin: '2026-05-20 10:30' },
+            { id: 10, username: 'oper01', realName: '吴玉珍', phone: '13800138010', email: 'oper01@example.com', department: '运营部', role: '运营数据员', status: '禁用', lastLogin: '2026-05-15 14:00' }
+        ];
+
+        // 导出用户
+        function exportUsers() {
+            const headers = ['序号', '用户名', '真实姓名', '手机号', '邮箱', '所在部门', '角色', '状态', '最后登录时间'];
+            
+            const data = users.map((user, index) => [
+                index + 1,
+                user.username,
+                user.realName,
+                user.phone,
+                user.email,
+                user.department,
+                user.role,
+                user.status,
+                user.lastLogin
+            ]);
+            
+            function escapeCsvField(field) {
+                if (field == null) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            let csvContent = '\uFEFF';
+            csvContent += headers.map(escapeCsvField).join(',') + '\n';
+            data.forEach(row => {
+                csvContent += row.map(escapeCsvField).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', '用户列表_' + new Date().toISOString().slice(0, 10) + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         renderPagination(1);

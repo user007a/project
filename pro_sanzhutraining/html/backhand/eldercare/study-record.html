@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>
-        * { font-family: 'Microsoft YaHei', 'Inter', sans-serif; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -201,7 +201,8 @@
     <div class="flex-1 flex flex-col min-w-0">
         <!-- 顶部栏 -->
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
+            <div>
+                <nav class="text-xs text-gray-400 mb-0.5"><a href="dashboard.html" class="hover:text-gray-600 transition-colors">首页</a><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-500">学员中心</span><span class="mx-1.5 text-gray-300">/</span><span class="text-gray-600">学习记录</span></nav>
                 <h1 class="text-lg font-bold text-gray-900">学习记录</h1>
             </div>
             <div class="flex items-center gap-4">
@@ -259,7 +260,7 @@
                         </select>
                     </div>
                     <div class="flex items-end gap-2">
-                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">搜索</button>
+                        <button class="px-5 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">搜索</button>
                         <button class="px-5 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">重置</button>
                     </div>
                 </div>
@@ -267,6 +268,15 @@
 
             <!-- 数据表格 -->
             <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-900">学习记录列表</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-500">共 50 条记录</span>
+                        <button onclick="exportRecords()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors">
+                            <span class="iconify" data-icon="ri:download-line"></span>导出记录
+                        </button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
@@ -376,29 +386,29 @@
     <script>
     // 学习记录Mock数据
     const records = [
-        { name:'刘秀英', phone:'13822015001', course:'养老护理员（初级）', chapter:'第一章 养老护理概述', duration:86, progress:75, status:'进行中', start:'2026-04-12 09:30', last:'2026-04-12 11:00' },
-        { name:'陈建华', phone:'13955023002', course:'养老护理员（中级）', chapter:'第三章 老年人日常护理', duration:120, progress:100, status:'已完成', start:'2026-04-08 14:00', last:'2026-04-08 16:05' },
-        { name:'王丽萍', phone:'13688033003', course:'老年人能力评估师（初级）', chapter:'第二章 评估方法与工具', duration:65, progress:45, status:'进行中', start:'2026-04-15 10:00', last:'2026-04-15 11:10' },
-        { name:'赵国强', phone:'15866043004', course:'健康照护师（初级）', chapter:'第一章 健康照护基础', duration:32, progress:20, status:'进行中', start:'2026-04-20 08:30', last:'2026-04-20 09:05' },
-        { name:'孙美华', phone:'13977053005', course:'营养配餐员（初级）', chapter:'第四章 老年人营养配餐', duration:95, progress:100, status:'已完成', start:'2026-04-05 13:00', last:'2026-04-05 14:40' },
-        { name:'周建国', phone:'13844063006', course:'养老护理员（高级）', chapter:'第五章 临终关怀', duration:150, progress:100, status:'已完成', start:'2026-04-02 09:00', last:'2026-04-02 11:35' },
-        { name:'李芳', phone:'13633073007', course:'老年人能力评估师（中级）', chapter:'第三章 评估报告撰写', duration:42, progress:30, status:'进行中', start:'2026-04-18 15:30', last:'2026-04-18 16:15' },
-        { name:'张伟', phone:'15811083008', course:'健康照护师（中级）', chapter:'第二章 康复训练指导', duration:15, progress:5, status:'异常', start:'2026-04-22 10:00', last:'2026-04-22 10:15' },
-        { name:'吴秀兰', phone:'13922093009', course:'养老护理员（初级）', chapter:'第二章 老年人心理护理', duration:78, progress:60, status:'进行中', start:'2026-04-10 09:00', last:'2026-04-10 10:20' },
-        { name:'郑明华', phone:'13655013010', course:'老年人能力评估师（初级）', chapter:'第一章 老年人能力评估概述', duration:110, progress:100, status:'已完成', start:'2026-04-01 14:00', last:'2026-04-01 15:55' },
-        { name:'黄丽珍', phone:'13888023111', course:'健康照护师（初级）', chapter:'第三章 常见疾病照护', duration:55, progress:40, status:'进行中', start:'2026-04-16 11:00', last:'2026-04-16 12:00' },
-        { name:'林志强', phone:'13966033112', course:'营养配餐员（初级）', chapter:'第一章 营养学基础', duration:180, progress:100, status:'已完成', start:'2026-03-28 09:00', last:'2026-03-28 12:05' },
-        { name:'何玉兰', phone:'15877043113', course:'养老护理员（中级）', chapter:'第四章 老年人常见疾病护理', duration:92, progress:68, status:'进行中', start:'2026-04-13 10:00', last:'2026-04-13 11:35' },
-        { name:'马建华', phone:'13699053114', course:'养老护理员（初级）', chapter:'第三章 老年人生活照料', duration:22, progress:12, status:'进行中', start:'2026-04-21 15:00', last:'2026-04-21 15:25' },
-        { name:'胡秀英', phone:'13811063115', course:'健康照护师（高级）', chapter:'第六章 临终照护伦理', duration:130, progress:100, status:'已完成', start:'2026-04-03 13:30', last:'2026-04-03 15:45' },
-        { name:'杨国庆', phone:'13944073116', course:'老年人能力评估师（中级）', chapter:'第一章 中级评估理论与实务', duration:48, progress:35, status:'进行中', start:'2026-04-19 09:00', last:'2026-04-19 09:50' },
-        { name:'朱丽华', phone:'13677083117', course:'营养配餐员（初级）', chapter:'第二章 食材选择与搭配', duration:160, progress:100, status:'已完成', start:'2026-04-04 08:30', last:'2026-04-04 11:15' },
-        { name:'徐明', phone:'15833093118', course:'养老护理员（初级）', chapter:'第五章 老年人急救常识', duration:8, progress:3, status:'异常', start:'2026-04-23 14:00', last:'2026-04-23 14:08' },
-        { name:'高秀兰', phone:'13988013119', course:'养老护理员（高级）', chapter:'第三章 老年人心理干预', duration:105, progress:80, status:'进行中', start:'2026-04-11 10:30', last:'2026-04-11 12:20' },
-        { name:'宋建国', phone:'13622013120', course:'健康照护师（初级）', chapter:'第四章 用药管理与照护', duration:18, progress:10, status:'进行中', start:'2026-04-22 16:00', last:'2026-04-22 16:20' },
-        { name:'邓芳', phone:'13855023121', course:'老年人能力评估师（高级）', chapter:'第二章 高级评估技术', duration:175, progress:100, status:'已完成', start:'2026-04-06 09:00', last:'2026-04-06 12:00' },
-        { name:'曹明华', phone:'13988033122', course:'养老护理员（中级）', chapter:'第二章 老年人沟通技巧', duration:70, progress:55, status:'进行中', start:'2026-04-17 14:00', last:'2026-04-17 15:15' },
-        { name:'韩秀珍', phone:'13611043123', course:'营养配餐员（初级）', chapter:'第三章 特殊膳食制作', duration:5, progress:2, status:'异常', start:'2026-04-24 09:00', last:'2026-04-24 09:05' },
+        { name:'刘秀英', phone:'13822015001', course:'养老护理员（初级）', chapter:'第一章 养老护理概述', duration:86, progress:75, status:'进行中', start:'2026-04-12 09:30', last:'2026-04-12 11:00', statusDesc:'学员正在正常学习该章节' },
+        { name:'陈建华', phone:'13955023002', course:'养老护理员（中级）', chapter:'第三章 老年人日常护理', duration:120, progress:100, status:'已完成', start:'2026-04-08 14:00', last:'2026-04-08 16:05', statusDesc:'该章节学习已全部完成' },
+        { name:'王丽萍', phone:'13688033003', course:'老年人能力评估师（初级）', chapter:'第二章 评估方法与工具', duration:65, progress:45, status:'进行中', start:'2026-04-15 10:00', last:'2026-04-15 11:10', statusDesc:'学员正在正常学习该章节' },
+        { name:'赵国强', phone:'15866043004', course:'健康照护师（初级）', chapter:'第一章 健康照护基础', duration:32, progress:20, status:'进行中', start:'2026-04-20 08:30', last:'2026-04-20 09:05', statusDesc:'学员正在正常学习该章节' },
+        { name:'孙美华', phone:'13977053005', course:'营养配餐员（初级）', chapter:'第四章 老年人营养配餐', duration:95, progress:100, status:'已完成', start:'2026-04-05 13:00', last:'2026-04-05 14:40', statusDesc:'该章节学习已全部完成' },
+        { name:'周建国', phone:'13844063006', course:'养老护理员（高级）', chapter:'第五章 临终关怀', duration:150, progress:100, status:'已完成', start:'2026-04-02 09:00', last:'2026-04-02 11:35', statusDesc:'该章节学习已全部完成' },
+        { name:'李芳', phone:'13633073007', course:'老年人能力评估师（中级）', chapter:'第三章 评估报告撰写', duration:42, progress:30, status:'进行中', start:'2026-04-18 15:30', last:'2026-04-18 16:15', statusDesc:'学员正在正常学习该章节' },
+        { name:'张伟', phone:'15811083008', course:'健康照护师（中级）', chapter:'第二章 康复训练指导', duration:15, progress:5, status:'异常', start:'2026-04-22 10:00', last:'2026-04-22 10:15', statusDesc:'学习进度异常，请关注' },
+        { name:'吴秀兰', phone:'13922093009', course:'养老护理员（初级）', chapter:'第二章 老年人心理护理', duration:78, progress:60, status:'进行中', start:'2026-04-10 09:00', last:'2026-04-10 10:20', statusDesc:'学员正在正常学习该章节' },
+        { name:'郑明华', phone:'13655013010', course:'老年人能力评估师（初级）', chapter:'第一章 老年人能力评估概述', duration:110, progress:100, status:'已完成', start:'2026-04-01 14:00', last:'2026-04-01 15:55', statusDesc:'该章节学习已全部完成' },
+        { name:'黄丽珍', phone:'13888023111', course:'健康照护师（初级）', chapter:'第三章 常见疾病照护', duration:55, progress:40, status:'进行中', start:'2026-04-16 11:00', last:'2026-04-16 12:00', statusDesc:'学员正在正常学习该章节' },
+        { name:'林志强', phone:'13966033112', course:'营养配餐员（初级）', chapter:'第一章 营养学基础', duration:180, progress:100, status:'已完成', start:'2026-03-28 09:00', last:'2026-03-28 12:05', statusDesc:'该章节学习已全部完成' },
+        { name:'何玉兰', phone:'15877043113', course:'养老护理员（中级）', chapter:'第四章 老年人常见疾病护理', duration:92, progress:68, status:'进行中', start:'2026-04-13 10:00', last:'2026-04-13 11:35', statusDesc:'学员正在正常学习该章节' },
+        { name:'马建华', phone:'13699053114', course:'养老护理员（初级）', chapter:'第三章 老年人生活照料', duration:22, progress:12, status:'进行中', start:'2026-04-21 15:00', last:'2026-04-21 15:25', statusDesc:'学员正在正常学习该章节' },
+        { name:'胡秀英', phone:'13811063115', course:'健康照护师（高级）', chapter:'第六章 临终照护伦理', duration:130, progress:100, status:'已完成', start:'2026-04-03 13:30', last:'2026-04-03 15:45', statusDesc:'该章节学习已全部完成' },
+        { name:'杨国庆', phone:'13944073116', course:'老年人能力评估师（中级）', chapter:'第一章 中级评估理论与实务', duration:48, progress:35, status:'进行中', start:'2026-04-19 09:00', last:'2026-04-19 09:50', statusDesc:'学员正在正常学习该章节' },
+        { name:'朱丽华', phone:'13677083117', course:'营养配餐员（初级）', chapter:'第二章 食材选择与搭配', duration:160, progress:100, status:'已完成', start:'2026-04-04 08:30', last:'2026-04-04 11:15', statusDesc:'该章节学习已全部完成' },
+        { name:'徐明', phone:'15833093118', course:'养老护理员（初级）', chapter:'第五章 老年人急救常识', duration:8, progress:3, status:'异常', start:'2026-04-23 14:00', last:'2026-04-23 14:08', statusDesc:'学习进度异常，请关注' },
+        { name:'高秀兰', phone:'13988013119', course:'养老护理员（高级）', chapter:'第三章 老年人心理干预', duration:105, progress:80, status:'进行中', start:'2026-04-11 10:30', last:'2026-04-11 12:20', statusDesc:'学员正在正常学习该章节' },
+        { name:'宋建国', phone:'13622013120', course:'健康照护师（初级）', chapter:'第四章 用药管理与照护', duration:18, progress:10, status:'进行中', start:'2026-04-22 16:00', last:'2026-04-22 16:20', statusDesc:'学员正在正常学习该章节' },
+        { name:'邓芳', phone:'13855023121', course:'老年人能力评估师（高级）', chapter:'第二章 高级评估技术', duration:175, progress:100, status:'已完成', start:'2026-04-06 09:00', last:'2026-04-06 12:00', statusDesc:'该章节学习已全部完成' },
+        { name:'曹明华', phone:'13988033122', course:'养老护理员（中级）', chapter:'第二章 老年人沟通技巧', duration:70, progress:55, status:'进行中', start:'2026-04-17 14:00', last:'2026-04-17 15:15', statusDesc:'学员正在正常学习该章节' },
+        { name:'韩秀珍', phone:'13611043123', course:'营养配餐员（初级）', chapter:'第三章 特殊膳食制作', duration:5, progress:2, status:'异常', start:'2026-04-24 09:00', last:'2026-04-24 09:05', statusDesc:'学习进度异常，请关注' },
     ];
 
     // 状态样式映射
@@ -431,7 +441,10 @@
         tr.innerHTML = `
             <td class="px-4 py-3 text-sm text-gray-500">${i+1}</td>
             <td class="px-4 py-3">
-                <span class="text-sm font-medium text-gray-900">${r.name}</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 ${ac} rounded-full flex items-center justify-center text-xs font-medium">${r.name.charAt(0)}</span>
+                    <span class="text-sm font-medium text-gray-900">${r.name}</span>
+                </div>
             </td>
             <td class="px-4 py-3 text-sm text-gray-700 max-w-[200px] truncate" title="${r.course}">${r.course}</td>
             <td class="px-4 py-3 text-sm text-gray-600 max-w-[180px] truncate" title="${r.chapter}">${r.chapter}</td>
@@ -605,6 +618,53 @@
     }
 
     renderPagination(1);
+
+    // 导出学习记录
+    function exportRecords() {
+        const headers = ['序号', '学员姓名', '联系电话', '课程名称', '章节名称', '学习时长(分钟)', '学习进度', '学习状态', '状态描述', '开始时间', '最后学习时间'];
+        
+        const data = records.map((r, index) => [
+            index + 1,
+            r.name,
+            r.phone,
+            r.course,
+            r.chapter,
+            r.duration,
+            r.progress + '%',
+            r.status,
+            r.statusDesc || '',
+            r.start,
+            r.last
+        ]);
+        
+        function escapeCsvField(field) {
+            if (field == null) return '';
+            const str = String(field);
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        }
+        
+        let csvContent = '\uFEFF';
+        csvContent += headers.map(escapeCsvField).join(',') + '\n';
+        data.forEach(row => {
+            csvContent += row.map(escapeCsvField).join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', '学习记录_' + new Date().toISOString().slice(0, 10) + '.csv');
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
     </script>
 
     <script>

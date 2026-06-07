@@ -560,6 +560,7 @@
       var params = new URLSearchParams(window.location.search);
       var mode = params.get('mode');
       var topicId = params.get('topic') || '1';
+      var shuffle = params.get('shuffle') === '1';
 
       if (mode === 'wrong') {
         // 错题模式：使用错题数据
@@ -571,8 +572,25 @@
         document.getElementById('headerTitle').textContent = topicNames[topicId] || '基础护理知识';
       }
 
+      // 随机打乱题目顺序
+      if (shuffle && !isWrongMode) {
+        questions = shuffleArray(questions);
+      }
+
       startTime = Date.now();
       renderQuestion();
+    }
+
+    // 随机打乱数组
+    function shuffleArray(array) {
+      var result = array.slice();
+      for (var i = result.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = result[i];
+        result[i] = result[j];
+        result[j] = temp;
+      }
+      return result;
     }
 
     // 渲染当前题目

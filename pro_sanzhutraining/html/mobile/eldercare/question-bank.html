@@ -102,7 +102,45 @@
     .stat-value.orange { color: var(--orange); }
     .stat-value.blue { color: var(--blue); }
     .stat-value.purple { color: var(--purple); }
-    .stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+    .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+    .random-practice-btn {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+    }
+    .random-practice-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+    }
+    .random-practice-btn:active {
+      transform: scale(0.98);
+    }
+    .random-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .random-text {
+      flex: 1;
+      text-align: center;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .random-arrow {
+      opacity: 0.8;
+    }
 
     /* 专题刷题列表 */
     .topic-section { padding: 0 16px 16px; }
@@ -249,6 +287,21 @@
             <div class="stat-value purple">1,280</div>
             <div class="stat-label">累计刷题</div>
           </div>
+        </div>
+        <!-- 随机练习入口 -->
+        <div class="random-practice-btn" onclick="startRandomQuiz()">
+          <span class="random-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+              <polyline points="23 4 23 10 17 16 8 7 8 14"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </span>
+          <span class="random-text">随机练习</span>
+          <span class="random-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
         </div>
       </div>
     </div>
@@ -509,6 +562,49 @@
       </div>
     </div>
 
+    <!-- 在线客服悬浮按钮 -->
+    <div class="fixed right-4 bottom-20 z-50">
+      <button onclick="openCustomerService()" style="width: 48px; height: 48px; background: linear-gradient(135deg, #2e9e5a, #1e7e42); border-radius: 50%; box-shadow: 0 4px 12px rgba(46,158,90,0.4); display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;">
+        <span class="iconify text-white text-2xl" data-icon="solar:chat-circle-bold"></span>
+      </button>
+    </div>
+
+    <!-- 客服弹窗 -->
+    <div id="customerServiceModal" class="fixed inset-0 z-[100] hidden">
+      <div class="absolute inset-0 bg-black/50" onclick="closeCustomerService()"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] bg-white rounded-t-3xl p-5 animate-slide-up">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-base text-[#333]">在线客服</h3>
+          <button onclick="closeCustomerService()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+            <span class="iconify text-gray-500" data-icon="solar:close-linear"></span>
+          </button>
+        </div>
+        <div class="bg-green-50 rounded-xl p-4 mb-3">
+          <p class="text-sm text-[#333] mb-3">您好！请问有什么可以帮您？</p>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="selectQuestion('课程购买')" class="px-3 py-1.5 bg-white rounded-full text-xs text-[#2e9e5a] border border-green-200">课程购买</button>
+            <button onclick="selectQuestion('考试报名')" class="px-3 py-1.5 bg-white rounded-full text-xs text-[#2e9e5a] border border-green-200">考试报名</button>
+            <button onclick="selectQuestion('证书查询')" class="px-3 py-1.5 bg-white rounded-full text-xs text-[#2e9e5a] border border-green-200">证书查询</button>
+            <button onclick="selectQuestion('其他问题')" class="px-3 py-1.5 bg-white rounded-full text-xs text-[#2e9e5a] border border-green-200">其他问题</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-gray-400 mb-4">
+          <span class="iconify text-sm" data-icon="solar:clock-circle-linear"></span>
+          <span>服务时间：工作日 9:00-18:00</span>
+        </div>
+        <div class="flex items-center gap-3 pt-3 border-t border-gray-100">
+          <button onclick="callServicePhone()" class="flex-1 py-3 bg-[#e8f5ec] text-[#2e9e5a] rounded-xl font-medium text-sm flex items-center justify-center gap-2">
+            <span class="iconify" data-icon="solar:phone-bold"></span>
+            电话咨询
+          </button>
+          <button onclick="sendEmail()" class="flex-1 py-3 bg-[#eaf2fa] text-[#3498db] rounded-xl font-medium text-sm flex items-center justify-center gap-2">
+            <span class="iconify" data-icon="solar:mail-bold"></span>
+            邮件联系
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 底部5tab导航 -->
     <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[750px] h-14 bg-white flex border-t border-gray-100 z-50 safe-area-bottom">
       <a href="home.html" class="tab-item flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 transition cursor-pointer">
@@ -581,6 +677,51 @@
       });
       
       document.querySelector('.section-more').textContent = '共' + count + '个课程';
+    }
+
+    // 随机练习入口函数
+    function startRandomQuiz() {
+      // 随机选择一个专题
+      var topics = ['1', '2', '3', '4', '5', '6', '7', '8'];
+      var randomTopic = topics[Math.floor(Math.random() * topics.length)];
+      // 跳转到答题页面，带随机参数
+      window.location.href = 'quiz.html?topic=' + randomTopic + '&shuffle=1';
+    }
+
+    // ========== 在线客服功能 ==========
+    function openCustomerService() {
+      document.getElementById('customerServiceModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCustomerService() {
+      document.getElementById('customerServiceModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function selectQuestion(type) {
+      alert('您选择了：' + type + '\n客服人员将尽快为您解答');
+      closeCustomerService();
+    }
+
+    function callServicePhone() {
+      var phone = '400-XXX-XXXX';
+      if (phone && phone !== '400-XXX-XXXX') {
+        window.location.href = 'tel:' + phone.replace(/-/g, '');
+      } else {
+        alert('客服电话暂未配置');
+      }
+      closeCustomerService();
+    }
+
+    function sendEmail() {
+      var email = 'contact@example.com';
+      if (email && email !== 'contact@example.com') {
+        window.location.href = 'mailto:' + email;
+      } else {
+        alert('客服邮箱暂未配置');
+      }
+      closeCustomerService();
     }
   </script>
 </body>
