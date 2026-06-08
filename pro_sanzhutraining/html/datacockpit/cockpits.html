@@ -1745,7 +1745,7 @@
                     </tbody>
                 </table>
             `;
-        } else if (title === '订单金额') {
+        } else if (title === '订单金额' || title === '订单金额（万）') {
             chartId = 'orderAmountChart';
             content = `
                 <div class="modal-summary">
@@ -1870,7 +1870,7 @@
                     areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(43, 110, 60, 0.3)' }, { offset: 1, color: 'rgba(43, 110, 60, 0.05)' }]) }
                 }]
             });
-        } else if (title === '订单金额') {
+        } else if (title === '订单金额' || title === '订单金额（万）') {
             chart.setOption({
                 tooltip: { trigger: 'item' },
                 color: ['#2b6e3c', '#4ade80', '#86efac', '#bbf7d0'],
@@ -1897,360 +1897,6 @@
         }
     });
 
-    const personnelChart = echarts.init(document.getElementById('personnelChart'));
-    personnelChart.setOption({
-        tooltip: { 
-            trigger: 'item', 
-            formatter: '{b}: {c}人 ({d}%)',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            borderColor: '#e2e8f0',
-            borderWidth: 1,
-            padding: [12, 16],
-            textStyle: { color: '#1e293b', fontSize: 13 }
-        },
-        legend: { orient: 'vertical', right: '5%', top: 'center', textStyle: { fontSize: 11, color: '#475569' } },
-        color: ['#166534', '#22c55e', '#4ade80', '#86efac', '#bbf7d0'],
-        series: [{
-            name: '人员分布', type: 'pie', radius: ['45%', '75%'], center: ['40%', '50%'],
-            avoidLabelOverlap: false, 
-            itemStyle: { 
-                borderRadius: 10, 
-                borderColor: '#fff', 
-                borderWidth: 3,
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.1)'
-            },
-            label: { 
-                show: true, 
-                position: 'outside',
-                formatter: '{b}\n{d}%',
-                fontSize: 11,
-                color: '#475569'
-            },
-            emphasis: { 
-                scale: true,
-                scaleSize: 10,
-                itemStyle: { shadowBlur: 20, shadowColor: 'rgba(22, 101, 52, 0.3)' }
-            },
-            data: [{ value: 156, name: '讲师' }, { value: 68, name: '管理员' }, { value: 32, name: '客服' }, { value: 22, name: '运营' }, { value: 8, name: '其他' }]
-        }]
-    });
-
-    const courseChart = echarts.init(document.getElementById('courseChart'));
-    courseChart.setOption({
-        tooltip: { 
-            trigger: 'axis', 
-            axisPointer: { type: 'shadow' },
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            borderColor: '#e2e8f0',
-            borderWidth: 1,
-            padding: [12, 16],
-            textStyle: { color: '#1e293b', fontSize: 13 }
-        },
-        grid: { left: '3%', right: '4%', bottom: '10%', top: '10%', containLabel: true },
-        xAxis: { 
-            type: 'category', 
-            data: ['养老护理员', '评估师', '照护师', '配餐员', '其他'], 
-            axisLabel: { fontSize: 11, color: '#475569' },
-            axisLine: { lineStyle: { color: '#e2e8f0' } },
-            axisTick: { show: false }
-        },
-        yAxis: { 
-            type: 'value', 
-            axisLabel: { fontSize: 11, color: '#64748b' },
-            axisLine: { show: false },
-            axisTick: { show: false },
-            splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }
-        },
-        color: ['#22c55e'],
-        series: [{ 
-            name: '课程数', 
-            type: 'bar', 
-            barWidth: '55%', 
-            data: [98, 65, 58, 42, 25], 
-            itemStyle: { 
-                borderRadius: [8, 8, 0, 0],
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: '#22c55e' },
-                    { offset: 1, color: '#16a34a' }
-                ]),
-                shadowBlur: 8,
-                shadowOffsetY: 4,
-                shadowColor: 'rgba(34, 197, 94, 0.3)'
-            },
-            label: {
-                show: true,
-                position: 'top',
-                fontSize: 12,
-                fontWeight: 'bold',
-                color: '#166534'
-            },
-            emphasis: {
-                itemStyle: {
-                    shadowBlur: 15,
-                    shadowColor: 'rgba(34, 197, 94, 0.5)'
-                }
-            }
-        }]
-    });
-
-    const chinaMap = echarts.init(document.getElementById('chinaMap'));
-    chinaMap.setOption({
-        tooltip: {
-            trigger: 'item',
-            formatter: function(params) {
-                if (params.data && params.data.orgName) {
-                    return `<div style="padding:8px;">
-                        <div style="font-weight:bold;color:#2b6e3c;">${params.data.orgName}</div>
-                        <div style="color:#64748b;font-size:12px;">省份: ${params.data.province}</div>
-                        <div style="color:#64748b;font-size:12px;">城市: ${params.data.city}</div>
-                        <div style="color:#2b6e3c;font-size:12px;">学员数: ${params.data.students}人</div>
-                    </div>`;
-                }
-                return params.name;
-            }
-        },
-        geo: {
-            map: 'china',
-            roam: true,
-            label: { show: true, fontSize: 10 },
-            emphasis: { itemStyle: { areaColor: '#d1fae5' } }
-        },
-        series: [{
-            name: '分支机构',
-            type: 'scatter',
-            coordinateSystem: 'geo',
-            symbolSize: function(val) { return Math.sqrt(val[2]) * 0.75; },
-            label: { show: false },
-            emphasis: { label: { show: true, formatter: '{b}', fontSize: 10 } },
-            itemStyle: { color: '#2b6e3c', shadowBlur: 8, shadowColor: 'rgba(43, 110, 60, 0.5)' },
-            data: [
-                { name: '北京分校', value: [116.46, 39.92, 850, '北京市', '北京', '叁竹培训北京分校'] },
-                { name: '上海分校', value: [121.48, 31.22, 720, '上海市', '上海', '叁竹培训上海分校'] },
-                { name: '广州分校', value: [113.23, 23.16, 680, '广东省', '广州', '叁竹培训广州分校'] },
-                { name: '深圳分校', value: [114.07, 22.62, 560, '广东省', '深圳', '叁竹培训深圳分校'] },
-                { name: '成都分校', value: [104.06, 30.67, 480, '四川省', '成都', '叁竹培训成都分校'] },
-                { name: '武汉分校', value: [114.31, 30.52, 420, '湖北省', '武汉', '叁竹培训武汉分校'] },
-                { name: '杭州分校', value: [120.19, 30.26, 380, '浙江省', '杭州', '叁竹培训杭州分校'] },
-                { name: '南京分校', value: [118.78, 32.04, 350, '江苏省', '南京', '叁竹培训南京分校'] },
-                { name: '重庆分校', value: [106.54, 29.59, 320, '重庆市', '重庆', '叁竹培训重庆分校'] },
-                { name: '济南分校', value: [117.00, 36.65, 280, '山东省', '济南', '叁竹培训济南分校'] },
-                { name: '西安分校', value: [108.95, 34.27, 260, '陕西省', '西安', '叁竹培训西安分校'] },
-                { name: '厦门分校', value: [118.10, 24.47, 220, '福建省', '厦门', '叁竹培训厦门分校'] }
-            ].map(function(item) {
-                return {
-                    name: item.name,
-                    value: item.value.slice(0, 3),
-                    province: item.value[3],
-                    city: item.value[4],
-                    orgName: item.value[5],
-                    students: item.value[2]
-                };
-            })
-        }, {
-            name: '总部',
-            type: 'scatter',
-            coordinateSystem: 'geo',
-            symbolSize: 28,
-            label: { 
-                show: true, 
-                formatter: '总部',
-                fontSize: 11,
-                fontWeight: 'bold',
-                color: '#dc2626'
-            },
-            emphasis: { label: { show: true, formatter: '湖南长沙总部', fontSize: 12 } },
-            itemStyle: { 
-                color: '#dc2626', 
-                shadowBlur: 15, 
-                shadowColor: 'rgba(220, 38, 38, 0.7)',
-                borderColor: '#fff',
-                borderWidth: 3
-            },
-            data: [{
-                name: '湖南长沙总部',
-                value: [112.94, 28.23],
-                province: '湖南省',
-                city: '长沙',
-                orgName: '叁竹培训总部',
-                students: 1500
-            }]
-        }]
-    });
-
-    const studentTrendChart = echarts.init(document.getElementById('studentTrendChart'));
-    studentTrendChart.setOption({
-        tooltip: { trigger: 'axis' },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        xAxis: { type: 'category', data: ['1月', '2月', '3月', '4月', '5月', '6月'], axisLabel: { fontSize: 10 } },
-        yAxis: { type: 'value', axisLabel: { fontSize: 10 } },
-        color: ['#2b6e3c'],
-        series: [{
-            name: '新增学员', type: 'line', smooth: true, data: [680, 520, 750, 890, 980, 1150],
-            areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(43, 110, 60, 0.3)' }, { offset: 1, color: 'rgba(43, 110, 60, 0.05)' }]) },
-            lineStyle: { width: 3 }, itemStyle: { color: '#2b6e3c' }
-        }]
-    });
-
-    const passRateChart = echarts.init(document.getElementById('passRateChart'));
-    passRateChart.setOption({
-        tooltip: { 
-            trigger: 'axis',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            borderColor: '#e2e8f0',
-            borderWidth: 1,
-            padding: [12, 16],
-            textStyle: { color: '#1e293b', fontSize: 13 },
-            formatter: '{b}<br/>{a}: {c}%'
-        },
-        grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
-        xAxis: { 
-            type: 'category', 
-            data: ['1月', '2月', '3月', '4月', '5月', '6月'], 
-            axisLabel: { fontSize: 11, color: '#475569' },
-            axisLine: { lineStyle: { color: '#e2e8f0' } },
-            axisTick: { show: false }
-        },
-        yAxis: { 
-            type: 'value', 
-            min: 70, 
-            max: 100, 
-            axisLabel: { fontSize: 11, color: '#64748b', formatter: '{value}%' },
-            axisLine: { show: false },
-            axisTick: { show: false },
-            splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }
-        },
-        color: ['#22c55e'],
-        series: [{
-            name: '通过率', 
-            type: 'line', 
-            smooth: true, 
-            data: [85.2, 86.8, 88.5, 90.1, 91.8, 92.5],
-            areaStyle: { 
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: 'rgba(34, 197, 94, 0.4)' }, 
-                    { offset: 1, color: 'rgba(34, 197, 94, 0.02)' }
-                ]) 
-            },
-            lineStyle: { width: 4, color: '#22c55e' }, 
-            itemStyle: { 
-                color: '#22c55e',
-                borderColor: '#fff',
-                borderWidth: 2
-            },
-            symbol: 'circle',
-            symbolSize: 8,
-            label: {
-                show: true,
-                position: 'top',
-                fontSize: 11,
-                fontWeight: 'bold',
-                color: '#166534',
-                formatter: '{c}%'
-            },
-            emphasis: {
-                scale: true,
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(34, 197, 94, 0.6)'
-                }
-            }
-        }]
-    });
-
-    const orderTrendChart = echarts.init(document.getElementById('orderTrendChart'));
-    orderTrendChart.setOption({
-        tooltip: { 
-            trigger: 'axis',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            borderColor: '#e2e8f0',
-            borderWidth: 1,
-            padding: [12, 16],
-            textStyle: { color: '#1e293b', fontSize: 13 }
-        },
-        legend: { 
-            data: ['订单数', '金额(万)'], 
-            bottom: '0%',
-            textStyle: { fontSize: 11, color: '#475569' },
-            itemWidth: 16,
-            itemHeight: 8,
-            itemGap: 20
-        },
-        grid: { left: '3%', right: '4%', bottom: '12%', top: '5%', containLabel: true },
-        xAxis: { 
-            type: 'category', 
-            data: ['1月', '2月', '3月', '4月', '5月', '6月'], 
-            axisLabel: { fontSize: 11, color: '#475569' },
-            axisLine: { lineStyle: { color: '#e2e8f0' } },
-            axisTick: { show: false }
-        },
-        yAxis: { 
-            type: 'value', 
-            axisLabel: { fontSize: 11, color: '#64748b' },
-            axisLine: { show: false },
-            axisTick: { show: false },
-            splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }
-        },
-        color: ['#22c55e', '#4ade80'],
-        series: [
-            {
-                name: '订单数', 
-                type: 'line', 
-                smooth: true, 
-                data: [520, 410, 580, 680, 760, 906],
-                areaStyle: { 
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: 'rgba(34, 197, 94, 0.35)' }, 
-                        { offset: 1, color: 'rgba(34, 197, 94, 0.02)' }
-                    ]) 
-                },
-                lineStyle: { width: 3.5, color: '#22c55e' }, 
-                itemStyle: { 
-                    color: '#22c55e',
-                    borderColor: '#fff',
-                    borderWidth: 2
-                },
-                symbol: 'circle',
-                symbolSize: 7,
-                emphasis: {
-                    scale: true,
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(34, 197, 94, 0.6)'
-                    }
-                }
-            },
-            {
-                name: '金额(万)', 
-                type: 'line', 
-                smooth: true, 
-                data: [38.6, 30.2, 42.8, 50.1, 56.2, 67.7],
-                areaStyle: { 
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: 'rgba(74, 222, 128, 0.3)' }, 
-                        { offset: 1, color: 'rgba(74, 222, 128, 0.02)' }
-                    ]) 
-                },
-                lineStyle: { width: 3.5, color: '#4ade80' }, 
-                itemStyle: { 
-                    color: '#4ade80',
-                    borderColor: '#fff',
-                    borderWidth: 2
-                },
-                symbol: 'circle',
-                symbolSize: 7,
-                emphasis: {
-                    scale: true,
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(74, 222, 128, 0.6)'
-                    }
-                }
-            }
-        ]
-    });
-
     function animateNumber(element, target, duration = 2000, isMoney = false) {
         const start = 0;
         const startTime = performance.now();
@@ -2262,7 +1908,7 @@
             const current = start + (target - start) * easeOut;
             
             if (isMoney) {
-                element.textContent = '¥' + current.toFixed(1) + '万';
+                element.textContent = '¥' + current.toFixed(1);
             } else {
                 element.textContent = Math.floor(current).toLocaleString();
             }
@@ -2302,17 +1948,24 @@
             if (window.loadKPIData) {
                 window.loadKPIData();
             }
+            if (window.initChartsFromMock) {
+                window.initChartsFromMock();
+            }
             setTimeout(animateNumbers, 300);
         }, 500);
     });
 
     window.addEventListener('resize', function() {
-        personnelChart.resize();
-        courseChart.resize();
-        chinaMap.resize();
-        studentTrendChart.resize();
-        passRateChart.resize();
-        orderTrendChart.resize();
+        if (window.echarts) {
+            const charts = ['personnelChart', 'courseChart', 'studentTrendChart', 'passRateChart', 'orderAmountChart', 'orderTrendChart', 'chinaMap'];
+            charts.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const chart = echarts.getInstanceByDom(el);
+                    if (chart) chart.resize();
+                }
+            });
+        }
     });
 </script>
 </body>

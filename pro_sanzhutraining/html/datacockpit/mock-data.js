@@ -150,6 +150,20 @@ const dashboardMockData = {
         { month: '4月', amount: 501000 },
         { month: '5月', amount: 562000 },
         { month: '6月', amount: 677000 }
+    ],
+    mapData: [
+        { name: '北京', value: 850, students: 12560, lat: 39.92, lng: 116.46 },
+        { name: '上海', value: 720, students: 10800, lat: 31.22, lng: 121.48 },
+        { name: '广州', value: 680, students: 9560, lat: 23.16, lng: 113.23 },
+        { name: '深圳', value: 560, students: 8600, lat: 22.62, lng: 114.07 },
+        { name: '成都', value: 480, students: 7200, lat: 30.67, lng: 104.06 },
+        { name: '武汉', value: 420, students: 6300, lat: 30.52, lng: 114.31 },
+        { name: '杭州', value: 380, students: 5600, lat: 30.26, lng: 120.19 },
+        { name: '南京', value: 350, students: 5200, lat: 32.04, lng: 118.78 },
+        { name: '重庆', value: 320, students: 4700, lat: 29.59, lng: 106.54 },
+        { name: '济南', value: 280, students: 4200, lat: 36.65, lng: 117.00 },
+        { name: '西安', value: 260, students: 3800, lat: 34.27, lng: 108.95 },
+        { name: '厦门', value: 220, students: 3300, lat: 24.47, lng: 118.10 }
     ]
 };
 
@@ -197,7 +211,7 @@ function loadKPIData() {
         let displayValue = '';
         
         if (card.isMoney) {
-            displayValue = '¥' + (value / 10000).toFixed(card.decimals) + '万';
+            displayValue = '¥' + (value / 10000).toFixed(card.decimals);
         } else if (card.isRate) {
             displayValue = value.toFixed(card.decimals) + '%';
         } else {
@@ -291,6 +305,7 @@ function initChartsFromMock() {
         initStudentTrendChart();
         initPassRateChart();
         initOrderAmountChart();
+        initOrderTrendChart();
         initMapChart();
     }
 }
@@ -383,7 +398,7 @@ function initOrderAmountChart() {
 }
 
 function initMapChart() {
-    const chartEl = document.getElementById('mapChart');
+    const chartEl = document.getElementById('chinaMap');
     if (!chartEl) return;
     const chart = echarts.init(chartEl);
     const mapData = dashboardMockData.mapData;
@@ -419,21 +434,15 @@ function initMapChart() {
             name: '分校分布',
             type: 'scatter',
             coordinateSystem: 'geo',
-            symbolSize: function(value) { return Math.sqrt(value[2]) * 2.5; },
+            symbolSize: function(value) { return Math.sqrt(value[2]) * 1.2; },
             itemStyle: { color: '#2b6e3c', shadowBlur: 8, shadowColor: 'rgba(43, 110, 60, 0.5)' },
             data: mapData.map(item => ({
                 name: item.name + '分校',
-                value: [116.46, 39.92, item.value, '北京市', item.name, '叁竹培训' + item.name + '分校', item.students]
-            })).map(function(item) {
-                return {
-                    name: item.name,
-                    value: item.value.slice(0, 3),
-                    province: item.value[3],
-                    city: item.value[4],
-                    orgName: item.value[5],
-                    students: item.value[6]
-                };
-            })
+                value: [item.lng, item.lat, item.value],
+                city: item.name,
+                orgName: '叁竹培训' + item.name + '分校',
+                students: item.students
+            }))
         }, {
             name: '总部',
             type: 'scatter',
@@ -444,6 +453,104 @@ function initMapChart() {
             itemStyle: { color: '#dc2626', shadowBlur: 15, shadowColor: 'rgba(220, 38, 38, 0.7)', borderColor: '#fff', borderWidth: 3 },
             data: [{ name: '湖南长沙总部', value: [112.94, 28.23], province: '湖南省', city: '长沙', orgName: '叁竹培训总部', students: 1500 }]
         }]
+    });
+}
+
+function initOrderTrendChart() {
+    const chartEl = document.getElementById('orderTrendChart');
+    if (!chartEl) return;
+    const chart = echarts.init(chartEl);
+    const data = dashboardMockData.monthlyOrders;
+    
+    chart.setOption({
+        tooltip: { 
+            trigger: 'axis',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderColor: '#e2e8f0',
+            borderWidth: 1,
+            padding: [12, 16],
+            textStyle: { color: '#1e293b', fontSize: 13 }
+        },
+        legend: { 
+            data: ['订单数', '金额(万)'], 
+            bottom: '0%',
+            textStyle: { fontSize: 11, color: '#475569' },
+            itemWidth: 16,
+            itemHeight: 8,
+            itemGap: 20
+        },
+        grid: { left: '3%', right: '4%', bottom: '12%', top: '5%', containLabel: true },
+        xAxis: { 
+            type: 'category', 
+            data: data.map(item => item.month), 
+            axisLabel: { fontSize: 11, color: '#475569' },
+            axisLine: { lineStyle: { color: '#e2e8f0' } },
+            axisTick: { show: false }
+        },
+        yAxis: { 
+            type: 'value', 
+            axisLabel: { fontSize: 11, color: '#64748b' },
+            axisLine: { show: false },
+            axisTick: { show: false },
+            splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }
+        },
+        color: ['#22c55e', '#4ade80'],
+        series: [
+            {
+                name: '订单数', 
+                type: 'line', 
+                smooth: true, 
+                data: data.map(item => item.orders),
+                areaStyle: { 
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(34, 197, 94, 0.35)' }, 
+                        { offset: 1, color: 'rgba(34, 197, 94, 0.02)' }
+                    ]) 
+                },
+                lineStyle: { width: 3.5, color: '#22c55e' }, 
+                itemStyle: { 
+                    color: '#22c55e',
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                symbol: 'circle',
+                symbolSize: 7,
+                emphasis: {
+                    scale: true,
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(34, 197, 94, 0.6)'
+                    }
+                }
+            },
+            {
+                name: '金额(万)', 
+                type: 'line', 
+                smooth: true, 
+                data: data.map(item => (item.amount / 10000)),
+                areaStyle: { 
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(74, 222, 128, 0.3)' }, 
+                        { offset: 1, color: 'rgba(74, 222, 128, 0.02)' }
+                    ]) 
+                },
+                lineStyle: { width: 3.5, color: '#4ade80' }, 
+                itemStyle: { 
+                    color: '#4ade80',
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                symbol: 'circle',
+                symbolSize: 7,
+                emphasis: {
+                    scale: true,
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(74, 222, 128, 0.6)'
+                    }
+                }
+            }
+        ]
     });
 }
 
@@ -532,7 +639,7 @@ function initModalChartsFromMock(title, chartId) {
                 areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(43, 110, 60, 0.3)' }, { offset: 1, color: 'rgba(43, 110, 60, 0.05)' }]) }
             }]
         });
-    } else if (title === '订单金额') {
+    } else if (title === '订单金额' || title === '订单金额（万）') {
         const data = dashboardMockData.orderTypeData;
         chart.setOption({
             tooltip: { trigger: 'item' },

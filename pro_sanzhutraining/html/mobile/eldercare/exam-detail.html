@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>叁竹培训 - 考试详情</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: #f3f4f6; color: #1f2937;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; padding-bottom: 100px; }
+    .header {
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      padding: 40px 16px 16px;
+      padding-top: calc(40px + env(safe-area-inset-top));
+      color: #fff;
+      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 50;
+      border-radius: 0 0 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+    .header-back { 
+      width: 36px; 
+      height: 36px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .header-title { 
+      font-size: 18px; 
+      font-weight: 600; 
+      flex: 1; 
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .exam-info { 
+      background: #fff; 
+      margin: 16px; 
+      border-radius: 16px; 
+      padding: 16px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .exam-title { 
+      font-size: 16px; 
+      font-weight: 600; 
+      text-align: center; 
+      margin-bottom: 16px; 
+      color: #1f2937; 
+    }
+    .info-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 12px; 
+      margin-bottom: 16px; 
+    }
+    .info-item { 
+      text-align: center; 
+      padding: 12px; 
+      background: #f0fdf4; 
+      border-radius: 12px; 
+    }
+    .info-value { 
+      font-size: 18px; 
+      font-weight: 600; 
+      color: #2e9e5a; 
+    }
+    .info-label { 
+      font-size: 11px; 
+      color: #6b7280; 
+      margin-top: 4px; 
+    }
+    .section-title { 
+      font-size: 14px; 
+      font-weight: 600; 
+      color: #1f2937; 
+      margin-bottom: 12px; 
+      padding-left: 8px; 
+      border-left: 3px solid #2e9e5a; 
+    }
+    .rule-list { 
+      padding-left: 20px; 
+      margin-bottom: 16px; 
+    }
+    .rule-item { 
+      font-size: 13px; 
+      color: #6b7280; 
+      line-height: 1.7; 
+      margin-bottom: 8px; 
+    }
+    .warning-box { 
+      background: #fffbeb; 
+      border-radius: 12px; 
+      padding: 14px; 
+      margin-bottom: 16px; 
+      display: flex; 
+      gap: 12px; 
+    }
+    .warning-icon { 
+      width: 28px; 
+      height: 28px; 
+      border-radius: 50%; 
+      background: #fbbf24; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0; 
+    }
+    .warning-icon span { color: #fff; font-size: 14px; }
+    .warning-text { 
+      font-size: 12px; 
+      color: #92400e; 
+      line-height: 1.6; 
+    }
+    .start-btn {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 32px); max-width: 750px;
+      padding: 14px; 
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      color: #fff; font-size: 15px; font-weight: 600;
+      border-radius: 16px 16px 0 0;
+      text-align: center; cursor: pointer;
+      box-shadow: 0 -4px 20px rgba(46, 158, 90, 0.2);
+    }
+    .start-btn:active { opacity: 0.9; }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 750px;
+      background: #fff; padding: 8px 0; padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      display: flex; justify-content: space-around;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-back" onclick="goBack()">
+        <span class="iconify" data-icon="solar:arrow-left-bold" style="color: #fff; font-size: 22px;"></span>
+      </div>
+      <div class="header-title">考试详情</div>
+    </div>
+    
+    <div class="exam-info">
+      <div class="exam-title">养老护理基础知识考试</div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-value">100</div>
+          <div class="info-label">总分</div>
+        </div>
+        <div class="info-item">
+          <div class="info-value">20</div>
+          <div class="info-label">题目数</div>
+        </div>
+        <div class="info-item">
+          <div class="info-value">30</div>
+          <div class="info-label">分钟</div>
+        </div>
+      </div>
+      
+      <div class="section-title">考试须知</div>
+      <ul class="rule-list">
+        <li class="rule-item">考试时间为30分钟，超时将自动交卷</li>
+        <li class="rule-item">考试过程中请保持网络畅通</li>
+        <li class="rule-item">考试开始后不得退出，否则将视为交卷</li>
+        <li class="rule-item">考试结束后可查看成绩和解析</li>
+        <li class="rule-item">满分100分，60分合格</li>
+      </ul>
+      
+      <div class="section-title">题型分布</div>
+      <ul class="rule-list">
+        <li class="rule-item">单选题：10题，每题4分，共40分</li>
+        <li class="rule-item">多选题：5题，每题6分，共30分</li>
+        <li class="rule-item">判断题：5题，每题2分，共10分</li>
+        <li class="rule-item">问答题：1题，每题20分，共20分</li>
+      </ul>
+      
+      <div class="warning-box">
+        <div class="warning-icon">
+          <span class="iconify" data-icon="solar:alert-circle-bold"></span>
+        </div>
+        <div class="warning-text">
+          <strong>温馨提示：</strong>请确保在稳定的网络环境下进行考试，考试过程中请勿刷新页面或切换应用。
+        </div>
+      </div>
+    </div>
+    
+    <div class="start-btn" onclick="startExam()">开始考试</div>
+  </div>
+  
+  <script>
+    function goBack() {
+      window.location.href = 'exam-list.html';
+    }
+    function startExam() {
+      window.location.href = 'exam-quiz.html?id=1';
+    }
+  </script>
+</body>
+</html>

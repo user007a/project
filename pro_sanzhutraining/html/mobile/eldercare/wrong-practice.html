@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>叁竹培训 - 错题练习</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: #f3f4f6;
+      color: #1f2937;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; }
+    .header {
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      padding: 32px 16px 12px;
+      padding-top: calc(32px + env(safe-area-inset-top));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-radius: 0 0 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 150px; height: 150px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+    .header-title {
+      font-size: 17px;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .progress-bar {
+      height: 4px;
+      background: #e5e7eb;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2e9e5a, #1e7e42);
+      transition: width 0.3s ease;
+    }
+    .question-area {
+      padding: 16px;
+      padding-bottom: 110px;
+    }
+    .question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .question-num {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .question-type {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .type-single {
+      background: #dcfce7;
+      color: #10b981;
+    }
+    .type-multi {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    .type-judge {
+      background: #fef3c7;
+      color: #f59e0b;
+    }
+    .question-text {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-weight: 500;
+      color: #1f2937;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .option-item.selected {
+      border-color: #2e9e5a;
+      background: #f0fdf4;
+    }
+    .option-item.selected .option-letter {
+      background: #2e9e5a;
+      color: #fff;
+    }
+    .option-item.correct {
+      border-color: #22c55e;
+      background: #f0fdf4;
+    }
+    .option-item.correct .option-letter {
+      background: #22c55e;
+      color: #fff;
+    }
+    .option-item.wrong {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+    .option-item.wrong .option-letter {
+      background: #dc2626;
+      color: #fff;
+    }
+    .option-letter {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .option-content {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+      flex: 1;
+    }
+    .analysis-box {
+      background: #fffbeb;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
+      border-left: 4px solid #f59e0b;
+    }
+    .analysis-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 6px;
+    }
+    .analysis-content {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #92400e;
+    }
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 750px;
+      background: #fff;
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+    }
+    .footer-btn {
+      padding: 11px 28px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .footer-btn.primary {
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(46, 158, 90, 0.2);
+    }
+    .footer-btn.secondary {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .result-modal.show {
+      display: flex;
+    }
+    .result-box {
+      background: #fff;
+      width: 100%;
+      max-width: 340px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .result-header {
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      padding: 24px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-header::before {
+      content: '';
+      position: absolute;
+      top: -40%; right: -20%;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      filter: blur(30px);
+    }
+    .result-score {
+      font-size: 42px;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+    .result-label {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .result-body {
+      padding: 20px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .result-row:last-child {
+      border-bottom: none;
+    }
+    .result-key {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .result-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .result-btn {
+      width: 100%;
+      padding: 13px;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-title">错题练习</div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="question-area" id="questionArea"></div>
+    
+    <div class="footer-bar">
+      <button class="footer-btn secondary" onclick="showAnswer()">查看答案</button>
+      <button class="footer-btn primary" onclick="nextQuestion()">下一题</button>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+      <div class="result-box">
+        <div class="result-header">
+          <div class="result-score" id="resultScore">0</div>
+          <div class="result-label">分</div>
+        </div>
+        <div class="result-body">
+          <div class="result-row">
+            <span class="result-key">总题数</span>
+            <span class="result-value">0</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">正确</span>
+            <span class="result-value" style="color: var(--correct);">0</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">错误</span>
+            <span class="result-value" style="color: var(--wrong);">0</span>
+          </div>
+          <button class="result-btn" onclick="goBack()">返回错题本</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    var allQuestions = [
+      { id: 1, type: 'single', question: '老年人的脉搏正常范围是多少？', options: ['50-70次/分钟', '60-100次/分钟', '70-120次/分钟', '80-130次/分钟'], answer: 'A', analysis: '老年人脉搏相对较慢，正常范围为50-70次/分钟。' },
+      { id: 2, type: 'single', question: '以下哪种营养素对老年人骨骼健康最重要？', options: ['蛋白质', '维生素C', '钙', '铁'], answer: 'C', analysis: '钙是维持骨骼健康最重要的营养素。' },
+      { id: 3, type: 'single', question: '老年人进行户外活动的最佳时间是？', options: ['早晨6-8点', '上午10点-下午4点', '傍晚6-8点', '晚上8-10点'], answer: 'A', analysis: '早晨空气清新，温度适宜，是老年人户外活动的最佳时间。' },
+      { id: 4, type: 'single', question: '以下哪种情况需要立即就医？', options: ['轻微咳嗽', '血压突然升高', '食欲不振', '轻微失眠'], answer: 'B', analysis: '血压突然升高可能引发心脑血管意外，需要立即就医。' },
+      { id: 5, type: 'multi', question: '老年人饮食应注意哪些方面？', options: ['低盐低脂', '少量多餐', '细嚼慢咽', '多吃生冷食物'], answer: ['A', 'B', 'C'], analysis: '老年人应低盐低脂、少量多餐、细嚼慢咽，避免生冷食物。' },
+      { id: 6, type: 'judge', question: '老年人可以长时间卧床休息，不需要活动。', options: ['正确', '错误'], answer: 'B', analysis: '老年人适当活动有助于身体健康，长时间卧床会导致肌肉萎缩等问题。' },
+    ];
+    
+    var wrongQuestions = [];
+    var currentIndex = 0;
+    var selectedAnswer = null;
+    var showAnswerFlag = false;
+    var correctCount = 0;
+    var masteredIds = [];
+    
+    function loadWrongQuestions() {
+      var saved = localStorage.getItem('wrongQuestions');
+      if (saved) {
+        var stored = JSON.parse(saved);
+        wrongQuestions = stored.map(w => {
+          var full = allQuestions.find(q => q.id === w.id);
+          return full ? { ...full, userAnswer: w.userAnswer } : w;
+        });
+      }
+      
+      if (wrongQuestions.length === 0) {
+        wrongQuestions = [
+          { ...allQuestions[0], userAnswer: 'B' },
+          { ...allQuestions[1], userAnswer: 'A' },
+          { ...allQuestions[4], userAnswer: ['A', 'D'] },
+          { ...allQuestions[5], userAnswer: 'A' },
+        ];
+      }
+      
+      init();
+    }
+    
+    function init() {
+      if (wrongQuestions.length === 0) {
+        alert('暂无错题');
+        goBack();
+        return;
+      }
+      renderQuestion();
+    }
+    
+    function renderQuestion() {
+      var q = wrongQuestions[currentIndex];
+      var typeMap = { single: '单选题', multi: '多选题', judge: '判断题' };
+      var typeClassMap = { single: 'type-single', multi: 'type-multi', judge: 'type-judge' };
+      
+      var optionsHtml = '';
+      var letters = q.type === 'judge' ? ['A', 'B'] : ['A', 'B', 'C', 'D'];
+      q.options.forEach(function(opt, idx) {
+        var letter = letters[idx];
+        var isSelected = q.type === 'multi' 
+          ? (selectedAnswer && selectedAnswer.includes(letter))
+          : (selectedAnswer === letter);
+        
+        var isCorrect = q.type === 'multi' 
+          ? (Array.isArray(q.answer) && q.answer.includes(letter))
+          : (q.answer === letter);
+        
+        var isWrong = isSelected && !isCorrect && showAnswerFlag;
+        
+        var cls = 'option-item';
+        if (showAnswerFlag) {
+          if (isCorrect) cls += ' correct';
+          else if (isWrong) cls += ' wrong';
+        } else if (isSelected) cls += ' selected';
+        
+        optionsHtml += `
+          <div class="option-item ${cls}" ${!showAnswerFlag ? `onclick="selectAnswer('${letter}', '${q.type}')"` : ''}>
+            <span class="option-letter">${letter}</span>
+            <span class="option-content">${opt}</span>
+          </div>
+        `;
+      });
+      
+      var analysisHtml = showAnswerFlag ? `
+        <div class="analysis-box">
+          <div class="analysis-title">解析</div>
+          <div class="analysis-content">${q.analysis}</div>
+        </div>
+      ` : '';
+      
+      document.getElementById('questionArea').innerHTML = `
+        <div class="question-header">
+          <span class="question-num">${currentIndex + 1}/${wrongQuestions.length}</span>
+          <span class="question-type ${typeClassMap[q.type]}">${typeMap[q.type]}</span>
+        </div>
+        <div class="question-text">${q.question}</div>
+        <div class="options-list">${optionsHtml}${analysisHtml}</div>
+      `;
+      
+      updateProgress();
+    }
+    
+    function selectAnswer(letter, type) {
+      if (showAnswerFlag) return;
+      if (type === 'multi') {
+        if (!selectedAnswer) selectedAnswer = [];
+        var idx = selectedAnswer.indexOf(letter);
+        if (idx > -1) {
+          selectedAnswer.splice(idx, 1);
+        } else {
+          selectedAnswer.push(letter);
+        }
+      } else {
+        selectedAnswer = letter;
+      }
+      renderQuestion();
+    }
+    
+    function showAnswer() {
+      if (showAnswerFlag) return;
+      showAnswerFlag = true;
+      
+      var q = wrongQuestions[currentIndex];
+      var isCorrect = false;
+      
+      if (q.type === 'multi') {
+        var correctAnswer = Array.isArray(q.answer) ? q.answer : [q.answer];
+        var userArr = Array.isArray(selectedAnswer) ? selectedAnswer : [];
+        isCorrect = userArr.length === correctAnswer.length && userArr.every(a => correctAnswer.includes(a));
+      } else {
+        isCorrect = selectedAnswer === q.answer;
+      }
+      
+      if (isCorrect) {
+        correctCount++;
+        masteredIds.push(q.id);
+      }
+      
+      renderQuestion();
+    }
+    
+    function nextQuestion() {
+      if (!showAnswerFlag) {
+        showAnswer();
+        return;
+      }
+      
+      if (currentIndex < wrongQuestions.length - 1) {
+        currentIndex++;
+        selectedAnswer = null;
+        showAnswerFlag = false;
+        renderQuestion();
+      } else {
+        updateWrongQuestions();
+        showResult();
+      }
+    }
+    
+    function updateWrongQuestions() {
+      var saved = localStorage.getItem('wrongQuestions');
+      if (saved) {
+        var stored = JSON.parse(saved);
+        stored = stored.filter(q => !masteredIds.includes(q.id));
+        localStorage.setItem('wrongQuestions', JSON.stringify(stored));
+      }
+    }
+    
+    function showResult() {
+      document.getElementById('resultScore').textContent = correctCount;
+      document.querySelectorAll('.result-value')[0].textContent = wrongQuestions.length;
+      document.querySelectorAll('.result-value')[1].textContent = correctCount;
+      document.querySelectorAll('.result-value')[2].textContent = wrongQuestions.length - correctCount;
+      document.getElementById('resultModal').classList.add('show');
+    }
+    
+    function updateProgress() {
+      var progress = ((currentIndex + 1) / wrongQuestions.length) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+    
+    function goBack() {
+      window.location.href = 'wrong-notebook.html';
+    }
+    
+    window.onload = loadWrongQuestions;
+  </script>
+</body>
+</html>

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>练习管理 - 叁竹培训系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+    <div class="flex-1 flex flex-col min-w-0">
+        <main class="flex-1 overflow-y-auto p-6">
+            <!-- 搜索栏 -->
+            <div class="bg-white p-6 rounded-xl border shadow-sm mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">练习名称</label>
+                        <input type="text" id="search-input" placeholder="搜索练习名称" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">所属分类</label>
+                        <select id="category-select" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm text-gray-600">
+                            <option>全部分类</option>
+                            <option>安全知识</option>
+                            <option>计算机技术</option>
+                            <option>大学英语</option>
+                            <option>文学</option>
+                            <option>地理</option>
+                            <option>历史</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-4">
+                    <button id="btn-clear" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">清空</button>
+                    <button id="btn-filter" class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">筛选</button>
+                </div>
+            </div>
+
+            <!-- 练习列表 -->
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b flex items-center justify-between">
+                    <div></div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="openNewPracticeModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-[#1890FF] transition-colors"><span class="iconify" data-icon="ri:add-line"></span>新建练习</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-100">
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-12 whitespace-nowrap">序号</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50">练习名称</th>
+                                <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[100px] whitespace-nowrap">分类</th>
+                                <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[80px] whitespace-nowrap">题目数</th>
+                                <th class="px-4 py-3 text-center text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[80px] whitespace-nowrap">状态</th>
+                                <th class="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[120px] whitespace-nowrap">创建时间</th>
+                                <th class="px-4 py-3 text-right text-xs text-gray-400 uppercase tracking-wider font-bold bg-gray-50/50 w-[150px] whitespace-nowrap">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="1">
+                                <td class="px-4 py-3 text-sm text-gray-500">1</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人日常照护基础练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">12</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-20</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="2">
+                                <td class="px-4 py-3 text-sm text-gray-500">2</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人能力评估实操练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">老年人能力评估师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">99</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-19</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="3">
+                                <td class="px-4 py-3 text-sm text-gray-500">3</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">健康照护师基础知识练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">健康照护师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">71</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-18</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="4">
+                                <td class="px-4 py-3 text-sm text-gray-500">4</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年营养与膳食搭配练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">营养配餐员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">50</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-17</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="5">
+                                <td class="px-4 py-3 text-sm text-gray-500">5</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人心理护理技能练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">34</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-16</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="6">
+                                <td class="px-4 py-3 text-sm text-gray-500">6</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人康复护理基础练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">40</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-15</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="7">
+                                <td class="px-4 py-3 text-sm text-gray-500">7</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人能力评估标准解读练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">老年人能力评估师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">25</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-14</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="8">
+                                <td class="px-4 py-3 text-sm text-gray-500">8</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">健康照护师急救技能练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">健康照护师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">38</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-13</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="9">
+                                <td class="px-4 py-3 text-sm text-gray-500">9</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年慢病营养管理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">营养配餐员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">60</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-12</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="10">
+                                <td class="px-4 py-3 text-sm text-gray-500">10</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人安全防护与应急处理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">45</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-11</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="11">
+                                <td class="px-4 py-3 text-sm text-gray-500">11</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人认知功能评估练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">老年人能力评估师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">32</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-10</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="12">
+                                <td class="px-4 py-3 text-sm text-gray-500">12</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">健康照护师康复辅助练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">健康照护师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">55</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-09</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="13">
+                                <td class="px-4 py-3 text-sm text-gray-500">13</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人特殊饮食护理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">营养配餐员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">28</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-08</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="14">
+                                <td class="px-4 py-3 text-sm text-gray-500">14</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人用药照护基础练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">42</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-07</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="15">
+                                <td class="px-4 py-3 text-sm text-gray-500">15</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人能力评估案例分析练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">老年人能力评估师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">35</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-06</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="16">
+                                <td class="px-4 py-3 text-sm text-gray-500">16</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">健康照护师沟通技巧练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">健康照护师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">30</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-05</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="17">
+                                <td class="px-4 py-3 text-sm text-gray-500">17</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年糖尿病饮食管理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">营养配餐员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">38</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-04</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="18">
+                                <td class="px-4 py-3 text-sm text-gray-500">18</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人跌倒预防与处理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">48</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-03</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="19">
+                                <td class="px-4 py-3 text-sm text-gray-500">19</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人能力评估实操演练练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">老年人能力评估师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">22</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-02</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="20">
+                                <td class="px-4 py-3 text-sm text-gray-500">20</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">健康照护师护理文书书写练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">健康照护师</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">36</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-05-01</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="21">
+                                <td class="px-4 py-3 text-sm text-gray-500">21</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人心血管疾病饮食调理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">营养配餐员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">28</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-xs font-medium">草稿</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-04-30</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="22">
+                                <td class="px-4 py-3 text-sm text-gray-500">22</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人临终关怀护理练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">42</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-xs font-medium">草稿</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-04-29</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/30 transition-all" data-row="23">
+                                <td class="px-4 py-3 text-sm text-gray-500">23</td>
+                                <td class="px-4 py-3"><p class="text-sm text-gray-900 font-medium">老年人失能照护综合练习</p></td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">养老护理员</td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">33</td>
+                                <td class="px-4 py-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 bg-green-50 text-green-600 rounded text-xs font-medium">已发布</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-400">2026-04-28</td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="chapter-btn text-gray-400 hover:text-blue-600 text-sm">章节</button>
+                                        <button class="student-btn text-gray-400 hover:text-blue-600 text-sm">学员</button>
+                                        <button class="more-btn text-gray-400 hover:text-blue-600 text-sm">更多</button>
+                                    </div>
+                                </td>
+                            </tr>
+                    </tbody>
+                </table>
+                <!-- 分页 -->
+                <div class="px-6 py-4 border-t flex items-center justify-between">
+                    <span id="pageInfo" class="text-sm text-gray-500">第 1 / 2 页，共 23 条</span>
+                    <div id="paginationBtns" class="flex items-center gap-1">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 新建练习弹窗 -->
+    <div id="modal-new-practice" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-lg mx-4 animate-fadeIn">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">新建练习</h3>
+                <button id="close-new-practice" class="p-1 hover:bg-gray-100 rounded transition-colors"><span class="iconify text-gray-400" data-icon="ri:close-line"></span></button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">分类</label>
+                    <div class="flex items-center gap-2">
+                        <select class="flex-1 border border-gray-200 px-3 py-2 rounded-lg text-sm text-gray-600 outline-none focus:ring-1 focus:ring-blue-500">
+                            <option>安全知识</option>
+                            <option>计算机技术</option>
+                            <option>大学英语</option>
+                            <option>文学</option>
+                            <option>地理</option>
+                            <option>历史</option>
+                        </select>
+                        <button class="px-3 py-2 text-blue-500 hover:text-blue-600 text-sm">分类管理</button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">练习名 <span class="text-red-500">*</span></label>
+                    <input type="text" placeholder="请输入练习名称" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <div class="relative">
+                            <input type="checkbox" checked class="sr-only peer" id="free-switch">
+                            <div class="w-11 h-6 bg-[#1890FF] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                        </div>
+                        <span class="text-sm text-gray-600">免费：开启后课程所有用户都可参与练习</span>
+                    </label>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+                    <button class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 章节管理弹窗 -->
+    <div id="modal-chapter" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-2xl mx-4 animate-fadeIn max-h-[80vh] flex flex-col">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+                <h3 class="text-lg font-semibold text-gray-900">章节管理</h3>
+                <button id="close-chapter" class="p-1 hover:bg-gray-100 rounded transition-colors"><span class="iconify text-gray-400" data-icon="ri:close-line"></span></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <input type="text" placeholder="搜索章节" class="border border-gray-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-500 w-48">
+                    </div>
+                    <button id="btn-add-chapter" class="flex items-center gap-2 px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
+                        <span class="iconify text-sm" data-icon="ri:plus-line"></span>
+                        添加章节
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-medium">1</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">第一章 消防安全基础知识</p>
+                                <p class="text-xs text-gray-500">包含 12 道题目</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="text-blue-500 hover:text-blue-600 text-sm">编辑</button>
+                            <button class="text-gray-400 hover:text-red-600 text-sm">删除</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-medium">2</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">第二章 火灾预防与控制</p>
+                                <p class="text-xs text-gray-500">包含 8 道题目</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="text-blue-500 hover:text-blue-600 text-sm">编辑</button>
+                            <button class="text-gray-400 hover:text-red-600 text-sm">删除</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-medium">3</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">第三章 灭火器材使用</p>
+                                <p class="text-xs text-gray-500">包含 10 道题目</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="text-blue-500 hover:text-blue-600 text-sm">编辑</button>
+                            <button class="text-gray-400 hover:text-red-600 text-sm">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 flex-shrink-0">
+                <button id="cancel-chapter" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 学员管理弹窗 -->
+    <div id="modal-student" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-2xl mx-4 animate-fadeIn max-h-[80vh] flex flex-col">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+                <h3 class="text-lg font-semibold text-gray-900">学员管理</h3>
+                <button id="close-student" class="p-1 hover:bg-gray-100 rounded transition-colors"><span class="iconify text-gray-400" data-icon="ri:close-line"></span></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">学员姓名</label>
+                        <input type="text" placeholder="搜索姓名" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">手机号</label>
+                        <input type="text" placeholder="搜索手机号" class="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-end">
+                        <button class="px-4 py-2 bg-[#1890FF] text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors w-full">筛选</button>
+                    </div>
+                </div>
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">姓名</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">手机号</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">练习进度</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">正确率</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">最后练习时间</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr>
+                            <td class="px-4 py-3 text-sm text-gray-900">张三</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-600">138****1234</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#1890FF] rounded-full" style="width: 75%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-600">75%</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-center text-sm text-green-600">85%</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-500">2026-05-14 10:30</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 text-sm text-gray-900">李四</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-600">139****5678</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#1890FF] rounded-full" style="width: 50%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-600">50%</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-center text-sm text-green-600">72%</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-500">2026-05-13 14:20</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 text-sm text-gray-900">王五</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-600">137****9012</td>
+                            <td class="px-4 py-3 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#1890FF] rounded-full" style="width: 100%"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-600">100%</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-center text-sm text-green-600">92%</td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-500">2026-05-12 09:15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 flex-shrink-0">
+                <button id="cancel-student" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 更多操作弹窗 -->
+    <div id="modal-more" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-md mx-4 animate-fadeIn">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">更多操作</h3>
+                <button id="close-more" class="p-1 hover:bg-gray-100 rounded transition-colors"><span class="iconify text-gray-400" data-icon="ri:close-line"></span></button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-3">
+                    <button id="btn-edit-practice" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                        <span class="iconify text-gray-400" data-icon="ri:edit-line"></span>
+                        <span class="text-sm text-gray-700">编辑练习</span>
+                    </button>
+                    <button id="btn-delete-practice" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                        <span class="iconify text-red-400" data-icon="ri:trash-2-line"></span>
+                        <span class="text-sm text-red-600">删除练习</span>
+                    </button>
+                    <button id="btn-statistics-practice" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                        <span class="iconify text-gray-400" data-icon="ri:bar-chart-2-line"></span>
+                        <span class="text-sm text-gray-700">练习统计</span>
+                    </button>
+                    <button id="btn-copy-practice" class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                        <span class="iconify text-gray-400" data-icon="ri:copy-line"></span>
+                        <span class="text-sm text-gray-700">复制练习</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div id="modal-delete-confirm" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl w-full max-w-sm mx-4 animate-fadeIn">
+            <div class="p-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="iconify text-red-500 text-3xl" data-icon="ri:alert-triangle-line"></span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">确认删除</h3>
+                    <p class="text-sm text-gray-500">确定要删除该练习吗？此操作不可撤销。</p>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button id="cancel-delete" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+                    <button id="confirm-delete" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors">确定删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 新建练习弹窗
+        document.getElementById('btn-new-practice').addEventListener('click', function() {
+            document.getElementById('modal-new-practice').style.display = 'flex';
+        });
+        document.getElementById('close-new-practice').addEventListener('click', function() {
+            document.getElementById('modal-new-practice').style.display = 'none';
+        });
+        document.getElementById('modal-new-practice').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // 章节管理弹窗
+        document.querySelectorAll('.chapter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('modal-chapter').style.display = 'flex';
+            });
+        });
+        document.getElementById('close-chapter').addEventListener('click', function() {
+            document.getElementById('modal-chapter').style.display = 'none';
+        });
+        document.getElementById('cancel-chapter').addEventListener('click', function() {
+            document.getElementById('modal-chapter').style.display = 'none';
+        });
+        document.getElementById('modal-chapter').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // 学员管理弹窗
+        document.querySelectorAll('.student-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('modal-student').style.display = 'flex';
+            });
+        });
+        document.getElementById('close-student').addEventListener('click', function() {
+            document.getElementById('modal-student').style.display = 'none';
+        });
+        document.getElementById('cancel-student').addEventListener('click', function() {
+            document.getElementById('modal-student').style.display = 'none';
+        });
+        document.getElementById('modal-student').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // 更多操作弹窗
+        document.querySelectorAll('.more-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.getElementById('modal-more').style.display = 'flex';
+            });
+        });
+        document.getElementById('close-more').addEventListener('click', function() {
+            document.getElementById('modal-more').style.display = 'none';
+        });
+        document.getElementById('modal-more').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // 删除确认弹窗
+        document.getElementById('btn-delete-practice').addEventListener('click', function() {
+            document.getElementById('modal-more').style.display = 'none';
+            document.getElementById('modal-delete-confirm').style.display = 'flex';
+        });
+        document.getElementById('cancel-delete').addEventListener('click', function() {
+            document.getElementById('modal-delete-confirm').style.display = 'none';
+        });
+        document.getElementById('confirm-delete').addEventListener('click', function() {
+            document.getElementById('modal-delete-confirm').style.display = 'none';
+            alert('练习已删除');
+        });
+        document.getElementById('modal-delete-confirm').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // 筛选功能
+        document.getElementById('btn-filter').addEventListener('click', function() {
+            alert('筛选功能已执行');
+        });
+
+        // 清空功能
+        document.getElementById('btn-clear').addEventListener('click', function() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('category-select').value = '全部分类';
+        });
+
+        // 新建练习弹窗函数（供按钮onclick调用）
+        function openNewPracticeModal() {
+            document.getElementById('modal-new-practice').style.display = 'flex';
+        }
+
+        // 分类管理按钮
+        document.getElementById('btn-category').addEventListener('click', function() {
+            alert('分类管理功能');
+        });
+
+        // 分页功能
+        const PAGE_SIZE = 10;
+        let currentPage = 1;
+        const rows = document.querySelectorAll('tbody tr[data-row]');
+        const totalRows = rows.length;
+        const totalPages = Math.ceil(totalRows / PAGE_SIZE);
+
+        function renderPagination(page) {
+            currentPage = page;
+            rows.forEach((row, index) => {
+                const rowNum = parseInt(row.getAttribute('data-row'));
+                if (rowNum > (page - 1) * PAGE_SIZE && rowNum <= page * PAGE_SIZE) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const infoEl = document.getElementById('pageInfo');
+            if (infoEl) infoEl.textContent = `第 ${page} / ${totalPages} 页，共 ${totalRows} 条`;
+
+            const paginationBtns = document.getElementById('paginationBtns');
+            if (paginationBtns) {
+                let html = '';
+                html += `<button onclick="renderPagination(${page - 1})" class="px-3 py-1.5 text-sm border rounded-lg ${page === 1 ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${page === 1 ? 'disabled' : ''}>上一页</button>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button onclick="renderPagination(${i})" class="px-3 py-1.5 text-sm border rounded-lg ${i === page ? 'bg-[#1890FF] text-white border-[#1890FF]' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}">${i}</button>`;
+                }
+                html += `<button onclick="renderPagination(${page + 1})" class="px-3 py-1.5 text-sm border rounded-lg ${page === totalPages ? 'border-gray-200 text-gray-400 cursor-not-allowed' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}" ${page === totalPages ? 'disabled' : ''}>下一页</button>`;
+                paginationBtns.innerHTML = html;
+            }
+        }
+
+        renderPagination(1);
+    </script>
+</body>
+</html>

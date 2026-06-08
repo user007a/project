@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>叁竹培训 - 模拟考试</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    :root {
+      --primary: #1abc9c;
+      --bg: #f5f5f5;
+      --white: #ffffff;
+      --text: #333;
+      --text-secondary: #666;
+      --text-light: #999;
+      --border: #e8e8e8;
+      --correct: #2e9e5a;
+      --wrong: #e74c3c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg); color: var(--text);
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; }
+    .header {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      padding: 12px 16px; color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .header-title { font-size: 17px; font-weight: 600; }
+    .submit-btn {
+      font-size: 14px; padding: 6px 14px; border-radius: 16px;
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+      color: #fff; cursor: pointer;
+    }
+    .progress-bar {
+      height: 4px; background: #e0e0e0;
+    }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, #1abc9c, #16a085);
+      transition: width 0.3s ease;
+    }
+    .question-area { padding: 20px 16px 120px; }
+    .question-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .question-num { font-size: 15px; font-weight: 600; }
+    .question-type { font-size: 12px; padding: 4px 12px; border-radius: 12px; }
+    .type-single { background: #e8f5ec; color: var(--correct); }
+    .type-multi { background: #eaf2fa; color: #3498db; }
+    .type-judge { background: #fef5e7; color: #f39c12; }
+    .question-text { font-size: 16px; line-height: 1.7; margin-bottom: 20px; font-weight: 500; }
+    .options-list { display: flex; flex-direction: column; gap: 12px; }
+    .option-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; border-radius: 12px;
+      background: #fff; border: 1.5px solid var(--border);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .option-item.selected {
+      border-color: var(--primary);
+      background: #f0fdfa;
+    }
+    .option-item.selected .option-letter {
+      background: var(--primary);
+      color: #fff;
+    }
+    .option-letter {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #f0f0f0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600;
+      flex-shrink: 0;
+    }
+    .option-content { font-size: 15px; line-height: 1.6; color: var(--text); flex: 1; }
+    .footer-bar {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 750px;
+      background: #fff; padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      display: flex; justify-content: space-around;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    .footer-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; color: var(--text-light);
+    }
+    .footer-btn span:first-child { font-size: 22px; }
+    .footer-btn span:last-child { font-size: 10px; }
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100;
+      display: none; align-items: flex-end;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-content {
+      background: #fff; width: 100%; border-radius: 20px 20px 0 0;
+      max-height: 70vh; overflow-y: auto;
+    }
+    .modal-header {
+      padding: 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .modal-title { font-size: 16px; font-weight: 600; }
+    .modal-close { cursor: pointer; }
+    .card-grid {
+      padding: 16px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    }
+    .card-item {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; font-size: 14px; font-weight: 500;
+      background: #f5f5f5; cursor: pointer;
+    }
+    .card-item.current { background: var(--primary); color: #fff; }
+    .card-item.answered { background: #e8f5ec; color: var(--correct); }
+    .result-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .result-modal.show { display: flex; }
+    .result-box {
+      background: #fff; width: 100%; max-width: 360px; border-radius: 20px;
+      overflow: hidden;
+    }
+    .result-header {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      padding: 30px; text-align: center; color: #fff;
+    }
+    .result-score { font-size: 48px; font-weight: 700; }
+    .result-label { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+    .result-body { padding: 24px; }
+    .result-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .result-row:last-child { border-bottom: none; }
+    .result-key { font-size: 14px; color: var(--text-secondary); }
+    .result-value { font-size: 14px; font-weight: 600; }
+    .result-btn {
+      width: 100%; padding: 14px; margin-top: 20px;
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      color: #fff; border: none; border-radius: 12px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="header-title">养老护理模拟考试</div>
+      <button class="submit-btn" onclick="submitExam()">交卷</button>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="question-area" id="questionArea"></div>
+    
+    <div class="footer-bar">
+      <div class="footer-btn" onclick="showAnswerCard()">
+        <span class="iconify" data-icon="solar:layout-grid-bold"></span>
+        <span>答题卡</span>
+      </div>
+      <div class="footer-btn" onclick="prevQuestion()">
+        <span class="iconify" data-icon="solar:arrow-left-bold"></span>
+        <span>上一题</span>
+      </div>
+      <div class="footer-btn" onclick="nextQuestion()">
+        <span class="iconify" data-icon="solar:arrow-right-bold"></span>
+        <span>下一题</span>
+      </div>
+    </div>
+    
+    <div class="modal-overlay" id="cardModal" onclick="hideAnswerCard()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">答题卡</div>
+          <div class="modal-close" onclick="hideAnswerCard()">
+            <span class="iconify" data-icon="solar:close-bold" style="font-size: 20px;"></span>
+          </div>
+        </div>
+        <div class="card-grid" id="cardGrid"></div>
+      </div>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+      <div class="result-box">
+        <div class="result-header">
+          <div class="result-score" id="resultScore">0</div>
+          <div class="result-label">分</div>
+        </div>
+        <div class="result-body">
+          <div class="result-row">
+            <span class="result-key">总题数</span>
+            <span class="result-value">20</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">正确</span>
+            <span class="result-value" style="color: var(--correct);">0</span>
+          </div>
+          <div class="result-row">
+            <span class="result-key">错误</span>
+            <span class="result-value" style="color: var(--wrong);">0</span>
+          </div>
+          <button class="result-btn" onclick="goBack()">返回模拟考试列表</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    var questions = [
+      { id: 1, type: 'single', score: 5, question: '老年人的脉搏正常范围是多少？', options: ['50-70次/分钟', '60-100次/分钟', '70-120次/分钟', '80-130次/分钟'], answer: 'A', analysis: '老年人脉搏相对较慢，正常范围为50-70次/分钟。' },
+      { id: 2, type: 'single', score: 5, question: '以下哪种营养素对老年人骨骼健康最重要？', options: ['蛋白质', '维生素C', '钙', '铁'], answer: 'C', analysis: '钙是维持骨骼健康最重要的营养素。' },
+      { id: 3, type: 'single', score: 5, question: '老年人进行户外活动的最佳时间是？', options: ['早晨6-8点', '上午10点-下午4点', '傍晚6-8点', '晚上8-10点'], answer: 'A', analysis: '早晨空气清新，温度适宜，是老年人户外活动的最佳时间。' },
+      { id: 4, type: 'single', score: 5, question: '以下哪种情况需要立即就医？', options: ['轻微咳嗽', '血压突然升高', '食欲不振', '轻微失眠'], answer: 'B', analysis: '血压突然升高可能引发心脑血管意外，需要立即就医。' },
+      { id: 5, type: 'single', score: 5, question: '老年人洗澡的适宜水温是多少？', options: ['35-38℃', '40-42℃', '45-48℃', '50-55℃'], answer: 'B', analysis: '老年人皮肤敏感，水温以40-42℃为宜，避免烫伤。' },
+      { id: 6, type: 'multi', score: 10, question: '老年人饮食应注意哪些方面？', options: ['低盐低脂', '少量多餐', '细嚼慢咽', '多吃生冷食物'], answer: ['A', 'B', 'C'], analysis: '老年人应低盐低脂、少量多餐、细嚼慢咽，避免生冷食物。' },
+      { id: 7, type: 'multi', score: 10, question: '预防老年人跌倒的措施有哪些？', options: ['保持地面干燥', '安装扶手', '穿防滑鞋', '光线昏暗'], answer: ['A', 'B', 'C'], analysis: '保持地面干燥、安装扶手、穿防滑鞋都是预防跌倒的有效措施。' },
+      { id: 8, type: 'multi', score: 10, question: '老年人常见的心理问题包括？', options: ['孤独感', '焦虑', '抑郁', '过度兴奋'], answer: ['A', 'B', 'C'], analysis: '孤独感、焦虑、抑郁是老年人常见的心理问题。' },
+      { id: 9, type: 'judge', score: 5, question: '老年人应该多喝水，每天饮水量建议在1500-2000毫升。', options: ['正确', '错误'], answer: 'A', analysis: '老年人多喝水有助于新陈代谢，每天建议1500-2000毫升。' },
+      { id: 10, type: 'judge', score: 5, question: '老年人可以长时间卧床休息，不需要活动。', options: ['正确', '错误'], answer: 'B', analysis: '老年人适当活动有助于身体健康，长时间卧床会导致肌肉萎缩等问题。' },
+      { id: 11, type: 'judge', score: 5, question: '为老年人喂食时应速度较慢，防止呛咳。', options: ['正确', '错误'], answer: 'A', analysis: '老年人吞咽功能可能下降，喂食速度应慢。' },
+      { id: 12, type: 'judge', score: 5, question: '老年人的睡眠需求比年轻人少，每天4-5小时就足够了。', options: ['正确', '错误'], answer: 'B', analysis: '老年人同样需要充足睡眠，建议每天7-8小时。' },
+      { id: 13, type: 'single', score: 5, question: '老年人便秘的主要原因不包括？', options: ['饮食中缺乏膳食纤维', '饮水量不足', '缺乏运动', '蛋白质摄入过多'], answer: 'D', analysis: '蛋白质摄入过多不是便秘的主要原因。' },
+      { id: 14, type: 'single', score: 5, question: '以下哪种运动不适合老年人？', options: ['散步', '太极拳', '马拉松', '哑铃操'], answer: 'C', analysis: '马拉松强度过大，不适合老年人。' },
+      { id: 15, type: 'single', score: 5, question: '老年人用药应注意什么？', options: ['遵医嘱用药', '自行增减药量', '多种药物混服', '不看说明书'], answer: 'A', analysis: '老年人用药必须严格遵医嘱。' },
+    ];
+    
+    var currentIndex = 0;
+    var answers = {};
+    
+    function init() {
+      renderQuestion();
+      renderAnswerCard();
+    }
+    
+    function renderQuestion() {
+      var q = questions[currentIndex];
+      var area = document.getElementById('questionArea');
+      var typeMap = { single: '单选题', multi: '多选题', judge: '判断题' };
+      var typeClassMap = { single: 'type-single', multi: 'type-multi', judge: 'type-judge' };
+      
+      var optionsHtml = '';
+      var letters = q.type === 'judge' ? ['A', 'B'] : ['A', 'B', 'C', 'D'];
+      q.options.forEach(function(opt, idx) {
+        var letter = letters[idx];
+        var isSelected = q.type === 'multi' 
+          ? (answers[q.id] && answers[q.id].includes(letter))
+          : (answers[q.id] === letter);
+        optionsHtml += `
+          <div class="option-item ${isSelected ? 'selected' : ''}" onclick="selectOption('${q.id}', '${letter}', '${q.type}')">
+            <span class="option-letter">${letter}</span>
+            <span class="option-content">${opt}</span>
+          </div>
+        `;
+      });
+      
+      area.innerHTML = `
+        <div class="question-header">
+          <span class="question-num">${currentIndex + 1}/${questions.length}</span>
+          <span class="question-type ${typeClassMap[q.type]}">${typeMap[q.type]} (${q.score}分)</span>
+        </div>
+        <div class="question-text">${q.question}</div>
+        <div class="options-list">${optionsHtml}</div>
+      `;
+      updateProgress();
+    }
+    
+    function selectOption(qId, letter, type) {
+      if (type === 'multi') {
+        if (!answers[qId]) answers[qId] = [];
+        var idx = answers[qId].indexOf(letter);
+        if (idx > -1) {
+          answers[qId].splice(idx, 1);
+        } else {
+          answers[qId].push(letter);
+        }
+      } else {
+        answers[qId] = letter;
+      }
+      renderQuestion();
+      renderAnswerCard();
+    }
+    
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    }
+    
+    function renderAnswerCard() {
+      var grid = document.getElementById('cardGrid');
+      var html = '';
+      questions.forEach(function(q, idx) {
+        var isAnswered = answers[q.id];
+        var isCurrent = idx === currentIndex;
+        var cls = 'card-item';
+        if (isCurrent) cls += ' current';
+        else if (isAnswered) cls += ' answered';
+        html += `<div class="${cls}" onclick="jumpToQuestion(${idx})">${idx + 1}</div>`;
+      });
+      grid.innerHTML = html;
+    }
+    
+    function jumpToQuestion(idx) {
+      currentIndex = idx;
+      renderQuestion();
+      hideAnswerCard();
+    }
+    
+    function showAnswerCard() {
+      document.getElementById('cardModal').classList.add('show');
+    }
+    
+    function hideAnswerCard() {
+      document.getElementById('cardModal').classList.remove('show');
+    }
+    
+    function submitExam() {
+      var correct = 0;
+      var totalScore = 0;
+      questions.forEach(function(q) {
+        var userAnswer = answers[q.id];
+        if (q.type === 'multi') {
+          var correctAnswer = Array.isArray(q.answer) ? q.answer : [q.answer];
+          var userArr = Array.isArray(userAnswer) ? userAnswer : [];
+          if (userArr.length === correctAnswer.length && userArr.every(a => correctAnswer.includes(a))) {
+            correct++;
+            totalScore += q.score;
+          }
+        } else {
+          if (userAnswer === q.answer) {
+            correct++;
+            totalScore += q.score;
+          }
+        }
+      });
+      
+      document.getElementById('resultScore').textContent = totalScore;
+      document.querySelectorAll('.result-value')[1].textContent = correct;
+      document.querySelectorAll('.result-value')[2].textContent = questions.length - correct;
+      document.getElementById('resultModal').classList.add('show');
+    }
+    
+    function updateProgress() {
+      var progress = ((currentIndex + 1) / questions.length) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+    
+    function goBack() {
+      window.location.href = 'mock-exam-list.html';
+    }
+    
+    window.onload = init;
+  </script>
+</body>
+</html>
