@@ -10,121 +10,456 @@
   <style>
     ::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; }
+
+    /* Header */
+    .login-header {
+      position: relative;
+      height: 220px;
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      border-radius: 0 0 24px 24px;
+      overflow: hidden;
+    }
+    .login-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&h=500&fit=crop') center/cover no-repeat;
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+    }
+    .login-header::after {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+    .header-date {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+      z-index: 1;
+    }
+    .header-brand {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 1;
+    }
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .header-brand-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-brand-slogan {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* Card */
+    .login-card {
+      margin: -28px 16px 0;
+      background: white;
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Input */
+    .input-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .input-group .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 20px;
+      z-index: 1;
+      transition: color 0.2s ease;
+    }
+    .input-group:focus-within .input-icon {
+      color: #2e9e5a;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      border: 2px solid #e5e7eb;
+      border-radius: 14px;
+      font-size: 15px;
+      color: #1f2937;
+      background: #f9fafb;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .input-group input:focus {
+      border-color: #2e9e5a;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(46,158,90,0.12);
+    }
+    .input-group input::placeholder {
+      color: #b0b7c3;
+    }
+    .input-group .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      z-index: 1;
+    }
+    .input-group .toggle-pwd:active {
+      transform: translateY(-50%) scale(0.9);
+      color: #2e9e5a;
+    }
+    .input-error {
+      font-size: 11px;
+      color: #ef4444;
+      margin-top: 6px;
+      padding-left: 4px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+    .input-error.show { display: flex; }
+    input.error { border-color: #fca5a5 !important; background: #fff5f5 !important; }
+
+    /* Row */
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .form-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #6b7280;
+      cursor: pointer;
+    }
+    .form-row label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2e9e5a;
+      border-radius: 4px;
+    }
+    .form-row .link {
+      font-size: 13px;
+      color: #2e9e5a;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .form-row .link:hover {
+      text-decoration: underline;
+    }
+
+    /* Buttons */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2e9e5a 0%, #1e7e42 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(46,158,90,0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-login:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px rgba(46,158,90,0.2);
+    }
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .btn-wechat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px;
+      background: #fff;
+      color: #07C160;
+      border: 2px solid #07C160;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-wechat:active {
+      background: #f0fdf4;
+      transform: scale(0.98);
+    }
+
+    /* Divider */
+    .divider-line {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 0 20px;
+    }
+    .divider-line::before,
+    .divider-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider-line span {
+      font-size: 12px;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    /* Agreement */
+    .agreement-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .agreement-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .agreement-row label input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: #2e9e5a;
+    }
+    .agreement-row a {
+      color: #2e9e5a;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    /* Success Modal */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-overlay.show {
+      display: flex;
+    }
+    .success-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 28px;
+      text-align: center;
+      width: 260px;
+      animation: scaleIn 0.3s ease;
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .success-box .icon-wrap {
+      width: 56px;
+      height: 56px;
+      background: #f0fdf4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .success-box .title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 6px;
+    }
+    .success-box .countdown {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* Footer */
+    .login-footer {
+      padding: 20px;
+      text-align: center;
+    }
+    .login-footer p {
+      font-size: 11px;
+      color: #9ca3af;
+      margin: 0;
+    }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body>
+<div class="app">
 
-<div class="page-container">
-
-  <!-- 顶部绿色渐变装饰区 -->
-  <div class="page-header h-16" style="padding-bottom: 16px;">
-    <div class="absolute top-4 left-5 text-white/80 text-xs">2026年05月28日</div>
+  <!-- Header -->
+  <div class="login-header">
+    <div class="header-date">2026年05月28日</div>
+    <div class="header-brand">
+      <div class="header-logo">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+          <path d="M16 42V14C16 14 12 8 12 4" stroke="#2e9e5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 42V10C24 10 20 5 20 2" stroke="#1e7e42" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M32 42V16C32 16 28 10 28 6" stroke="#2e9e5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 22C14 22 16 20 20 22" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M22 18C22 18 24 16 28 18" stroke="#1e7e42" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M30 24C30 24 32 22 36 24" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M12 28C12 28 14 26 16 28" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="header-brand-name">叁竹培训</div>
+      <div class="header-brand-slogan">专业培训 · 技能认证</div>
+    </div>
   </div>
 
-  <!-- 白色圆角卡片 -->
-  <div class="px-6 -mt-10 flex-1">
-    <div class="card" style="padding: 24px;">
+  <!-- Login Card -->
+  <div class="login-card">
 
-      <!-- Logo + 标题 + slogan -->
-      <div class="flex flex-col items-center mb-6">
-        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-3 shadow-sm">
-          <!-- 叁竹培训Logo: 三根竹子 -->
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10">
-            <path d="M16 42V14C16 14 12 8 12 4" stroke="#2e9e5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M24 42V10C24 10 20 5 20 2" stroke="#1e7e42" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M32 42V16C32 16 28 10 28 6" stroke="#2e9e5a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14 22C14 22 16 20 20 22" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M22 18C22 18 24 16 28 18" stroke="#1e7e42" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M30 24C30 24 32 22 36 24" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M12 28C12 28 14 26 16 28" stroke="#2e9e5a" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h1 class="text-2xl font-bold text-gray-800">叁竹培训</h1>
-        <p class="text-gray-400 text-sm mt-1">专业培训 · 技能认证</p>
-      </div>
-
-      <!-- 输入框区域 -->
-      <div class="space-y-5">
-        <!-- 手机号/用户名 -->
-        <div class="input-field" id="phoneGroup">
-          <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl" data-icon="solar:phone-bold"></span>
-          <input id="phoneInput" type="text" placeholder="手机号码 / 用户名" />
-          <div class="input-hint error hidden" id="phoneError">
-            <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
-            请输入正确的11位手机号
-          </div>
-        </div>
-
-        <!-- 密码 -->
-        <div class="input-field" id="passwordGroup">
-          <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl" data-icon="solar:lock-password-bold"></span>
-          <input id="passwordInput" type="password" placeholder="请输入密码" autocomplete="current-password" />
-          <span class="iconify absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-500 text-xl cursor-pointer hover:text-[#2e9e5a] transition-colors" data-icon="solar:eye-bold" id="togglePwd"></span>
-          <div class="input-hint error hidden" id="passwordError">
-            <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size: 12px;"></span>
-            请输入密码
-          </div>
-        </div>
-
-        <!-- 记住登录状态 -->
-        <div class="flex items-center justify-between -mt-2">
-          <label class="flex items-center text-xs text-gray-600 gap-2 cursor-pointer">
-            <input id="agreeCheck" class="w-4 h-4 rounded border-gray-300 text-[#2e9e5a] focus:ring-[#2e9e5a] accent-[#2e9e5a]" type="checkbox"/>
-            <span>记住登录状态</span>
-          </label>
-          <a class="text-xs text-[#2e9e5a] font-medium hover:underline" href="javascript:void(0)">忘记密码？</a>
-        </div>
-      </div>
-
-      <!-- 登录按钮 -->
-      <button id="btnLogin" class="btn btn-primary w-full mt-6">
-        <span class="login-btn-text">登 录</span>
-        <span class="spinner hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-      </button>
-
-      <!-- 隐私协议 -->
-      <div class="flex items-center justify-center mt-6 gap-2">
-        <label class="flex items-center text-[11px] text-gray-500 gap-2 cursor-pointer">
-          <input id="agreeCheck" class="w-4 h-4 rounded border-gray-300 text-[#2e9e5a] focus:ring-[#2e9e5a] accent-[#2e9e5a]" type="checkbox"/>
-          <span>已阅读并同意 <span class="text-[#2e9e5a]">《服务协议》</span> 与 <span class="text-[#2e9e5a]">《隐私政策》</span></span>
-        </label>
+    <!-- 手机号/用户名 -->
+    <div class="input-group">
+      <span class="input-icon iconify" data-icon="solar:phone-bold"></span>
+      <input id="phoneInput" type="text" placeholder="手机号码 / 用户名" autocomplete="username" />
+      <div class="input-error" id="phoneError">
+        <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size:12px;"></span>
+        <span id="phoneErrorText">请输入正确的11位手机号</span>
       </div>
     </div>
 
-    <!-- 快速登录分隔线 -->
-    <div class="divider">快速登录</div>
+    <!-- 密码 -->
+    <div class="input-group">
+      <span class="input-icon iconify" data-icon="solar:lock-password-bold"></span>
+      <input id="passwordInput" type="password" placeholder="请输入密码" autocomplete="current-password" />
+      <span class="toggle-pwd iconify" data-icon="solar:eye-bold" id="togglePwd"></span>
+      <div class="input-error" id="passwordError">
+        <span class="iconify" data-icon="solar:danger-circle-bold" style="font-size:12px;"></span>
+        <span id="passwordErrorText">请输入密码</span>
+      </div>
+    </div>
 
-    <!-- 微信授权登录 -->
-    <button id="btnWechat" class="btn btn-outline-primary w-[85%] mx-auto">
-      <span class="iconify text-xl" data-icon="ri:wechat-fill"></span>
+    <!-- 记住登录 + 忘记密码 -->
+    <div class="form-row">
+      <label>
+        <input id="rememberCheck" type="checkbox" />
+        <span>记住登录状态</span>
+      </label>
+      <span class="link" onclick="forgotPassword()">忘记密码？</span>
+    </div>
+
+    <!-- 登录按钮 -->
+    <button id="btnLogin" class="btn-login">
+      <span class="login-btn-text">登 录</span>
+      <span class="spinner" id="loginSpinner"></span>
+    </button>
+
+    <!-- 协议 -->
+    <div class="agreement-row">
+      <label>
+        <input id="agreeCheck" type="checkbox" />
+        <span>已阅读并同意 <a href="javascript:void(0)">《服务协议》</a> 与 <a href="javascript:void(0)">《隐私政策》</a></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 快速登录分隔线 -->
+  <div style="padding: 0 16px;">
+    <div class="divider-line"><span>快速登录</span></div>
+  </div>
+
+  <!-- 微信授权登录 -->
+  <div style="padding: 0 16px;">
+    <button id="btnWechat" class="btn-wechat">
+      <span class="iconify" data-icon="ri:wechat-fill" style="font-size:22px;"></span>
       <span class="wechat-btn-text">微信授权登录</span>
-      <span class="wechat-spinner hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 border-2 border-[#2e9e5a]/30 border-t-[#2e9e5a] rounded-full animate-spin"></span>
     </button>
   </div>
 
   <!-- 底部版权 -->
-  <div class="p-6 text-center">
-    <p class="text-xs text-gray-400">2026 叁竹教育科技有限公司 版权所有</p>
+  <div class="login-footer">
+    <p>2026 叁竹教育科技有限公司 版权所有</p>
   </div>
 </div>
 
 <!-- 登录成功弹窗 -->
-<div id="successOverlay" class="fixed inset-0 bg-black/50 z-50 hidden justify-center items-center">
-  <div class="bg-white rounded-2xl p-8 text-center w-[260px] animate-[scaleIn_0.3s_ease]">
-    <div class="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-      <span class="iconify text-[#2e9e5a] text-3xl" data-icon="solar:check-circle-bold"></span>
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="icon-wrap">
+      <span class="iconify" data-icon="solar:check-circle-bold" style="color:#2e9e5a;font-size:30px;"></span>
     </div>
-    <div class="text-lg font-semibold text-gray-800 mb-2">登录成功</div>
-    <div class="text-xs text-gray-400" id="successCountdown">2秒后自动跳转...</div>
+    <div class="title">登录成功</div>
+    <div class="countdown" id="successCountdown">2秒后自动跳转...</div>
   </div>
 </div>
-
-<style>
-  @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-</style>
 
 <script>
   // 自动跳转已登录
@@ -145,34 +480,35 @@
   });
 
   // 表单验证
-  function showError(groupId, errorId, msg) {
-    var group = document.getElementById(groupId);
-    var errorEl = document.getElementById(errorId);
-    errorEl.textContent = msg || errorEl.textContent;
-    errorEl.classList.remove('hidden');
-    var input = group.querySelector('input');
-    if (input) input.classList.add('border-red-400');
+  function showError(errorId, msg) {
+    var el = document.getElementById(errorId);
+    el.querySelector('span:last-child').textContent = msg;
+    el.classList.add('show');
+    var input = el.parentElement.querySelector('input');
+    if (input) input.classList.add('error');
   }
-  function clearError(groupId, errorId) {
-    var errorEl = document.getElementById(errorId);
-    errorEl.classList.add('hidden');
-    var group = document.getElementById(groupId);
-    var input = group.querySelector('input');
-    if (input) input.classList.remove('border-red-400');
+  function clearError(errorId) {
+    var el = document.getElementById(errorId);
+    el.classList.remove('show');
+    var input = el.parentElement.querySelector('input');
+    if (input) input.classList.remove('error');
   }
   function clearAllErrors() {
     ['phoneError', 'passwordError'].forEach(function(id) {
-      document.getElementById(id).classList.add('hidden');
-    });
-    ['phoneGroup', 'passwordGroup'].forEach(function(id) {
-      var input = document.getElementById(id).querySelector('input');
-      if (input) input.classList.remove('border-red-400');
+      document.getElementById(id).classList.remove('show');
+      var input = document.getElementById(id).parentElement.querySelector('input');
+      if (input) input.classList.remove('error');
     });
   }
 
   // 输入时清除错误
-  document.getElementById('phoneInput').addEventListener('input', function() { clearError('phoneGroup', 'phoneError'); });
-  document.getElementById('passwordInput').addEventListener('input', function() { clearError('passwordGroup', 'passwordError'); });
+  document.getElementById('phoneInput').addEventListener('input', function() { clearError('phoneError'); });
+  document.getElementById('passwordInput').addEventListener('input', function() { clearError('passwordError'); });
+
+  // 忘记密码
+  function forgotPassword() {
+    alert('请联系管理员重置密码，客服电话：400-XXX-XXXX');
+  }
 
   // 账号密码登录
   document.getElementById('btnLogin').addEventListener('click', function() {
@@ -182,11 +518,11 @@
     var valid = true;
 
     if (!phone) {
-      showError('phoneGroup', 'phoneError', '请输入手机号或用户名');
+      showError('phoneError', '请输入手机号或用户名');
       valid = false;
     }
     if (!pass) {
-      showError('passwordGroup', 'passwordError', '请输入密码');
+      showError('passwordError', '请输入密码');
       valid = false;
     }
     if (!valid) return;
@@ -196,36 +532,21 @@
       return;
     }
 
-    doLogin(this, phone, 'login-btn-text', 'spinner');
-  });
-
-  // 微信登录
-  document.getElementById('btnWechat').addEventListener('click', function() {
-    if (!document.getElementById('agreeCheck').checked) {
-      alert('请先阅读并同意《服务协议》与《隐私政策》');
-      return;
-    }
-    doLogin(this, '微信用户', 'wechat-btn-text', 'wechat-spinner');
-  });
-
-  // 通用登录处理
-  function doLogin(btn, username, textClass, spinnerClass) {
-    var textEl = btn.querySelector('.' + textClass);
-    var spinnerEl = btn.querySelector('.' + spinnerClass);
+    var textEl = this.querySelector('.login-btn-text');
+    var spinEl = document.getElementById('loginSpinner');
     textEl.style.opacity = '0';
-    spinnerEl.classList.remove('hidden');
-    btn.disabled = true;
+    spinEl.style.display = 'block';
+    this.disabled = true;
 
     setTimeout(function() {
       textEl.style.opacity = '1';
-      spinnerEl.classList.add('hidden');
-      btn.disabled = false;
+      spinEl.style.display = 'none';
+      this.disabled = false;
       sessionStorage.setItem('isLoggedIn', 'true');
-      sessionStorage.setItem('loginUser', username);
+      sessionStorage.setItem('loginUser', phone);
 
       var overlay = document.getElementById('successOverlay');
-      overlay.classList.remove('hidden');
-      overlay.classList.add('flex');
+      overlay.classList.add('show');
 
       var countdown = 2;
       document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
@@ -238,8 +559,41 @@
           document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
         }
       }, 1000);
-    }, 1200);
-  }
+    }.bind(this), 1200);
+  });
+
+  // 微信登录
+  document.getElementById('btnWechat').addEventListener('click', function() {
+    if (!document.getElementById('agreeCheck').checked) {
+      alert('请先阅读并同意《服务协议》与《隐私政策》');
+      return;
+    }
+    var textEl = this.querySelector('.wechat-btn-text');
+    textEl.style.opacity = '0.5';
+    this.disabled = true;
+
+    setTimeout(function() {
+      textEl.style.opacity = '1';
+      this.disabled = false;
+      sessionStorage.setItem('isLoggedIn', 'true');
+      sessionStorage.setItem('loginUser', '微信用户');
+
+      var overlay = document.getElementById('successOverlay');
+      overlay.classList.add('show');
+
+      var countdown = 2;
+      document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
+      var timer = setInterval(function() {
+        countdown--;
+        if (countdown <= 0) {
+          clearInterval(timer);
+          window.location.href = 'home.html';
+        } else {
+          document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
+        }
+      }, 1000);
+    }.bind(this), 1000);
+  });
 </script>
 </body>
 </html>
