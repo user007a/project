@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="叁竹培训 - 练习模式中心">
+  <meta name="keywords" content="练习模式,养老护理练习,在线练习">
+  <title>练习模式 - 叁竹培训</title>
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/global.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    .search-input { flex: 1; border: none; outline: none; padding: 0 16px; font-size: 15px; font-family: inherit; color: var(--text-primary); }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-btn { width: 56px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+    .search-btn:hover { background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1a6838 100%); transform: scale(1.02); }
+    .search-btn:active { transform: scale(0.98); }
+    .header-nav { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .header-nav a { color: rgba(255,255,255,0.95); font-size: 15px; font-weight: 500; transition: all 0.2s; white-space: nowrap; padding: 8px 12px; border-radius: var(--radius-md); }
+    .header-nav a:hover { color: var(--text-white); background: rgba(255,255,255,0.15); }
+    .header-nav a.active { color: var(--text-white); background: rgba(255,255,255,0.2); font-weight: 600; }
+
+    .page-body { margin-top: var(--header-height); min-height: calc(100vh - var(--header-height)); background: var(--color-gray-50); }
+    .page-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+
+    .page-header {
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border-radius: var(--radius-sm);
+    }
+    .page-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      margin-left: 16px;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 20px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      margin-bottom: 20px;
+    }
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .filter-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--text-primary);
+      background: var(--color-bg-card);
+      cursor: pointer;
+      min-width: 120px;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      background: var(--color-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--text-regular);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .filter-btn.active {
+      background: var(--color-primary-50);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .practice-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .stat-icon.blue { background: var(--color-blue-50); color: var(--color-blue); }
+    .stat-icon.green { background: var(--color-primary-50); color: var(--color-primary); }
+    .stat-icon.orange { background: var(--color-orange-50); color: var(--color-orange); }
+    .stat-icon.purple { background: var(--color-purple-50); color: var(--color-purple); }
+    .stat-content {
+      flex: 1;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .practice-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+    }
+    .practice-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: var(--color-primary-200);
+    }
+    .card-header {
+      padding: 20px;
+      background: linear-gradient(135deg, var(--color-blue-50) 0%, var(--color-blue-100) 100%);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .card-category {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(59,130,246,0.15);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--color-blue);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .card-body {
+      padding: 20px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tag {
+      padding: 4px 10px;
+      background: var(--color-gray-50);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .tag.hot {
+      background: rgba(249,115,22,0.1);
+      color: var(--color-orange);
+    }
+    .tag.new {
+      background: rgba(34,197,94,0.1);
+      color: var(--color-primary);
+    }
+    .card-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .info-item strong {
+      color: var(--text-primary);
+    }
+    .card-progress {
+      margin-bottom: 16px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--color-gray-100);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+    .card-action {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-practice {
+      flex: 1;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--text-white);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-practice:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(46,158,90,0.3);
+    }
+    .btn-detail {
+      padding: 12px 16px;
+      background: var(--color-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-regular);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-detail:hover {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    @media (max-width: 1200px) {
+      .practice-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .practice-stats { grid-template-columns: 1fr; }
+      .practice-grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .filter-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon"><span class="iconify" data-icon="mdi:bamboo" style="color: white; font-size: 24px;"></span></div>
+        <span class="logo-text">叁竹培训</span>
+      </div>
+      <div class="search-box">
+        <select class="search-select">
+          <option value="course">课程</option>
+          <option value="teacher">讲师</option>
+          <option value="cert">证书</option>
+        </select>
+        <input class="search-input" type="text" placeholder="搜索课程、讲师、证书..." id="searchInput">
+        <button class="search-btn" onclick="handleSearch()"><span class="iconify" data-icon="mdi:magnify" style="color: white; font-size: 22px;"></span></button>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">首页</a>
+        <a href="course-list.html">课程中心</a>
+        <a href="exam-hall.html">考试中心</a>
+        <a href="user-center.html">我的学习</a>
+        <a href="profile.html">个人信息</a>
+      </nav>
+      <div class="header-actions" id="headerActions">
+        <a href="login.html" class="btn-login">登录</a>
+        <a href="register.html" class="btn-register">注册</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="page-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title"><span class="iconify" data-icon="mdi:pencil-outline"></span>练习模式</h1>
+          <p class="page-desc">自由练习，随时查看答案，不限次数，巩固知识要点</p>
+        </div>
+      </div>
+
+      <div class="practice-stats">
+        <div class="stat-card">
+          <div class="stat-icon blue"><span class="iconify" data-icon="mdi:book-open"></span></div>
+          <div class="stat-content">
+            <div class="stat-value">45</div>
+            <div class="stat-label">练习题库</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><span class="iconify" data-icon="mdi:check-circle"></span></div>
+          <div class="stat-content">
+            <div class="stat-value">1,234</div>
+            <div class="stat-label">已完成题数</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><span class="iconify" data-icon="mdi:trending-up"></span></div>
+          <div class="stat-content">
+            <div class="stat-value">87%</div>
+            <div class="stat-label">正确率</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><span class="iconify" data-icon="mdi:clock"></span></div>
+          <div class="stat-content">
+            <div class="stat-value">4.5h</div>
+            <div class="stat-label">累计练习时长</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-section">
+          <span class="filter-label">难度：</span>
+          <select class="filter-select" id="difficultySelect">
+            <option value="all">全部难度</option>
+            <option value="easy">简单</option>
+            <option value="medium">中等</option>
+            <option value="hard">困难</option>
+          </select>
+        </div>
+        <div class="filter-section">
+          <span class="filter-label">类型：</span>
+          <select class="filter-select" id="typeSelect">
+            <option value="all">全部类型</option>
+            <option value="single">单选题</option>
+            <option value="multiple">多选题</option>
+            <option value="judge">判断题</option>
+            <option value="fill">填空题</option>
+          </select>
+        </div>
+        <div class="filter-section">
+          <span class="filter-label">模式：</span>
+          <button class="filter-btn active" onclick="setPracticeMode('normal')">顺序练习</button>
+          <button class="filter-btn" onclick="setPracticeMode('random')">随机练习</button>
+          <button class="filter-btn" onclick="setPracticeMode('wrong')">错题练习</button>
+        </div>
+      </div>
+
+      <div class="practice-grid">
+        <div class="practice-card" onclick="startPractice('1')">
+          <div class="card-header">
+            <span class="card-category">基础护理</span>
+            <h3 class="card-title">老年人日常生活照料</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">单选题</span>
+              <span class="tag">多选题</span>
+              <span class="tag hot">高频考点</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>120道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>简单</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>85%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:play"></span>开始练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-card" onclick="startPractice('2')">
+          <div class="card-header">
+            <span class="card-category">健康管理</span>
+            <h3 class="card-title">老年常见疾病护理</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">单选题</span>
+              <span class="tag">判断题</span>
+              <span class="tag new">新增题库</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>80道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>中等</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>45%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 45%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:play"></span>开始练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-card" onclick="startPractice('3')">
+          <div class="card-header">
+            <span class="card-category">康复护理</span>
+            <h3 class="card-title">老年人康复训练指导</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">多选题</span>
+              <span class="tag">填空题</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>60道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>中等</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>60%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:play"></span>开始练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-card" onclick="startPractice('4')">
+          <div class="card-header">
+            <span class="card-category">心理护理</span>
+            <h3 class="card-title">老年人心理健康维护</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">单选题</span>
+              <span class="tag">判断题</span>
+              <span class="tag hot">高频考点</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>50道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>简单</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>100%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:rotate-cw"></span>继续练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-card" onclick="startPractice('5')">
+          <div class="card-header">
+            <span class="card-category">安全护理</span>
+            <h3 class="card-title">老年人安全防护知识</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">单选题</span>
+              <span class="tag">多选题</span>
+              <span class="tag new">新增题库</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>70道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>中等</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>30%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 30%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:play"></span>开始练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-card" onclick="startPractice('6')">
+          <div class="card-header">
+            <span class="card-category">营养护理</span>
+            <h3 class="card-title">老年人饮食营养与健康</h3>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">单选题</span>
+              <span class="tag">填空题</span>
+            </div>
+            <div class="card-info">
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:format-list-numbered"></span>
+                <span>题数：<strong>45道</strong></span>
+              </div>
+              <div class="info-item">
+                <span class="iconify" data-icon="mdi:target"></span>
+                <span>难度：<strong>困难</strong></span>
+              </div>
+            </div>
+            <div class="card-progress">
+              <div class="progress-label">
+                <span>完成进度</span>
+                <span>0%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="card-action">
+              <button class="btn-practice">
+                <span class="iconify" data-icon="mdi:play"></span>开始练习
+              </button>
+              <button class="btn-detail">
+                <span class="iconify" data-icon="mdi:eye"></span>详情
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="iconify" data-icon="mdi:bamboo" style="color: var(--color-primary);"></span>叁竹培训</div>
+          <p>专业养老行业培训认证平台</p>
+          <p>让学习更简单，让就业更轻松</p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">关于我们</h4>
+          <div class="footer-links">
+            <a href="#">公司简介</a>
+            <a href="#">加入我们</a>
+            <a href="#">机构入驻</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">联系我们</h4>
+          <div class="footer-links">
+            <a href="#">客服电话：400-888-8888</a>
+            <a href="#">邮箱：info@sanzhu.com</a>
+            <a href="#">地址：北京市朝阳区建国路88号</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">关注我们</h4>
+          <div class="footer-qrcode-group">
+            <div class="footer-qrcode-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fmp.weixin.qq.com%2Fsanzhutraining&format=svg" alt="微信公众号">
+              <p>微信公众号</p>
+            </div>
+            <div class="footer-qrcode-item">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=mobile%2Feldercare%2Fhome.html&format=svg" alt="小程序">
+              <p>小程序</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024 叁竹培训 版权所有</span>
+        <span>京ICP备12345678号-1</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleSearch() {
+      const keyword = document.getElementById('searchInput').value;
+      if (keyword) {
+        alert('搜索: ' + keyword);
+      }
+    }
+    function setPracticeMode(mode) {
+      document.querySelectorAll('.filter-btn').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      alert('练习模式已切换为: ' + {normal: '顺序练习', random: '随机练习', wrong: '错题练习'}[mode]);
+    }
+    function startPractice(id) {
+      alert('开始练习: ' + id);
+    }
+  </script>
+</body>
+</html>

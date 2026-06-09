@@ -10,22 +10,12 @@
         * { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         @keyframes tabSlideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .tab-animate { animation: tabSlideIn 0.2s ease-out; }
-
-        /* Tab 栏滚动条隐藏 */
         .tab-scroll::-webkit-scrollbar { display: none; }
         .tab-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* 菜单箭头旋转 */
         .menu-arrow.expanded { transform: rotate(90deg); }
-
-        /* iframe 容器 */
-        .iframe-container { display: none; }
-        .iframe-container.active { display: block; }
-        .iframe-container iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
-
     <!-- ========== 侧边栏 ========== -->
     <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
         <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10 flex-shrink-0">
@@ -35,257 +25,138 @@
             <span class="text-white font-bold text-base">叁竹培训系统</span>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <!-- 工作台 -->
-            <a href="#" data-page="dashboard.html" data-title="工作台" data-icon="ri:home-4-line"
-               class="menu-link flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
-                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span>
-                <span class="text-sm">工作台</span>
+            <a href="dashboard.html" target="mainFrame" onclick="openPage('dashboard.html', '工作台')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span><span class="text-sm">工作台</span>
             </a>
-            <!-- 学员中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:team-line"></span><span class="text-sm">学员中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="student-list.html" data-title="学员管理" data-icon="ri:team-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="student-list.html" target="mainFrame" onclick="openPage('student-list.html', '学员管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span><span class="text-sm">学员管理</span>
                     </a>
-                    <a href="#" data-page="study-record.html" data-title="学习记录" data-icon="ri:time-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
-                        <span class="text-sm">学习记录</span>
+                    <a href="study-record.html" target="mainFrame" onclick="openPage('study-record.html', '学习记录')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span><span class="text-sm">学习记录</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 课程中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">课程中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:book-open-line"></span><span class="text-sm">课程中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="course-list.html" data-title="课程管理" data-icon="ri:book-open-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">课程管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="course-list.html" target="mainFrame" onclick="openPage('course-list.html', '课程管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span><span class="text-sm">课程管理</span>
                     </a>
-                    <a href="#" data-page="category-list.html" data-title="课程分类" data-icon="ri:folder-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
-                        <span class="text-sm">课程分类</span>
+                    <a href="category-list.html" target="mainFrame" onclick="openPage('category-list.html', '课程分类')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span><span class="text-sm">课程分类</span>
                     </a>
-                    <a href="#" data-page="share-list.html" data-title="课程分享" data-icon="ri:share-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:share-line"></span>
-                        <span class="text-sm">课程分享</span>
+                    <a href="share-list.html" target="mainFrame" onclick="openPage('share-list.html', '课程分享')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:share-line"></span><span class="text-sm">课程分享</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 考试中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:clipboard-list-line"></span>
-                        <span class="text-sm">考试中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300 expanded">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:user-star-line"></span><span class="text-sm">讲师中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6" style="display: block;">
-                    <a href="#" data-page="question-bank.html" data-title="题库管理" data-icon="ri:help-circle-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:help-circle-line"></span>
-                        <span class="text-sm">题库管理</span>
-                    </a>
-                    <a href="#" data-page="paper-management.html" data-title="试卷管理" data-icon="ri:file-text-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:file-text-line"></span>
-                        <span class="text-sm">试卷管理</span>
-                    </a>
-                    <a href="#" data-page="mock-exam.html" data-title="模拟考试" data-icon="ri:timer-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:timer-line"></span>
-                        <span class="text-sm">模拟考试</span>
-                    </a>
-                    <a href="#" data-page="practice-exam.html" data-title="练习管理" data-icon="ri:book-open-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">练习管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="teacher-list.html" target="mainFrame" onclick="openPage('teacher-list.html', '讲师管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:user-line"></span><span class="text-sm">讲师管理</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 订单中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:shopping-cart-line"></span>
-                        <span class="text-sm">订单中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:user-star-line"></span><span class="text-sm">考试中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="order-list.html" data-title="订单管理" data-icon="ri:shopping-cart-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span>
-                        <span class="text-sm">订单管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="question-bank.html" target="mainFrame" onclick="openPage('question-bank.html', '题库管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:questionnaire-line"></span><span class="text-sm">题库管理</span>
                     </a>
-                    <a href="#" data-page="refund-list.html" data-title="退款管理" data-icon="ri:refund-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span>
-                        <span class="text-sm">退款管理</span>
+                    <a href="paper-management.html" target="mainFrame" onclick="openPage('paper-management.html', '试卷管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:file-text-line"></span><span class="text-sm">试卷管理</span>
                     </a>
-                    <a href="#" data-page="invoice-list.html" data-title="发票管理" data-icon="ri:receipt-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:receipt-line"></span>
-                        <span class="text-sm">发票管理</span>
+                    <a href="mock-exam.html" target="mainFrame" onclick="openPage('mock-exam.html', '模拟考试')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:timer-line"></span><span class="text-sm">模拟考试</span>
+                    </a>
+                    <a href="practice-exam.html" target="mainFrame" onclick="openPage('practice-exam.html', '练习管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:timer-line"></span><span class="text-sm">练习管理</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 讲师中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:user-star-line"></span>
-                        <span class="text-sm">讲师中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:shopping-cart-line"></span><span class="text-sm">订单中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="teacher-list.html" data-title="讲师管理" data-icon="ri:user-star-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
-                        <span class="text-sm">讲师管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="order-list.html" target="mainFrame" onclick="openPage('order-list.html', '订单管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span><span class="text-sm">订单管理</span>
+                    </a>
+                    <a href="refund-list.html" target="mainFrame" onclick="openPage('refund-list.html', '退款管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span><span class="text-sm">退款管理</span>
+                    </a>
+                    <a href="invoice-list.html" target="mainFrame" onclick="openPage('invoice-list.html', '发票管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:receipt-line"></span><span class="text-sm">发票管理</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 证书中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:certificate-line"></span>
-                        <span class="text-sm">证书中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:user-star-line"></span><span class="text-sm">内容中心</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="certificate-manage.html" data-title="证书管理" data-icon="ri:certificate-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:certificate-line"></span>
-                        <span class="text-sm">证书管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="article-list.html" target="mainFrame" onclick="openPage('article-list.html', '资讯管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:file-text-line"></span><span class="text-sm">资讯管理</span>
                     </a>
-                    <a href="#" data-page="certificate-list.html" data-title="证书查询" data-icon="ri:search-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:search-line"></span>
-                        <span class="text-sm">证书查询</span>
+                    <a href="article-category.html" target="mainFrame" onclick="openPage('article-category.html', '资讯分类')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span><span class="text-sm">资讯分类</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 内容中心 -->
             <div class="menu-group">
                 <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:article-line"></span>
-                        <span class="text-sm">内容中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
+                    <div class="flex items-center"><span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:settings-3-line"></span><span class="text-sm">系统设置</span></div>
+                    <span class="menu-arrow text-gray-400 text-xs">›</span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="article-list.html" data-title="资讯管理" data-icon="ri:article-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:article-line"></span>
-                        <span class="text-sm">资讯管理</span>
+                <div class="menu-items pl-6" style="display:none;">
+                    <a href="user-management.html" target="mainFrame" onclick="openPage('user-management.html', '用户管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span><span class="text-sm">用户管理</span>
                     </a>
-                    <a href="#" data-page="article-category.html" data-title="资讯分类" data-icon="ri:folder-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
-                        <span class="text-sm">资讯分类</span>
+                    <a href="institution-management.html" target="mainFrame" onclick="openPage('institution-management.html', '子机构管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:building-line"></span><span class="text-sm">子机构管理</span>
+                    </a>
+                    <a href="department-management.html" target="mainFrame" onclick="openPage('department-management.html', '部门管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:layout-grid-line"></span><span class="text-sm">部门管理</span>
+                    </a>
+                    <a href="message-center.html" target="mainFrame" onclick="openPage('message-center.html', '消息管理')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span><span class="text-sm">消息管理</span>
+                    </a>
+                    <a href="system-settings.html" target="mainFrame" onclick="openPage('system-settings.html', '基础设置')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span><span class="text-sm">基础设置</span>
+                    </a>
+                    <a href="external-config.html" target="mainFrame" onclick="openPage('external-config.html', '服务配置')" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
+                        <span class="iconify mr-3 text-lg" data-icon="ri:cloud-line"></span><span class="text-sm">服务配置</span>
                     </a>
                 </div>
             </div>
-
-            <!-- 系统设置 -->
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:settings-3-line"></span>
-                        <span class="text-sm">系统设置</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">&#8250;</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="#" data-page="user-management.html" data-title="用户管理" data-icon="ri:user-settings-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
-                        <span class="text-sm">用户管理</span>
-                    </a>
-                    <a href="#" data-page="department-management.html" data-title="部门管理" data-icon="ri:building-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:building-line"></span>
-                        <span class="text-sm">部门管理</span>
-                    </a>
-                    <a href="#" data-page="institution-management.html" data-title="子机构管理" data-icon="ri:building-2-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:building-2-line"></span>
-                        <span class="text-sm">子机构管理</span>
-                    </a>
-                    <a href="#" data-page="role-permission.html" data-title="角色权限" data-icon="ri:shield-keyhole-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
-                        <span class="text-sm">角色权限</span>
-                    </a>
-                    <a href="#" data-page="message-center.html" data-title="消息管理" data-icon="ri:notification-3-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span>
-                        <span class="text-sm">消息管理</span>
-                    </a>
-                    <a href="#" data-page="system-settings.html" data-title="基础设置" data-icon="ri:settings-3-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span>
-                        <span class="text-sm">基础设置</span>
-                    </a>
-                    <a href="#" data-page="payment-settings.html" data-title="支付配置" data-icon="ri:bank-card-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:bank-card-line"></span>
-                        <span class="text-sm">支付配置</span>
-                    </a>
-                    <a href="#" data-page="sms-settings.html" data-title="短信配置" data-icon="ri:message-3-line"
-                       class="menu-link flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:message-3-line"></span>
-                        <span class="text-sm">短信配置</span>
-                    </a>
-                </div>
-            </div>
-
         </nav>
     </aside>
-
     <!-- ========== 右侧主区域 ========== -->
     <div class="flex-1 flex flex-col min-w-0 h-screen">
-
-        <!-- 顶部栏 -->
         <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0">
             <div class="flex items-center gap-2 flex-1 min-w-0">
-                <!-- 折叠菜单按钮 -->
                 <button id="sidebarToggle" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">
                     <span class="iconify text-xl" data-icon="ri:menu-fold-line"></span>
                 </button>
-                <!-- Tab 标签栏 -->
                 <div id="tabBar" class="tab-scroll flex items-center gap-1 overflow-x-auto min-w-0">
-                    <!-- Tab 项由 JS 动态生成 -->
                 </div>
             </div>
             <div class="flex items-center gap-4 flex-shrink-0 ml-4">
@@ -294,252 +165,144 @@
                     <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 <div class="h-6 w-px bg-gray-200"></div>
-                <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span class="text-blue-600 text-sm font-bold">管</span>
+                <div class="relative">
+                    <div id="adminDropdown" class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 text-sm font-bold">管</span>
+                        </div>
+                        <span class="text-sm text-gray-700">管理员</span>
+                        <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
                     </div>
-                    <span class="text-sm text-gray-700">管理员</span>
-                    <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
+                    <div id="adminMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
+                        <a href="admin-profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <span class="iconify mr-2 text-gray-400" data-icon="ri:user-line"></span>个人信息
+                        </a>
+                        <a href="login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                            <span class="iconify mr-2" data-icon="ri:logout-circle-line"></span>退出登录
+                        </a>
+                    </div>
                 </div>
             </div>
         </header>
-
-        <!-- ========== iframe 内容区 ========== -->
-        <div id="contentArea" class="flex-1 relative bg-[#F0F2F5] overflow-hidden">
-            <!-- iframe 由 JS 动态创建 -->
-        </div>
+        <main class="flex-1 overflow-hidden bg-[#F0F2F5]">
+            <iframe name="mainFrame" id="mainFrame" src="dashboard.html" class="w-full h-full border-none"></iframe>
+        </main>
     </div>
-
     <script>
-    // ==================== Tab 管理 ====================
-    (function() {
-        var tabs = [];
-        var activeTabId = null;
-        var tabBar = document.getElementById('tabBar');
-        var contentArea = document.getElementById('contentArea');
-        var tabCounter = 0;
-
-        // 菜单配置映射
-        var menuMap = {};
-        document.querySelectorAll('.menu-link').forEach(function(link) {
-            var page = link.getAttribute('data-page');
-            menuMap[page] = {
-                title: link.getAttribute('data-title'),
-                icon: link.getAttribute('data-icon')
-            };
+        // 菜单展开/收起
+        document.querySelectorAll('.menu-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const menuItems = this.nextElementSibling;
+                const arrow = this.querySelector('.menu-arrow');
+                if (menuItems.style.display === 'none' || menuItems.style.display === '') {
+                    menuItems.style.display = 'block';
+                    arrow.classList.add('expanded');
+                } else {
+                    menuItems.style.display = 'none';
+                    arrow.classList.remove('expanded');
+                }
+            });
         });
 
-        // 创建 Tab
-        function createTab(page, title, icon) {
-            var tabId = 'tab_' + (++tabCounter);
-            var tabData = {
-                id: tabId,
-                page: page,
-                title: title,
-                icon: icon
-            };
-            tabs.push(tabData);
+        // Tab 管理
+        const tabs = [];
+        const tabBar = document.getElementById('tabBar');
+        const mainFrame = document.getElementById('mainFrame');
 
-            // 创建 Tab DOM
-            var tabEl = document.createElement('div');
-            tabEl.id = tabId;
-            tabEl.className = 'tab-item tab-animate flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all select-none flex-shrink-0 border';
-            tabEl.innerHTML =
-                '<span class="iconify text-base" data-icon="' + icon + '"></span>' +
-                '<span class="whitespace-nowrap">' + title + '</span>' +
-                '<button class="tab-close ml-1 p-0.5 hover:bg-black/10 rounded transition-colors" onclick="event.stopPropagation()">' +
-                '  <span class="iconify text-xs" data-icon="ri:close-line"></span>' +
-                '</button>';
+        // 页面图标映射
+        const iconMap = {
+            'dashboard.html': 'ri:home-4-line',
+            'student-list.html': 'ri:team-line',
+            'study-record.html': 'ri:time-line',
+            'course-list.html': 'ri:book-open-line',
+            'category-list.html': 'ri:folder-line',
+            'share-list.html': 'ri:share-line',
+            'teacher-list.html': 'ri:user-line',
+            'question-bank.html': 'ri:questionnaire-line',
+            'paper-management.html': 'ri:file-text-line',
+            'mock-exam.html': 'ri:timer-line',
+            'practice-exam.html': 'ri:pen-tool-line',
+            'order-list.html': 'ri:shopping-cart-line',
+            'refund-list.html': 'ri:refund-line',
+            'invoice-list.html': 'ri:receipt-line',
+            'article-list.html': 'ri:file-text-line',
+            'article-category.html': 'ri:folder-line',
+            'user-management.html': 'ri:user-settings-line',
+            'institution-management.html': 'ri:building-line',
+            'department-management.html': 'ri:layout-grid-line',
+            'message-center.html': 'ri:notification-3-line',
+            'system-settings.html': 'ri:settings-3-line',
+            'external-config.html': 'ri:cloud-line'
+        };
 
-            tabEl.querySelector('.tab-close').addEventListener('click', function(e) {
-                e.stopPropagation();
-                closeTab(tabId);
-            });
-
-            tabEl.addEventListener('click', function() {
-                activateTab(tabId);
-            });
-
-            tabBar.appendChild(tabEl);
-
-            // 创建 iframe
-            var iframeContainer = document.createElement('div');
-            iframeContainer.id = 'iframe_' + tabId;
-            iframeContainer.className = 'iframe-container absolute inset-0';
-            iframeContainer.innerHTML = '<iframe src="' + page + '" frameborder="0"></iframe>';
-            contentArea.appendChild(iframeContainer);
-
-            activateTab(tabId);
-            return tabId;
-        }
-
-        // 激活 Tab
-        function activateTab(tabId) {
-            activeTabId = tabId;
-
-            // 更新 Tab 样式
-            document.querySelectorAll('.tab-item').forEach(function(el) {
-                if (el.id === tabId) {
-                    el.className = 'tab-item tab-animate flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all select-none flex-shrink-0 border bg-[#1890FF] text-white border-[#1890FF]';
-                } else {
-                    el.className = 'tab-item flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md cursor-pointer transition-all select-none flex-shrink-0 border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 bg-white';
-                }
-            });
-
-            // 显示对应的 iframe
-            document.querySelectorAll('.iframe-container').forEach(function(el) {
-                el.classList.remove('active');
-            });
-            var iframeContainer = document.getElementById('iframe_' + tabId);
-            if (iframeContainer) {
-                iframeContainer.classList.add('active');
-            }
-
-            // 滚动到可视区域
-            var activeTab = document.getElementById(tabId);
-            if (activeTab) {
-                activeTab.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
-            }
-
-            // 更新菜单高亮
-            updateMenuHighlight();
-        }
-
-        // 关闭 Tab
-        function closeTab(tabId) {
-            var index = tabs.findIndex(function(t) { return t.id === tabId; });
-            if (index === -1) return;
-
-            // 如果关闭的是当前激活的 tab，切换到相邻 tab
-            if (activeTabId === tabId) {
-                var nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                    activateTab(nextTab.id);
-                } else {
-                    activeTabId = null;
-                }
-            }
-
-            // 移除 DOM
-            var tabEl = document.getElementById(tabId);
-            if (tabEl) tabEl.remove();
-            var iframeContainer = document.getElementById('iframe_' + tabId);
-            if (iframeContainer) iframeContainer.remove();
-
-            // 移除数据
-            tabs.splice(index, 1);
-        }
-
-        // 打开或切换到 Tab
-        function openTab(page, title, icon) {
-            // 检查是否已存在
-            var existing = tabs.find(function(t) { return t.page === page; });
-            if (existing) {
-                activateTab(existing.id);
+        function openPage(url, title) {
+            const existingTab = tabs.find(tab => tab.url === url);
+            if (existingTab) {
+                selectTab(existingTab);
                 return;
             }
+            const icon = iconMap[url] || 'ri:file-line';
+            const newTab = { id: Date.now(), url: url, title: title, icon: icon, element: null };
+            const tabElement = document.createElement('div');
+            tabElement.className = 'flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-600 rounded-t-md cursor-pointer hover:bg-gray-200 transition-colors tab-animate';
+            tabElement.innerHTML = `<span class="iconify text-base" data-icon="${icon}"></span><span class="text-sm whitespace-nowrap">${title}</span><button class="tab-close ml-1 p-0.5 hover:bg-black/10 rounded transition-colors"><span class="iconify text-xs" data-icon="ri:close-line"></span></button>`;
+            tabElement.dataset.tabId = newTab.id;
+            tabElement.addEventListener('click', (e) => {
+                if (!e.target.closest('.tab-close')) selectTab(newTab);
+            });
+            tabElement.querySelector('.tab-close').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(newTab);
+            });
+            tabBar.appendChild(tabElement);
+            newTab.element = tabElement;
+            tabs.push(newTab);
+            selectTab(newTab);
+            mainFrame.src = url;
+        }
 
-            // 从 menuMap 中获取标题和图标
-            var info = menuMap[page];
-            if (info) {
-                title = title || info.title;
-                icon = icon || info.icon;
+        function selectTab(tab) {
+            tabs.forEach(t => {
+                t.element.classList.remove('bg-white', 'text-gray-900', 'border-b-2', 'border-blue-500');
+                t.element.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            tab.element.classList.remove('bg-gray-100', 'text-gray-600');
+            tab.element.classList.add('bg-white', 'text-gray-900', 'border-b-2', 'border-blue-500');
+        }
+
+        function closeTab(tab) {
+            const index = tabs.indexOf(tab);
+            if (index === -1) return;
+            tab.element.remove();
+            tabs.splice(index, 1);
+            if (tabs.length > 0) {
+                const newIndex = index > 0 ? index - 1 : 0;
+                selectTab(tabs[newIndex]);
+                mainFrame.src = tabs[newIndex].url;
             }
-
-            createTab(page, title || page, icon || 'ri:file-line');
         }
 
-        // 更新菜单高亮
-        function updateMenuHighlight() {
-            var activePage = activeTabId ? tabs.find(function(t) { return t.id === activeTabId; }) : null;
-            var activePageUrl = activePage ? activePage.page : null;
-
-            document.querySelectorAll('.menu-link').forEach(function(link) {
-                var page = link.getAttribute('data-page');
-                if (page === activePageUrl) {
-                    link.classList.remove('text-gray-300', 'hover:bg-white/10');
-                    link.classList.add('bg-[#1890FF]', 'text-white');
-                } else {
-                    link.classList.remove('bg-[#1890FF]', 'text-white');
-                    link.classList.add('text-gray-300', 'hover:bg-white/10');
-                }
-            });
-        }
-
-        // 菜单点击事件
-        document.querySelectorAll('.menu-link').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                var page = this.getAttribute('data-page');
-                var title = this.getAttribute('data-title');
-                var icon = this.getAttribute('data-icon');
-                openTab(page, title, icon);
-            });
-        });
-
-        // 菜单折叠/展开
-        document.querySelectorAll('.menu-toggle').forEach(function(toggle) {
-            toggle.addEventListener('click', function() {
-                var menuGroup = this.closest('.menu-group');
-                var menuItems = menuGroup.querySelector('.menu-items');
-                var arrow = this.querySelector('.menu-arrow');
-
-                var isExpanded = menuItems.style.display !== 'none';
-
-                if (isExpanded) {
-                    menuItems.style.display = 'none';
-                    arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    menuItems.style.display = 'block';
-                    arrow.style.transform = 'rotate(90deg)';
-                }
-            });
-        });
-
-        // 默认展开所有菜单
-        document.querySelectorAll('.menu-items').forEach(function(items) {
-            items.style.display = 'block';
-        });
-        document.querySelectorAll('.menu-arrow').forEach(function(arrow) {
-            arrow.style.transform = 'rotate(90deg)';
+        // 管理员下拉菜单
+        const adminDropdown = document.getElementById('adminDropdown');
+        const adminMenu = document.getElementById('adminMenu');
+        adminDropdown.addEventListener('click', () => { adminMenu.classList.toggle('hidden'); });
+        document.addEventListener('click', (e) => {
+            if (!adminDropdown.contains(e.target)) adminMenu.classList.add('hidden');
         });
 
         // 侧边栏折叠
-        var sidebarCollapsed = false;
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            var aside = document.querySelector('aside');
-            sidebarCollapsed = !sidebarCollapsed;
-            if (sidebarCollapsed) {
-                aside.style.width = '0';
-                aside.style.overflow = 'hidden';
-                aside.style.padding = '0';
-                this.querySelector('.iconify').setAttribute('data-icon', 'ri:menu-unfold-line');
-            } else {
-                aside.style.width = '16rem';
-                aside.style.overflow = '';
-                aside.style.padding = '';
-                this.querySelector('.iconify').setAttribute('data-icon', 'ri:menu-fold-line');
-            }
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('aside');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('w-16');
+            sidebar.classList.toggle('w-64');
+            document.querySelectorAll('.menu-items').forEach(item => {
+                if (sidebar.classList.contains('w-16')) item.style.display = 'none';
+            });
         });
 
-        // 监听 iframe 消息（返回列表等导航）
-        window.addEventListener('message', function(e) {
-            if (e.data && e.data.type === 'navigate') {
-                var url = e.data.url;
-                if (url && menuMap[url]) {
-                    openTab(url, menuMap[url].title, menuMap[url].icon);
-                }
-            }
-        });
-
-        // 暴露全局函数供外部调用
-        window.openTab = openTab;
-        window.closeTab = closeTab;
-        window.activateTab = activateTab;
-
-        // 初始化：打开工作台
-        openTab('dashboard.html', '工作台', 'ri:home-4-line');
-    })();
+        // 默认打开工作台
+        openPage('dashboard.html', '工作台');
     </script>
 </body>
 </html>

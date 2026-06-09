@@ -20,219 +20,42 @@
         .sort-none::after { border-bottom: 4px solid #D1D5DB; border-top: 4px solid #D1D5DB; vertical-align: middle; }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden bg-[#F0F2F5]">
+<body class="bg-[#F0F2F5]">
 
-    <!-- 侧边栏 -->
-    <aside class="w-64 bg-[#001529] flex flex-col flex-shrink-0 h-screen">
-        <div class="h-16 flex items-center px-6 gap-3 border-b border-white/10">
-            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"><span class="iconify text-white text-lg" data-icon="ri:plant-line"></span></div>
-            <span class="text-white font-bold text-base">叁竹培训系统</span>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <a href="dashboard.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                <span class="iconify mr-3 text-lg" data-icon="ri:home-4-line"></span>
-                <span class="text-sm">工作台</span>
-            </a>            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
+    
+                <!-- 顶部导航 -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
+            <div>
+                                <h1 class="text-lg font-bold text-gray-900">题库管理</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span class="iconify text-xl" data-icon="ri:notification-3-line"></span>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
-                <div class="menu-items pl-6">
-                    <a href="student-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:team-line"></span>
-                        <span class="text-sm">学员管理</span>
-                    </a>
-                    <a href="study-record.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:time-line"></span>
-                        <span class="text-sm">学习记录</span>
-                    </a>
+                <div class="h-6 w-px bg-gray-200"></div>
+                <div class="relative">
+                    <div id="adminDropdown" class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600 text-sm font-bold">管</span>
+                        </div>
+                        <span class="text-sm text-gray-700">管理员</span>
+                        <span class="iconify text-gray-400" data-icon="ri:arrow-down-s-line"></span>
+                    </div>
+                    <div id="adminMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
+                        <a href="admin-profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            <span class="iconify mr-2 text-gray-400" data-icon="ri:user-line"></span>
+                            个人信息
+                        </a>
+                        <a href="login.html" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                            <span class="iconify mr-2" data-icon="ri:logout-circle-line"></span>
+                            退出登录
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">课程中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="course-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">课程管理</span>
-                    </a>
-                    <a href="category-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
-                        <span class="text-sm">课程分类</span>
-                    </a>
-                    <a href="share-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:share-line"></span>
-                        <span class="text-sm">课程分享</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:clipboard-list-line"></span>
-                        <span class="text-sm">考试中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="question-bank.html" class="flex items-center px-4 py-3 bg-[#1890FF] text-white rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:help-circle-line"></span>
-                        <span class="text-sm">题库管理</span>
-                    </a>
-                    <a href="paper-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:file-text-line"></span>
-                        <span class="text-sm">试卷管理</span>
-                    </a>
-                    <a href="mock-exam.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:timer-line"></span>
-                        <span class="text-sm">模拟考试</span>
-                    </a>
-                    <a href="practice-exam.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:book-open-line"></span>
-                        <span class="text-sm">练习管理</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:shopping-cart-line"></span>
-                        <span class="text-sm">订单中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="order-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:shopping-cart-line"></span>
-                        <span class="text-sm">订单管理</span>
-                    </a>
-                    <a href="refund-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:refund-line"></span>
-                        <span class="text-sm">退款管理</span>
-                    </a>
-                    <a href="invoice-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:receipt-line"></span>
-                        <span class="text-sm">发票管理</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:user-star-line"></span>
-                        <span class="text-sm">讲师中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="teacher-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:user-star-line"></span>
-                        <span class="text-sm">讲师管理</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:certificate-line"></span>
-                        <span class="text-sm">证书中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="certificate-manage.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:certificate-line"></span>
-                        <span class="text-sm">证书管理</span>
-                    </a>
-                    <a href="certificate-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:search-line"></span>
-                        <span class="text-sm">证书查询</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:article-line"></span>
-                        <span class="text-sm">内容中心</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="article-list.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:article-line"></span>
-                        <span class="text-sm">资讯管理</span>
-                    </a>
-                    <a href="article-category.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:folder-line"></span>
-                        <span class="text-sm">资讯分类</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-group">
-                <button class="menu-toggle w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                    <div class="flex items-center">
-                        <span class="iconify mr-3 text-lg text-gray-300" data-icon="ri:settings-3-line"></span>
-                        <span class="text-sm">系统设置</span>
-                    </div>
-                    <span class="menu-arrow text-gray-400 text-xs transition-transform duration-300">›</span>
-                </button>
-                <div class="menu-items pl-6">
-                    <a href="user-management.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:user-settings-line"></span>
-                        <span class="text-sm">用户管理</span>
-                    </a>
-                    <a href="role-permission.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:shield-keyhole-line"></span>
-                        <span class="text-sm">角色权限</span>
-                    </a>
-                    <a href="message-center.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:notification-3-line"></span>
-                        <span class="text-sm">消息管理</span>
-                    </a>
-                    <a href="system-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:settings-3-line"></span>
-                        <span class="text-sm">基础设置</span>
-                    </a>
-                    <a href="payment-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:bank-card-line"></span>
-                        <span class="text-sm">支付配置</span>
-                    </a>
-                    <a href="sms-settings.html" class="flex items-center px-4 py-3 text-gray-300 hover:bg-white/10 rounded-md transition-all">
-                        <span class="iconify mr-3 text-lg" data-icon="ri:message-3-line"></span>
-                        <span class="text-sm">短信配置</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </aside>
-
-    <div class="flex-1 flex flex-col min-w-0">
+        </header>
         <main class="flex-1 overflow-y-auto p-6">
-            <!-- 面包屑导航 -->
-            <div class="mb-4 text-sm text-gray-500">
-                <a href="dashboard.html" class="hover:text-[#1890FF] transition-colors">首页</a>
-                <span class="mx-2">/</span>
-                <span class="text-gray-900 font-medium">考试中心</span>
-                <span class="mx-2">/</span>
-                <span class="text-gray-900">题库管理</span>
-            </div>
-
             <!-- 统计卡片行 -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-xl border shadow-sm group hover:shadow-md transition-shadow">
@@ -361,7 +184,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-20</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(1)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 2 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="2">
@@ -372,7 +195,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">老年人能力评估师(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-19</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(2)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 3 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="3">
@@ -383,7 +206,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-18</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(3)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 4 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="4">
@@ -394,7 +217,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">营养配餐员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-17</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(4)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 5 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="5">
@@ -405,7 +228,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-16</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(5)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 6 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="6">
@@ -416,7 +239,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-15</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(6)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 7 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="7">
@@ -427,7 +250,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-14</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(7)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 8 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="8">
@@ -438,7 +261,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">老年人能力评估师(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-13</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(8)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 9 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="9">
@@ -449,7 +272,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">营养配餐员(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-12</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(9)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 10 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="10">
@@ -460,7 +283,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-11</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(10)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 11 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="11">
@@ -471,7 +294,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-10</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(11)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 12 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="12">
@@ -482,7 +305,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-09</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(12)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 13 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="13">
@@ -493,7 +316,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">老年人能力评估师(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-08</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(13)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 14 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="14">
@@ -504,7 +327,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">营养配餐员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-07</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(14)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 15 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="15">
@@ -515,7 +338,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">老年人能力评估师(高级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-06</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(15)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 16 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="16">
@@ -526,7 +349,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-05</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(16)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 17 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="17">
@@ -537,7 +360,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-04</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(17)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 18 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="18">
@@ -548,7 +371,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(高级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-03</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(18)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 19 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="19">
@@ -559,7 +382,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">老年人能力评估师(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-02</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(19)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 20 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="20">
@@ -570,7 +393,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">营养配餐员(初级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-05-01</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(20)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 21 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="21">
@@ -581,7 +404,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-04-30</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(21)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 22 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="22">
@@ -592,7 +415,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">健康照护师(高级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-04-29</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(22)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                             <!-- 23 -->
                             <tr class="hover:bg-blue-50/30 transition-all" data-row="23">
@@ -603,7 +426,7 @@
                                 <td class="px-4 py-3 text-center text-sm text-gray-600 whitespace-nowrap">10分</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">养老护理员(中级)</td>
                                 <td class="px-4 py-3 text-sm text-gray-400">2026-04-28</td>
-                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal()" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
+                                <td class="px-4 py-3 text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1"><button onclick="openEditModal(23)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="编辑"><span class="iconify text-base" data-icon="ri:edit-line"></span></button><button class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="删除"><span class="iconify text-base" data-icon="ri:delete-bin-line"></span></button></div></td>
                             </tr>
                         </tbody>
                     </table>
@@ -639,7 +462,7 @@
                 <div class="flex-1 overflow-y-auto p-6 space-y-5">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">所属课程</label>
-                        <select class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        <select id="qCourse" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             <option>养老护理员(初级)</option>
                             <option>养老护理员(中级)</option>
                             <option>养老护理员(高级)</option>
@@ -664,51 +487,51 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">分数</label>
-                        <input type="number" min="1" max="100" value="10" placeholder="请输入题目分数" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        <input id="qScore" type="number" min="1" max="100" value="10" placeholder="请输入题目分数" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">题目内容</label>
-                        <textarea rows="3" placeholder="请输入题目内容" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none"></textarea>
+                        <textarea id="qContent" rows="3" placeholder="请输入题目内容" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none"></textarea>
                     </div>
                     <!-- 选项区(单选/多选) -->
                     <div id="optionsArea">
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">选项设置</label>
                         <div class="space-y-3">
                             <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="correct" value="A" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">A</span></label>
-                                <input type="text" placeholder="选项A内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" id="optA" name="correct" value="A" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">A</span></label>
+                                <input id="optAText" type="text" placeholder="选项A内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="correct" value="B" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">B</span></label>
-                                <input type="text" placeholder="选项B内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" id="optB" name="correct" value="B" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">B</span></label>
+                                <input id="optBText" type="text" placeholder="选项B内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="correct" value="C" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">C</span></label>
-                                <input type="text" placeholder="选项C内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" id="optC" name="correct" value="C" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">C</span></label>
+                                <input id="optCText" type="text" placeholder="选项C内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                             <div class="flex items-center gap-3">
-                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="correct" value="D" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">D</span></label>
-                                <input type="text" placeholder="选项D内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                                <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" id="optD" name="correct" value="D" class="w-4 h-4 text-blue-600"><span class="text-sm font-medium text-gray-700 w-5">D</span></label>
+                                <input id="optDText" type="text" placeholder="选项D内容" class="flex-1 border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                             </div>
                         </div>
-                        <p class="text-xs text-gray-400 mt-2">点击选项前圆点标记正确答案</p>
+                        <p id="optionHint" class="text-xs text-gray-400 mt-2">点击选项前圆点标记正确答案</p>
                     </div>
                     <!-- 判断题答案 -->
                     <div id="judgeArea" class="hidden">
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">正确答案</label>
                         <div class="flex items-center gap-6">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="judgeAnswer" value="true" class="w-4 h-4 text-blue-600"><span class="text-sm text-gray-700">正确</span></label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="judgeAnswer" value="false" class="w-4 h-4 text-blue-600"><span class="text-sm text-gray-700">错误</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" id="judgeTrue" name="judgeAnswer" value="true" class="w-4 h-4 text-blue-600"><span class="text-sm text-gray-700">正确</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" id="judgeFalse" name="judgeAnswer" value="false" class="w-4 h-4 text-blue-600"><span class="text-sm text-gray-700">错误</span></label>
                         </div>
                     </div>
                     <!-- 填空题答案 -->
                     <div id="fillArea" class="hidden">
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">填空答案</label>
-                        <input type="text" placeholder="请输入正确答案" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                        <input id="fillAnswer" type="text" placeholder="请输入正确答案" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">解析</label>
-                        <textarea rows="2" placeholder="请输入题目解析（选填）" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none"></textarea>
+                        <textarea id="qExplain" rows="2" placeholder="请输入题目解析（选填）" class="w-full border border-gray-200 p-2 rounded-lg outline-none focus:ring-1 focus:ring-blue-500 text-sm resize-none"></textarea>
                     </div>
                 </div>
                 <!-- 底部 -->
@@ -721,7 +544,371 @@
     </div>
 
     <script>
-        function openEditModal() {
+        // ===== Mock 题目数据 =====
+        const mockQuestions = {
+        "1": {
+                "content": "养老护理员为老人翻身时，应间隔多长时间？",
+                "type": "single",
+                "score": 10,
+                "course": "养老护理员(初级)",
+                "opts": [
+                        "1小时",
+                        "2小时",
+                        "3小时",
+                        "4小时"
+                ],
+                "correct": "B",
+                "explain": "长期卧床老人需每2小时翻身一次，以预防压疮。"
+        },
+        "2": {
+                "content": "以下哪些属于老年人能力评估的维度？",
+                "type": "multi",
+                "score": 10,
+                "course": "老年人能力评估师(初级)",
+                "opts": [
+                        "日常生活活动",
+                        "精神状态",
+                        "感知觉与沟通",
+                        "社会参与"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                ],
+                "explain": "老年人能力评估包含日常生活活动、精神状态、感知觉与沟通、社会参与四个一级指标。"
+        },
+        "3": {
+                "content": "老年人跌倒后应立即扶起。",
+                "type": "judge",
+                "score": 10,
+                "course": "养老护理员(初级)",
+                "correct": "false",
+                "explain": "老年人跌倒后不应立即扶起，应先检查伤情，评估有无骨折等，再决定如何处理。"
+        },
+        "4": {
+                "content": "老年人膳食中蛋白质的供给量应占总能量的？",
+                "type": "single",
+                "score": 10,
+                "course": "营养配餐员(初级)",
+                "opts": [
+                        "5%-10%",
+                        "10%-15%",
+                        "15%-20%",
+                        "20%-25%"
+                ],
+                "correct": "C",
+                "explain": "老年人蛋白质供能比应为15%-20%，略高于普通成年人。"
+        },
+        "5": {
+                "content": "WHO提出的健康照护原则不包括？",
+                "type": "single",
+                "score": 10,
+                "course": "健康照护师(中级)",
+                "opts": [
+                        "以人为中心",
+                        "全面性",
+                        "独立性最大化",
+                        "过度保护"
+                ],
+                "correct": "D",
+                "explain": "WHO健康照护原则包括以人为中心、全面性、连续性、协调性和独立性最大化，过度保护不是其原则。"
+        },
+        "6": {
+                "content": "养老护理中的\"五防\"包括？",
+                "type": "multi",
+                "score": 10,
+                "course": "养老护理员(中级)",
+                "opts": [
+                        "防跌倒",
+                        "防走失",
+                        "防烫伤",
+                        "防压疮"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                ],
+                "explain": "养老护理\"五防\"包括防跌倒、防走失、防烫伤、防压疮、防误食。"
+        },
+        "7": {
+                "content": "老年人血压测量前需要安静休息5分钟。",
+                "type": "judge",
+                "score": 10,
+                "course": "健康照护师(初级)",
+                "correct": "true",
+                "explain": "正确。测量血压前应让老人安静休息5-10分钟，避免情绪激动或运动影响测量结果。"
+        },
+        "8": {
+                "content": "老年人能力评估等级分为几级？",
+                "type": "single",
+                "score": 10,
+                "course": "老年人能力评估师(初级)",
+                "opts": [
+                        "2级",
+                        "3级",
+                        "4级",
+                        "5级"
+                ],
+                "correct": "C",
+                "explain": "老年人能力评估等级分为四级：能力完好、轻度失能、中度失能、重度失能。"
+        },
+        "9": {
+                "content": "营养配餐中需要考虑的因素有？",
+                "type": "multi",
+                "score": 10,
+                "course": "营养配餐员(中级)",
+                "opts": [
+                        "年龄",
+                        "健康状况",
+                        "饮食习惯",
+                        "经济条件"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                ],
+                "explain": "营养配餐需综合考虑年龄、健康状况、饮食习惯、经济条件等多方面因素。"
+        },
+        "10": {
+                "content": "老年人跌倒风险评估常用的量表是____。",
+                "type": "fill",
+                "score": 10,
+                "course": "健康照护师(中级)",
+                "correct": "Morse量表",
+                "explain": "Morse跌倒评估量表是国际通用的老年人跌倒风险评估工具。"
+        },
+        "11": {
+                "content": "养老护理员职业道德的核心是？",
+                "type": "single",
+                "score": 10,
+                "course": "养老护理员(初级)",
+                "opts": [
+                        "专业技术",
+                        "爱岗敬业",
+                        "服从管理",
+                        "吃苦耐劳"
+                ],
+                "correct": "B",
+                "explain": "养老护理员职业道德的核心是爱岗敬业，尊重和关爱老年人。"
+        },
+        "12": {
+                "content": "老年人服用降压药后应立即测量血压。",
+                "type": "judge",
+                "score": 10,
+                "course": "健康照护师(初级)",
+                "correct": "false",
+                "explain": "服用降压药后应等待30分钟至1小时再测量血压，以确保药效发挥作用。"
+        },
+        "13": {
+                "content": "老年人洗澡水温应控制在？",
+                "type": "single",
+                "score": 10,
+                "course": "养老护理员(中级)",
+                "opts": [
+                        "35-37℃",
+                        "38-40℃",
+                        "41-43℃",
+                        "44-46℃"
+                ],
+                "correct": "B",
+                "explain": "老年人洗澡水温应控制在38-40℃，避免过烫导致烫伤或过冷导致感冒。"
+        },
+        "14": {
+                "content": "老年人每天食盐摄入量不应超过？",
+                "type": "single",
+                "score": 10,
+                "course": "营养配餐员(初级)",
+                "opts": [
+                        "3克",
+                        "5克",
+                        "6克",
+                        "8克"
+                ],
+                "correct": "B",
+                "explain": "《中国居民膳食指南》建议老年人每天食盐摄入量不超过5克。"
+        },
+        "15": {
+                "content": "巴氏指数评定的总分为____分。",
+                "type": "fill",
+                "score": 10,
+                "course": "老年人能力评估师(高级)",
+                "correct": "100",
+                "explain": "巴氏指数(Barthel Index)总分为100分，用于评定日常生活活动能力。"
+        },
+        "16": {
+                "content": "老年人发生噎食时应立即饮水。",
+                "type": "judge",
+                "score": 10,
+                "course": "养老护理员(初级)",
+                "correct": "false",
+                "explain": "噎食时不能饮水，应立即采用海姆立克急救法进行施救。"
+        },
+        "17": {
+                "content": "以下哪项不属于老年人心理特点？",
+                "type": "single",
+                "score": 10,
+                "course": "健康照护师(中级)",
+                "opts": [
+                        "记忆力下降",
+                        "反应迟缓",
+                        "情感需求增加",
+                        "学习能力增强"
+                ],
+                "correct": "D",
+                "explain": "老年人心理特点包括记忆力下降、反应迟缓、情感需求增加，学习能力通常会下降而非增强。"
+        },
+        "18": {
+                "content": "长期照护的服务内容包括？",
+                "type": "multi",
+                "score": 10,
+                "course": "养老护理员(高级)",
+                "opts": [
+                        "生活照料",
+                        "康复护理",
+                        "精神慰藉",
+                        "临终关怀"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                ],
+                "explain": "长期照护涵盖生活照料、康复护理、精神慰藉和临终关怀等全方位服务。"
+        },
+        "19": {
+                "content": "老年人能力评估中，日常生活活动能力评估不包括？",
+                "type": "single",
+                "score": 10,
+                "course": "老年人能力评估师(中级)",
+                "opts": [
+                        "进食",
+                        "洗澡",
+                        "购物",
+                        "如厕"
+                ],
+                "correct": "C",
+                "explain": "购物属于工具性日常生活活动能力(IADL)，不在基础日常生活活动能力(ADL)评估范围内。"
+        },
+        "20": {
+                "content": "营养配餐中应限制老年人脂肪摄入。",
+                "type": "judge",
+                "score": 10,
+                "course": "营养配餐员(初级)",
+                "correct": "true",
+                "explain": "正确。老年人代谢减慢，应适当限制脂肪摄入，尤其饱和脂肪，以预防心血管疾病。"
+        },
+        "21": {
+                "content": "健康照护中\"鼻饲\"操作适用于？",
+                "type": "single",
+                "score": 10,
+                "course": "健康照护师(高级)",
+                "opts": [
+                        "无法经口进食者",
+                        "食欲不振者",
+                        "牙齿缺损者",
+                        "消化不良者"
+                ],
+                "correct": "A",
+                "explain": "鼻饲适用于无法经口进食的患者，如昏迷、吞咽困难等人群。"
+        },
+        "22": {
+                "content": "老年人能力评估需要遵循的原则有？",
+                "type": "multi",
+                "score": 10,
+                "course": "老年人能力评估师(高级)",
+                "opts": [
+                        "客观公正",
+                        "保护隐私",
+                        "知情同意",
+                        "家庭成员主导"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C"
+                ],
+                "explain": "评估应遵循客观公正、保护隐私、知情同意原则，以评估师为主导而非家庭成员。"
+        },
+        "23": {
+                "content": "养老机构安全管理的要求包括？",
+                "type": "multi",
+                "score": 10,
+                "course": "养老护理员(中级)",
+                "opts": [
+                        "消防安全",
+                        "食品安全",
+                        "人身安全",
+                        "心理安全"
+                ],
+                "correct": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                ],
+                "explain": "养老机构安全管理包括消防安全、食品安全、人身安全和心理安全等多个维度。"
+        }
+};
+
+        // ===== 编辑弹窗 =====
+        function openEditModal(rowNum) {
+            const key = String(rowNum);
+            const data = (rowNum && mockQuestions[key]) ? mockQuestions[key] : null;
+            const titleEl = document.getElementById('modalTitle');
+
+            if (data) {
+                titleEl.textContent = '编辑题目';
+                document.getElementById('qCourse').value = data.course;
+                document.getElementById('qType').value = data.type;
+                document.getElementById('qScore').value = data.score;
+                document.getElementById('qContent').value = data.content;
+                document.getElementById('qExplain').value = data.explain || '';
+            } else {
+                titleEl.textContent = '新建题目';
+                document.getElementById('qCourse').selectedIndex = 0;
+                document.getElementById('qType').value = 'single';
+                document.getElementById('qScore').value = 10;
+                document.getElementById('qContent').value = '';
+                document.getElementById('qExplain').value = '';
+            }
+
+            // 清空选项和答案
+            ['optA','optB','optC','optD'].forEach(id => {
+                document.getElementById(id).checked = false;
+                document.getElementById(id + 'Text').value = '';
+            });
+            document.getElementById('judgeTrue').checked = false;
+            document.getElementById('judgeFalse').checked = false;
+            document.getElementById('fillAnswer').value = '';
+
+            if (data) {
+                if (data.type === 'single' || data.type === 'multi') {
+                    const opts = data.opts || [];
+                    ['A','B','C','D'].forEach((letter, idx) => {
+                        document.getElementById('opt' + letter + 'Text').value = opts[idx] || '';
+                    });
+                    const corrects = Array.isArray(data.correct) ? data.correct : [data.correct];
+                    corrects.forEach(letter => {
+                        const el = document.getElementById('opt' + letter);
+                        if (el) el.checked = true;
+                    });
+                } else if (data.type === 'judge') {
+                    if (data.correct === 'true') document.getElementById('judgeTrue').checked = true;
+                    else document.getElementById('judgeFalse').checked = true;
+                } else if (data.type === 'fill') {
+                    document.getElementById('fillAnswer').value = data.correct || '';
+                }
+            }
+
+            toggleQuestionFields();
+
             document.getElementById('editModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -731,9 +918,27 @@
         }
         function toggleQuestionFields() {
             const type = document.getElementById('qType').value;
-            document.getElementById('optionsArea').classList.toggle('hidden', type === 'judge' || type === 'fill');
+            const optionsArea = document.getElementById('optionsArea');
+            optionsArea.classList.toggle('hidden', type === 'judge' || type === 'fill');
             document.getElementById('judgeArea').classList.toggle('hidden', type !== 'judge');
             document.getElementById('fillArea').classList.toggle('hidden', type !== 'fill');
+
+            // 单选题用 radio，多选题用 checkbox
+            const isMulti = type === 'multi';
+            const hintEl = document.getElementById('optionHint');
+            ['optA', 'optB', 'optC', 'optD'].forEach(id => {
+                const el = document.getElementById(id);
+                el.type = isMulti ? 'checkbox' : 'radio';
+                if (isMulti) {
+                    el.removeAttribute('name');
+                    el.checked = false;
+                } else {
+                    el.setAttribute('name', 'correct');
+                }
+            });
+            if (hintEl) {
+                hintEl.textContent = isMulti ? '多选题可勾选多个正确答案' : '点击选项前圆点标记正确答案';
+            }
         }
 
         // 排序功能
@@ -1026,5 +1231,22 @@ document.addEventListener('keydown', function(e) {
     initShortcutHints();
     </script>
 <script src="embed.js"></script>
+    <script>
+        // 管理员下拉菜单
+        const adminDropdown = document.getElementById('adminDropdown');
+        const adminMenu = document.getElementById('adminMenu');
+        if (adminDropdown && adminMenu) {
+            adminDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                adminMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', function() {
+                adminMenu.classList.add('hidden');
+            });
+            adminMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    </script>
 </body>
 </html>

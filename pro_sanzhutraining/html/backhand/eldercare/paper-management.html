@@ -20,17 +20,7 @@
         .sort-none::after { border-bottom: 4px solid #D1D5DB; border-top: 4px solid #D1D5DB; vertical-align: middle; }
     </style>
 </head>
-    <div class="flex-1 flex flex-col min-w-0">
-        <main class="flex-1 overflow-y-auto p-6">
-            <!-- 面包屑导航 -->
-            <div class="mb-4 text-sm text-gray-500">
-                <a href="dashboard.html" class="hover:text-[#1890FF] transition-colors">首页</a>
-                <span class="mx-2">/</span>
-                <span class="text-gray-900 font-medium">考试中心</span>
-                <span class="mx-2">/</span>
-                <span class="text-gray-900">试卷管理</span>
-            </div>
-
+<body class="bg-[#F0F2F5]"><main class="flex-1 overflow-y-auto p-6">
             <!-- 统计卡片行 -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white p-5 rounded-xl border shadow-sm group hover:shadow-md transition-shadow">
@@ -680,46 +670,16 @@
                     <button onclick="closeQuestionModal()" class="p-1 text-gray-400 hover:text-gray-600 transition-colors"><span class="iconify text-xl" data-icon="ri:close-line"></span></button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-6">
-                    <!-- 题目类型筛选 -->
-                    <div class="flex items-center gap-2 mb-4 flex-wrap">
-                        <button class="px-3 py-1.5 bg-[#1890FF] text-white rounded-md text-sm font-medium">全部</button>
-                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200">单选题</button>
-                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200">多选题</button>
-                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200">判断题</button>
-                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200">填空题</button>
+                    <!-- 题目类型筛选 Tab -->
+                    <div class="flex items-center gap-2 mb-4 flex-wrap" id="qTabBar">
+                        <button class="px-3 py-1.5 bg-[#1890FF] text-white rounded-md text-sm font-medium transition-colors" data-tab="all" onclick="filterQuestionList('all', this)">全部 <span class="ml-1 text-xs opacity-70" id="qCountAll">10</span></button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors" data-tab="single" onclick="filterQuestionList('single', this)">单选题 <span class="ml-1 text-xs opacity-50" id="qCountSingle">3</span></button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors" data-tab="multi" onclick="filterQuestionList('multi', this)">多选题 <span class="ml-1 text-xs opacity-50" id="qCountMulti">3</span></button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors" data-tab="judge" onclick="filterQuestionList('judge', this)">判断题 <span class="ml-1 text-xs opacity-50" id="qCountJudge">2</span></button>
+                        <button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors" data-tab="fill" onclick="filterQuestionList('fill', this)">填空题 <span class="ml-1 text-xs opacity-50" id="qCountFill">2</span></button>
                     </div>
-                    <!-- 试题列表 -->
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">1</div>
-                            <div class="flex-1">
-                                <p class="text-sm text-gray-900">养老护理员为老人翻身时，应间隔多长时间？</p>
-                                <p class="text-xs text-gray-400 mt-1">单选题 · 2分 · 养老护理员(初级)</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="px-2 py-1 text-red-600 hover:bg-red-50 rounded text-xs font-medium">移除</button>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">2</div>
-                            <div class="flex-1">
-                                <p class="text-sm text-gray-900">以下哪些属于老年人能力评估的维度？</p>
-                                <p class="text-xs text-gray-400 mt-1">多选题 · 4分 · 老年人能力评估师(初级)</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="px-2 py-1 text-red-600 hover:bg-red-50 rounded text-xs font-medium">移除</button>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">3</div>
-                            <div class="flex-1">
-                                <p class="text-sm text-gray-900">老年人跌倒后应立即扶起。</p>
-                                <p class="text-xs text-gray-400 mt-1">判断题 · 2分 · 养老护理员(初级)</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="px-2 py-1 text-red-600 hover:bg-red-50 rounded text-xs font-medium">移除</button>
-                            </div>
-                        </div>
+                    <!-- 试题列表（动态渲染） -->
+                    <div class="space-y-3" id="questionList" style="min-height:200px">
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t flex items-center justify-end gap-3 flex-shrink-0">
@@ -877,6 +837,97 @@
             document.getElementById('questionModal').classList.add('hidden');
             document.body.style.overflow = '';
         }
+
+        // ===== 试题管理 Mock 数据 =====
+        const paperQuestions = [
+            { id:1,  type:'single', content:'养老护理员为老人翻身时，应间隔多长时间？',                            score:2,  course:'养老护理员(初级)',       opts:['1小时','2小时','3小时','4小时'],        correct:'B' },
+            { id:2,  type:'single', content:'老年人膳食中蛋白质的供给量应占总能量的？',                              score:2,  course:'营养配餐员(初级)',       opts:['5%-10%','10%-15%','15%-20%','20%-25%'], correct:'C' },
+            { id:3,  type:'single', content:'老年人能力评估等级分为几级？',                                          score:3,  course:'老年人能力评估师(初级)', opts:['2级','3级','4级','5级'],                correct:'C' },
+            { id:4,  type:'multi',  content:'以下哪些属于老年人能力评估的维度？',                                    score:4,  course:'老年人能力评估师(初级)', opts:['日常生活活动','精神状态','感知觉与沟通','社会参与'], correct:['A','B','C','D'] },
+            { id:5,  type:'multi',  content:'养老护理中的"五防"包括？',                                             score:4,  course:'养老护理员(中级)',       opts:['防跌倒','防走失','防烫伤','防压疮'],    correct:['A','B','C','D'] },
+            { id:6,  type:'multi',  content:'长期照护的服务内容包括？',                                              score:4,  course:'养老护理员(高级)',       opts:['生活照料','康复护理','精神慰藉','临终关怀'], correct:['A','B','C','D'] },
+            { id:7,  type:'judge',  content:'老年人跌倒后应立即扶起。',                                              score:2,  course:'养老护理员(初级)' },
+            { id:8,  type:'judge',  content:'老年人血压测量前需要安静休息5分钟。',                                   score:2,  course:'健康照护师(初级)' },
+            { id:9,  type:'fill',   content:'老年人跌倒风险评估常用的量表是____。',                                  score:3,  course:'健康照护师(中级)' },
+            { id:10, type:'fill',   content:'巴氏指数评定的总分为____分。',                                         score:3,  course:'老年人能力评估师(高级)' },
+        ];
+
+        const typeLabel = { single:'单选题', multi:'多选题', judge:'判断题', fill:'填空题' };
+        const typeIcon = { single:'#3B82F6', multi:'#8B5CF6', judge:'#F59E0B', fill:'#06B6D4' };
+        let currentQFilter = 'all';
+
+        function renderQuestionList(data) {
+            const container = document.getElementById('questionList');
+            if (!data.length) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400 text-sm">暂无试题</div>';
+                return;
+            }
+            container.innerHTML = data.map((q, idx) => `
+                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white flex-shrink-0" style="background:${typeIcon[q.type]}">${idx + 1}</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 truncate">${q.content}</p>
+                        <p class="text-xs text-gray-400 mt-1">${typeLabel[q.type]} · ${q.score}分 · ${q.course}</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="iconify text-gray-400 text-sm cursor-pointer hover:text-green-500" data-icon="ri:eye-line" title="预览"></span>
+                        <button class="px-2 py-1 text-red-600 hover:bg-red-50 rounded text-xs font-medium transition-colors" onclick="removeQuestion(${q.id})">移除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterQuestionList(type, btn) {
+            currentQFilter = type;
+            // 更新 Tab 高亮
+            document.querySelectorAll('#qTabBar button').forEach(b => {
+                b.classList.remove('bg-[#1890FF]', 'text-white');
+                b.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            });
+            btn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            btn.classList.add('bg-[#1890FF]', 'text-white');
+            // 过滤渲染
+            const filtered = type === 'all' ? paperQuestions : paperQuestions.filter(q => q.type === type);
+            renderQuestionList(filtered);
+        }
+
+        function removeQuestion(id) {
+            if (!confirm('确定从本试卷中移除此试题？')) return;
+            const idx = paperQuestions.findIndex(q => q.id === id);
+            if (idx > -1) {
+                paperQuestions.splice(idx, 1);
+                // 更新 count 显示
+                updateQCounts();
+                filterQuestionList(currentQFilter, document.querySelector(`#qTabBar button[data-tab="${currentQFilter}"]`));
+            }
+        }
+
+        function updateQCounts() {
+            const all = paperQuestions.length;
+            const counts = { all, single:0, multi:0, judge:0, fill:0 };
+            paperQuestions.forEach(q => counts[q.type]++);
+            ['all','single','multi','judge','fill'].forEach(t => {
+                const el = document.getElementById('qCount' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (!el) { const allEl = document.getElementById('qCountAll'); if (allEl && t==='all') allEl.textContent = all; return; }
+                el.textContent = counts[t];
+            });
+        }
+
+        // 打开弹窗时初始化列表
+        const _origOpenQModal = openQuestionModal;
+        openQuestionModal = function() {
+            updateQCounts();
+            renderQuestionList(paperQuestions);
+            // 重置 tab 为"全部"
+            currentQFilter = 'all';
+            document.querySelectorAll('#qTabBar button').forEach(b => {
+                b.classList.remove('bg-[#1890FF]', 'text-white');
+                b.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            });
+            const allBtn = document.querySelector('#qTabBar button[data-tab="all"]');
+            if (allBtn) { allBtn.classList.remove('bg-gray-100','text-gray-600','hover:bg-gray-200'); allBtn.classList.add('bg-[#1890FF]','text-white'); }
+            _origOpenQModal();
+        };
         function openAddQuestionModal() {
             document.getElementById('addQuestionModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
