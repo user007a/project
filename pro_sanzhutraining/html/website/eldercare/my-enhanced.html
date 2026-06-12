@@ -1,0 +1,3058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="叁竹培训个人中心 - 我的学习、订单、考试、收藏">
+  <meta name="keywords" content="个人中心,学习管理,订单管理,考试记录,收藏">
+  <title>个人中心 - 叁竹培训</title>
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <style>
+    /* ================================================
+       美化版个人中心 - 全面升级 v2.0
+       ================================================ */
+
+    /* ================================================
+       通知栏
+       ================================================ */
+    .notify-bar { 
+      background: linear-gradient(90deg, #FCD34D 0%, #F59E0B 50%, #FCD34D 100%); 
+      padding: 12px 0; 
+      text-align: center; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      z-index: 1001; 
+      box-shadow: 0 2px 16px rgba(251, 191, 36, 0.4); 
+    }
+    .notify-content { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 10px; 
+      color: #78350F; 
+      font-size: 14px; 
+      font-weight: 500; 
+    }
+    .notify-close { 
+      position: absolute; 
+      right: 40px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      cursor: pointer; 
+      color: #78350F; 
+      opacity: 0.6; 
+      transition: all 0.25s; 
+      width: 32px; 
+      height: 32px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      border-radius: 50%; 
+    }
+    .notify-close:hover { 
+      opacity: 1; 
+      background: rgba(255,255,255,0.35); 
+      transform: translateY(-50%) scale(1.1); 
+    }
+    
+    /* ================================================
+       头部导航
+       ================================================ */
+    .header { 
+      position: fixed; 
+      top: 48px; 
+      left: 0; 
+      right: 0; 
+      height: 64px; 
+      background: var(--color-bg-card); 
+      z-index: 1000; 
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05); 
+      border-bottom: 1px solid var(--border-light); 
+      transition: box-shadow 0.3s ease;
+    }
+    .header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .header-inner { 
+      max-width: var(--max-width); 
+      margin: 0 auto; 
+      height: 100%; 
+      display: flex; 
+      align-items: center; 
+      padding: 0 32px; 
+      gap: 32px; 
+    }
+    .logo-area { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      flex-shrink: 0; 
+    }
+    .logo-icon { 
+      width: 42px; 
+      height: 42px; 
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); 
+      border-radius: var(--radius-lg); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); 
+      transition: transform 0.25s ease;
+    }
+    .logo-icon:hover { transform: scale(1.05); }
+    .logo-text { 
+      font-size: 24px; 
+      font-weight: 700; 
+      color: var(--text-primary); 
+      white-space: nowrap; 
+      letter-spacing: -0.4px; 
+    }
+    .header-nav { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      flex-shrink: 0; 
+    }
+    .header-nav a { 
+      color: var(--text-regular); 
+      font-size: 15px; 
+      font-weight: 500; 
+      padding: 10px 18px; 
+      border-radius: var(--radius-md); 
+      transition: all 0.25s; 
+      position: relative; 
+    }
+    .header-nav a:hover { 
+      color: var(--color-primary); 
+      background: var(--color-primary-50); 
+      transform: translateY(-1px); 
+    }
+    .header-nav a.active { 
+      color: var(--color-primary); 
+      font-weight: 600; 
+    }
+    
+    /* 搜索框 */
+    .search-box { 
+      flex: 1; 
+      max-width: 520px; 
+      display: flex; 
+      height: 42px; 
+      border-radius: var(--radius-xl); 
+      overflow: hidden; 
+      background: var(--color-gray-50); 
+      border: 2px solid transparent; 
+      transition: all 0.25s; 
+    }
+    .search-box:focus-within { 
+      border-color: var(--color-primary); 
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); 
+      background: var(--color-bg-card);
+    }
+    .search-input { 
+      flex: 1; 
+      border: none; 
+      outline: none; 
+      padding: 0 20px; 
+      font-size: 15px; 
+      background: transparent; 
+      color: var(--text-primary); 
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-btn { 
+      width: 56px; 
+      background: var(--color-primary); 
+      border: none; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      transition: all 0.25s; 
+    }
+    .search-btn:hover { 
+      background: var(--color-primary-dark); 
+      transform: scale(1.02); 
+    }
+    
+    /* 用户操作区 */
+    .header-actions { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      flex-shrink: 0; 
+    }
+    .header-actions .btn-login { 
+      padding: 9px 22px; 
+      color: var(--text-regular); 
+      font-weight: 500; 
+      font-size: 14px; 
+      border-radius: var(--radius-md); 
+      transition: all 0.25s; 
+    }
+    .header-actions .btn-login:hover { 
+      color: var(--color-primary); 
+      background: var(--color-primary-50); 
+      transform: translateY(-1px); 
+    }
+    .header-actions .btn-register { 
+      padding: 9px 26px; 
+      background: #ffffff; 
+      color: #1f2937; 
+      font-weight: 600; 
+      font-size: 14px; 
+      border-radius: var(--radius-md); 
+      border: 1px solid #e5e7eb; 
+      transition: all 0.25s; 
+    }
+    .header-actions .btn-register:hover { 
+      border-color: var(--color-primary); 
+      color: var(--color-primary); 
+    }
+    
+    /* 用户菜单 */
+    .user-menu { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      flex-shrink: 0; 
+      position: relative; 
+    }
+    .user-avatar-mini { 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      background: var(--color-primary-100); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.2); 
+      transition: all 0.25s;
+    }
+    .user-avatar-mini:hover { 
+      transform: scale(1.05); 
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); 
+    }
+    .user-dropdown { 
+      display: none; 
+      position: absolute; 
+      top: calc(100% + 10px); 
+      right: 0; 
+      min-width: 190px; 
+      background: var(--color-bg-card); 
+      border-radius: var(--radius-lg); 
+      box-shadow: 0 8px 28px rgba(0,0,0,0.12); 
+      border: 1px solid var(--border-light); 
+      overflow: hidden; 
+      z-index: 1001; 
+    }
+    .user-menu:hover .user-dropdown { 
+      display: block; 
+      animation: dropdownFadeIn 0.2s ease;
+    }
+    @keyframes dropdownFadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown-item { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      padding: 13px 18px; 
+      font-size: 14px; 
+      color: var(--text-regular); 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    .dropdown-item:hover { 
+      background: var(--color-primary-50); 
+      color: var(--color-primary); 
+      padding-left: 22px;
+    }
+    .dropdown-item.logout:hover { 
+      background: rgba(239,68,68,0.08); 
+      color: #ef4444; 
+    }
+    .dropdown-divider { height: 1px; background: var(--border-light); }
+    
+    /* ================================================
+       页面主体布局
+       ================================================ */
+    .page-body { 
+      margin-top: calc(48px + 64px); 
+      padding: 32px 0; 
+      background: var(--color-bg-primary); 
+      min-height: calc(100vh - 48px - 64px); 
+    }
+    .page-container { max-width: var(--max-width); margin: 0 auto; padding: 0 20px; }
+    .my-layout { display: flex; gap: 24px; }
+    .sidebar { width: 240px; flex-shrink: 0; }
+    .content-area { flex: 1; min-width: 0; }
+    
+    /* ================================================
+       用户信息头部 - 全新设计
+       ================================================ */
+    .user-banner-enhanced {
+      background: linear-gradient(135deg, #2563EB 0%, #1E40AF 50%, #1E3A8A 100%);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+    }
+    
+    .user-banner-enhanced::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    
+    .user-banner-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    
+    .user-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    
+    .user-level-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #78350F;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .user-info-text {
+      flex: 1;
+      color: white;
+    }
+    
+    .user-name-large {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .user-id {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+    
+    .user-achievements {
+      display: flex;
+      gap: 24px;
+    }
+    
+    .achievement-item {
+      text-align: center;
+    }
+    
+    .achievement-value {
+      font-size: 20px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .achievement-label {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+    
+    .user-stats-mini {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    
+    .stat-mini-item {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    
+    .stat-mini-item .iconify {
+      font-size: 16px;
+    }
+    
+    /* ================================================
+       统计概览卡片 - 全新设计
+       ================================================ */
+    .stats-overview-enhanced {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card-enhanced::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .stat-card-enhanced:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .stat-card-enhanced:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-card-enhanced.blue { --card-gradient: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%); }
+    .stat-card-enhanced.green { --card-gradient: linear-gradient(90deg, #10B981 0%, #059669 100%); }
+    .stat-card-enhanced.orange { --card-gradient: linear-gradient(90deg, #F97316 0%, #EA580C 100%); }
+    .stat-card-enhanced.purple { --card-gradient: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 100%); }
+    
+    .stat-card-icon-enhanced {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      transition: transform 0.3s ease;
+    }
+    
+    .stat-card-enhanced:hover .stat-card-icon-enhanced {
+      transform: scale(1.1);
+    }
+    
+    .stat-card-icon-enhanced.blue {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    }
+    .stat-card-icon-enhanced.blue .iconify {
+      color: #2563EB;
+      font-size: 24px;
+    }
+    
+    .stat-card-icon-enhanced.green {
+      background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+    }
+    .stat-card-icon-enhanced.green .iconify {
+      color: #059669;
+      font-size: 24px;
+    }
+    
+    .stat-card-icon-enhanced.orange {
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+    }
+    .stat-card-icon-enhanced.orange .iconify {
+      color: #EA580C;
+      font-size: 24px;
+    }
+    
+    .stat-card-icon-enhanced.purple {
+      background: linear-gradient(135deg, #FAF5FF 0%, #F3E8FF 100%);
+    }
+    .stat-card-icon-enhanced.purple .iconify {
+      color: #7C3AED;
+      font-size: 24px;
+    }
+    
+    .stat-card-value-enhanced {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+    
+    .stat-card-label-enhanced {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    
+    .stat-card-trend {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .stat-card-trend.up {
+      color: var(--color-success);
+    }
+    
+    .stat-card-trend .iconify {
+      font-size: 14px;
+    }
+    
+    /* ================================================
+       课程进度卡片 - 全新设计
+       ================================================ */
+    .course-progress-card-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .card-header-enhanced {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .card-title-enhanced {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-title-enhanced::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      border-radius: 2px;
+    }
+    
+    .card-more-enhanced {
+      font-size: 14px;
+      color: var(--color-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.25s ease;
+    }
+    
+    .card-more-enhanced:hover {
+      color: var(--color-primary-dark);
+      transform: translateX(4px);
+    }
+    
+    .course-progress-list-enhanced {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .course-progress-item-enhanced {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: var(--color-gray-50);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .course-progress-item-enhanced:hover {
+      background: var(--color-primary-50);
+      transform: translateX(4px);
+    }
+    
+    .course-progress-cover-enhanced {
+      width: 160px;
+      height: 90px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .course-progress-cover-enhanced img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .course-progress-item-enhanced:hover .course-progress-cover-enhanced img {
+      transform: scale(1.05);
+    }
+    
+    .course-progress-info-enhanced {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .course-progress-title-enhanced {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .course-progress-meta-enhanced {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .course-progress-bar-enhanced {
+      height: 8px;
+      background: var(--color-gray-200);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .course-progress-fill-enhanced {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      border-radius: var(--radius-full);
+      transition: width 1s ease-out;
+      position: relative;
+    }
+    
+    .course-progress-fill-enhanced::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+      animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .course-progress-footer-enhanced {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .course-progress-btn-enhanced {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    .course-progress-btn-enhanced:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* ================================================
+       侧边导航栏 - 全新设计
+       ================================================ */
+    .sidebar-title {
+      padding: 16px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      border: 1px solid var(--border-light);
+      border-bottom: none;
+    }
+    
+    .nav-menu-enhanced {
+      background: var(--color-bg-card);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+    
+    .nav-item-enhanced {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text-regular);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 3px solid transparent;
+      min-height: 48px;
+      position: relative;
+    }
+    
+    .nav-item-enhanced:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-50);
+      transform: translateX(4px);
+    }
+    
+    .nav-item-enhanced.active {
+      color: var(--color-primary);
+      background: linear-gradient(90deg, var(--color-primary-50) 0%, transparent 100%);
+      border-left-color: var(--color-primary);
+      font-weight: 600;
+    }
+    
+    .nav-item-enhanced .iconify {
+      font-size: 20px;
+      transition: transform 0.25s ease;
+    }
+    
+    .nav-item-enhanced:hover .iconify {
+      transform: scale(1.1);
+    }
+    
+    /* ================================================
+       订单列表 - 全新设计
+       ================================================ */
+    .order-list-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+    
+    .order-item-enhanced {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.25s ease;
+    }
+    
+    .order-item-enhanced:last-child {
+      border-bottom: none;
+    }
+    
+    .order-item-enhanced:hover {
+      background: var(--color-gray-50);
+    }
+    
+    .order-header-enhanced {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .order-id {
+      font-weight: 500;
+    }
+    
+    .order-date {
+      color: var(--text-muted);
+    }
+    
+    .order-content-enhanced {
+      display: flex;
+      gap: 16px;
+    }
+    
+    .order-course-cover-enhanced {
+      width: 120px;
+      height: 80px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-course-cover-enhanced img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .order-info-enhanced {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .order-title-enhanced {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .order-meta-enhanced {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .order-footer-enhanced {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .order-price-enhanced {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-price);
+    }
+    
+    .order-status-enhanced {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+    }
+    
+    .order-status-enhanced.paid {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+    
+    .order-status-enhanced.unpaid {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .order-actions-enhanced {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    
+    .order-action-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      color: var(--text-regular);
+      background: var(--color-bg-card);
+      transition: all 0.25s ease;
+    }
+    
+    .order-action-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+    
+    .order-action-btn.primary {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    .order-action-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* ================================================
+       考试记录卡片 - 全新设计
+       ================================================ */
+    .exam-record-list-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+    }
+    
+    .exam-record-item-enhanced {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      gap: 20px;
+      transition: background 0.25s ease;
+    }
+    
+    .exam-record-item-enhanced:last-child {
+      border-bottom: none;
+    }
+    
+    .exam-record-item-enhanced:hover {
+      background: var(--color-gray-50);
+    }
+    
+    .exam-score-display {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .exam-score-display.pass {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+    
+    .exam-score-display.fail {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    }
+    
+    .exam-score-value {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    
+    .exam-score-label {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+    
+    .exam-record-info-enhanced {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .exam-record-title-enhanced {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    .exam-record-meta-enhanced {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .exam-record-actions-enhanced {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .exam-action-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      color: var(--text-regular);
+      background: var(--color-bg-card);
+      transition: all 0.25s ease;
+    }
+    
+    .exam-action-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+    
+    /* ================================================
+       收藏夹网格 - 全新设计
+       ================================================ */
+    .favorites-grid-enhanced {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    .favorite-card-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 2px solid transparent;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .favorite-card-enhanced:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+      border-color: var(--color-primary);
+    }
+    
+    .favorite-cover-enhanced {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .favorite-cover-enhanced img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    
+    .favorite-card-enhanced:hover .favorite-cover-enhanced img {
+      transform: scale(1.08);
+    }
+    
+    .favorite-price-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+    }
+    
+    .favorite-info-enhanced {
+      padding: 16px;
+    }
+    
+    .favorite-title-enhanced {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .favorite-actions-enhanced {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .favorite-action-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      color: var(--text-regular);
+      background: var(--color-bg-card);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .favorite-action-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+    
+    .favorite-action-btn.primary {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      border: none;
+    }
+    
+    .favorite-action-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* ================================================
+       个人资料表单
+       ================================================ */
+    .profile-form-card-enhanced {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      padding: 28px;
+    }
+    
+    .form-title-enhanced {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .form-title-enhanced::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      border-radius: 2px;
+    }
+    
+    .form-row-enhanced {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group-enhanced {
+      flex: 1;
+    }
+    
+    .form-label-enhanced {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .form-input-enhanced {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--color-gray-50);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    
+    .form-input-enhanced:focus {
+      border-color: var(--color-primary);
+      background: var(--color-bg-card);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .form-actions-enhanced {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    
+    .btn-primary-enhanced {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    .btn-primary-enhanced:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    .btn-secondary-enhanced {
+      padding: 12px 32px;
+      background: var(--color-gray-100);
+      color: var(--text-regular);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    
+    .btn-secondary-enhanced:hover {
+      background: var(--color-gray-200);
+      transform: translateY(-1px);
+    }
+    
+    /* ================================================
+       空状态
+       ================================================ */
+    .empty-state-enhanced {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+    }
+    
+    .empty-icon-enhanced {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--color-gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    
+    .empty-icon-enhanced .iconify {
+      font-size: 40px;
+      color: var(--color-gray-400);
+    }
+    
+    .empty-title-enhanced {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    .empty-desc-enhanced {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    .empty-btn-enhanced {
+      padding: 12px 32px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    .empty-btn-enhanced:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    /* ================================================
+       页脚
+       ================================================ */
+    .footer {
+      background: var(--color-gray-900);
+      color: var(--text-white);
+      margin-top: 48px;
+      padding-top: 56px;
+    }
+    
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 56px;
+      margin-bottom: 48px;
+    }
+    
+    .footer-logo {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--color-gray-400);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    
+    .footer-col-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .footer-links a {
+      display: block;
+      font-size: 14px;
+      color: var(--color-gray-400);
+      margin-bottom: 12px;
+      transition: all 0.25s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--text-white);
+      transform: translateX(4px);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid var(--color-gray-700);
+      padding: 24px 0;
+      font-size: 14px;
+      color: var(--color-gray-500);
+      text-align: center;
+    }
+    
+    /* ================================================
+       内容标签页
+       ================================================ */
+    .content-tab {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .content-tab.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ================================================
+       可访问性增强
+       ================================================ */
+    *:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    
+    *:focus:not(:focus-visible) {
+      outline: none;
+    }
+    
+    *:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* ================================================
+       加载状态
+       ================================================ */
+    .loading-skeleton {
+      background: linear-gradient(90deg, var(--color-gray-200) 25%, var(--color-gray-100) 50%, var(--color-gray-200) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s ease-in-out infinite;
+      border-radius: var(--radius-md);
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--color-gray-200);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* ================================================
+       Toast 提示
+       ================================================ */
+    .toast-container {
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .toast {
+      min-width: 300px;
+      padding: 16px 20px;
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideInRight 0.3s ease;
+      border-left: 4px solid var(--color-primary);
+    }
+    
+    .toast.success {
+      border-left-color: var(--color-success);
+    }
+    
+    .toast.error {
+      border-left-color: #ef4444;
+    }
+    
+    .toast.warning {
+      border-left-color: #f59e0b;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .toast.success .toast-icon {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-success);
+    }
+    
+    .toast.error .toast-icon {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .toast.warning .toast-icon {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    
+    .toast-message {
+      flex: 1;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    
+    .toast-close {
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      padding: 4px;
+    }
+    
+    .toast-close:hover {
+      color: var(--text-primary);
+    }
+    
+    /* ================================================
+       按钮点击反馈
+       ================================================ */
+    .btn-ripple {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-ripple::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-ripple:active::after {
+      width: 300px;
+      height: 300px;
+    }
+    
+    /* ================================================
+       表单验证状态
+       ================================================ */
+    .form-input-enhanced.error {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    
+    .form-input-enhanced.success {
+      border-color: var(--color-success);
+      background: rgba(16, 185, 129, 0.05);
+    }
+    
+    .form-error-message {
+      font-size: 12px;
+      color: #ef4444;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .form-success-message {
+      font-size: 12px;
+      color: var(--color-success);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* ================================================
+       图片懒加载
+       ================================================ */
+    .lazy-image {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .lazy-image.loaded {
+      opacity: 1;
+    }
+    
+    /* ================================================
+       响应式设计
+       ================================================ */
+    @media (max-width: 1439px) {
+      .stats-overview-enhanced {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .favorites-grid-enhanced {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 1023px) {
+      .my-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .nav-menu-enhanced {
+        display: flex;
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
+      }
+      .nav-item-enhanced {
+        flex-shrink: 0;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+      .nav-item-enhanced.active {
+        border-bottom-color: var(--color-primary);
+        background: var(--color-primary-50);
+      }
+      .toast-container {
+        right: 10px;
+        left: 10px;
+      }
+      .toast {
+        min-width: auto;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .stats-overview-enhanced {
+        grid-template-columns: 1fr;
+      }
+      .favorites-grid-enhanced {
+        grid-template-columns: 1fr;
+      }
+      .user-banner-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .user-achievements {
+        justify-content: center;
+      }
+      .course-progress-item-enhanced {
+        flex-direction: column;
+      }
+      .course-progress-cover-enhanced {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+      }
+      .form-row-enhanced {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+    
+    /* ================================================
+       弹窗样式
+       ================================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+    
+    .modal-close:hover {
+      background: var(--color-gray-100);
+      color: var(--text-primary);
+    }
+    
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+    }
+    
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      padding: 20px 24px;
+      border-top: 1px solid var(--color-gray-200);
+      justify-content: flex-end;
+    }
+    
+    .modal-body .form-row {
+      margin-bottom: 20px;
+    }
+    
+    .modal-body .form-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .modal-body .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .modal-body .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .modal-body .form-label .required {
+      color: #ef4444;
+    }
+    
+    .modal-body .form-input {
+      padding: 12px 16px;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: var(--color-bg);
+      transition: all 0.2s;
+    }
+    
+    .modal-body .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .modal-body .radio-group {
+      display: flex;
+      gap: 24px;
+    }
+    
+    .modal-body .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .modal-body .radio-label input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-primary);
+    }
+    
+    .modal-body textarea.form-input {
+      resize: vertical;
+    }
+    
+    .btn-secondary {
+      padding: 10px 20px;
+      border: 1px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--color-gray-100);
+    }
+    
+    /* ================================================
+       打印样式
+       ================================================ */
+    @media print {
+      .header,
+      .footer,
+      .notify-bar,
+      .sidebar,
+      .toast-container {
+        display: none !important;
+      }
+      
+      .page-body {
+        margin-top: 0;
+      }
+      
+      .content-area {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 加载遮罩 -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+  
+  <!-- Toast 提示容器 -->
+  <div class="toast-container" id="toastContainer"></div>
+  
+  <!-- 发票弹窗 -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">申请发票</h3>
+        <button class="modal-close" onclick="closeInvoiceModal()" aria-label="关闭弹窗">
+          <span class="iconify" data-icon="mdi:close" style="font-size: 20px;"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="invoiceForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">发票类型 <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input type="radio" name="invoiceType" value="personal" checked>
+                  <span>个人</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="invoiceType" value="company">
+                  <span>企业</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">发票抬头 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="invoiceTitle" placeholder="请输入发票抬头" required>
+            </div>
+          </div>
+          <div class="form-row company-fields" id="companyFields" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">税号 <span class="required">*</span></label>
+              <input type="text" class="form-input" id="taxNumber" placeholder="请输入企业税号">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">邮箱 <span class="required">*</span></label>
+              <input type="email" class="form-input" id="invoiceEmail" placeholder="请输入接收发票的邮箱" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">联系电话</label>
+              <input type="tel" class="form-input" id="invoicePhone" placeholder="请输入联系电话">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">备注</label>
+              <textarea class="form-input" id="invoiceRemark" rows="3" placeholder="请输入备注信息"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeInvoiceModal()">取消</button>
+        <button class="btn-primary" onclick="submitInvoice()">提交申请</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="notify-bar" id="notifyBar">
+    <div class="notify-content">
+      <span class="iconify" data-icon="mdi:megaphone" style="font-size: 16px;"></span>
+      <span>公告：2024年度养老护理员职业技能等级认定考试报名开始，点击查看详情</span>
+    </div>
+    <span class="notify-close" onclick="document.getElementById('notifyBar').style.display='none'" role="button" aria-label="关闭公告" tabindex="0">
+      <span class="iconify" data-icon="mdi:close" style="font-size: 16px;"></span>
+    </span>
+  </div>
+
+  <header class="header" role="banner">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-icon" aria-hidden="true">
+          <span class="iconify" data-icon="mdi:heart-pulse" style="color: white; font-size: 24px;"></span>
+        </div>
+        <span class="logo-text">叁竹培训</span>
+      </div>
+      <nav class="header-nav" role="navigation" aria-label="主导航">
+        <a href="index.html">首页</a>
+        <a href="course-list.html">课程中心</a>
+        <a href="exam-center.html">考试中心</a>
+        <a href="my.html" class="active" aria-current="page">个人中心</a>
+      </nav>
+      <div class="search-box" role="search">
+        <input type="search" class="search-input" placeholder="搜索课程、讲师、考试..." aria-label="搜索课程、讲师、考试">
+        <button class="search-btn" aria-label="搜索">
+          <span class="iconify" data-icon="mdi:magnify" style="color: white; font-size: 20px;" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="header-actions">
+        <div class="user-menu">
+          <div class="user-avatar-mini" role="button" aria-label="用户菜单" tabindex="0" aria-haspopup="true">
+            <span class="iconify" data-icon="mdi:account" style="font-size: 20px; color: var(--color-primary);" aria-hidden="true"></span>
+          </div>
+          <div class="user-dropdown" role="menu" aria-label="用户菜单">
+            <div class="dropdown-item" role="menuitem" tabindex="0">
+              <span class="iconify" data-icon="mdi:account-circle" style="font-size: 18px;" aria-hidden="true"></span>
+              个人中心
+            </div>
+            <div class="dropdown-item" role="menuitem" tabindex="0">
+              <span class="iconify" data-icon="mdi:cog" style="font-size: 18px;" aria-hidden="true"></span>
+              账号设置
+            </div>
+            <div class="dropdown-divider" role="separator"></div>
+            <div class="dropdown-item logout" role="menuitem" tabindex="0">
+              <span class="iconify" data-icon="mdi:logout" style="font-size: 18px;" aria-hidden="true"></span>
+              退出登录
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="page-container">
+      <div class="my-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar-title">
+            <span class="iconify" data-icon="mdi:account-circle" style="font-size: 20px; color: var(--color-primary);" aria-hidden="true"></span>
+            个人中心
+          </div>
+          <nav class="nav-menu-enhanced" role="navigation" aria-label="个人中心导航">
+            <div class="nav-item-enhanced active" id="nav-learning" onclick="switchTab('learning')" role="tab" aria-selected="true" aria-controls="learningContent">
+              <span class="iconify" data-icon="mdi:book-open-page-variant" aria-hidden="true"></span>
+              我的学习
+            </div>
+            <div class="nav-item-enhanced" id="nav-orders" onclick="switchTab('orders')" role="tab" aria-selected="false" aria-controls="ordersContent">
+              <span class="iconify" data-icon="mdi:cart" aria-hidden="true"></span>
+              我的订单
+            </div>
+            <div class="nav-item-enhanced" id="nav-exams" onclick="switchTab('exams')" role="tab" aria-selected="false" aria-controls="examsContent">
+              <span class="iconify" data-icon="mdi:clipboard-text" aria-hidden="true"></span>
+              考试记录
+            </div>
+            <div class="nav-item-enhanced" id="nav-favorites" onclick="switchTab('favorites')" role="tab" aria-selected="false" aria-controls="favoritesContent">
+              <span class="iconify" data-icon="mdi:heart" aria-hidden="true"></span>
+              我的收藏
+            </div>
+            <div class="nav-item-enhanced" id="nav-profile" onclick="switchTab('profile')" role="tab" aria-selected="false" aria-controls="profileContent">
+              <span class="iconify" data-icon="mdi:cog" aria-hidden="true"></span>
+              个人设置
+            </div>
+          </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="content-area" role="main">
+          <!-- 学习中心 -->
+          <div id="learningContent" class="content-tab active" role="tabpanel" aria-labelledby="nav-learning" tabindex="-1">
+            <!-- 用户信息头部 -->
+            <div class="user-banner-enhanced">
+              <div class="user-banner-content">
+                <div class="user-avatar-large">
+                  张
+                  <div class="user-level-badge">V5</div>
+                </div>
+                <div class="user-info-text">
+                  <div class="user-name-large">张三</div>
+                  <div class="user-id">ID: 100001</div>
+                  <div class="user-achievements">
+                    <div class="achievement-item">
+                      <span class="achievement-value">128</span>
+                      <span class="achievement-label">学习天数</span>
+                    </div>
+                    <div class="achievement-item">
+                      <span class="achievement-value">15</span>
+                      <span class="achievement-label">连续打卡</span>
+                    </div>
+                    <div class="achievement-item">
+                      <span class="achievement-value">3</span>
+                      <span class="achievement-label">获得证书</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="user-stats-mini">
+                <div class="stat-mini-item">
+                  <span class="iconify" data-icon="mdi:fire" aria-hidden="true"></span>
+                  <span>学习达人</span>
+                </div>
+                <div class="stat-mini-item">
+                  <span class="iconify" data-icon="mdi:star" aria-hidden="true"></span>
+                  <span>优秀学员</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 统计概览 -->
+            <div class="stats-overview-enhanced">
+              <div class="stat-card-enhanced blue">
+                <div class="stat-card-icon-enhanced blue">
+                  <span class="iconify" data-icon="mdi:book-open-variant" aria-hidden="true"></span>
+                </div>
+                <div class="stat-card-value-enhanced">12</div>
+                <div class="stat-card-label-enhanced">已购课程</div>
+                <div class="stat-card-trend up">
+                  <span class="iconify" data-icon="mdi:trending-up" aria-hidden="true"></span>
+                  较上月 +2
+                </div>
+              </div>
+              <div class="stat-card-enhanced green">
+                <div class="stat-card-icon-enhanced green">
+                  <span class="iconify" data-icon="mdi:play-circle" aria-hidden="true"></span>
+                </div>
+                <div class="stat-card-value-enhanced">3</div>
+                <div class="stat-card-label-enhanced">学习中</div>
+                <div class="stat-card-trend">
+                  完成 60%
+                </div>
+              </div>
+              <div class="stat-card-enhanced orange">
+                <div class="stat-card-icon-enhanced orange">
+                  <span class="iconify" data-icon="mdi:check-circle" aria-hidden="true"></span>
+                </div>
+                <div class="stat-card-value-enhanced">85</div>
+                <div class="stat-card-label-enhanced">考试通过</div>
+                <div class="stat-card-trend up">
+                  <span class="iconify" data-icon="mdi:trending-up" aria-hidden="true"></span>
+                  平均 82 分
+                </div>
+              </div>
+              <div class="stat-card-enhanced purple">
+                <div class="stat-card-icon-enhanced purple">
+                  <span class="iconify" data-icon="mdi:certificate" aria-hidden="true"></span>
+                </div>
+                <div class="stat-card-value-enhanced">5</div>
+                <div class="stat-card-label-enhanced">获得证书</div>
+                <div class="stat-card-trend up">
+                  <span class="iconify" data-icon="mdi:trending-up" aria-hidden="true"></span>
+                  本月新增 1
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程进度 -->
+            <div class="course-progress-card-enhanced">
+              <div class="card-header-enhanced">
+                <div class="card-title-enhanced">正在学习</div>
+                <div class="card-more-enhanced">
+                  查看全部
+                  <span class="iconify" data-icon="mdi:chevron-right" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="course-progress-list-enhanced">
+                <div class="course-progress-item-enhanced">
+                  <div class="course-progress-cover-enhanced">
+                    <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=320&h=180&fit=crop" alt="养老护理员（初级）考证培训课程封面" loading="lazy">
+                  </div>
+                  <div class="course-progress-info-enhanced">
+                    <div class="course-progress-title-enhanced">养老护理员（初级）考证培训</div>
+                    <div class="course-progress-meta-enhanced">
+                      <span>已学习 12/20 课时</span>
+                      <span>讲师：张老师</span>
+                    </div>
+                    <div class="course-progress-bar-enhanced">
+                      <div class="course-progress-fill-enhanced" style="width: 60%;" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="课程进度 60%"></div>
+                    </div>
+                    <div class="course-progress-footer-enhanced">
+                      <span>上次学习：2024-01-15 14:30</span>
+                      <button class="course-progress-btn-enhanced" onclick="goToCourse('caregiver-primary')">继续学习</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="course-progress-item-enhanced">
+                  <div class="course-progress-cover-enhanced">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=320&h=180&fit=crop" alt="老年人心理护理专题课程封面" loading="lazy">
+                  </div>
+                  <div class="course-progress-info-enhanced">
+                    <div class="course-progress-title-enhanced">老年人心理护理专题课程</div>
+                    <div class="course-progress-meta-enhanced">
+                      <span>已学习 8/15 课时</span>
+                      <span>讲师：李老师</span>
+                    </div>
+                    <div class="course-progress-bar-enhanced">
+                      <div class="course-progress-fill-enhanced" style="width: 53%;" role="progressbar" aria-valuenow="53" aria-valuemin="0" aria-valuemax="100" aria-label="课程进度 53%"></div>
+                    </div>
+                    <div class="course-progress-footer-enhanced">
+                      <span>上次学习：2024-01-14 10:20</span>
+                      <button class="course-progress-btn-enhanced" onclick="goToCourse('psychology-care')">继续学习</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 订单管理 -->
+          <div id="ordersContent" class="content-tab" role="tabpanel" aria-labelledby="nav-orders" tabindex="-1">
+            <div class="order-list-enhanced">
+              <div class="order-item-enhanced" data-order-id="202401150001">
+                <div class="order-header-enhanced">
+                  <span class="order-id">订单号：202401150001</span>
+                  <span class="order-date">2024-01-15</span>
+                </div>
+                <div class="order-content-enhanced">
+                  <div class="order-course-cover-enhanced">
+                    <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=240&h=160&fit=crop" alt="养老护理员（初级）考证培训课程封面" loading="lazy">
+                  </div>
+                  <div class="order-info-enhanced">
+                    <div class="order-title-enhanced">养老护理员（初级）考证培训</div>
+                    <div class="order-meta-enhanced">
+                      <span>讲师：张老师</span>
+                      <span>课时：20课时</span>
+                    </div>
+                    <div class="order-footer-enhanced">
+                      <div class="order-price-enhanced">¥599.00</div>
+                      <div class="order-status-enhanced paid">
+                        <span class="iconify" data-icon="mdi:check-circle" aria-hidden="true"></span>
+                        已支付
+                      </div>
+                    </div>
+                    <div class="order-actions-enhanced">
+                      <button class="order-action-btn" onclick="applyInvoice('202401150001')">申请发票</button>
+                      <button class="order-action-btn" onclick="viewOrderDetail('202401150001')">查看详情</button>
+                      <button class="order-action-btn primary" onclick="goToCourse('caregiver-primary')">去学习</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="order-item-enhanced" data-order-id="202401140002">
+                <div class="order-header-enhanced">
+                  <span class="order-id">订单号：202401140002</span>
+                  <span class="order-date">2024-01-14</span>
+                </div>
+                <div class="order-content-enhanced">
+                  <div class="order-course-cover-enhanced">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=240&h=160&fit=crop" alt="老年人心理护理专题课程封面" loading="lazy">
+                  </div>
+                  <div class="order-info-enhanced">
+                    <div class="order-title-enhanced">老年人心理护理专题课程</div>
+                    <div class="order-meta-enhanced">
+                      <span>讲师：李老师</span>
+                      <span>课时：15课时</span>
+                    </div>
+                    <div class="order-footer-enhanced">
+                      <div class="order-price-enhanced">¥399.00</div>
+                      <div class="order-status-enhanced unpaid">
+                        <span class="iconify" data-icon="mdi:clock-outline" aria-hidden="true"></span>
+                        待支付
+                      </div>
+                    </div>
+                    <div class="order-actions-enhanced">
+                      <button class="order-action-btn" onclick="cancelOrder('202401140002')">取消订单</button>
+                      <button class="order-action-btn primary" onclick="payOrder('202401140002')">立即支付</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 考试记录 -->
+          <div id="examsContent" class="content-tab" role="tabpanel" aria-labelledby="nav-exams" tabindex="-1">
+            <div class="exam-record-list-enhanced">
+              <div class="exam-record-item-enhanced">
+                <div class="exam-score-display pass">
+                  <div class="exam-score-value">85</div>
+                  <div class="exam-score-label">分</div>
+                </div>
+                <div class="exam-record-info-enhanced">
+                  <div class="exam-record-title-enhanced">养老护理员初级考试</div>
+                  <div class="exam-record-meta-enhanced">
+                    <span>考试时间：2024-01-10 14:00-16:00</span>
+                    <span>用时：1小时45分</span>
+                    <span>正确率：85%</span>
+                  </div>
+                  <div class="exam-record-actions-enhanced">
+                    <button class="exam-action-btn" onclick="viewExamDetail('exam-caregiver-primary')">查看详情</button>
+                    <button class="exam-action-btn" onclick="retryExam('exam-caregiver-primary')">重新考试</button>
+                  </div>
+                </div>
+              </div>
+              <div class="exam-record-item-enhanced">
+                <div class="exam-score-display fail">
+                  <div class="exam-score-value">58</div>
+                  <div class="exam-score-label">分</div>
+                </div>
+                <div class="exam-record-info-enhanced">
+                  <div class="exam-record-title-enhanced">老年人心理护理考试</div>
+                  <div class="exam-record-meta-enhanced">
+                    <span>考试时间：2024-01-08 10:00-11:30</span>
+                    <span>用时：1小时20分</span>
+                    <span>正确率：58%</span>
+                  </div>
+                  <div class="exam-record-actions-enhanced">
+                    <button class="exam-action-btn" onclick="viewExamDetail('exam-psychology-care')">查看详情</button>
+                    <button class="exam-action-btn" onclick="retryExam('exam-psychology-care')">重新考试</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 我的收藏 -->
+          <div id="favoritesContent" class="content-tab" role="tabpanel" aria-labelledby="nav-favorites" tabindex="-1">
+            <div class="favorites-grid-enhanced">
+              <div class="favorite-card-enhanced">
+                <div class="favorite-cover-enhanced">
+                  <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=225&fit=crop" alt="养老护理员（初级）考证培训课程封面" loading="lazy">
+                  <div class="favorite-price-badge">¥599</div>
+                </div>
+                <div class="favorite-info-enhanced">
+                  <div class="favorite-title-enhanced">养老护理员（初级）考证培训</div>
+                  <div class="favorite-actions-enhanced">
+                    <button class="favorite-action-btn" onclick="removeFavorite('caregiver-primary')">
+                      <span class="iconify" data-icon="mdi:heart-off" aria-hidden="true"></span>
+                      取消收藏
+                    </button>
+                    <button class="favorite-action-btn primary" onclick="buyCourse('caregiver-primary')">
+                      <span class="iconify" data-icon="mdi:shopping-cart" aria-hidden="true"></span>
+                      立即购买
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="favorite-card-enhanced">
+                <div class="favorite-cover-enhanced">
+                  <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=225&fit=crop" alt="老年人心理护理专题课程封面" loading="lazy">
+                  <div class="favorite-price-badge">¥399</div>
+                </div>
+                <div class="favorite-info-enhanced">
+                  <div class="favorite-title-enhanced">老年人心理护理专题课程</div>
+                  <div class="favorite-actions-enhanced">
+                    <button class="favorite-action-btn" onclick="removeFavorite('psychology-care')">
+                      <span class="iconify" data-icon="mdi:heart-off" aria-hidden="true"></span>
+                      取消收藏
+                    </button>
+                    <button class="favorite-action-btn primary" onclick="buyCourse('psychology-care')">
+                      <span class="iconify" data-icon="mdi:shopping-cart" aria-hidden="true"></span>
+                      立即购买
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="favorite-card-enhanced">
+                <div class="favorite-cover-enhanced">
+                  <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=225&fit=crop" alt="养老护理员（中级）提升课程封面" loading="lazy">
+                  <div class="favorite-price-badge">¥799</div>
+                </div>
+                <div class="favorite-info-enhanced">
+                  <div class="favorite-title-enhanced">养老护理员（中级）提升课程</div>
+                  <div class="favorite-actions-enhanced">
+                    <button class="favorite-action-btn" onclick="removeFavorite('caregiver-intermediate')">
+                      <span class="iconify" data-icon="mdi:heart-off" aria-hidden="true"></span>
+                      取消收藏
+                    </button>
+                    <button class="favorite-action-btn primary" onclick="buyCourse('caregiver-intermediate')">
+                      <span class="iconify" data-icon="mdi:shopping-cart" aria-hidden="true"></span>
+                      立即购买
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 个人设置 -->
+          <div id="profileContent" class="content-tab" role="tabpanel" aria-labelledby="nav-profile" tabindex="-1">
+            <div class="profile-form-card-enhanced">
+              <div class="form-title-enhanced">基本信息</div>
+              <div class="form-row-enhanced">
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="username">用户名 <span aria-label="必填" style="color: #ef4444;">*</span></label>
+                  <input type="text" id="username" class="form-input-enhanced" value="张三" required aria-required="true">
+                </div>
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="phone">手机号 <span aria-label="必填" style="color: #ef4444;">*</span></label>
+                  <input type="tel" id="phone" class="form-input-enhanced" value="138****8888" required aria-required="true" pattern="1[3-9]\d{9}">
+                </div>
+              </div>
+              <div class="form-row-enhanced">
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="email">邮箱 <span aria-label="必填" style="color: #ef4444;">*</span></label>
+                  <input type="email" id="email" class="form-input-enhanced" value="zhangsan@example.com" required aria-required="true">
+                </div>
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="gender">性别</label>
+                  <select id="gender" class="form-input-enhanced" aria-label="选择性别">
+                    <option value="male">男</option>
+                    <option value="female">女</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row-enhanced">
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="region">所在地区</label>
+                  <input type="text" id="region" class="form-input-enhanced" value="北京市朝阳区">
+                </div>
+                <div class="form-group-enhanced">
+                  <label class="form-label-enhanced" for="company">工作单位</label>
+                  <input type="text" id="company" class="form-input-enhanced" value="某某养老院">
+                </div>
+              </div>
+              <div class="form-actions-enhanced">
+                <button type="submit" class="btn-primary-enhanced">保存修改</button>
+                <button type="reset" class="btn-secondary-enhanced">重置</button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="iconify" data-icon="mdi:heart-pulse" style="font-size: 28px;"></span>
+            叁竹培训
+          </div>
+          <p>专注于养老行业人才培养，提供专业的养老护理员培训、职业技能等级认定、继续教育等服务。</p>
+        </div>
+        <div>
+          <div class="footer-col-title">快速链接</div>
+          <div class="footer-links">
+            <a href="#">课程中心</a>
+            <a href="#">考试中心</a>
+            <a href="#">证书查询</a>
+            <a href="#">帮助中心</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">关于我们</div>
+          <div class="footer-links">
+            <a href="#">公司介绍</a>
+            <a href="#">联系方式</a>
+            <a href="#">合作洽谈</a>
+            <a href="#">加入我们</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">联系方式</div>
+          <div class="footer-links">
+            <a href="#">客服热线：400-123-4567</a>
+            <a href="#">工作时间：周一至周五 9:00-18:00</a>
+            <a href="#">邮箱：support@sanzhu.com</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2024 叁竹培训 版权所有 | 京ICP备12345678号
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================
+    // Toast 提示系统
+    // ============================================
+    class Toast {
+      constructor() {
+        this.container = document.getElementById('toastContainer');
+      }
+      
+      show(message, type = 'info', duration = 3000) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const iconMap = {
+          success: 'mdi:check-circle',
+          error: 'mdi:alert-circle',
+          warning: 'mdi:alert',
+          info: 'mdi:information'
+        };
+        
+        toast.innerHTML = `
+          <div class="toast-icon">
+            <span class="iconify" data-icon="${iconMap[type]}" style="font-size: 20px;"></span>
+          </div>
+          <div class="toast-message">${message}</div>
+          <span class="toast-close" role="button" aria-label="关闭提示" tabindex="0">
+            <span class="iconify" data-icon="mdi:close" style="font-size: 18px;"></span>
+          </span>
+        `;
+        
+        this.container.appendChild(toast);
+        
+        // 关闭按钮事件
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => this.remove(toast));
+        closeBtn.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            this.remove(toast);
+          }
+        });
+        
+        // 自动关闭
+        if (duration > 0) {
+          setTimeout(() => this.remove(toast), duration);
+        }
+        
+        return toast;
+      }
+      
+      remove(toast) {
+        toast.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+      }
+      
+      success(message, duration) {
+        return this.show(message, 'success', duration);
+      }
+      
+      error(message, duration) {
+        return this.show(message, 'error', duration);
+      }
+      
+      warning(message, duration) {
+        return this.show(message, 'warning', duration);
+      }
+      
+      info(message, duration) {
+        return this.show(message, 'info', duration);
+      }
+    }
+    
+    const toast = new Toast();
+    
+    // ============================================
+    // 加载状态管理
+    // ============================================
+    class LoadingManager {
+      constructor() {
+        this.overlay = document.getElementById('loadingOverlay');
+        this.counter = 0;
+      }
+      
+      show() {
+        this.counter++;
+        this.overlay.classList.add('active');
+      }
+      
+      hide() {
+        this.counter--;
+        if (this.counter <= 0) {
+          this.counter = 0;
+          this.overlay.classList.remove('active');
+        }
+      }
+    }
+    
+    const loading = new LoadingManager();
+    
+    // ============================================
+    // 标签页切换
+    // ============================================
+    function switchTab(tab) {
+      // 移除所有活动状态
+      document.querySelectorAll('.nav-item-enhanced').forEach(n => {
+        n.classList.remove('active');
+        n.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.content-tab').forEach(c => c.classList.remove('active'));
+      
+      // 添加活动状态
+      const activeNav = document.getElementById('nav-' + tab);
+      const activeContent = document.getElementById(tab + 'Content');
+      
+      activeNav.classList.add('active');
+      activeNav.setAttribute('aria-selected', 'true');
+      activeContent.classList.add('active');
+      
+      // 更新URL hash
+      window.location.hash = tab;
+      
+      // 将焦点移到内容区域
+      activeContent.focus();
+    }
+    
+    // ============================================
+    // 页面滚动效果
+    // ============================================
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+    
+    // ============================================
+    // 数字动画效果
+    // ============================================
+    function animateNumbers() {
+      const numbers = document.querySelectorAll('.stat-card-value-enhanced');
+      numbers.forEach(num => {
+        const target = parseInt(num.textContent);
+        let current = 0;
+        const increment = target / 30;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            num.textContent = target;
+            clearInterval(timer);
+          } else {
+            num.textContent = Math.floor(current);
+          }
+        }, 30);
+      });
+    }
+    
+    // ============================================
+    // 图片懒加载
+    // ============================================
+    function initLazyLoad() {
+      const images = document.querySelectorAll('img[data-src]');
+      
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.classList.add('loaded');
+            img.removeAttribute('data-src');
+            observer.unobserve(img);
+          }
+        });
+      });
+      
+      images.forEach(img => imageObserver.observe(img));
+    }
+    
+    // ============================================
+    // 表单验证
+    // ============================================
+    class FormValidator {
+      constructor(form) {
+        this.form = form;
+        this.init();
+      }
+      
+      init() {
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        // 实时验证
+        const inputs = this.form.querySelectorAll('.form-input-enhanced');
+        inputs.forEach(input => {
+          input.addEventListener('blur', () => this.validateField(input));
+          input.addEventListener('input', () => this.clearError(input));
+        });
+      }
+      
+      handleSubmit(e) {
+        e.preventDefault();
+        
+        const inputs = this.form.querySelectorAll('.form-input-enhanced');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+          if (!this.validateField(input)) {
+            isValid = false;
+          }
+        });
+        
+        if (isValid) {
+          this.submitForm();
+        }
+      }
+      
+      validateField(input) {
+        const value = input.value.trim();
+        const type = input.type;
+        const required = input.hasAttribute('required');
+        
+        // 清除之前的错误
+        this.clearError(input);
+        
+        // 必填验证
+        if (required && !value) {
+          this.showError(input, '此字段为必填项');
+          return false;
+        }
+        
+        // 邮箱验证
+        if (type === 'email' && value) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            this.showError(input, '请输入有效的邮箱地址');
+            return false;
+          }
+        }
+        
+        // 手机号验证
+        if (type === 'tel' && value) {
+          const phoneRegex = /^1[3-9]\d{9}$/;
+          if (!phoneRegex.test(value)) {
+            this.showError(input, '请输入有效的手机号码');
+            return false;
+          }
+        }
+        
+        // 显示成功状态
+        if (value) {
+          input.classList.add('success');
+        }
+        
+        return true;
+      }
+      
+      showError(input, message) {
+        input.classList.add('error');
+        input.classList.remove('success');
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'form-error-message';
+        errorDiv.innerHTML = `
+          <span class="iconify" data-icon="mdi:alert-circle" style="font-size: 14px;"></span>
+          ${message}
+        `;
+        
+        input.parentNode.appendChild(errorDiv);
+      }
+      
+      clearError(input) {
+        input.classList.remove('error');
+        const errorMessage = input.parentNode.querySelector('.form-error-message');
+        if (errorMessage) {
+          errorMessage.remove();
+        }
+      }
+      
+      async submitForm() {
+        loading.show();
+        
+        // 模拟API请求
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        loading.hide();
+        toast.success('个人信息保存成功！');
+      }
+    }
+    
+    // ============================================
+    // 按钮点击反馈
+    // ============================================
+    function initButtonFeedback() {
+      // 只给没有onclick属性的按钮添加波纹效果
+      const buttons = document.querySelectorAll('.btn-primary-enhanced:not([onclick])');
+      
+      buttons.forEach(btn => {
+        btn.classList.add('btn-ripple');
+      });
+    }
+    
+    // ============================================
+    // 键盘导航支持
+    // ============================================
+    function initKeyboardNavigation() {
+      // 导航项键盘支持
+      const navItems = document.querySelectorAll('.nav-item-enhanced');
+      navItems.forEach((item, index) => {
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('role', 'button');
+        
+        item.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            item.click();
+          }
+        });
+        
+        // 箭头键导航
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const next = navItems[index + 1] || navItems[0];
+            next.focus();
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const prev = navItems[index - 1] || navItems[navItems.length - 1];
+            prev.focus();
+          }
+        });
+      });
+    }
+    
+    // ============================================
+    // 页面初始化
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化图片懒加载
+      initLazyLoad();
+      
+      // 初始化按钮反馈
+      initButtonFeedback();
+      
+      // 初始化键盘导航
+      initKeyboardNavigation();
+      
+      // 初始化表单验证
+      const profileForm = document.querySelector('.profile-form-card-enhanced');
+      if (profileForm) {
+        new FormValidator(profileForm);
+      }
+      
+      // 初始化发票类型切换
+      document.querySelectorAll('input[name="invoiceType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const companyFields = document.getElementById('companyFields');
+          if (this.value === 'company') {
+            companyFields.style.display = 'block';
+            document.getElementById('taxNumber').required = true;
+          } else {
+            companyFields.style.display = 'none';
+            document.getElementById('taxNumber').required = false;
+          }
+        });
+      });
+      
+      // 根据URL hash切换标签页
+      const hash = window.location.hash.slice(1);
+      if (hash && ['learning', 'orders', 'exams', 'favorites', 'profile'].includes(hash)) {
+        switchTab(hash);
+      }
+      
+      // 显示欢迎提示
+      setTimeout(() => {
+        toast.success('欢迎回来，张三！', 4000);
+      }, 1000);
+    });
+    
+    // 页面加载时执行数字动画
+    window.addEventListener('load', animateNumbers);
+    
+    // ============================================
+    // 课程跳转功能
+    // ============================================
+    function goToCourse(courseId) {
+      const courseMap = {
+        'caregiver-primary': { name: '养老护理员（初级）考证培训', url: 'course-live.html?id=caregiver-primary' },
+        'psychology-care': { name: '老年人心理护理专题课程', url: 'course-live.html?id=psychology-care' },
+        'caregiver-intermediate': { name: '养老护理员（中级）提升课程', url: 'course-live.html?id=caregiver-intermediate' }
+      };
+      
+      const course = courseMap[courseId];
+      if (course) {
+        loading.show();
+        toast.info(`正在进入「${course.name}」...`);
+        
+        setTimeout(() => {
+          loading.hide();
+          window.location.href = course.url;
+        }, 800);
+      } else {
+        toast.error('课程信息不存在');
+      }
+    }
+    
+    // ============================================
+    // 订单相关功能
+    // ============================================
+    function payOrder(orderId) {
+      loading.show();
+      toast.info('正在处理支付...');
+      
+      setTimeout(() => {
+        loading.hide();
+        toast.success(`订单 ${orderId} 支付成功！`);
+        
+        // 更新订单状态
+        const orderItem = document.querySelector(`[data-order-id="${orderId}"]`);
+        if (orderItem) {
+          const statusEl = orderItem.querySelector('.order-status-enhanced');
+          const actionsEl = orderItem.querySelector('.order-actions-enhanced');
+          
+          if (statusEl) {
+            statusEl.className = 'order-status-enhanced paid';
+            statusEl.innerHTML = '<span class="iconify" data-icon="mdi:check-circle" aria-hidden="true"></span>已支付';
+          }
+          
+          if (actionsEl) {
+            actionsEl.innerHTML = `
+              <button class="order-action-btn" onclick="applyInvoice('${orderId}')">申请发票</button>
+              <button class="order-action-btn" onclick="viewOrderDetail('${orderId}')">查看详情</button>
+              <button class="order-action-btn primary" onclick="goToCourse('psychology-care')">去学习</button>
+            `;
+          }
+        }
+      }, 1500);
+    }
+    
+    function cancelOrder(orderId) {
+      if (confirm(`确定要取消订单 ${orderId} 吗？`)) {
+        loading.show();
+        
+        setTimeout(() => {
+          loading.hide();
+          toast.info(`订单 ${orderId} 已取消`);
+          
+          const orderItem = document.querySelector(`[data-order-id="${orderId}"]`);
+          if (orderItem) {
+            orderItem.style.opacity = '0.5';
+            orderItem.querySelector('.order-status-enhanced').innerHTML = '<span class="iconify" data-icon="mdi:alert-circle" aria-hidden="true"></span>已取消';
+          }
+        }, 500);
+      }
+    }
+    
+    function viewOrderDetail(orderId) {
+      toast.info(`查看订单 ${orderId} 详情`);
+      // 实际应用中会跳转到订单详情页
+      window.location.href = `order-detail.html?id=${orderId}`;
+    }
+    
+    // ============================================
+    // 发票申请功能
+    // ============================================
+    function applyInvoice(orderId) {
+      document.getElementById('invoiceModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeInvoiceModal() {
+      document.getElementById('invoiceModal').classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('invoiceForm').reset();
+      document.getElementById('companyFields').style.display = 'none';
+    }
+    
+    function submitInvoice() {
+      const form = document.getElementById('invoiceForm');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      loading.show();
+      
+      setTimeout(() => {
+        loading.hide();
+        closeInvoiceModal();
+        toast.success('发票申请提交成功！发票将发送至您的邮箱');
+      }, 1000);
+    }
+    
+    // ============================================
+    // 考试相关功能
+    // ============================================
+    function viewExamDetail(examId) {
+      const examMap = {
+        'exam-caregiver-primary': { name: '养老护理员初级考试', url: 'exam-detail.html?id=exam-caregiver-primary' },
+        'exam-psychology-care': { name: '老年人心理护理考试', url: 'exam-detail.html?id=exam-psychology-care' }
+      };
+      
+      const exam = examMap[examId];
+      if (exam) {
+        toast.info(`查看「${exam.name}」详情`);
+        window.location.href = exam.url;
+      } else {
+        toast.error('考试信息不存在');
+      }
+    }
+    
+    function retryExam(examId) {
+      const examMap = {
+        'exam-caregiver-primary': { name: '养老护理员初级考试', url: 'exam-start.html?id=exam-caregiver-primary' },
+        'exam-psychology-care': { name: '老年人心理护理考试', url: 'exam-start.html?id=exam-psychology-care' }
+      };
+      
+      const exam = examMap[examId];
+      if (exam) {
+        if (confirm(`确定要重新参加「${exam.name}」吗？`)) {
+          loading.show();
+          toast.info(`正在进入「${exam.name}」...`);
+          
+          setTimeout(() => {
+            loading.hide();
+            window.location.href = exam.url;
+          }, 800);
+        }
+      } else {
+        toast.error('考试信息不存在');
+      }
+    }
+    
+    // ============================================
+    // 收藏相关功能
+    // ============================================
+    function buyCourse(courseId) {
+      const courseMap = {
+        'caregiver-primary': { name: '养老护理员（初级）考证培训', price: 599 },
+        'psychology-care': { name: '老年人心理护理专题课程', price: 399 },
+        'caregiver-intermediate': { name: '养老护理员（中级）提升课程', price: 799 }
+      };
+      
+      const course = courseMap[courseId];
+      if (course) {
+        loading.show();
+        toast.info(`正在购买「${course.name}」...`);
+        
+        setTimeout(() => {
+          loading.hide();
+          toast.success(`「${course.name}」购买成功！已加入学习列表`);
+          
+          // 切换到订单标签页
+          switchTab('orders');
+        }, 1000);
+      } else {
+        toast.error('课程信息不存在');
+      }
+    }
+    
+    function removeFavorite(courseId) {
+      const courseMap = {
+        'caregiver-primary': '养老护理员（初级）考证培训',
+        'psychology-care': '老年人心理护理专题课程',
+        'caregiver-intermediate': '养老护理员（中级）提升课程'
+      };
+      
+      const courseName = courseMap[courseId];
+      if (confirm(`确定要取消收藏「${courseName}」吗？`)) {
+        toast.info(`已取消收藏「${courseName}」`);
+        
+        // 实际应用中会调用API删除收藏
+        // 这里模拟移除卡片
+        const cards = document.querySelectorAll('.favorite-card-enhanced');
+        cards.forEach((card, index) => {
+          const title = card.querySelector('.favorite-title-enhanced').textContent;
+          if (title === courseName) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              card.remove();
+              
+              // 如果没有收藏了，显示空状态
+              const favoritesGrid = document.querySelector('.favorites-grid-enhanced');
+              if (favoritesGrid && favoritesGrid.children.length === 0) {
+                favoritesGrid.innerHTML = '<div style="text-align: center; padding: 40px;">暂无收藏课程</div>';
+              }
+            }, 300);
+          }
+        });
+      }
+    }
+    
+    // ============================================
+    // 页面离开前提示
+    // ============================================
+    window.addEventListener('beforeunload', function(e) {
+      const hasUnsavedChanges = document.querySelector('.form-input-enhanced.success');
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '您有未保存的更改，确定要离开吗？';
+      }
+    });
+  </script>
+</body>
+</html>
