@@ -4,95 +4,438 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 认养证书</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: linear-gradient(180deg, #fef9e7 0%, #f5f5f5 100%); color: #333; min-height: 100vh; }
-    a { text-decoration: none; color: inherit; }
+    /* 页面特定变量 - 金色系（证书专用） */
     :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
-      --gold: #d4af37; --gold-dark: #b8962e; --gold-light: #fef9e7;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+      --cert-gold: #d4af37;
+      --cert-gold-dark: #b8962e;
+      --cert-gold-light: #fef9e7;
     }
-    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 100px; }
     
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 16px; position: relative; }
-    .back-btn { width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .back-btn svg { width: 20px; height: 20px; color: var(--text); }
-    .header-title { font-size: 17px; font-weight: 600; color: var(--text); position: absolute; left: 50%; transform: translateX(-50%); }
-    .share-btn { width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .share-btn svg { width: 20px; height: 20px; color: var(--text); }
+    body { 
+      font-family: var(--font-family); 
+      background: linear-gradient(180deg, var(--cert-gold-light) 0%, var(--bg) 100%); 
+      color: var(--text); 
+      min-height: 100vh; 
+    }
     
-    .content { padding: 0 16px; }
+    .app { 
+      width: 100%; 
+      max-width: 750px; 
+      margin: 0 auto; 
+      min-height: 100vh; 
+      position: relative; 
+      overflow: hidden; 
+      padding-bottom: 100px; 
+    }
     
-    .cert-container { background: linear-gradient(180deg, #fff 0%, #fefcf5 100%); border-radius: 20px; padding: 32px 24px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); position: relative; overflow: hidden; }
-    .cert-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, var(--gold), var(--gold-dark), var(--gold)); }
+    /* 页面头部 */
+    .page-header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: var(--space-4); 
+      position: relative; 
+    }
     
-    .cert-border { border: 2px solid var(--gold); border-radius: 12px; padding: 24px 16px; position: relative; }
-    .cert-inner-border { border: 1px dashed var(--gold); border-radius: 8px; padding: 20px 12px; }
+    .header-back { 
+      width: 40px; 
+      height: 40px; 
+      background: var(--bg-white); 
+      border-radius: var(--radius-full); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      box-shadow: var(--shadow-md); 
+    }
     
-    .cert-header { text-align: center; margin-bottom: 24px; }
-    .cert-icon { font-size: 48px; margin-bottom: 8px; }
-    .cert-title { font-size: 22px; font-weight: 700; color: var(--gold-dark); letter-spacing: 4px; }
-    .cert-subtitle { font-size: 12px; color: var(--text-light); margin-top: 8px; letter-spacing: 2px; }
+    .header-back svg { 
+      width: 20px; 
+      height: 20px; 
+      color: var(--text); 
+    }
     
-    .cert-body { text-align: center; }
-    .cert-text { font-size: 14px; color: var(--text-secondary); line-height: 2; margin-bottom: 8px; }
-    .cert-highlight { color: var(--gold-dark); font-weight: 600; }
+    .header-title { 
+      font-size: var(--font-lg); 
+      font-weight: 600; 
+      color: var(--text); 
+      position: absolute; 
+      left: 50%; 
+      transform: translateX(-50%); 
+    }
     
-    .cert-divider { width: 60px; height: 2px; background: var(--gold); margin: 20px auto; }
+    .share-btn { 
+      width: 40px; 
+      height: 40px; 
+      background: var(--bg-white); 
+      border-radius: var(--radius-full); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      box-shadow: var(--shadow-md); 
+    }
     
-    .cert-info { background: var(--gold-light); border-radius: 10px; padding: 16px; margin: 16px 0; }
-    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed rgba(212, 175, 55, 0.3); }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { font-size: 13px; color: var(--text-secondary); }
-    .info-value { font-size: 14px; color: var(--text); font-weight: 500; }
+    .share-btn svg { 
+      width: 20px; 
+      height: 20px; 
+      color: var(--text); 
+    }
     
-    .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; }
-    .cert-date { text-align: left; }
-    .cert-date-label { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
-    .cert-date-value { font-size: 13px; color: var(--text); }
-    .cert-seal { width: 60px; height: 60px; border: 2px solid var(--gold); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--gold-light); }
-    .seal-icon { font-size: 20px; }
-    .seal-text { font-size: 9px; color: var(--gold-dark); font-weight: 600; }
-    .cert-qr { text-align: right; }
-    .qr-placeholder { width: 60px; height: 60px; background: #fff; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-left: auto; }
-    .qr-icon { font-size: 30px; }
-    .qr-text { font-size: 9px; color: var(--text-light); margin-top: 4px; }
+    .content { 
+      padding: 0 var(--space-4); 
+    }
     
-    .tree-photo-section { margin-top: 20px; text-align: center; }
-    .tree-photo-frame { width: 120px; height: 120px; margin: 0 auto 12px; border: 3px solid var(--gold); border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, #e8f5ec, #d4edda); display: flex; align-items: center; justify-content: center; }
-    .tree-photo-icon { font-size: 60px; }
-    .tree-caption { font-size: 12px; color: var(--text-light); }
+    .cert-container { 
+      background: linear-gradient(180deg, var(--bg-white) 0%, #fefcf5 100%); 
+      border-radius: var(--radius-xl); 
+      padding: var(--space-8) var(--space-6); 
+      margin-bottom: var(--space-4); 
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); 
+      position: relative; 
+      overflow: hidden; 
+    }
     
-    .tree-decoration { position: absolute; font-size: 100px; opacity: 0.05; }
-    .tree-decoration.left { left: -20px; top: 100px; }
-    .tree-decoration.right { right: -20px; bottom: 100px; }
+    .cert-container::before { 
+      content: ''; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      height: 8px; 
+      background: linear-gradient(90deg, var(--cert-gold), var(--cert-gold-dark), var(--cert-gold)); 
+    }
     
-    .adoption-records { background: #fff; border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border); }
-    .records-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .records-icon { font-size: 18px; }
-    .record-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-light); }
-    .record-item:last-child { border-bottom: none; }
-    .record-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--gold-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .record-icon svg { width: 18px; height: 18px; color: var(--gold); }
-    .record-content { flex: 1; }
-    .record-title { font-size: 13px; color: var(--text); margin-bottom: 2px; }
-    .record-time { font-size: 11px; color: var(--text-light); }
-    .record-action { font-size: 12px; color: var(--gold); cursor: pointer; }
+    .cert-border { 
+      border: 2px solid var(--cert-gold); 
+      border-radius: var(--radius-md); 
+      padding: var(--space-6) var(--space-4); 
+      position: relative; 
+    }
     
-    .bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; background: #fff; border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 12px; z-index: 100; }
-    .bar-btn { flex: 1; height: 44px; border-radius: 22px; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
-    .bar-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; border: none; }
-    .bar-btn.secondary { background: #fff; color: var(--text); border: 1px solid var(--border); }
-    .bar-btn svg { width: 18px; height: 18px; }
+    .cert-inner-border { 
+      border: 1px dashed var(--cert-gold); 
+      border-radius: var(--radius-sm); 
+      padding: var(--space-5) var(--space-3); 
+    }
+    
+    .cert-header { 
+      text-align: center; 
+      margin-bottom: var(--space-6); 
+    }
+    
+    .cert-icon { 
+      font-size: 48px; 
+      margin-bottom: var(--space-2); 
+    }
+    
+    .cert-title { 
+      font-size: var(--font-xl); 
+      font-weight: 700; 
+      color: var(--cert-gold-dark); 
+      letter-spacing: 4px; 
+    }
+    
+    .cert-subtitle { 
+      font-size: var(--font-xs); 
+      color: var(--text-light); 
+      margin-top: var(--space-2); 
+      letter-spacing: 2px; 
+    }
+    
+    .cert-body { 
+      text-align: center; 
+    }
+    
+    .cert-text { 
+      font-size: var(--font-base); 
+      color: var(--text-secondary); 
+      line-height: 2; 
+      margin-bottom: var(--space-2); 
+    }
+    
+    .cert-highlight { 
+      color: var(--cert-gold-dark); 
+      font-weight: 600; 
+    }
+    
+    .cert-divider { 
+      width: 60px; 
+      height: 2px; 
+      background: var(--cert-gold); 
+      margin: var(--space-5) auto; 
+    }
+    
+    .cert-info { 
+      background: var(--cert-gold-light); 
+      border-radius: var(--radius-md); 
+      padding: var(--space-4); 
+      margin: var(--space-4) 0; 
+    }
+    
+    .info-row { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: var(--space-2) 0; 
+      border-bottom: 1px dashed rgba(212, 175, 55, 0.3); 
+    }
+    
+    .info-row:last-child { 
+      border-bottom: none; 
+    }
+    
+    .info-label { 
+      font-size: var(--font-sm); 
+      color: var(--text-secondary); 
+    }
+    
+    .info-value { 
+      font-size: var(--font-base); 
+      color: var(--text); 
+      font-weight: 500; 
+    }
+    
+    .cert-footer { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-end; 
+      margin-top: var(--space-5); 
+    }
+    
+    .cert-date { 
+      text-align: left; 
+    }
+    
+    .cert-date-label { 
+      font-size: var(--font-xs); 
+      color: var(--text-light); 
+      margin-bottom: var(--space-1); 
+    }
+    
+    .cert-date-value { 
+      font-size: var(--font-sm); 
+      color: var(--text); 
+    }
+    
+    .cert-seal { 
+      width: 60px; 
+      height: 60px; 
+      border: 2px solid var(--cert-gold); 
+      border-radius: var(--radius-full); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      background: var(--cert-gold-light); 
+    }
+    
+    .seal-icon { 
+      font-size: var(--font-lg); 
+    }
+    
+    .seal-text { 
+      font-size: 9px; 
+      color: var(--cert-gold-dark); 
+      font-weight: 600; 
+    }
+    
+    .cert-qr { 
+      text-align: right; 
+    }
+    
+    .qr-placeholder { 
+      width: 60px; 
+      height: 60px; 
+      background: var(--bg-white); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-left: auto; 
+    }
+    
+    .qr-icon { 
+      font-size: 30px; 
+    }
+    
+    .qr-text { 
+      font-size: 9px; 
+      color: var(--text-light); 
+      margin-top: var(--space-1); 
+    }
+    
+    .tree-photo-section { 
+      margin-top: var(--space-5); 
+      text-align: center; 
+    }
+    
+    .tree-photo-frame { 
+      width: 120px; 
+      height: 120px; 
+      margin: 0 auto var(--space-3); 
+      border: 3px solid var(--cert-gold); 
+      border-radius: var(--radius-full); 
+      overflow: hidden; 
+      background: linear-gradient(135deg, var(--primary-light), #d4edda); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
+    
+    .tree-photo-icon { 
+      font-size: 60px; 
+    }
+    
+    .tree-caption { 
+      font-size: var(--font-xs); 
+      color: var(--text-light); 
+    }
+    
+    .tree-decoration { 
+      position: absolute; 
+      font-size: 100px; 
+      opacity: 0.05; 
+    }
+    
+    .tree-decoration.left { 
+      left: -20px; 
+      top: 100px; 
+    }
+    
+    .tree-decoration.right { 
+      right: -20px; 
+      bottom: 100px; 
+    }
+    
+    .adoption-records { 
+      background: var(--bg-white); 
+      border-radius: var(--radius-lg); 
+      padding: var(--space-4); 
+      border: 1px solid var(--border); 
+    }
+    
+    .records-title { 
+      font-size: var(--font-md); 
+      font-weight: 600; 
+      color: var(--text); 
+      margin-bottom: var(--space-3); 
+      display: flex; 
+      align-items: center; 
+      gap: var(--space-2); 
+    }
+    
+    .records-icon { 
+      font-size: var(--font-lg); 
+    }
+    
+    .record-item { 
+      display: flex; 
+      align-items: center; 
+      gap: var(--space-3); 
+      padding: 10px 0; 
+      border-bottom: 1px solid var(--border-light); 
+    }
+    
+    .record-item:last-child { 
+      border-bottom: none; 
+    }
+    
+    .record-icon { 
+      width: 36px; 
+      height: 36px; 
+      border-radius: var(--radius-md); 
+      background: var(--cert-gold-light); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0; 
+    }
+    
+    .record-icon svg { 
+      width: var(--font-lg); 
+      height: var(--font-lg); 
+      color: var(--cert-gold); 
+    }
+    
+    .record-content { 
+      flex: 1; 
+    }
+    
+    .record-title { 
+      font-size: var(--font-sm); 
+      color: var(--text); 
+      margin-bottom: 2px; 
+    }
+    
+    .record-time { 
+      font-size: var(--font-xs); 
+      color: var(--text-light); 
+    }
+    
+    .record-action { 
+      font-size: var(--font-xs); 
+      color: var(--cert-gold); 
+      cursor: pointer; 
+    }
+    
+    .bottom-bar { 
+      position: fixed; 
+      bottom: 0; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: 100%; 
+      max-width: 750px; 
+      background: var(--bg-white); 
+      border-top: 1px solid var(--border); 
+      padding: var(--space-3) var(--space-4); 
+      display: flex; 
+      gap: var(--space-3); 
+      z-index: 100; 
+    }
+    
+    .bar-btn { 
+      flex: 1; 
+      height: 44px; 
+      border-radius: 22px; 
+      font-size: var(--font-base); 
+      font-weight: 600; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: var(--space-2); 
+      cursor: pointer; 
+    }
+    
+    .bar-btn.primary { 
+      background: linear-gradient(135deg, var(--cert-gold), var(--cert-gold-dark)); 
+      color: var(--bg-white); 
+      border: none; 
+    }
+    
+    .bar-btn.secondary { 
+      background: var(--bg-white); 
+      color: var(--text); 
+      border: 1px solid var(--border); 
+    }
+    
+    .bar-btn svg { 
+      width: var(--font-lg); 
+      height: var(--font-lg); 
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
@@ -129,7 +472,7 @@
               <div class="cert-text">
                 <span class="cert-highlight">张三</span> 已成功认养
               </div>
-              <div class="cert-text" style="font-size: 18px;">
+              <div class="cert-text" style="font-size: var(--font-lg);">
                 <span class="cert-highlight">红富士 #A025</span>
               </div>
               <div class="cert-text">
@@ -138,7 +481,7 @@
               
               <div class="cert-divider"></div>
               
-              <div class="cert-text" style="font-size: 13px; color: var(--text-light);">
+              <div class="cert-text" style="font-size: var(--font-sm); color: var(--text-light);">
                 认养期间，您将享有果树产出、采摘体验、实时监控等专属权益
               </div>
             </div>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>数农智果 - 购物车</title>
+<link rel="stylesheet" href="../css/design-system.css">
+<style>
+/* ==================== 基础样式 ==================== */
+* { margin:0; padding:0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-page);
+  padding-bottom: 200px;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==================== 顶部导航 ==================== */
+.header {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.header-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
+.header-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ==================== 购物车列表 ==================== */
+.cart-list { padding: 16px; }
+.cart-item {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  position: relative;
+  animation: fadeInUp 0.4s ease forwards;
+  opacity: 0;
+}
+.cart-item:nth-child(1) { animation-delay: 0.05s; }
+.cart-item:nth-child(2) { animation-delay: 0.1s; }
+.cart-item:nth-child(3) { animation-delay: 0.15s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cart-item:active { transform: scale(0.98); }
+
+.cart-checkbox {
+  margin-top: 28px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary-500);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cart-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 40px;
+}
+
+.cart-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+.cart-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cart-spec {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.cart-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.cart-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-light);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-primary);
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.qty-btn:active { 
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  transform: scale(0.95);
+}
+.qty-value {
+  min-width: 32px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 删除按钮 */
+.cart-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.cart-delete:active { background: #fee2e2; }
+
+/* ==================== 空状态 ==================== */
+.cart-empty {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+.cart-empty.show { display: flex; }
+.empty-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+}
+.empty-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.empty-btn {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,168,74,0.3);
+  transition: all 0.2s;
+}
+.empty-btn:active { transform: scale(0.95); }
+
+/* ==================== 底部操作栏 ==================== */
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.08);
+  z-index: 100;
+}
+.footer-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary-500);
+  cursor: pointer;
+}
+.footer-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.footer-price {
+  flex: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.price-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.price-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ef4444;
+  line-height: 1.2;
+}
+.footer-btn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,168,74,0.3);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.footer-btn:active { transform: scale(0.95); }
+.footer-btn.disabled {
+  background: var(--bg-secondary);
+  color: var(--text-light);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ==================== 骨架屏 ==================== */
+.skeleton-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 9999;
+  padding: 12px 16px;
+  transition: opacity 0.4s ease;
+}
+.skeleton-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.skeleton-header {
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  border-radius: 0 0 12px 12px;
+  margin: -12px -16px 12px;
+}
+.skeleton-cart-item {
+  height: 120px;
+  background: #f0f0f0;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+.skeleton-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: white;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ==================== 滑动删除 ==================== */
+.cart-item-delete {
+  position: absolute;
+  right: -80px;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: #ef4444;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0 16px 16px 0;
+  transition: right 0.3s ease;
+}
+.cart-item.swiped .cart-item-delete {
+  right: 0;
+}
+.cart-item.swiped {
+  transform: translateX(-80px);
+}
+</style>
+</head>
+<body>
+
+<!-- 骨架屏 -->
+<div class="skeleton-screen" id="skeletonScreen">
+  <div class="skeleton-header"></div>
+  <div class="skeleton-cart-item"></div>
+  <div class="skeleton-cart-item" style="animation-delay: 0.1s;"></div>
+  <div class="skeleton-cart-item" style="animation-delay: 0.2s;"></div>
+  <div class="skeleton-footer"></div>
+</div>
+
+<!-- 顶部导航 -->
+<header class="header">
+  <button class="header-btn" aria-label="返回" onclick="history.back()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M19 12H5"/>
+      <path d="M12 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <div class="header-title">购物车</div>
+  <button class="header-btn" aria-label="编辑" id="editBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+  </button>
+</header>
+
+<!-- 购物车列表 -->
+<div class="cart-list" id="cartList">
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox" checked>
+    <div class="cart-img">🍎</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">红富士苹果 5斤装</div>
+        <div class="cart-spec">脆甜多汁 · 新鲜采摘</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥68</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">1</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M3 6h18"/>
+        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+      </svg>
+    </button>
+  </div>
+  
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox" checked>
+    <div class="cart-img">🍏</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">嘎啦苹果 5斤装</div>
+        <div class="cart-spec">酸甜可口 · 皮薄肉嫩</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥58</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">2</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M3 6h18"/>
+        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+      </svg>
+    </button>
+  </div>
+  
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox">
+    <div class="cart-img">🎁</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">精品礼盒装 8斤</div>
+        <div class="cart-spec">送礼佳品 · 品质保证</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥168</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">1</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M3 6h18"/>
+        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- 空状态 -->
+<div class="cart-empty" id="cartEmpty">
+  <div class="empty-icon">🛒</div>
+  <div class="empty-text">购物车是空的，快去挑选商品吧</div>
+  <button class="empty-btn" onclick="location.href='h5_store.html'">去商城看看</button>
+</div>
+
+<!-- 底部操作栏 -->
+<div class="footer-bar">
+  <input type="checkbox" class="footer-checkbox" checked id="selectAll">
+  <span class="footer-text" onclick="toggleSelectAll()">全选</span>
+  <div class="footer-price">
+    <div class="price-label">合计：</div>
+    <div class="price-value" id="totalPrice">¥184</div>
+  </div>
+  <button class="footer-btn" id="checkoutBtn">结算(2)</button>
+</div>
+
+<script>
+// ==================== 骨架屏 ====================
+window.addEventListener('load', function() {
+  setTimeout(() => {
+    document.getElementById('skeletonScreen').classList.add('hide');
+    setTimeout(() => {
+      document.getElementById('skeletonScreen').style.display = 'none';
+    }, 400);
+  }, 600);
+});
+
+// ==================== 数量调整 ====================
+function updateQty(btn, delta) {
+  const container = btn.parentElement;
+  const valueSpan = container.querySelector('.qty-value');
+  let value = parseInt(valueSpan.textContent);
+  value = Math.max(1, value + delta);
+  valueSpan.textContent = value;
+  
+  // 添加动画
+  btn.style.transform = 'scale(0.8)';
+  setTimeout(() => {
+    btn.style.transform = 'scale(1)';
+  }, 200);
+  
+  updateTotal();
+}
+
+// ==================== 删除商品 ====================
+function deleteItem(btn) {
+  const item = btn.closest('.cart-item');
+  item.style.transform = 'translateX(-100%)';
+  item.style.opacity = '0';
+  setTimeout(() => {
+    item.remove();
+    updateTotal();
+    checkEmpty();
+  }, 300);
+  showToast('已删除商品');
+}
+
+// ==================== 全选切换 ====================
+function toggleSelectAll() {
+  const selectAll = document.getElementById('selectAll');
+  selectAll.checked = !selectAll.checked;
+  document.querySelectorAll('.cart-checkbox').forEach(cb => {
+    cb.checked = selectAll.checked;
+  });
+  updateTotal();
+}
+
+document.getElementById('selectAll').addEventListener('change', function() {
+  document.querySelectorAll('.cart-checkbox').forEach(cb => {
+    cb.checked = this.checked;
+  });
+  updateTotal();
+});
+
+// ==================== 更新总价 ====================
+function updateTotal() {
+  let total = 0;
+  let count = 0;
+  document.querySelectorAll('.cart-item').forEach(item => {
+    const checkbox = item.querySelector('.cart-checkbox');
+    if (checkbox.checked) {
+      const price = parseInt(item.querySelector('.cart-price').textContent.replace('¥', ''));
+      const qty = parseInt(item.querySelector('.qty-value').textContent);
+      total += price * qty;
+      count++;
+    }
+  });
+  
+  document.getElementById('totalPrice').textContent = '¥' + total;
+  document.getElementById('checkoutBtn').textContent = count > 0 ? `结算(${count})` : '请选择商品';
+  document.getElementById('checkoutBtn').classList.toggle('disabled', count === 0);
+}
+
+// ==================== 检查空状态 ====================
+function checkEmpty() {
+  const items = document.querySelectorAll('.cart-item');
+  if (items.length === 0) {
+    document.getElementById('cartEmpty').classList.add('show');
+    document.querySelector('.footer-bar').style.display = 'none';
+  }
+}
+
+// ==================== Toast提示 ====================
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: fadeInOut 2s ease;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// 添加CSS动画
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeInOut {
+    0% { opacity:0; transform: translate(-50%, -50%) scale(0.8); }
+    20% { opacity:1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity:1; }
+    100% { opacity:0; }
+  }
+`;
+document.head.appendChild(style);
+
+// 初始计算总价
+updateTotal();
+</script>
+</body>
+</html>

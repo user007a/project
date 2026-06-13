@@ -4,70 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 看地图</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
-    a { text-decoration: none; color: inherit; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --bg: #f5f5f5; --white: #fff;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px;
-    }
+    /* 移除重复的 :root 变量定义，使用设计系统变量 */
     .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 66px; }
-    .header { position: relative; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; padding: 0 16px; color: #fff; }
-    .back-btn { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 18px; height: 18px; color: #fff; }
-    .header-title { flex: 1; text-align: center; font-size: 17px; font-weight: 600; }
+    .page-header { position: relative; height: 56px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; padding: 0 var(--space-4); color: var(--bg-white); }
+    .header-back { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .header-back svg { width: 18px; height: 18px; color: var(--bg-white); }
+    .header-title { flex: 1; text-align: center; font-size: var(--font-lg); font-weight: 600; }
     .map-container { position: relative; height: calc(100vh - 180px); background: #e8eef3; }
     .map-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(180deg, #e8eef3 0%, #d4dde5 100%); }
-    .map-grid { width: 80%; max-width: 280px; aspect-ratio: 1; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr); gap: 4px; }
-    .grid-cell { background: rgba(46, 158, 90, 0.1); border: 1px solid rgba(46, 158, 90, 0.2); border-radius: 4px; }
+    .map-grid { width: 80%; max-width: 280px; aspect-ratio: 1; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr); gap: var(--space-1); }
+    .grid-cell { background: rgba(46, 158, 90, 0.1); border: 1px solid rgba(46, 158, 90, 0.2); border-radius: var(--radius-sm); }
     .grid-cell.plot { background: rgba(46, 158, 90, 0.3); border-color: rgba(46, 158, 90, 0.5); }
     .plot-marker { position: relative; }
-    .plot-marker::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: var(--primary); border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .plot-marker::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: var(--primary); border-radius: 50%; border: 2px solid var(--bg-white); box-shadow: var(--shadow-sm); }
     .plot-marker.warning::after { background: var(--orange); }
-    .plot-marker.overdue::after { background: var(--red); }
-    .map-legend { position: absolute; bottom: 16px; left: 16px; background: rgba(255,255,255,0.95); border-radius: 10px; padding: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
-    .legend-title { font-size: 12px; font-weight: 600; color: #333; margin-bottom: 8px; }
-    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; color: #666; }
+    .plot-marker.overdue::after { background: var(--error); }
+    .map-legend { position: absolute; bottom: var(--space-4); left: var(--space-4); background: rgba(255,255,255,0.95); border-radius: var(--radius-md); padding: var(--space-3); box-shadow: var(--shadow-md); }
+    .legend-title { font-size: var(--font-sm); font-weight: 600; color: var(--text); margin-bottom: var(--space-2); }
+    .legend-item { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1); font-size: var(--font-sm); color: var(--text-secondary); }
     .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
     .legend-dot.normal { background: var(--primary); }
     .legend-dot.warning { background: var(--orange); }
-    .legend-dot.overdue { background: var(--red); }
-    .zoom-controls { position: absolute; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; }
-    .zoom-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .zoom-btn svg { width: 20px; height: 20px; color: #333; }
-    .plot-list { background: #fff; border-top: 1px solid #e8e8e8; padding: 12px 16px; }
-    .list-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 10px; }
-    .plot-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+    .legend-dot.overdue { background: var(--error); }
+    .zoom-controls { position: absolute; bottom: var(--space-4); right: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+    .zoom-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.95); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow-sm); }
+    .zoom-btn svg { width: 20px; height: 20px; color: var(--text); }
+    .plot-list { background: var(--bg-white); border-top: 1px solid var(--border); padding: var(--space-3) var(--space-4); }
+    .list-title { font-size: var(--font-base); font-weight: 600; color: var(--text); margin-bottom: var(--space-2); }
+    .plot-item { display: flex; align-items: center; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-light); cursor: pointer; }
     .plot-item:last-child { border-bottom: none; }
-    .plot-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; }
+    .plot-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: var(--space-3); }
     .plot-dot.normal { background: var(--primary); }
     .plot-dot.warning { background: var(--orange); }
-    .plot-dot.overdue { background: var(--red); }
+    .plot-dot.overdue { background: var(--error); }
     .plot-info { flex: 1; }
-    .plot-name { font-size: 14px; color: #333; }
-    .plot-meta { font-size: 12px; color: #999; margin-top: 2px; }
-    .plot-status { font-size: 11px; padding: 3px 8px; border-radius: 10px; }
-    .plot-status.normal { background: #e8f5ec; color: #22a84a; }
-    .plot-status.warning { background: var(--orange-light); color: var(--orange); }
-    .plot-status.overdue { background: var(--red-light); color: var(--red); }
-    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
-    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
+    .plot-name { font-size: var(--font-base); color: var(--text); }
+    .plot-meta { font-size: var(--font-sm); color: var(--text-light); margin-top: var(--space-1); }
+    .plot-status { font-size: var(--font-xs); padding: 3px var(--space-2); border-radius: var(--radius-md); }
+    .plot-status.normal { background: var(--success-bg); color: var(--success); }
+    .plot-status.warning { background: var(--orange-bg); color: var(--orange); }
+    .plot-status.overdue { background: var(--error-bg); color: var(--error); }
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: var(--bg-white); display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color var(--transition-fast); cursor: pointer; }
     .tab-item.active { color: var(--primary); }
     .tab-item svg { width: 22px; height: 22px; }
-    .tab-item span { font-size: 10px; }
+    .tab-item span { font-size: var(--font-xs); }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
@@ -77,7 +70,7 @@
 
     <div class="map-container">
       <div class="map-placeholder">
-        <div style="font-size: 12px; color: #999; margin-bottom: 20px;">果园俯视图</div>
+        <div style="font-size: var(--font-sm); color: var(--text-light); margin-bottom: var(--space-5);">果园俯视图</div>
         <div class="map-grid">
           <div class="grid-cell"></div>
           <div class="grid-cell"></div>
@@ -124,7 +117,7 @@
           <div class="grid-cell"></div>
           <div class="grid-cell"></div>
         </div>
-        <div style="font-size: 11px; color: #999; margin-top: 20px;">共 8 块地块</div>
+        <div style="font-size: var(--font-xs); color: var(--text-light); margin-top: var(--space-5);">共 8 块地块</div>
       </div>
 
       <div class="map-legend">

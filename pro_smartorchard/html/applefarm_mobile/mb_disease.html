@@ -4,85 +4,102 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 识病虫</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
+    body { font-family: var(--font-family); background: var(--bg); color: var(--text); overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
     img { display: block; max-width: 100%; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --gray: #95a5a6; --gray-light: #f0f0f0;
-      --bg: #f5f5f5; --white: #fff;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
+    
     .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 66px; }
-    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
-    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
+    
+    /* 页面头部 */
+    .page-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: var(--space-4) var(--space-4) var(--space-3); color: var(--bg-white); position: relative; }
+    .page-header-title { font-size: var(--font-lg); font-weight: 700; }
+    .page-header-sub { font-size: var(--font-xs); opacity: 0.8; margin-top: var(--space-1); }
+    
+    /* 返回按钮 */
+    .header-back { position: absolute; left: var(--space-3); top: var(--space-4); width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .header-back svg { width: 18px; height: 18px; color: var(--bg-white); }
+    
+    /* 底部导航 */
+    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: var(--bg-white); display: flex; border-top: 1px solid var(--border); z-index: 100; }
+    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1); color: var(--text-light); transition: color var(--transition-fast); position: relative; cursor: pointer; }
     .tab-item.active { color: var(--primary); }
     .tab-item svg { width: 22px; height: 22px; }
-    .tab-item span { font-size: 10px; }
-    .content { padding: 16px; padding-bottom: 80px; }
-    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 18px; height: 18px; color: #fff; }
-    .upload-area { width: 100%; height: 200px; border: 2px dashed var(--border); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all .2s; background: #fff; }
-    .upload-area:active { background: var(--gray-light); }
-    .upload-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
+    .tab-item span { font-size: var(--font-xs); }
+    
+    /* 内容区域 */
+    .content { padding: var(--space-4); padding-bottom: 80px; }
+    
+    /* 卡片 */
+    .card { background: var(--bg-white); border-radius: var(--radius-lg); margin-bottom: var(--space-4); padding: var(--space-4); box-shadow: var(--shadow-card); border: 1px solid var(--border); }
+    .card-title { font-size: var(--font-md); font-weight: 600; color: var(--text); margin-bottom: var(--space-3); }
+    
+    /* 上传区域 */
+    .upload-area { width: 100%; height: 200px; border: 2px dashed var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); cursor: pointer; transition: all var(--transition-fast); background: var(--bg-white); }
+    .upload-area:active { background: var(--gray-100); }
+    .upload-icon { width: 60px; height: 60px; border-radius: var(--radius-full); background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
     .upload-icon svg { width: 32px; height: 32px; color: var(--primary); }
-    .upload-text { font-size: 14px; color: var(--text-secondary); }
-    .btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 24px; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all .2s; border: none; }
+    .upload-text { font-size: var(--font-base); color: var(--text-secondary); }
+    
+    /* 按钮 */
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 var(--space-6); border-radius: var(--radius-full); font-size: var(--font-md); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); border: none; }
     .btn:active { opacity: 0.8; }
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--bg-white); }
     .btn-block { width: 100%; }
-    .result-card { margin-top: 20px; }
-    .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .result-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
-    .result-icon.danger { background: var(--red-light); color: var(--red); }
-    .result-icon.warning { background: var(--orange-light); color: var(--orange); }
-    .result-icon.success { background: var(--primary-light); color: var(--primary); }
+    
+    /* 结果卡片 */
+    .result-card { margin-top: var(--space-5); }
+    .result-header { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+    .result-icon { width: 56px; height: 56px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; }
+    .result-icon.danger { background: var(--danger-bg); color: var(--danger); }
+    .result-icon.warning { background: var(--warning-bg); color: var(--warning); }
+    .result-icon.success { background: var(--success-bg); color: var(--success); }
     .result-icon svg { width: 32px; height: 32px; }
     .result-info { flex: 1; }
-    .result-name { font-size: 18px; font-weight: 700; color: var(--text); }
-    .result-confidence { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-    .tips-box { padding: 14px; background: var(--blue-light); border-radius: 8px; margin-top: 16px; }
-    .tips-title { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
-    .tips-content { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-    .history-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .result-name { font-size: var(--font-lg); font-weight: 700; color: var(--text); }
+    .result-confidence { font-size: var(--font-sm); color: var(--text-secondary); margin-top: var(--space-1); }
+    
+    /* 提示框 */
+    .tips-box { padding: var(--space-3); background: var(--info-bg); border-radius: var(--radius-md); margin-top: var(--space-4); }
+    .tips-title { font-size: var(--font-base); font-weight: 600; color: var(--info); margin-bottom: var(--space-2); }
+    .tips-content { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.6; }
+    
+    /* 历史记录 */
+    .history-item { display: flex; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); cursor: pointer; }
     .history-item:last-child { border-bottom: none; }
-    .history-thumb { width: 64px; height: 64px; border-radius: 8px; background: var(--gray-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .history-thumb { width: 64px; height: 64px; border-radius: var(--radius-md); background: var(--gray-100); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .history-thumb svg { width: 32px; height: 32px; color: var(--text-light); }
     .history-info { flex: 1; min-width: 0; }
-    .history-name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .history-time { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+    .history-name { font-size: var(--font-base); font-weight: 600; color: var(--text); }
+    .history-time { font-size: var(--font-xs); color: var(--text-light); margin-top: var(--space-1); }
+    
+    /* 模态框 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
     .modal-overlay.show { display: flex; }
-    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 90%; max-width: 340px; text-align: center; }
-    .spinner { width: 48px; height: 48px; border: 4px solid var(--gray-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    .modal-box { background: var(--bg-white); border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5); width: 90%; max-width: 340px; text-align: center; }
+    .spinner { width: 48px; height: 48px; border: 4px solid var(--gray-100); border-top-color: var(--primary); border-radius: var(--radius-full); animation: spin 1s linear infinite; margin: 0 auto var(--space-4); }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .modal-text { font-size: 15px; color: var(--text); }
+    .modal-text { font-size: var(--font-md); color: var(--text); }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </div>
       <div style="padding-left: 40px;">
-        <div class="header-title">病虫害识别</div>
-        <div class="header-sub">拍照识别果树病虫害</div>
+        <div class="page-header-title">病虫害识别</div>
+        <div class="page-header-sub">拍照识别果树病虫害</div>
       </div>
     </div>
     
@@ -99,7 +116,7 @@
           <div class="upload-text">点击或拖拽上传图片</div>
         </div>
         <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleUpload(event)">
-        <button class="btn btn-primary btn-block" style="margin-top: 16px;" onclick="startIdentify()">开始识别</button>
+        <button class="btn btn-primary btn-block" style="margin-top: var(--space-4);" onclick="startIdentify()">开始识别</button>
       </div>
 
       <div id="resultArea" style="display:none;">

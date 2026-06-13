@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 合格证模板管理</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-page);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.search-bar {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.search-input {
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  width: 300px;
+}
+.filter-select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+}
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.btn-sm {
+  padding: 4px 12px;
+  font-size: var(--font-size-sm);
+}
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+.status-badge.enabled { background: var(--color-success-bg); color: var(--color-success); }
+.status-badge.disabled { background: var(--color-muted-bg); color: var(--text-muted); }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.template-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+.template-card:hover {
+  border-color: var(--color-primary);
+}
+.template-card.active {
+  border-color: var(--color-primary);
+  background: rgba(34, 168, 74, 0.05);
+}
+.template-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+.template-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+.template-fields {
+  margin-bottom: var(--space-lg);
+}
+.template-field {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  margin-right: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+.template-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item active">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">合格证模板管理</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">管理合格证模板，配置字段信息</p>
+    </div>
+    <button class="btn btn-primary">新建模板</button>
+  </div>
+
+  <!-- 搜索栏 -->
+  <div class="search-bar">
+    <input type="text" class="search-input" placeholder="搜索模板名称...">
+    <select class="filter-select">
+      <option>全部状态</option>
+      <option>启用</option>
+      <option>禁用</option>
+    </select>
+    <button class="btn btn-secondary">筛选</button>
+  </div>
+
+  <!-- 模板卡片列表 -->
+  <div class="card-grid">
+    <div class="template-card active">
+      <div class="template-name">红富士合格证</div>
+      <div class="template-desc">适用于红富士苹果产品的合格证模板</div>
+      <div class="template-fields">
+        <span class="template-field">产品名称</span>
+        <span class="template-field">批次号</span>
+        <span class="template-field">检测结果</span>
+        <span class="template-field">承诺声明</span>
+        <span class="template-field">二维码</span>
+      </div>
+      <div style="margin-bottom: var(--space-lg);">
+        <span class="status-badge enabled">已启用</span>
+      </div>
+      <div class="template-actions">
+        <button class="btn btn-secondary btn-sm">编辑</button>
+        <button class="btn btn-primary btn-sm">预览</button>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-name">嘎啦苹果合格证</div>
+      <div class="template-desc">适用于嘎啦苹果产品的合格证模板</div>
+      <div class="template-fields">
+        <span class="template-field">产品名称</span>
+        <span class="template-field">批次号</span>
+        <span class="template-field">检测结果</span>
+        <span class="template-field">承诺声明</span>
+        <span class="template-field">二维码</span>
+      </div>
+      <div style="margin-bottom: var(--space-lg);">
+        <span class="status-badge enabled">已启用</span>
+      </div>
+      <div class="template-actions">
+        <button class="btn btn-secondary btn-sm">编辑</button>
+        <button class="btn btn-primary btn-sm">预览</button>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-name">金帅苹果合格证</div>
+      <div class="template-desc">适用于金帅苹果产品的合格证模板</div>
+      <div class="template-fields">
+        <span class="template-field">产品名称</span>
+        <span class="template-field">批次号</span>
+        <span class="template-field">检测结果</span>
+        <span class="template-field">承诺声明</span>
+        <span class="template-field">二维码</span>
+      </div>
+      <div style="margin-bottom: var(--space-lg);">
+        <span class="status-badge disabled">已禁用</span>
+      </div>
+      <div class="template-actions">
+        <button class="btn btn-secondary btn-sm">编辑</button>
+        <button class="btn btn-primary btn-sm">预览</button>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-name">礼盒装合格证</div>
+      <div class="template-desc">适用于礼盒装产品的合格证模板</div>
+      <div class="template-fields">
+        <span class="template-field">产品名称</span>
+        <span class="template-field">批次号</span>
+        <span class="template-field">检测结果</span>
+        <span class="template-field">承诺声明</span>
+        <span class="template-field">净含量</span>
+        <span class="template-field">二维码</span>
+      </div>
+      <div style="margin-bottom: var(--space-lg);">
+        <span class="status-badge enabled">已启用</span>
+      </div>
+      <div class="template-actions">
+        <button class="btn btn-secondary btn-sm">编辑</button>
+        <button class="btn btn-primary btn-sm">预览</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

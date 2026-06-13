@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 作业标准库</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-base);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.search-bar {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.search-input {
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  width: 300px;
+}
+.filter-select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+.guide-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+.guide-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+.guide-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+.guide-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+.guide-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+.guide-tag {
+  padding: 4px 8px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.btn-secondary {
+  background: var(--gray-50);
+  color: var(--text-primary);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">作业标准库</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">查看各类农事作业的标准化操作流程</p>
+    </div>
+    <button class="btn btn-primary">添加标准</button>
+  </div>
+
+  <!-- 搜索栏 -->
+  <div class="search-bar">
+    <input type="text" class="search-input" placeholder="搜索作业标准...">
+    <select class="filter-select">
+      <option>全部类型</option>
+      <option>施肥</option>
+      <option>施药</option>
+      <option>修剪</option>
+      <option>灌溉</option>
+      <option>疏果</option>
+    </select>
+    <select class="filter-select">
+      <option>全部季节</option>
+      <option>春季</option>
+      <option>夏季</option>
+      <option>秋季</option>
+      <option>冬季</option>
+    </select>
+    <button class="btn btn-secondary">筛选</button>
+  </div>
+
+  <!-- 作业标准卡片 -->
+  <div class="card-grid">
+    <div class="guide-card">
+      <div class="guide-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <path d="M8 12l2 2 4-4 4 4"/>
+        </svg>
+      </div>
+      <div class="guide-title">春季施肥作业标准</div>
+      <div class="guide-desc">春季施肥是苹果树生长的关键环节，正确的施肥方法能有效促进花芽分化和果实发育。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">春季</span>
+        <span class="guide-tag">施肥</span>
+        <span class="guide-tag">必学</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon" style="background: #f59e0b;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <path d="M8 12h8M8 16h8M8 8h8"/>
+        </svg>
+      </div>
+      <div class="guide-title">病虫害防治指南</div>
+      <div class="guide-desc">详细介绍常见病虫害的识别方法和防治措施，确保果园健康。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">病虫害</span>
+        <span class="guide-tag">防治</span>
+        <span class="guide-tag">必学</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon" style="background: #3b82f6;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <path d="M8 12l4-4 4 4M8 16l4-4 4 4"/>
+        </svg>
+      </div>
+      <div class="guide-title">冬季修剪技术标准</div>
+      <div class="guide-desc">冬季修剪是苹果树整形修剪的重要时期，合理修剪能调整树势，提高产量。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">冬季</span>
+        <span class="guide-tag">修剪</span>
+        <span class="guide-tag">进阶</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon" style="background: #a855f7;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <path d="M8 16l4-4 4 4M12 8v8"/>
+        </svg>
+      </div>
+      <div class="guide-title">灌溉管理规范</div>
+      <div class="guide-desc">科学的灌溉管理能有效节约用水，保证苹果树的正常生长需求。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">灌溉</span>
+        <span class="guide-tag">水分管理</span>
+        <span class="guide-tag">基础</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon" style="background: #ec4899;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <path d="M8 8h8M8 12h8M8 16h8"/>
+        </svg>
+      </div>
+      <div class="guide-title">疏花疏果技术</div>
+      <div class="guide-desc">合理的疏花疏果能保证果实品质，提高商品果率，增加经济效益。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">春季</span>
+        <span class="guide-tag">疏果</span>
+        <span class="guide-tag">必学</span>
+      </div>
+    </div>
+
+    <div class="guide-card">
+      <div class="guide-icon" style="background: #ef4444;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+          <circle cx="12" cy="8" r="3"/>
+          <path d="M15 12h-6"/>
+        </svg>
+      </div>
+      <div class="guide-title">套袋作业规范</div>
+      <div class="guide-desc">果实套袋能有效保护果实，减少病虫害危害，提高果实外观品质。</div>
+      <div class="guide-tags">
+        <span class="guide-tag">夏季</span>
+        <span class="guide-tag">套袋</span>
+        <span class="guide-tag">进阶</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

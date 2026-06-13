@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>数农智果 - 购物车</title>
+<link rel="stylesheet" href="../css/design-system.css">
+<style>
+* { margin:0; padding:0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: #f5f5f5;
+  padding-bottom: 180px;
+}
+
+.header {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.header-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
+.header-title { color: white; font-size: 18px; font-weight: 600; }
+
+.cart-list { padding: 16px; }
+.cart-item {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  position: relative;
+}
+.cart-item:active { transform: scale(0.98); }
+
+.cart-checkbox {
+  margin-top: 28px;
+  width: 20px;
+  height: 20px;
+  accent-color: #22c55e;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cart-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 40px;
+}
+
+.cart-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+.cart-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cart-spec {
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+.cart-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.cart-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1.5px solid #f3f4f6;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #111827;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.qty-btn:active { 
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  transform: scale(0.95);
+}
+.qty-value {
+  min-width: 32px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.cart-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.cart-delete:active { background: #fee2e2; }
+
+.cart-empty {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+.cart-empty.show { display: flex; }
+.empty-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+}
+.empty-text {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+.empty-btn {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  transition: all 0.2s;
+}
+.empty-btn:active { transform: scale(0.95); }
+
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.08);
+  z-index: 100;
+}
+.footer-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #22c55e;
+  cursor: pointer;
+}
+.footer-text {
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+}
+.footer-price {
+  flex: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.price-label {
+  font-size: 11px;
+  color: #6b7280;
+}
+.price-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ef4444;
+  line-height: 1.2;
+}
+.footer-btn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.footer-btn:active { transform: scale(0.95); }
+.footer-btn.disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.footer-nav {
+  position: fixed;
+  bottom: -60px;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 8px 0 12px;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.08);
+  z-index: 99;
+  transition: bottom 0.3s ease;
+}
+.footer-nav.show { bottom: 0; }
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 8px;
+  position: relative;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: #22c55e;
+  border-radius: 0 0 3px 3px;
+}
+.nav-icon { width: 22px; height: 22px; }
+.nav-text {
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.nav-item.active .nav-icon { color: #22c55e; }
+.nav-item.active .nav-text { color: #22c55e; font-weight: 600; }
+</style>
+</head>
+<body>
+<header class="header">
+  <button class="header-btn" aria-label="返回" onclick="history.back()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M19 12H5"/>
+      <path d="M12 19l-7-7 7-7"/>
+    </svg>
+  </button>
+  <div class="header-title">购物车</div>
+  <button class="header-btn" aria-label="编辑" onclick="toggleEdit()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+  </button>
+</header>
+
+<div class="cart-list" id="cartList">
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox" checked onchange="updateTotal()">
+    <div class="cart-img">🍎</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">红富士苹果 5斤装</div>
+        <div class="cart-spec">脆甜多汁 · 新鲜采摘</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥68</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">1</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)" aria-label="删除">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox" checked onchange="updateTotal()">
+    <div class="cart-img">🍏</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">嘎啦苹果 5斤装</div>
+        <div class="cart-spec">酸甜可口 · 皮薄肉嫩</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥58</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">2</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)" aria-label="删除">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-item">
+    <input type="checkbox" class="cart-checkbox" onchange="updateTotal()">
+    <div class="cart-img">🎁</div>
+    <div class="cart-info">
+      <div>
+        <div class="cart-name">精品礼盒装 8斤</div>
+        <div class="cart-spec">送礼佳品 · 品质保证</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="cart-price">¥168</div>
+        <div class="cart-quantity">
+          <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+          <span class="qty-value">1</span>
+          <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        </div>
+      </div>
+    </div>
+    <button class="cart-delete" onclick="deleteItem(this)" aria-label="删除">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="cart-empty" id="cartEmpty">
+  <div class="empty-icon">🛒</div>
+  <div class="empty-text">购物车是空的</div>
+  <button class="empty-btn" onclick="location.href='h5_store.html'">去逛逛</button>
+</div>
+
+<div class="footer-bar" id="footerBar">
+  <input type="checkbox" class="footer-checkbox" checked onchange="toggleAll(this)">
+  <span class="footer-text">全选</span>
+  <div class="footer-price">
+    <div class="price-label">合计：</div>
+    <div class="price-value" id="totalPrice">¥184</div>
+  </div>
+  <button class="footer-btn" id="checkoutBtn" onclick="checkout()">结算(2)</button>
+</div>
+
+<div class="footer-nav">
+  <div class="nav-item" onclick="location.href='h5_store.html'">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span class="nav-text">首页</span>
+  </div>
+  <div class="nav-item active">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 01-8 0"/>
+    </svg>
+    <span class="nav-text">购物车</span>
+  </div>
+  <div class="nav-item" onclick="location.href='trace_h5.html'">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+      <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+    </svg>
+    <span class="nav-text">溯源</span>
+  </div>
+  <div class="nav-item" onclick="location.href='h5_member.html'">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span class="nav-text">我的</span>
+  </div>
+</div>
+
+<script>
+let isEditMode = false;
+
+function toggleEdit() {
+  isEditMode = !isEditMode;
+  const deleteBtns = document.querySelectorAll('.cart-delete');
+  deleteBtns.forEach(btn => {
+    btn.style.display = isEditMode ? 'flex' : 'none';
+  });
+}
+
+function updateQty(btn, delta) {
+  const container = btn.parentElement;
+  const valueSpan = container.querySelector('.qty-value');
+  let value = parseInt(valueSpan.textContent);
+  value = Math.max(1, value + delta);
+  valueSpan.textContent = value;
+  updateTotal();
+}
+
+function deleteItem(btn) {
+  const item = btn.closest('.cart-item');
+  item.style.transform = 'translateX(-100%)';
+  item.style.opacity = '0';
+  setTimeout(() => {
+    item.remove();
+    updateTotal();
+    checkEmpty();
+  }, 300);
+}
+
+function toggleAll(checkbox) {
+  const itemCheckboxes = document.querySelectorAll('.cart-checkbox');
+  itemCheckboxes.forEach(cb => cb.checked = checkbox.checked);
+  updateTotal();
+}
+
+function updateTotal() {
+  let total = 0;
+  let count = 0;
+  document.querySelectorAll('.cart-item').forEach(item => {
+    const checkbox = item.querySelector('.cart-checkbox');
+    if (checkbox.checked) {
+      const price = parseInt(item.querySelector('.cart-price').textContent.replace('¥', ''));
+      const qty = parseInt(item.querySelector('.qty-value').textContent);
+      total += price * qty;
+      count++;
+    }
+  });
+  document.getElementById('totalPrice').textContent = '¥' + total;
+  document.getElementById('checkoutBtn').textContent = count > 0 ? '结算(' + count + ')' : '结算';
+  document.getElementById('checkoutBtn').className = count > 0 ? 'footer-btn' : 'footer-btn disabled';
+}
+
+function checkEmpty() {
+  const cartList = document.getElementById('cartList');
+  const cartEmpty = document.getElementById('cartEmpty');
+  if (cartList.children.length === 0) {
+    cartList.style.display = 'none';
+    cartEmpty.classList.add('show');
+  }
+}
+
+function checkout() {
+  const btn = document.getElementById('checkoutBtn');
+  if (btn.classList.contains('disabled')) return;
+  showToast('正在跳转结算...');
+  setTimeout(() => {
+    // location.href = 'h5_checkout.html';
+  }, 1000);
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: fadeInOut 2s ease;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
+
+updateTotal();
+</script>
+</body>
+</html>

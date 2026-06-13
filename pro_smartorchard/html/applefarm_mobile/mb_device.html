@@ -4,140 +4,440 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 设备监控</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+    /* Header */
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
     }
-    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; background: #f5f5f5; padding-bottom: 66px; }
     
-    /* 顶部导航 */
-    .header { position: relative; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 44px 16px 16px; color: #fff; }
-    .back-btn { position: absolute; left: 12px; top: 44px; width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 20px; height: 20px; }
-    .header-content { padding-left: 40px; }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
     
-    /* 状态栏 */
-    .stats-bar { display: flex; justify-content: space-around; padding: 16px; background: #fff; margin: 12px; border-radius: var(--radius); border: 1px solid var(--border); }
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-content { padding-left: 44px; }
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px 16px;
+      background: var(--bg-white);
+      margin: 12px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    
     .stat-item { text-align: center; }
-    .stat-value { font-size: 24px; font-weight: 700; }
-    .stat-value.online { color: var(--primary); }
-    .stat-value.offline { color: var(--red); }
-    .stat-value.warning { color: var(--orange); }
-    .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
     
-    /* 筛选栏 */
-    .filter-bar { display: flex; gap: 10px; padding: 0 12px; margin-bottom: 12px; }
-    .filter-item { padding: 10px 16px; background: #fff; border-radius: 20px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border: 2px solid transparent; transition: all .2s; }
-    .filter-item.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    .stat-value {
+      font-size: var(--font-2xl);
+      font-weight: 800;
+    }
     
-    /* 设备卡片 */
-    .device-card { background: #fff; border-radius: var(--radius); padding: 16px; margin: 0 12px 12px; border: 1px solid var(--border); }
-    .device-header { display: flex; align-items: flex-start; gap: 14px; }
-    .device-icon-wrap { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .device-icon-wrap.online { background: #e8f5ec; }
-    .device-icon-wrap.offline { background: #f5f5f5; }
-    .device-icon-wrap.warning { background: var(--orange-light); }
+    .stat-value.online { color: var(--success); }
+    .stat-value.offline { color: var(--error); }
+    .stat-value.warning { color: var(--warning); }
+    
+    .stat-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      padding: 0 12px;
+      margin-bottom: 14px;
+    }
+    
+    .filter-item {
+      padding: 10px 16px;
+      background: var(--bg-white);
+      border-radius: var(--radius-full);
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    
+    .filter-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    /* Device Card */
+    .device-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      margin: 0 12px 14px;
+      border: 1px solid var(--border);
+      transition: all var(--transition-fast);
+    }
+    
+    .device-card:active { transform: scale(0.99); }
+    
+    .device-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    
+    .device-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+    
+    .device-icon-wrap.online { background: var(--success-bg); }
+    .device-icon-wrap.offline { background: var(--gray-100); }
+    .device-icon-wrap.warning { background: var(--warning-bg); }
+    
     .device-icon-wrap svg { width: 28px; height: 28px; }
-    .device-icon-wrap.online svg { color: #22a84a; }
-    .device-icon-wrap.offline svg { color: #999; }
-    .device-icon-wrap.warning svg { color: var(--orange); }
+    .device-icon-wrap.online svg { color: var(--success); }
+    .device-icon-wrap.offline svg { color: var(--text-light); }
+    .device-icon-wrap.warning svg { color: var(--warning); }
+    
     .device-info { flex: 1; min-width: 0; }
-    .device-name { font-size: 15px; font-weight: 600; color: var(--text); }
-    .device-location { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-    .device-status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 12px; font-size: 12px; margin-top: 8px; }
-    .device-status-badge.online { background: #e8f5ec; color: #22a84a; }
-    .device-status-badge.offline { background: #f5f5f5; color: #999; }
-    .device-status-badge.warning { background: var(--orange-light); color: var(--orange); }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
-    .status-dot.online { background: #22a84a; }
-    .status-dot.offline { background: #999; }
-    .status-dot.warning { background: var(--orange); }
     
-    /* 参数展示 */
-    .device-params { display: flex; gap: 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
-    .param-item { flex: 1; text-align: center; padding: 10px; background: #f8f9fa; border-radius: 10px; }
-    .param-value { font-size: 20px; font-weight: 700; color: var(--text); }
-    .param-unit { font-size: 12px; color: var(--text-light); margin-left: 2px; }
-    .param-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
+    .device-name {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+    }
     
-    /* 预警提示 */
-    .alert-section { padding: 12px; background: var(--red-light); border-radius: 10px; margin-top: 12px; }
-    .alert-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .alert-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; }
-    .alert-icon svg { width: 16px; height: 16px; color: #fff; }
-    .alert-title { font-size: 13px; font-weight: 600; color: var(--red); }
-    .alert-content { font-size: 12px; color: var(--red); line-height: 1.5; }
-    .alert-btn { margin-top: 10px; padding: 6px 14px; background: var(--red); color: #fff; border: none; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; }
+    .device-location {
+      font-size: var(--font-xs);
+      color: var(--text-light);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     
-    /* 设备详情弹窗 */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
-    .modal-overlay.show { display: flex; }
-    .modal-panel { width: 100%; max-width: 750px; background: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px; padding-bottom: 32px; animation: slideUp 0.3s ease; }
+    .device-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-xs);
+      font-weight: 500;
+      margin-top: 8px;
+    }
+    
+    .device-status-badge.online {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    
+    .device-status-badge.offline {
+      background: var(--gray-100);
+      color: var(--text-light);
+    }
+    
+    .device-status-badge.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+      animation: pulse 2s infinite;
+    }
+    
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    
+    .status-dot.online { background: var(--success); }
+    .status-dot.offline { background: var(--text-light); }
+    .status-dot.warning { background: var(--warning); animation: pulse 2s infinite; }
+    
+    /* Device Params */
+    .device-params {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border-light);
+    }
+    
+    .param-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+    }
+    
+    .param-value {
+      font-size: var(--font-lg);
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .param-unit {
+      font-size: var(--font-xs);
+      color: var(--text-light);
+      margin-left: 2px;
+    }
+    
+    .param-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    
+    /* Alert Section */
+    .alert-section {
+      padding: 14px;
+      background: var(--error-bg);
+      border-radius: var(--radius-lg);
+      margin-top: 14px;
+      border-left: 4px solid var(--error);
+    }
+    
+    .alert-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .alert-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--error);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .alert-icon svg { width: 18px; height: 18px; color: var(--bg-white); }
+    
+    .alert-title {
+      font-size: var(--font-sm);
+      font-weight: 600;
+      color: var(--error);
+    }
+    
+    .alert-content {
+      font-size: var(--font-sm);
+      color: var(--error);
+      line-height: 1.5;
+    }
+    
+    .alert-btn {
+      margin-top: 12px;
+      padding: 8px 16px;
+      background: var(--error);
+      color: var(--bg-white);
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: var(--font-sm);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .alert-btn:active { transform: scale(0.98); }
+    
+    /* Modal Panel */
+    .modal-panel {
+      width: 100%;
+      max-width: 750px;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 24px 20px;
+      padding-bottom: 40px;
+      animation: slideUp 0.3s ease;
+    }
+    
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-title { font-size: 18px; font-weight: 600; color: var(--text); }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .modal-close svg { width: 18px; height: 18px; color: #999; }
     
-    .detail-section { margin-bottom: 20px; }
-    .detail-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    .detail-title svg { width: 16px; height: 16px; color: var(--primary); }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
     
-    .info-list { background: #f8f9fa; border-radius: var(--radius); padding: 12px; }
-    .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e9ecef; }
+    .modal-title {
+      font-size: var(--font-lg);
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .modal-close svg { width: 18px; height: 18px; color: var(--text-secondary); }
+    
+    .detail-section { margin-bottom: 22px; }
+    
+    .detail-title {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .detail-title svg { width: 18px; height: 18px; color: var(--primary); }
+    
+    .info-list {
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
     .info-item:last-child { border-bottom: none; }
-    .info-label { font-size: 13px; color: var(--text-secondary); }
-    .info-value { font-size: 13px; color: var(--text); font-weight: 500; }
     
-    .chart-area { height: 160px; background: #f8f9fa; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; }
-    .chart-placeholder { text-align: center; }
-    .chart-icon { width: 48px; height: 48px; margin: 0 auto 8px; border-radius: 50%; background: #eaf2fa; display: flex; align-items: center; justify-content: center; }
-    .chart-icon svg { width: 28px; height: 28px; color: var(--blue); }
-    .chart-text { font-size: 13px; color: var(--text-light); }
+    .info-label {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+    }
     
-    .action-btns { display: flex; gap: 12px; margin-top: 16px; }
-    .action-btn { flex: 1; height: 44px; border-radius: 22px; font-size: 15px; font-weight: 500; cursor: pointer; border: none; transition: all .2s; }
-    .action-btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
-    .action-btn.secondary { background: #f5f5f5; color: var(--text); }
-    .action-btn.warning { background: var(--orange-light); color: var(--orange); }
+    .info-value {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+    }
     
-    /* 预警列表 */
-    .alert-card { background: #fff; border-radius: var(--radius); padding: 14px; margin: 0 12px 12px; border-left: 4px solid var(--red); }
-    .alert-header-row { display: flex; justify-content: space-between; align-items: center; }
-    .alert-device-name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .alert-time { font-size: 11px; color: var(--text-light); }
-    .alert-message { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
-    .alert-suggestion { margin-top: 10px; padding: 10px; background: #f8f8f8; border-radius: 8px; }
-    .suggestion-title { font-size: 12px; font-weight: 600; color: var(--orange); margin-bottom: 4px; }
-    .suggestion-text { font-size: 12px; color: var(--text-secondary); }
+    .chart-area {
+      height: 180px;
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
     
-    /* 底部导航 */
-    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
-    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; cursor: pointer; }
-    .tab-item.active { color: var(--primary); }
-    .tab-item svg { width: 22px; height: 22px; }
-    .tab-item span { font-size: 10px; }
+    .chart-area::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(34, 168, 74, 0.03), transparent);
+    }
     
-    .content { padding-bottom: 72px; }
+    .chart-placeholder {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .chart-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: var(--info-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chart-icon svg { width: 32px; height: 32px; color: var(--info); }
+    
+    .chart-text {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+    }
+    
+    .action-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      height: 44px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-sm);
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition-fast);
+    }
+    
+    .action-btn:active { transform: scale(0.98); }
+    
+    .action-btn.primary {
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: var(--bg-white);
+    }
+    
+    .action-btn.secondary {
+      background: var(--gray-100);
+      color: var(--text-secondary);
+    }
+    
+    .action-btn.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
+  <div class="mb-app">
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
@@ -148,7 +448,7 @@
       </div>
     </div>
 
-    <!-- 状态统计 -->
+    <!-- Stats Bar -->
     <div class="stats-bar">
       <div class="stat-item">
         <div class="stat-value online">8</div>
@@ -164,7 +464,7 @@
       </div>
     </div>
 
-    <!-- 筛选栏 -->
+    <!-- Filter Bar -->
     <div class="filter-bar">
       <div class="filter-item active" onclick="filterDevices('all')">全部</div>
       <div class="filter-item" onclick="filterDevices('online')">在线</div>
@@ -172,7 +472,7 @@
       <div class="filter-item" onclick="filterDevices('warning')">预警</div>
     </div>
 
-    <!-- 设备列表 -->
+    <!-- Device List -->
     <div class="content" id="deviceList">
       <div class="device-card" onclick="openDeviceDetail('温湿度传感器')">
         <div class="device-header">
@@ -200,7 +500,7 @@
             <div class="param-label">湿度</div>
           </div>
           <div class="param-item">
-            <div class="param-value">正常</div>
+            <div class="param-value" style="color: var(--success);">正常</div>
             <div class="param-label">状态</div>
           </div>
         </div>
@@ -233,7 +533,7 @@
             <div class="param-label">酸碱度</div>
           </div>
           <div class="param-item">
-            <div class="param-value">适宜</div>
+            <div class="param-value" style="color: var(--success);">适宜</div>
             <div class="param-label">状态</div>
           </div>
         </div>
@@ -258,7 +558,7 @@
         </div>
         <div class="device-params">
           <div class="param-item">
-            <div class="param-value">运行中</div>
+            <div class="param-value" style="color: var(--info);">运行中</div>
             <div class="param-label">状态</div>
           </div>
           <div class="param-item">
@@ -266,7 +566,7 @@
             <div class="param-label">剩余时长</div>
           </div>
           <div class="param-item">
-            <div class="param-value">85<span class="param-unit">%</span></div>
+            <div class="param-value" style="color: var(--warning);">85<span class="param-unit">%</span></div>
             <div class="param-label">水位</div>
           </div>
         </div>
@@ -311,30 +611,30 @@
             <div class="param-label">湿度</div>
           </div>
           <div class="param-item">
-            <div class="param-value">离线</div>
+            <div class="param-value" style="color: var(--text-light);">离线</div>
             <div class="param-label">状态</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 底部导航 -->
-    <div class="tab-bar">
-      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+    <!-- Tab Bar -->
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
         <span>首页</span>
       </div>
-      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+      <div class="mb-tab-item" onclick="navigateTo('mb_service.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
         <span>服务</span>
       </div>
-      <div class="tab-item" onclick="navigateTo('mb_plot.html')">
+      <div class="mb-tab-item" onclick="navigateTo('mb_plot.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7"/>
           <rect x="14" y="3" width="7" height="7"/>
@@ -343,7 +643,7 @@
         </svg>
         <span>地块</span>
       </div>
-      <div class="tab-item active">
+      <div class="mb-tab-item active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
@@ -353,7 +653,7 @@
     </div>
   </div>
 
-  <!-- 设备详情弹窗 -->
+  <!-- Detail Modal -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-panel">
       <div class="modal-header">
@@ -427,21 +727,12 @@
   </div>
 
   <script>
-    function goBack() {
-      window.history.back();
-    }
-
-    function navigateTo(page) {
-      window.location.href = page;
-    }
+    function goBack() { window.history.back(); }
+    function navigateTo(page) { window.location.href = page; }
 
     function filterDevices(type) {
-      var items = document.querySelectorAll('.filter-item');
-      items.forEach(function(item) {
-        item.classList.remove('active');
-      });
+      document.querySelectorAll('.filter-item').forEach(item => item.classList.remove('active'));
       event.target.classList.add('active');
-      // 筛选逻辑可以在这里实现
       alert('筛选功能：' + type);
     }
 

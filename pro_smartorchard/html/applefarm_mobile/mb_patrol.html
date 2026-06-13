@@ -4,159 +4,392 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 巡果园</title>
+  <!-- H5设计系统 v2 — Supabase × Airbnb × Notion 混合设计基因 -->
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
+    /* ========== 页面专属样式（仅保留设计系统未覆盖的部分） ========== */
+
+    /* --- 状态统计卡片 --- */
+    .patrol-stats {
+      display: flex;
+      justify-content: space-around;
+      padding: var(--space-4);
+      background: var(--bg-white);
+      margin: var(--space-3);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
     }
-    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; background: #f5f5f5; padding-bottom: 66px; }
-    
-    /* 顶部导航 */
-    .header { position: relative; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 44px 16px 16px; color: #fff; }
-    .back-btn { position: absolute; left: 12px; top: 44px; width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 20px; height: 20px; }
-    .header-content { padding-left: 40px; }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
-    
-    /* 状态栏 */
-    .status-bar { display: flex; justify-content: space-around; padding: 16px; background: #fff; margin: 12px; border-radius: var(--radius); border: 1px solid var(--border); }
-    .status-item { text-align: center; }
-    .status-value { font-size: 24px; font-weight: 700; color: var(--primary); }
-    .status-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-    
-    /* 地图区域 */
-    .map-area { margin: 0 12px; height: 280px; background: #f8f8f8; border-radius: var(--radius); border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .map-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
-    .map-icon { width: 64px; height: 64px; border-radius: 50%; background: #eaf2fa; display: flex; align-items: center; justify-content: center; }
-    .map-icon svg { width: 36px; height: 36px; color: var(--blue); }
-    .map-text { font-size: 14px; color: var(--text-light); }
-    .map-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(46,158,90,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(46,158,90,0.1) 1px, transparent 1px); background-size: 30px 30px; }
-    .checkpoint-marker { position: absolute; width: 36px; height: 36px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+    .patrol-stats-item { text-align: center; }
+    .patrol-stats-value {
+      font-size: var(--font-2xl);
+      font-weight: var(--font-extrabold);
+      color: var(--primary);
+      font-family: var(--font-family-number);
+    }
+    .patrol-stats-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* --- 地图区域 --- */
+    .map-area {
+      margin: 0 var(--space-3);
+      height: 280px;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+    }
+    .map-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--info-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .map-icon svg { width: 36px; height: 36px; color: var(--info-dark); }
+    .map-text { font-size: var(--font-sm); color: var(--text-secondary); }
+
+    .map-grid {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(46,158,90,0.1) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(46,158,90,0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .checkpoint-marker {
+      position: absolute;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
     .checkpoint-marker.current { animation: pulse 2s infinite; }
-    .checkpoint-marker.done { background: var(--primary); }
-    .checkpoint-marker svg { width: 18px; height: 18px; color: #fff; }
-    .checkpoint-label { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--text-secondary); white-space: nowrap; margin-top: 4px; }
+    .checkpoint-marker.done { background: var(--success); }
+    .checkpoint-marker svg { width: 18px; height: 18px; color: var(--bg-white); }
+
+    .checkpoint-label {
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(243,156,18,0.7); }
       70% { box-shadow: 0 0 0 10px rgba(243,156,18,0); }
       100% { box-shadow: 0 0 0 0 rgba(243,156,18,0); }
     }
-    .user-marker { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; animation: bounce 1s infinite; }
-    .user-marker svg { width: 20px; height: 20px; color: #fff; }
+
+    .user-marker {
+      position: absolute;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--info);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bounce 1s infinite;
+    }
+    .user-marker svg { width: 20px; height: 20px; color: var(--bg-white); }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
-    
-    /* 打卡提示弹窗 */
-    .checkin-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: var(--radius-lg); padding: 24px; width: 85%; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); z-index: 100; display: none; }
+
+    /* --- 打卡弹窗 --- */
+    .checkin-popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      width: 85%; max-width: 300px;
+      box-shadow: var(--shadow-float);
+      z-index: 100;
+      display: none;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translate(-50%, -40%); opacity: 0; }
+      to { transform: translate(-50%, -50%); opacity: 1; }
+    }
     .checkin-popup.show { display: block; }
-    .checkin-icon { width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
-    .checkin-icon svg { width: 36px; height: 36px; color: var(--primary); }
-    .checkin-title { font-size: 18px; font-weight: 600; text-align: center; margin-bottom: 8px; }
-    .checkin-desc { font-size: 14px; color: var(--text-secondary); text-align: center; margin-bottom: 20px; }
-    .checkin-btn { width: 100%; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; }
-    
-    /* 打卡列表 */
-    .card { background: #fff; border-radius: var(--radius); padding: 16px; margin: 12px; border: 1px solid var(--border); }
-    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .card-title svg { width: 18px; height: 18px; color: var(--primary); }
-    .checkpoint-list { margin-top: 8px; }
-    .checkpoint-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
-    .checkpoint-item:last-child { border-bottom: none; }
-    .checkpoint-status { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .checkpoint-status.pending { background: #f0f0f0; }
-    .checkpoint-status.pending svg { width: 12px; height: 12px; color: #999; }
+
+    .checkin-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto var(--space-4);
+      border-radius: 50%;
+      background: var(--success-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkin-icon svg { width: 36px; height: 36px; color: var(--success); }
+
+    .checkin-title {
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      text-align: center;
+      margin-bottom: var(--space-2);
+      color: var(--text);
+    }
+    .checkin-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: var(--space-5);
+    }
+    .checkin-btn {
+      width: 100%; height: 48px;
+      background: var(--gradient-primary);
+      color: var(--text-on-primary);
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: var(--font-semibold);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      min-height: 44px;
+    }
+    .checkin-btn:active { transform: scale(0.98); }
+
+    /* --- 打卡列表项增强 --- */
+    .mb-list-item.checkpoint-item {
+      min-height: 56px;
+    }
+    .checkpoint-status {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .checkpoint-status svg { width: 14px; height: 14px; }
+    .checkpoint-status.pending { background: var(--gray-200); }
+    .checkpoint-status.pending svg { color: var(--text-tertiary); }
     .checkpoint-status.current { background: var(--orange); }
-    .checkpoint-status.current svg { width: 12px; height: 12px; color: #fff; }
-    .checkpoint-status.done { background: var(--primary); }
-    .checkpoint-status.done svg { width: 12px; height: 12px; color: #fff; }
-    .checkpoint-info { flex: 1; }
-    .checkpoint-name { font-size: 14px; font-weight: 500; color: var(--text); }
-    .checkpoint-distance { font-size: 12px; color: var(--text-light); margin-top: 2px; }
-    .checkpoint-time { font-size: 12px; color: var(--text-secondary); }
-    
-    /* 异常上报 */
-    .report-section { margin-bottom: 16px; }
-    .report-btn { width: 100%; height: 48px; background: #fff; border: 2px dashed var(--border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: all .2s; }
-    .report-btn:hover, .report-btn:active { border-color: var(--primary); background: var(--primary-light); }
-    .report-btn svg { width: 24px; height: 24px; color: var(--primary); }
-    .report-text { font-size: 15px; color: var(--text); font-weight: 500; }
-    
-    /* 异常上报弹窗 */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: flex-end; }
+    .checkpoint-status.current svg { color: var(--bg-white); }
+    .checkpoint-status.done { background: var(--success); }
+    .checkpoint-status.done svg { color: var(--bg-white); }
+
+    .checkpoint-distance {
+      font-size: var(--font-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .checkpoint-time {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    /* --- 异常上报按钮 --- */
+    .report-btn {
+      width: 100%; height: 48px;
+      background: var(--bg-white);
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      min-height: 44px;
+    }
+    .report-btn:active {
+      border-color: var(--error);
+      background: var(--error-light);
+    }
+    .report-btn svg { width: 24px; height: 24px; color: var(--error); }
+    .report-text { font-size: var(--font-base); color: var(--text); font-weight: var(--font-medium); }
+
+    /* --- Modal 通用 --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: var(--z-overlay);
+      display: none;
+      justify-content: flex-end;
+    }
     .modal-overlay.show { display: flex; }
-    .modal-panel { width: 85%; max-width: 360px; background: #fff; border-radius: var(--radius-lg) 0 0 var(--radius-lg); padding: 20px; padding-bottom: 32px; animation: slideIn 0.3s ease; }
+
+    .modal-panel {
+      width: 85%; max-width: 360px;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+      padding: var(--space-5);
+      padding-bottom: var(--space-8);
+      animation: slideIn 0.3s ease;
+    }
     @keyframes slideIn {
       from { transform: translateX(100%); }
       to { transform: translateX(0); }
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-title { font-size: 18px; font-weight: 600; color: var(--text); }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .modal-close svg { width: 18px; height: 18px; color: #999; }
-    
-    .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block; }
-    .photo-upload { width: 100%; height: 160px; border: 2px dashed var(--border); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
-    .photo-upload.has-photo { border-style: solid; border-color: var(--primary); }
-    .photo-upload svg { width: 32px; height: 32px; color: var(--text-light); }
-    .photo-upload.has-photo svg { color: var(--primary); }
-    .photo-text { font-size: 13px; color: var(--text-light); }
-    
-    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .type-item { padding: 10px; background: #f8f8f8; border-radius: 10px; border: 2px solid transparent; cursor: pointer; text-align: center; transition: all .2s; }
-    .type-item.active { background: var(--red-light); border-color: var(--red); }
+    .modal-close {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .modal-close:active { transform: scale(0.95); }
+    .modal-close svg { width: 18px; height: 18px; color: var(--text-secondary); }
+
+    .form-label {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2);
+      display: block;
+    }
+
+    .photo-upload {
+      width: 100%; height: 160px;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .photo-upload.has-photo {
+      border-style: solid;
+      border-color: var(--error);
+      background: var(--error-light);
+    }
+    .photo-upload svg { width: 32px; height: 32px; color: var(--text-tertiary); }
+    .photo-upload.has-photo svg { color: var(--error); }
+    .photo-text { font-size: var(--font-sm); color: var(--text-secondary); }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+    }
+    .type-item {
+      padding: var(--space-3);
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+      min-height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .type-item.active {
+      background: var(--error-light);
+      border-color: var(--error);
+    }
     .type-item svg { width: 24px; height: 24px; margin-bottom: 6px; }
-    .type-item.pest svg { color: var(--red); }
-    .type-item.device svg { color: var(--orange); }
-    .type-item.other svg { color: var(--blue); }
-    .type-name { font-size: 12px; color: var(--text); }
-    
-    .remark-input { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 14px; color: var(--text); resize: none; }
-    .remark-input:focus { outline: none; border-color: var(--primary); }
-    
-    .submit-btn { width: 100%; height: 48px; background: linear-gradient(135deg, var(--red), #c0392b); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; }
-    
-    /* 底部提示 */
-    .footer-tip { padding: 16px; text-align: center; font-size: 12px; color: var(--text-light); padding-bottom: 32px; }
+    .type-item.pest svg { color: var(--error); }
+    .type-item.device svg { color: var(--warning); }
+    .type-item.other svg { color: var(--info); }
+    .type-name { font-size: var(--font-xs); color: var(--text); }
+
+    .remark-input {
+      width: 100%; min-height: 80px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-family: var(--font-family);
+      resize: none;
+      transition: all var(--transition-fast);
+    }
+    .remark-input:focus {
+      outline: none;
+      border-color: var(--error);
+    }
+
+    /* --- 底部提示 --- */
+    .footer-tip {
+      padding: var(--space-4);
+      text-align: center;
+      font-size: var(--font-xs);
+      color: var(--text-tertiary);
+      padding-bottom: var(--space-8);
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 18l-6-6 6-6"/>
-        </svg>
+  <div class="mb-app">
+    <!-- 详情页型 Header -->
+    <div class="mb-header-detail">
+      <div class="header-nav">
+        <div class="header-back" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <div class="header-title">巡果园</div>
+        <div class="header-actions">
+          <div class="header-action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+              <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+            </svg>
+          </div>
+        </div>
       </div>
       <div class="header-content">
-        <div class="header-title">巡果园</div>
         <div class="header-sub">今日路线：A区 → B区 → C区</div>
       </div>
     </div>
 
     <!-- 状态统计 -->
-    <div class="status-bar">
-      <div class="status-item">
-        <div class="status-value">3</div>
-        <div class="status-label">总打卡点</div>
+    <div class="patrol-stats">
+      <div class="patrol-stats-item">
+        <div class="patrol-stats-value">3</div>
+        <div class="patrol-stats-label">总打卡点</div>
       </div>
-      <div class="status-item">
-        <div class="status-value">1</div>
-        <div class="status-label">已完成</div>
+      <div class="patrol-stats-item">
+        <div class="patrol-stats-value">1</div>
+        <div class="patrol-stats-label">已完成</div>
       </div>
-      <div class="status-item">
-        <div class="status-value">2</div>
-        <div class="status-label">待打卡</div>
+      <div class="patrol-stats-item">
+        <div class="patrol-stats-value">2</div>
+        <div class="patrol-stats-label">待打卡</div>
       </div>
     </div>
 
@@ -171,7 +404,7 @@
             <line x1="16" y1="6" x2="16" y2="22"/>
           </svg>
         </div>
-        <div class="map-text">📍 GPS定位中，显示巡园路线</div>
+        <div class="map-text">GPS定位中，显示巡园路线</div>
       </div>
       <!-- 打卡点标记 -->
       <div class="checkpoint-marker done" style="top: 30%; left: 25%;">
@@ -214,45 +447,40 @@
     </div>
 
     <!-- 打卡列表 -->
-    <div class="card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4"/>
-        </svg>
-        巡园路线
-      </div>
-      <div class="checkpoint-list">
-        <div class="checkpoint-item">
+    <div class="mb-section">
+      <div class="mb-section-title"><span class="mb-section-dot"></span>巡园路线</div>
+      <div class="mb-list">
+        <div class="mb-list-item checkpoint-item">
           <div class="checkpoint-status done">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
-          <div class="checkpoint-info">
-            <div class="checkpoint-name">A1区 - 主入口</div>
+          <div class="mb-list-content">
+            <div class="mb-list-title">A1区 - 主入口</div>
             <div class="checkpoint-distance">已完成 · 打卡时间：09:15</div>
           </div>
         </div>
-        <div class="checkpoint-item">
+        <div class="mb-list-item checkpoint-item">
           <div class="checkpoint-status current">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
             </svg>
           </div>
-          <div class="checkpoint-info">
-            <div class="checkpoint-name">B1区 - 果园中部</div>
-            <div class="checkpoint-distance">📍 距离50米，请前往打卡</div>
+          <div class="mb-list-content">
+            <div class="mb-list-title">B1区 - 果园中部</div>
+            <div class="checkpoint-distance">距离50米，请前往打卡</div>
           </div>
           <div class="checkpoint-time">当前</div>
         </div>
-        <div class="checkpoint-item">
+        <div class="mb-list-item checkpoint-item">
           <div class="checkpoint-status pending">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
             </svg>
           </div>
-          <div class="checkpoint-info">
-            <div class="checkpoint-name">C1区 - 仓库附近</div>
+          <div class="mb-list-content">
+            <div class="mb-list-title">C1区 - 仓库附近</div>
             <div class="checkpoint-distance">待打卡 · 预计15分钟</div>
           </div>
         </div>
@@ -260,35 +488,28 @@
     </div>
 
     <!-- 异常上报 -->
-    <div class="card">
-      <div class="card-title">
+    <div class="mb-section">
+      <div class="mb-section-title"><span class="mb-section-dot"></span>异常上报</div>
+      <div class="report-btn" onclick="openReportModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v6m0 6v6m4.6-13H7.4M21 12h-6"/>
         </svg>
-        异常上报
-      </div>
-      <div class="report-section">
-        <div class="report-btn" onclick="openReportModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v6m0 6v6m4.6-13H7.4M21 12h-6"/>
-          </svg>
-          <span class="report-text">发现异常，立即上报</span>
-        </div>
+        <span class="report-text">发现异常，立即上报</span>
       </div>
     </div>
 
     <!-- 底部提示 -->
     <div class="footer-tip">
-      💡 提示：到达打卡点50米范围内将自动弹出打卡提示
+      提示：到达打卡点50米范围内将自动弹出打卡提示
     </div>
   </div>
 
   <!-- 异常上报弹窗 -->
   <div class="modal-overlay" id="reportModal">
     <div class="modal-panel">
-      <div class="modal-header">
-        <div class="modal-title">上报异常</div>
+      <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+        <div style="font-size:var(--font-lg);font-weight:var(--font-semibold);color:var(--text);">上报异常</div>
         <div class="modal-close" onclick="closeReportModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -296,8 +517,8 @@
           </svg>
         </div>
       </div>
-      
-      <div class="form-group">
+
+      <div class="form-group" style="margin-bottom:var(--space-4);">
         <div class="form-label">拍摄异常照片</div>
         <div class="photo-upload" id="reportPhoto" onclick="uploadPhoto()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -307,8 +528,8 @@
           <div class="photo-text">点击拍照上传</div>
         </div>
       </div>
-      
-      <div class="form-group">
+
+      <div class="form-group" style="margin-bottom:var(--space-4);">
         <div class="form-label">选择异常类型</div>
         <div class="type-grid">
           <div class="type-item pest" onclick="selectReportType('病虫害')">
@@ -336,13 +557,13 @@
           </div>
         </div>
       </div>
-      
-      <div class="form-group">
+
+      <div class="form-group" style="margin-bottom:var(--space-4);">
         <div class="form-label">备注说明</div>
         <textarea class="remark-input" placeholder="请描述异常情况..." id="reportRemark"></textarea>
       </div>
-      
-      <button class="submit-btn" onclick="submitReport()">确认上报</button>
+
+      <button class="mb-btn mb-btn-block" style="background:var(--error);color:var(--text-on-primary);border-radius:var(--radius-full);" onclick="submitReport()">确认上报</button>
     </div>
   </div>
 
@@ -356,7 +577,7 @@
       </div>
       <div class="checkin-title" style="color: var(--primary);">上报成功</div>
       <div class="checkin-desc">异常信息已提交，将尽快处理</div>
-      <button class="checkin-btn" style="background: var(--primary);" onclick="closeSuccessModal()">确 定</button>
+      <button class="checkin-btn" onclick="closeSuccessModal()">确 定</button>
     </div>
   </div>
 

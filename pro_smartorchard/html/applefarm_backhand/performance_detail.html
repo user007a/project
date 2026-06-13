@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 绩效详情</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-page);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.profile-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-size: var(--font-size-3xl);
+  font-weight: bold;
+}
+.profile-info {
+  flex: 1;
+}
+.profile-name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+.profile-meta {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.score-card {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  color: white;
+  text-align: center;
+}
+.score-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+.score-label {
+  font-size: var(--font-size-sm);
+  opacity: 0.85;
+}
+.chart-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.chart-placeholder {
+  height: 250px;
+  background: var(--gradient-placeholder);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-placeholder);
+}
+.double-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+}
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.progress-bar {
+  height: 12px;
+  background: var(--bg-progress);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--space-xs);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+.progress-fill.green { background: var(--color-success); }
+.progress-fill.orange { background: var(--color-warning); }
+.progress-fill.blue { background: var(--color-info); }
+.metric-item {
+  margin-bottom: var(--space-lg);
+}
+.metric-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+.metric-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.status-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+.status-badge.excellent { background: var(--color-success-bg); color: var(--color-success); }
+.status-badge.good { background: var(--color-warning-bg); color: var(--color-warning); }
+.status-badge.pass { background: var(--color-info-bg); color: var(--color-info); }
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item active">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">绩效详情</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">查看员工详细绩效数据</p>
+    </div>
+    <div style="display: flex; gap: var(--space-md);">
+      <button class="btn btn-secondary">返回列表</button>
+      <button class="btn btn-primary">编辑绩效</button>
+    </div>
+  </div>
+
+  <!-- 员工信息 -->
+  <div class="profile-section">
+    <div class="profile-header">
+      <div class="profile-avatar">张</div>
+      <div class="profile-info">
+        <div class="profile-name">张三</div>
+        <div class="profile-meta">一班 · 农工 · 入职时间：2024-03-15</div>
+      </div>
+      <div class="score-card">
+        <div class="score-value">96</div>
+        <div class="score-label">综合评分</div>
+        <div style="margin-top: var(--space-sm);"><span class="status-badge excellent">优秀</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键指标 -->
+  <div class="double-section">
+    <div class="chart-section">
+      <h2 class="section-title">绩效指标</h2>
+      <div class="metric-item">
+        <div class="metric-label">任务完成率</div>
+        <div class="metric-value">100%</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width: 100%;"></div></div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">作业质量评分</div>
+        <div class="metric-value">95分</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width: 95%;"></div></div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">工作量完成</div>
+        <div class="metric-value">48任务</div>
+        <div class="progress-bar"><div class="progress-fill blue" style="width: 96%;"></div></div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">出勤天数</div>
+        <div class="metric-value">22天</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width: 100%;"></div></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <h2 class="section-title">月度趋势</h2>
+      <div class="chart-placeholder">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <path d="M3 3v18h18"/>
+            <path d="M5 18l4-10 4 6 4-8 3 3"/>
+          </svg>
+          <div>月度绩效趋势</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">近6个月数据</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 任务完成记录 -->
+  <div class="table-container">
+    <h2 class="section-title">本月任务完成记录</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>任务名称</th>
+          <th>地块</th>
+          <th>任务类型</th>
+          <th>完成时间</th>
+          <th>质量评分</th>
+          <th>状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>春季施肥作业</td>
+          <td>A1区</td>
+          <td>施肥</td>
+          <td>2026-06-10</td>
+          <td>98</td>
+          <td><span style="color: var(--color-success);">已完成</span></td>
+        </tr>
+        <tr>
+          <td>病虫害防治</td>
+          <td>A2区</td>
+          <td>施药</td>
+          <td>2026-06-08</td>
+          <td>95</td>
+          <td><span style="color: var(--color-success);">已完成</span></td>
+        </tr>
+        <tr>
+          <td>果树修剪</td>
+          <td>B1区</td>
+          <td>修剪</td>
+          <td>2026-06-05</td>
+          <td>92</td>
+          <td><span style="color: var(--color-success);">已完成</span></td>
+        </tr>
+        <tr>
+          <td>浇水灌溉</td>
+          <td>A1区</td>
+          <td>灌溉</td>
+          <td>2026-06-03</td>
+          <td>100</td>
+          <td><span style="color: var(--color-success);">已完成</span></td>
+        </tr>
+        <tr>
+          <td>疏花疏果</td>
+          <td>B2区</td>
+          <td>疏果</td>
+          <td>2026-06-01</td>
+          <td>96</td>
+          <td><span style="color: var(--color-success);">已完成</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

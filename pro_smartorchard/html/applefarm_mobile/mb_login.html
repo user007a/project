@@ -4,220 +4,654 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 登录</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { font-size: 16px; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-family);
       min-height: 100vh;
-      background: linear-gradient(180deg, #2e9e5a 0%, #3db870 50%, #5ec98a 100%);
+      background: linear-gradient(180deg, var(--primary-600) 0%, var(--primary-500) 30%, var(--primary-400) 70%, var(--primary-300) 100%);
       overflow-x: hidden;
       position: relative;
     }
+    
     .bg-decor {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 0; overflow: hidden;
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      pointer-events: none; 
+      z-index: 0; 
+      overflow: hidden;
     }
+    
     .bg-circle {
-      position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06);
+      position: absolute; 
+      border-radius: 50%; 
+      background: rgba(255,255,255,0.08);
     }
-    .bg-circle-1 { width: 280px; height: 280px; top: -60px; right: -80px; }
-    .bg-circle-2 { width: 200px; height: 200px; bottom: 120px; left: -60px; background: rgba(255,255,255,0.04); }
-    .bg-circle-3 { width: 140px; height: 140px; top: 40%; right: 10%; background: rgba(255,255,255,0.05); }
+    
+    .bg-circle-1 { 
+      width: 320px; 
+      height: 320px; 
+      top: -80px; 
+      right: -100px;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .bg-circle-2 { 
+      width: 220px; 
+      height: 220px; 
+      bottom: 150px; 
+      left: -80px; 
+      background: rgba(255,255,255,0.05);
+      animation: float 8s ease-in-out infinite reverse;
+    }
+    
+    .bg-circle-3 { 
+      width: 160px; 
+      height: 160px; 
+      top: 50%; 
+      right: 20%; 
+      background: rgba(255,255,255,0.06);
+      animation: float 5s ease-in-out infinite;
+    }
+    
     .bg-grid {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
       background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
     }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-15px) scale(1.05); }
+    }
+    
     .container {
-      position: relative; z-index: 1;
-      display: flex; flex-direction: column; align-items: center;
-      min-height: 100vh; padding: 60px 7.5% 40px;
+      position: relative; 
+      z-index: 1;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      min-height: 100vh; 
+      padding: 70px 7.5% 40px;
     }
-    .header { text-align: center; margin-bottom: 32px; }
+    
+    .header { 
+      text-align: center; 
+      margin-bottom: 40px; 
+      animation: slideDown 0.5s ease;
+    }
+    
     .logo-wrap {
-      width: 72px; height: 72px; margin: 0 auto 16px;
-      background: rgba(255,255,255,0.95); border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      width: 80px; 
+      height: 80px; 
+      margin: 0 auto 20px;
+      background: rgba(255,255,255,0.98); 
+      border-radius: 24px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform var(--transition-normal);
     }
-    .logo-wrap svg { width: 44px; height: 44px; }
+    
+    .logo-wrap:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo-wrap svg { 
+      width: 48px; 
+      height: 48px; 
+    }
+    
     .sys-name {
-      font-size: 18px; font-weight: 700; color: #fff;
-      letter-spacing: 1px; margin-bottom: 6px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      font-size: var(--font-size-xl); 
+      font-weight: var(--font-weight-bold); 
+      color: #fff;
+      letter-spacing: 2px; 
+      margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .sys-sub { font-size: 12px; color: rgba(255,255,255,0.7); letter-spacing: 2px; }
+    
+    .sys-sub { 
+      font-size: var(--font-size-sm); 
+      color: rgba(255,255,255,0.8); 
+      letter-spacing: 3px;
+    }
+    
     .login-card {
-      width: 100%; background: #fff; border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-      padding: 24px 20px; overflow: hidden;
+      width: 100%; 
+      background: #fff; 
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      padding: 28px 24px; 
+      overflow: hidden;
+      animation: slideUp 0.5s ease 0.1s both;
     }
+    
     .tab-bar {
-      display: flex; background: #f5f5f5; border-radius: 22px;
-      padding: 3px; margin-bottom: 24px; position: relative;
+      display: flex; 
+      background: var(--gray-50); 
+      border-radius: var(--radius-full);
+      padding: 4px; 
+      margin-bottom: 28px; 
+      position: relative;
     }
+    
     .tab-item {
-      flex: 1; text-align: center; padding: 8px 0;
-      font-size: 13px; color: #999; cursor: pointer;
-      border-radius: 20px; transition: all 0.3s ease;
-      position: relative; z-index: 1; user-select: none;
+      flex: 1; 
+      text-align: center; 
+      padding: 10px 0;
+      font-size: var(--font-size-sm); 
+      color: var(--text-light); 
+      cursor: pointer;
+      border-radius: var(--radius-full); 
+      transition: all var(--transition-normal);
+      position: relative; 
+      z-index: 1; 
+      user-select: none;
+      font-weight: var(--font-weight-medium);
     }
-    .tab-item.active { color: #fff; font-weight: 600; }
+    
+    .tab-item.active { 
+      color: #fff; 
+      font-weight: var(--font-weight-semibold); 
+    }
+    
     .tab-slider {
-      position: absolute; top: 3px; left: 3px;
-      width: calc(33.333% - 2px); height: calc(100% - 6px);
-      background: linear-gradient(135deg, #2e9e5a, #1e7e42);
-      border-radius: 20px; transition: transform 0.3s ease;
+      position: absolute; 
+      top: 4px; 
+      left: 4px;
+      width: calc(33.333% - 3px); 
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      border-radius: var(--radius-full); 
+      transition: transform var(--transition-normal);
       z-index: 0;
+      box-shadow: 0 2px 8px rgba(34, 168, 74, 0.3);
     }
+    
     .tab-slider[data-index="1"] { transform: translateX(100%); }
     .tab-slider[data-index="2"] { transform: translateX(200%); }
-    .tab-panels { position: relative; overflow: hidden; }
+    
+    .tab-panels { 
+      position: relative; 
+      overflow: hidden; 
+    }
+    
     .tab-panel {
-      display: none; animation: fadeSlideIn 0.3s ease;
+      display: none; 
+      animation: fadeSlideIn 0.3s ease;
     }
+    
     .tab-panel.active { display: block; }
+    
     @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
+      from { 
+        opacity: 0; 
+        transform: translateX(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateX(0); 
+      }
     }
+    
     .input-group {
-      position: relative; margin-bottom: 16px;
+      position: relative; 
+      margin-bottom: 18px;
     }
+    
     .input-group .input-icon {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      width: 20px; height: 20px; color: #bbb;
+      position: absolute; 
+      left: 16px; 
+      top: 50%; 
+      transform: translateY(-50%);
+      width: 22px; 
+      height: 22px; 
+      color: var(--gray-400);
+      transition: color var(--transition-fast);
     }
+    
     .input-group input {
-      width: 100%; height: 44px; border: 1px solid #e8e8e8;
-      border-radius: 8px; padding: 0 14px 0 42px;
-      font-size: 14px; color: #333; outline: none;
-      transition: border-color 0.2s;
-      background: #fafafa;
+      width: 100%; 
+      height: 48px; 
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); 
+      padding: 0 16px 0 48px;
+      font-size: var(--font-size-md); 
+      color: var(--text-primary); 
+      outline: none;
+      transition: all var(--transition-fast);
+      background: #fff;
     }
-    .input-group input::placeholder { color: #bbb; }
-    .input-group input:focus { border-color: #2e9e5a; background: #fff; }
+    
+    .input-group input::placeholder { 
+      color: var(--gray-400); 
+    }
+    
+    .input-group input:focus { 
+      border-color: var(--primary-500); 
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(34, 168, 74, 0.1);
+    }
+    
+    .input-group input:focus + .input-icon {
+      color: var(--primary-500);
+    }
+    
     .input-group .toggle-pwd {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      width: 20px; height: 20px; cursor: pointer; color: #bbb;
-      transition: color 0.2s;
+      position: absolute; 
+      right: 16px; 
+      top: 50%; 
+      transform: translateY(-50%);
+      width: 22px; 
+      height: 22px; 
+      cursor: pointer; 
+      color: var(--gray-400);
+      transition: color var(--transition-fast);
     }
-    .input-group .toggle-pwd:hover { color: #2e9e5a; }
+    
+    .input-group .toggle-pwd:hover { 
+      color: var(--primary-500); 
+    }
+    
     .input-group .error-msg {
-      display: none; font-size: 11px; color: #e74c3c;
-      margin-top: 4px; padding-left: 4px;
+      display: none; 
+      font-size: var(--font-size-xs); 
+      color: var(--error);
+      margin-top: 6px; 
+      padding-left: 6px;
     }
-    .input-group.has-error input { border-color: #e74c3c; }
-    .input-group.has-error .error-msg { display: block; }
-    .code-row { display: flex; gap: 10px; }
-    .code-row .input-group { flex: 1; margin-bottom: 0; }
-    .code-row input { padding-right: 14px; }
+    
+    .input-group.has-error input { 
+      border-color: var(--error); 
+    }
+    
+    .input-group.has-error .error-msg { 
+      display: block; 
+    }
+    
+    .input-group.has-error .input-icon {
+      color: var(--error);
+    }
+    
+    .code-row { 
+      display: flex; 
+      gap: 12px; 
+      margin-bottom: 18px !important;
+    }
+    
+    .code-row .input-group { 
+      flex: 1; 
+      margin-bottom: 0; 
+    }
+    
+    .code-row input { 
+      padding-right: 16px; 
+    }
+    
     .btn-get-code {
-      flex-shrink: 0; height: 44px; padding: 0 14px;
-      border: 1px solid #2e9e5a; border-radius: 8px;
-      background: transparent; color: #2e9e5a; font-size: 12px;
-      cursor: pointer; white-space: nowrap; transition: all 0.2s;
+      flex-shrink: 0; 
+      height: 48px; 
+      padding: 0 18px;
+      border: 2px solid var(--primary-500); 
+      border-radius: var(--radius-lg);
+      background: transparent; 
+      color: var(--primary-500); 
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer; 
+      white-space: nowrap; 
+      transition: all var(--transition-fast);
     }
-    .btn-get-code:disabled { border-color: #ccc; color: #999; cursor: not-allowed; }
+    
+    .btn-get-code:hover:not(:disabled) {
+      background: var(--primary-50);
+    }
+    
+    .btn-get-code:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    
+    .btn-get-code:disabled { 
+      border-color: var(--gray-300); 
+      color: var(--gray-400); 
+      cursor: not-allowed; 
+    }
+    
     .form-extra {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 20px; font-size: 12px;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      margin-bottom: 24px; 
+      font-size: var(--font-size-sm);
     }
+    
     .remember-me {
-      display: flex; align-items: center; gap: 6px; cursor: pointer; color: #666;
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      cursor: pointer; 
+      color: var(--text-secondary);
       user-select: none;
     }
-    .remember-me input[type="checkbox"] { display: none; }
+    
+    .remember-me input[type="checkbox"] { 
+      display: none; 
+    }
+    
     .checkbox-custom {
-      width: 16px; height: 16px; border: 1.5px solid #ccc;
-      border-radius: 3px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      width: 18px; 
+      height: 18px; 
+      border: 2px solid var(--gray-300);
+      border-radius: var(--radius-sm); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      transition: all var(--transition-fast);
     }
+    
     .remember-me input:checked + .checkbox-custom {
-      background: #2e9e5a; border-color: #2e9e5a;
+      background: var(--primary-500); 
+      border-color: var(--primary-500);
     }
-    .checkbox-custom svg { width: 10px; height: 10px; color: #fff; opacity: 0; transition: opacity 0.2s; }
-    .remember-me input:checked + .checkbox-custom svg { opacity: 1; }
-    .forgot-pwd { color: #2e9e5a; text-decoration: none; }
+    
+    .checkbox-custom svg { 
+      width: 11px; 
+      height: 11px; 
+      color: #fff; 
+      opacity: 0; 
+      transition: opacity var(--transition-fast); 
+    }
+    
+    .remember-me input:checked + .checkbox-custom svg { 
+      opacity: 1; 
+    }
+    
+    .forgot-pwd { 
+      color: var(--primary-500); 
+      text-decoration: none;
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .forgot-pwd:hover {
+      text-decoration: underline;
+    }
+    
     .btn-login {
-      width: 100%; height: 44px; border: none; border-radius: 22px;
-      background: linear-gradient(135deg, #2e9e5a, #1e7e42);
-      color: #fff; font-size: 16px; font-weight: 600;
-      letter-spacing: 4px; cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      position: relative; overflow: hidden;
+      width: 100%; 
+      height: 50px; 
+      border: none; 
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: #fff; 
+      font-size: var(--font-size-md); 
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 4px; 
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative; 
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(34, 168, 74, 0.35);
     }
-    .btn-login:active { transform: scale(0.98); }
-    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .btn-login:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      box-shadow: 0 6px 20px rgba(34, 168, 74, 0.45);
+      transform: translateY(-1px);
+    }
+    
+    .btn-login:active { 
+      transform: scale(0.98); 
+    }
+    
+    .btn-login:disabled { 
+      opacity: 0.6; 
+      cursor: not-allowed; 
+      box-shadow: none;
+    }
+    
     .btn-login .spinner {
-      display: none; width: 20px; height: 20px;
+      display: none; 
+      width: 22px; 
+      height: 22px;
       border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff; border-radius: 50%;
+      border-top-color: #fff; 
+      border-radius: 50%;
       animation: spin 0.6s linear infinite;
-      position: absolute; top: 50%; left: 50%;
-      margin: -10px 0 0 -10px;
+      position: absolute; 
+      top: 50%; 
+      left: 50%;
+      margin: -11px 0 0 -11px;
     }
-    .btn-login.loading .btn-text { opacity: 0; }
-    .btn-login.loading .spinner { display: block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .wechat-panel { text-align: center; padding: 20px 0 10px; }
+    
+    .btn-login.loading .btn-text { 
+      opacity: 0; 
+    }
+    
+    .btn-login.loading .spinner { 
+      display: block; 
+    }
+    
+    @keyframes spin { 
+      to { 
+        transform: rotate(360deg); 
+      } 
+    }
+    
+    .wechat-panel { 
+      text-align: center; 
+      padding: 24px 0 14px; 
+    }
+    
     .wechat-icon-wrap {
-      width: 80px; height: 80px; margin: 0 auto 16px;
-      background: #f0faf3; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      width: 90px; 
+      height: 90px; 
+      margin: 0 auto 20px;
+      background: var(--success-bg); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(82, 196, 26, 0.2);
+      transition: transform var(--transition-normal);
     }
-    .wechat-icon-wrap svg { width: 48px; height: 48px; }
-    .wechat-desc { font-size: 14px; color: #666; margin-bottom: 28px; }
+    
+    .wechat-icon-wrap:hover {
+      transform: scale(1.05);
+    }
+    
+    .wechat-icon-wrap svg { 
+      width: 52px; 
+      height: 52px; 
+    }
+    
+    .wechat-desc { 
+      font-size: var(--font-size-md); 
+      color: var(--text-secondary); 
+      margin-bottom: 32px; 
+    }
+    
     .btn-wechat {
-      width: 100%; height: 44px; border: none; border-radius: 22px;
-      background: #07c160; color: #fff; font-size: 16px; font-weight: 600;
-      letter-spacing: 2px; cursor: pointer; position: relative; overflow: hidden;
-      transition: opacity 0.2s, transform 0.1s;
+      width: 100%; 
+      height: 50px; 
+      border: none; 
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #07c160, #06ad56);
+      color: #fff; 
+      font-size: var(--font-size-md); 
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 2px; 
+      cursor: pointer; 
+      position: relative; 
+      overflow: hidden;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 14px rgba(7, 193, 96, 0.35);
     }
-    .btn-wechat:active { transform: scale(0.98); }
-    .btn-wechat:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .btn-wechat:hover:not(:disabled) {
+      background: linear-gradient(135deg, #06ad56, #059a4d);
+      box-shadow: 0 6px 20px rgba(7, 193, 96, 0.45);
+      transform: translateY(-1px);
+    }
+    
+    .btn-wechat:active { 
+      transform: scale(0.98); 
+    }
+    
+    .btn-wechat:disabled { 
+      opacity: 0.6; 
+      cursor: not-allowed; 
+      box-shadow: none;
+    }
+    
     .btn-wechat .spinner {
-      display: none; width: 20px; height: 20px;
+      display: none; 
+      width: 22px; 
+      height: 22px;
       border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff; border-radius: 50%;
+      border-top-color: #fff; 
+      border-radius: 50%;
       animation: spin 0.6s linear infinite;
-      position: absolute; top: 50%; left: 50%;
-      margin: -10px 0 0 -10px;
+      position: absolute; 
+      top: 50%; 
+      left: 50%;
+      margin: -11px 0 0 -11px;
     }
-    .btn-wechat.loading .btn-text { opacity: 0; }
-    .btn-wechat.loading .spinner { display: block; }
-    .wechat-tip { font-size: 11px; color: #999; margin-top: 14px; }
+    
+    .btn-wechat.loading .btn-text { 
+      opacity: 0; 
+    }
+    
+    .btn-wechat.loading .spinner { 
+      display: block; 
+    }
+    
+    .wechat-tip { 
+      font-size: var(--font-size-xs); 
+      color: var(--text-light); 
+      margin-top: 16px; 
+    }
+    
     .agreement {
-      text-align: center; font-size: 11px; color: rgba(255,255,255,0.65);
-      margin-top: 24px; line-height: 1.6;
+      text-align: center; 
+      font-size: var(--font-size-xs); 
+      color: rgba(255,255,255,0.7);
+      margin-top: 32px; 
+      line-height: 1.6;
     }
-    .agreement a { color: #fff; text-decoration: underline; }
+    
+    .agreement a { 
+      color: #fff; 
+      text-decoration: underline;
+    }
+    
+    .agreement a:hover {
+      opacity: 0.8;
+    }
+    
     .success-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); z-index: 1000;
-      justify-content: center; align-items: center;
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.5); 
+      z-index: 1000;
+      justify-content: center; 
+      align-items: center;
+      backdrop-filter: blur(4px);
     }
-    .success-overlay.show { display: flex; }
+    
+    .success-overlay.show { 
+      display: flex; 
+      animation: fadeIn 0.3s ease;
+    }
+    
     .success-modal {
-      background: #fff; border-radius: 16px; padding: 36px 32px;
-      text-align: center; width: 260px;
-      animation: scaleIn 0.3s ease;
+      background: #fff; 
+      border-radius: var(--radius-xl); 
+      padding: 40px 36px;
+      text-align: center; 
+      width: 280px;
+      animation: scaleIn 0.4s ease;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
     }
+    
     @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+      from { 
+        opacity: 0; 
+        transform: scale(0.85); 
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1); 
+      }
     }
+    
     .success-icon {
-      width: 56px; height: 56px; margin: 0 auto 16px;
-      background: #f0faf4; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
+      width: 64px; 
+      height: 64px; 
+      margin: 0 auto 20px;
+      background: var(--success-bg); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(82, 196, 26, 0.2);
     }
-    .success-icon svg { width: 32px; height: 32px; color: #2e9e5a; }
-    .success-title { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
-    .success-countdown { font-size: 12px; color: #999; }
+    
+    .success-icon svg { 
+      width: 36px; 
+      height: 36px; 
+      color: var(--success); 
+    }
+    
+    .success-title { 
+      font-size: var(--font-size-xl); 
+      font-weight: var(--font-weight-bold); 
+      color: var(--text-primary); 
+      margin-bottom: 10px; 
+    }
+    
+    .success-countdown { 
+      font-size: var(--font-size-sm); 
+      color: var(--text-light); 
+    }
+    
+    /* 登录失败提示 */
+    .error-toast {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-sm);
+      z-index: 1001;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .error-toast.show {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -227,20 +661,22 @@
     <div class="bg-circle bg-circle-3"></div>
     <div class="bg-grid"></div>
   </div>
+  
   <div class="container">
     <div class="header">
       <div class="logo-wrap">
         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" fill="#2e9e5a" opacity="0.2"/>
-          <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" stroke="#2e9e5a" stroke-width="2.5" stroke-linejoin="round"/>
-          <circle cx="20" cy="24" r="2" fill="#2e9e5a"/>
-          <circle cx="28" cy="24" r="2" fill="#2e9e5a"/>
-          <path d="M18 30C18 30 21 34 24 34C27 34 30 30 30 30" stroke="#2e9e5a" stroke-width="2" stroke-linecap="round"/>
+          <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" fill="#22a84a" opacity="0.2"/>
+          <path d="M24 8C24 8 14 20 14 28C14 34 18.5 38 24 38C29.5 38 34 34 34 28C34 20 24 8 24 8Z" stroke="#22a84a" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="20" cy="24" r="2" fill="#22a84a"/>
+          <circle cx="28" cy="24" r="2" fill="#22a84a"/>
+          <path d="M18 30C18 30 21 34 24 34C27 34 30 30 30 30" stroke="#22a84a" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="sys-name">数农智果</div>
       <div class="sys-sub">智慧果园 · 精准管理</div>
     </div>
+    
     <div class="login-card">
       <div class="tab-bar" id="tabBar">
         <div class="tab-slider" data-index="0" id="tabSlider"></div>
@@ -248,7 +684,9 @@
         <div class="tab-item" data-tab="1">微信登录</div>
         <div class="tab-item" data-tab="2">验证码登录</div>
       </div>
+      
       <div class="tab-panels">
+        <!-- 密码登录 -->
         <div class="tab-panel active" id="panel0">
           <div class="input-group" id="usernameGroup">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -258,6 +696,7 @@
             <input type="text" id="username" placeholder="请输入用户名" autocomplete="username">
             <div class="error-msg" id="usernameError">请输入用户名</div>
           </div>
+          
           <div class="input-group" id="passwordGroup">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -270,6 +709,7 @@
             </svg>
             <div class="error-msg" id="passwordError">请输入密码</div>
           </div>
+          
           <div class="form-extra">
             <label class="remember-me">
               <input type="checkbox" id="rememberMe">
@@ -282,11 +722,14 @@
             </label>
             <a href="javascript:void(0)" class="forgot-pwd">忘记密码</a>
           </div>
+          
           <button class="btn-login" id="btnLogin" type="button">
             <span class="btn-text">登 录</span>
             <span class="spinner"></span>
           </button>
         </div>
+        
+        <!-- 微信登录 -->
         <div class="tab-panel" id="panel1">
           <div class="wechat-panel">
             <div class="wechat-icon-wrap">
@@ -307,6 +750,8 @@
             <div class="wechat-tip">首次登录将自动创建账号</div>
           </div>
         </div>
+        
+        <!-- 验证码登录 -->
         <div class="tab-panel" id="panel2">
           <div class="input-group" id="phoneGroup">
             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -316,7 +761,8 @@
             <input type="tel" id="phone" placeholder="请输入手机号" maxlength="11">
             <div class="error-msg" id="phoneError">请输入正确的11位手机号</div>
           </div>
-          <div class="code-row" style="margin-bottom:16px;">
+          
+          <div class="code-row">
             <div class="input-group" id="codeGroup">
               <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -327,6 +773,7 @@
             </div>
             <button class="btn-get-code" id="btnGetCode" type="button">获取验证码</button>
           </div>
+          
           <button class="btn-login" id="btnCodeLogin" type="button">
             <span class="btn-text">登 录</span>
             <span class="spinner"></span>
@@ -334,10 +781,13 @@
         </div>
       </div>
     </div>
+    
     <div class="agreement">
       登录即代表同意<a href="javascript:void(0)">《用户协议》</a>和<a href="javascript:void(0)">《隐私政策》</a>
     </div>
   </div>
+  
+  <!-- 登录成功弹窗 -->
   <div class="success-overlay" id="successOverlay">
     <div class="success-modal">
       <div class="success-icon">
@@ -349,12 +799,17 @@
       <div class="success-countdown" id="successCountdown">2秒后自动跳转...</div>
     </div>
   </div>
+  
+  <!-- 错误提示 -->
+  <div class="error-toast" id="errorToast">登录失败，请重试</div>
+
   <script>
     (function checkLogin() {
       if (sessionStorage.getItem('isLoggedIn')) {
         window.location.href = 'mb_home.html';
       }
     })();
+    
     (function restoreRemembered() {
       var saved = localStorage.getItem('rememberedUser');
       if (saved) {
@@ -362,9 +817,11 @@
         document.getElementById('rememberMe').checked = true;
       }
     })();
+    
     var tabs = document.querySelectorAll('.tab-item');
     var slider = document.getElementById('tabSlider');
     var panels = document.querySelectorAll('.tab-panel');
+    
     tabs.forEach(function(tab) {
       tab.addEventListener('click', function() {
         var idx = parseInt(this.getAttribute('data-tab'));
@@ -376,9 +833,11 @@
         clearErrors();
       });
     });
+    
     var togglePwd = document.getElementById('togglePwd');
     var pwdInput = document.getElementById('password');
     var pwdVisible = false;
+    
     togglePwd.addEventListener('click', function() {
       pwdVisible = !pwdVisible;
       pwdInput.type = pwdVisible ? 'text' : 'password';
@@ -388,8 +847,10 @@
         this.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
       }
     });
+    
     var btnGetCode = document.getElementById('btnGetCode');
     var codeTimer = null;
+    
     btnGetCode.addEventListener('click', function() {
       var phone = document.getElementById('phone').value.trim();
       if (!/^1\d{10}$/.test(phone)) {
@@ -397,9 +858,11 @@
         return;
       }
       clearError('phoneGroup');
+      
       var seconds = 60;
       btnGetCode.disabled = true;
       btnGetCode.textContent = seconds + 's后重试';
+      
       codeTimer = setInterval(function() {
         seconds--;
         if (seconds <= 0) {
@@ -411,26 +874,40 @@
         }
       }, 1000);
     });
+    
     function setError(groupId, errorId, msg) {
       var group = document.getElementById(groupId);
       var errorEl = document.getElementById(errorId);
       group.classList.add('has-error');
       if (msg) errorEl.textContent = msg;
     }
+    
     function clearError(groupId) {
       var group = document.getElementById(groupId);
       group.classList.remove('has-error');
     }
+    
     function clearErrors() {
       document.querySelectorAll('.input-group').forEach(function(g) {
         g.classList.remove('has-error');
       });
     }
+    
+    function showErrorToast(msg) {
+      var toast = document.getElementById('errorToast');
+      toast.textContent = msg || '操作失败，请重试';
+      toast.classList.add('show');
+      setTimeout(function() {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+    
     document.getElementById('btnLogin').addEventListener('click', function() {
       clearErrors();
       var user = document.getElementById('username').value.trim();
       var pass = document.getElementById('password').value.trim();
       var valid = true;
+      
       if (!user) {
         setError('usernameGroup', 'usernameError', '请输入用户名');
         valid = false;
@@ -439,19 +916,24 @@
         setError('passwordGroup', 'passwordError', '请输入密码');
         valid = false;
       }
+      
       if (!valid) return;
+      
       if (document.getElementById('rememberMe').checked) {
         localStorage.setItem('rememberedUser', user);
       } else {
         localStorage.removeItem('rememberedUser');
       }
+      
       doLogin(this, user);
     });
+    
     document.getElementById('btnCodeLogin').addEventListener('click', function() {
       clearErrors();
       var phone = document.getElementById('phone').value.trim();
       var code = document.getElementById('code').value.trim();
       var valid = true;
+      
       if (!/^1\d{10}$/.test(phone)) {
         setError('phoneGroup', 'phoneError', '请输入正确的11位手机号');
         valid = false;
@@ -460,24 +942,33 @@
         setError('codeGroup', 'codeError', '请输入6位数字验证码');
         valid = false;
       }
+      
       if (!valid) return;
+      
       doLogin(this, phone);
     });
+    
     document.getElementById('btnWechat').addEventListener('click', function() {
       doLogin(this, '微信用户');
     });
+    
     function doLogin(btn, username) {
       btn.classList.add('loading');
       btn.disabled = true;
+      
       setTimeout(function() {
         btn.classList.remove('loading');
         btn.disabled = false;
+        
         sessionStorage.setItem('isLoggedIn', 'true');
         sessionStorage.setItem('loginUser', username);
+        
         var overlay = document.getElementById('successOverlay');
         overlay.classList.add('show');
+        
         var countdown = 2;
         document.getElementById('successCountdown').textContent = countdown + '秒后自动跳转...';
+        
         var timer = setInterval(function() {
           countdown--;
           if (countdown <= 0) {
@@ -489,15 +980,19 @@
         }, 1000);
       }, 1200);
     }
+    
     document.getElementById('username').addEventListener('input', function() {
       clearError('usernameGroup');
     });
+    
     document.getElementById('password').addEventListener('input', function() {
       clearError('passwordGroup');
     });
+    
     document.getElementById('phone').addEventListener('input', function() {
       clearError('phoneGroup');
     });
+    
     document.getElementById('code').addEventListener('input', function() {
       clearError('codeGroup');
     });

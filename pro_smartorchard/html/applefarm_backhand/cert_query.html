@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 合格证查询</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-page);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.search-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+.search-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.search-box {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+}
+.search-input {
+  padding: var(--space-md) var(--space-xl);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  width: 400px;
+}
+.btn {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+}
+.scan-area {
+  width: 200px;
+  height: 200px;
+  border: 2px dashed var(--border-light);
+  border-radius: var(--radius-lg);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.scan-area:hover {
+  border-color: var(--color-primary);
+  background: rgba(34, 168, 74, 0.05);
+}
+.scan-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-sm);
+}
+.scan-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.result-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  display: none;
+}
+.result-section.show {
+  display: block;
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.result-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.verify-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(34, 168, 74, 0.15);
+  border-radius: var(--radius-md);
+  color: var(--color-success);
+  font-weight: var(--font-weight-medium);
+}
+.cert-card {
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  background: white;
+}
+.cert-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+.cert-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+.cert-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.cert-body {
+  margin-bottom: var(--space-xl);
+}
+.cert-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.cert-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+.cert-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.cert-qr {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+.qr-box {
+  width: 100px;
+  height: 100px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+}
+.cert-footer {
+  text-align: center;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-light);
+}
+.cert-stamp {
+  display: inline-block;
+  padding: var(--space-md) var(--space-xl);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  margin-top: var(--space-sm);
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-top: var(--space-xl);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item active">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">合格证查询验证</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">通过合格证编号或扫描二维码验证真伪</p>
+    </div>
+  </div>
+
+  <!-- 搜索区域 -->
+  <div class="search-section">
+    <h2 class="search-title">查询合格证</h2>
+    <div class="search-box">
+      <input type="text" class="search-input" placeholder="输入合格证编号">
+      <button class="btn btn-primary">查询</button>
+    </div>
+    <div style="margin-top: var(--space-xl);">
+      <div style="font-size: var(--font-size-sm); color: var(--text-secondary); margin-bottom: var(--space-md);">或扫描二维码</div>
+      <div class="scan-area">
+        <svg class="scan-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7z"/>
+          <path d="M21 12l-2 2-4-4-4 4-2-2"/>
+        </svg>
+        <span class="scan-text">点击扫码</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 查询结果 -->
+  <div class="result-section" id="resultSection">
+    <div class="result-header">
+      <div class="result-title">查询结果</div>
+      <div class="verify-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12l5 5L20 7"/>
+        </svg>
+        <span>验证通过</span>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-header">
+        <div class="cert-title">承诺达标合格证</div>
+        <div class="cert-subtitle">Certificate of Compliance</div>
+      </div>
+      
+      <div class="cert-body">
+        <div class="cert-row">
+          <span class="cert-label">合格证编号</span>
+          <span class="cert-value">SN202606130001</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">产品名称</span>
+          <span class="cert-value">红富士苹果</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">批次号</span>
+          <span class="cert-value">20260613001</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">生产日期</span>
+          <span class="cert-value">2026-06-13</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">净含量</span>
+          <span class="cert-value">500g/袋</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">等级</span>
+          <span class="cert-value">特级</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">检测结论</span>
+          <span class="cert-value" style="color: var(--color-success);">合格</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">检测人</span>
+          <span class="cert-value">张三</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">查询次数</span>
+          <span class="cert-value">第3次查询</span>
+        </div>
+        <div class="cert-row">
+          <span class="cert-label">首次查询时间</span>
+          <span class="cert-value">2026-06-13 10:30:00</span>
+        </div>
+      </div>
+
+      <div class="cert-qr">
+        <div class="qr-box">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-primary);">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="cert-footer">
+        <div style="font-size: var(--font-size-xs); color: var(--text-secondary);">扫描二维码验证真伪</div>
+        <div class="cert-stamp">数农智果农业科技有限公司</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 查询记录 -->
+  <div class="table-container">
+    <h2 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); margin-bottom: var(--space-lg);">查询记录</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>合格证编号</th>
+          <th>产品名称</th>
+          <th>查询时间</th>
+          <th>查询IP</th>
+          <th>状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SN202606130001</td>
+          <td>红富士苹果</td>
+          <td>2026-06-13 14:30:00</td>
+          <td>192.168.1.100</td>
+          <td><span style="color: var(--color-success);">验证通过</span></td>
+        </tr>
+        <tr>
+          <td>SN202606130001</td>
+          <td>红富士苹果</td>
+          <td>2026-06-13 11:20:00</td>
+          <td>10.0.0.55</td>
+          <td><span style="color: var(--color-success);">验证通过</span></td>
+        </tr>
+        <tr>
+          <td>SN202606130001</td>
+          <td>红富士苹果</td>
+          <td>2026-06-13 10:30:00</td>
+          <td>172.16.0.88</td>
+          <td><span style="color: var(--color-success);">验证通过</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

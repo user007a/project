@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 销售统计</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-page);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+.stat-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.stat-change {
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-xs);
+}
+.stat-change.up { color: var(--color-success); }
+.stat-change.down { color: var(--color-danger); }
+.chart-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.chart-placeholder {
+  height: 300px;
+  background: var(--gradient-placeholder);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-placeholder);
+}
+.double-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+.filter-bar {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.filter-item label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.filter-item select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item active">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">销售统计</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">分析销售数据，洞察业务趋势</p>
+    </div>
+    <button class="btn btn-primary">导出报表</button>
+  </div>
+
+  <!-- 筛选栏 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>年份：</label>
+      <select>
+        <option>2026</option>
+        <option>2025</option>
+        <option>2024</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>月份：</label>
+      <select>
+        <option>全部</option>
+        <option>1月</option>
+        <option>2月</option>
+        <option>3月</option>
+        <option>4月</option>
+        <option>5月</option>
+        <option>6月</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>渠道：</label>
+      <select>
+        <option>全部渠道</option>
+        <option>认养渠道</option>
+        <option>批发渠道</option>
+        <option>零售渠道</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">订单总数</div>
+      <div class="stat-value">1,258</div>
+      <div class="stat-change up">↑ 15.3% 较上月</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">销售额</div>
+      <div class="stat-value">¥ 284.8万</div>
+      <div class="stat-change up">↑ 12.5% 较上月</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">客户数量</div>
+      <div class="stat-value">386</div>
+      <div class="stat-change up">↑ 8.2% 较上月</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">客单价</div>
+      <div class="stat-value">¥ 2,264</div>
+      <div class="stat-change down">↓ 2.4% 较上月</div>
+    </div>
+  </div>
+
+  <!-- 销售趋势图 -->
+  <div class="chart-section">
+    <h2 class="section-title">销售趋势分析</h2>
+    <div class="chart-placeholder">
+      <div style="text-align: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+          <path d="M3 3v18h18"/>
+          <path d="M5 18l3-5 4 3 4-5 4 5"/>
+        </svg>
+        <div>销售趋势折线图</div>
+        <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">1月-6月销售额变化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 销售构成和渠道分析 -->
+  <div class="double-section">
+    <div class="chart-section">
+      <h2 class="section-title">销售构成分析</h2>
+      <div class="chart-placeholder" style="height: 250px;">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2 L12 12 L22 12 Z"/>
+          </svg>
+          <div>销售构成饼图</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养50% · 批发35% · 零售15%</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <h2 class="section-title">渠道销售对比</h2>
+      <div class="chart-placeholder" style="height: 250px;">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <rect x="3" y="4" width="4" height="16" rx="1"/>
+            <rect x="10" y="8" width="4" height="12" rx="1"/>
+            <rect x="17" y="12" width="4" height="8" rx="1"/>
+          </svg>
+          <div>渠道对比柱状图</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养 · 批发 · 零售</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>苹果数字履历 - 数农智果</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* 引导页容器 */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #1a5c32 0%, #22a84a 40%, #52b368 70%, #8fd9a0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 背景装饰 */
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .bg-circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -80px;
+            animation: float1 8s ease-in-out infinite;
+        }
+        
+        .bg-circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            left: -60px;
+            animation: float2 10s ease-in-out infinite;
+        }
+        
+        .bg-circle-3 {
+            width: 150px;
+            height: 150px;
+            bottom: -50px;
+            right: 20%;
+            animation: float3 6s ease-in-out infinite;
+        }
+        
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.1); }
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(20px) scale(1.05); }
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(-20px) scale(1.08); }
+        }
+        
+        /* Logo 区域 */
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 苹果图标动画 */
+        .apple-icon-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+        }
+        
+        .apple-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+        }
+        
+        .apple-icon {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            animation: appleEnter 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: scale(0.3) rotate(-20deg);
+        }
+        
+        .apple-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+        }
+        
+        @keyframes appleEnter {
+            0% { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+            60% { transform: scale(1.1) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        
+        /* 品牌名称 */
+        .brand-name {
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .brand-name h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 4px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 8px;
+        }
+        
+        .brand-name p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 2px;
+        }
+        
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 扫描线动画 */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.8) 30%, 
+                rgba(255,255,255,0.8) 70%, 
+                transparent 100%);
+            opacity: 0;
+            animation: scanMove 2s ease-in-out infinite;
+            animation-delay: 1.2s;
+        }
+        
+        @keyframes scanMove {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        /* 扫描框 */
+        .scan-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            margin-top: -60px;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.8s;
+            opacity: 0;
+        }
+        
+        .scan-corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255,255,255,0.9);
+        }
+        
+        .scan-corner-tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+        .scan-corner-tr { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 4px 0 0; }
+        .scan-corner-bl { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 4px; }
+        .scan-corner-br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 4px 0; }
+        
+        /* 进度条 */
+        .progress-container {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 1s;
+            opacity: 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+            animation: loading 2.5s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 1px;
+        }
+        
+        .loading-text {
+            animation: blink 1s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* 跳过按钮 */
+        .skip-btn {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            color: rgba(255,255,255,0.9);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: 1.5s;
+            opacity: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .skip-btn:active {
+            background: rgba(255,255,255,0.25);
+            transform: scale(0.95);
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        /* 底部提示 */
+        .bottom-tip {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 1.3s;
+            opacity: 0;
+        }
+        
+        .bottom-tip span {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        /* 树叶飘动效果 */
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+            animation: leafFloat 15s linear infinite;
+        }
+        
+        .leaf-1 { left: 10%; animation-delay: 0s; animation-duration: 18s; }
+        .leaf-2 { left: 30%; animation-delay: 3s; animation-duration: 15s; }
+        .leaf-3 { left: 50%; animation-delay: 6s; animation-duration: 20s; }
+        .leaf-4 { left: 70%; animation-delay: 9s; animation-duration: 16s; }
+        .leaf-5 { left: 90%; animation-delay: 12s; animation-duration: 14s; }
+        
+        @keyframes leafFloat {
+            0% { top: -5%; transform: rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { top: 105%; transform: rotate(360deg) translateX(50px); opacity: 0; }
+        }
+        
+        /* 跳转动效 */
+        .splash-screen.exit {
+            animation: screenExit 0.8s ease-in forwards;
+        }
+        
+        @keyframes screenExit {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.1); }
+        }
+
+        /* 安全区域适配 */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .bottom-tip {
+                bottom: calc(60px + env(safe-area-inset-bottom));
+            }
+            .progress-container {
+                bottom: calc(120px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen" id="splashScreen">
+        <!-- 背景装饰 -->
+        <div class="bg-decoration">
+            <div class="bg-circle bg-circle-1"></div>
+            <div class="bg-circle bg-circle-2"></div>
+            <div class="bg-circle bg-circle-3"></div>
+            
+            <!-- 飘落树叶 -->
+            <svg class="leaf leaf-1" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+            <svg class="leaf leaf-2" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+            <svg class="leaf leaf-3" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+            <svg class="leaf leaf-4" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+            <svg class="leaf leaf-5" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)">
+                <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            </svg>
+        </div>
+        
+        <!-- Logo 区域 -->
+        <div class="logo-container">
+            <div class="apple-icon-wrapper">
+                <div class="apple-glow"></div>
+                <div class="scan-line"></div>
+                <div class="scan-frame">
+                    <div class="scan-corner scan-corner-tl"></div>
+                    <div class="scan-corner scan-corner-tr"></div>
+                    <div class="scan-corner scan-corner-bl"></div>
+                    <div class="scan-corner scan-corner-br"></div>
+                </div>
+                <div class="apple-icon">
+                    <!-- 苹果 SVG 图标 -->
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="appleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ff6b6b"/>
+                                <stop offset="50%" style="stop-color:#ee5a5a"/>
+                                <stop offset="100%" style="stop-color:#c0392b"/>
+                            </linearGradient>
+                            <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#27ae60"/>
+                                <stop offset="100%" style="stop-color:#1e8449"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- 苹果主体 -->
+                        <ellipse cx="256" cy="300" rx="170" ry="180" fill="url(#appleGrad)"/>
+                        <!-- 苹果高光 -->
+                        <ellipse cx="190" cy="240" rx="50" ry="70" fill="rgba(255,255,255,0.2)" transform="rotate(-20 190 240)"/>
+                        <!-- 苹果柄 -->
+                        <path d="M256 120 Q270 80 290 60" stroke="#5D4037" stroke-width="12" stroke-linecap="round" fill="none"/>
+                        <!-- 苹果叶子 -->
+                        <ellipse cx="295" cy="90" rx="45" ry="25" fill="url(#leafGrad)" transform="rotate(30 295 90)"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="brand-name">
+                <h1>数农智果</h1>
+                <p>数字农业 · 智慧果园</p>
+            </div>
+        </div>
+        
+        <!-- 进度条 -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">
+                <span class="loading-text">正在加载追溯信息...</span>
+            </div>
+        </div>
+        
+        <!-- 底部提示 -->
+        <div class="bottom-tip">
+            <span>每一颗苹果，都有自己的故事</span>
+        </div>
+        
+        <!-- 跳过按钮 -->
+        <button class="skip-btn" onclick="skipIntro()">跳过 ›</button>
+    </div>
+    
+    <script>
+        // 跳过引导页
+        function skipIntro() {
+            goToTrace();
+        }
+        
+        // 跳转到追溯页面
+        function goToTrace() {
+            const splash = document.getElementById('splashScreen');
+            splash.classList.add('exit');
+            
+            setTimeout(function() {
+                // 获取URL参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const code = urlParams.get('code') || 'SNZG-2026-0001';
+                
+                // 跳转到追溯页面
+                window.location.href = 'trace_h5.html?code=' + code;
+            }, 700);
+        }
+        
+        // 自动跳转（进度条完成后）
+        setTimeout(function() {
+            goToTrace();
+        }, 3500);
+        
+        // 页面可见性变化时处理
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                // 页面重新可见时重置
+            }
+        });
+    </script>
+</body>
+</html>

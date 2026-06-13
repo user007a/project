@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 成本分析</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-base);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.tab-nav {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+.tab-item {
+  padding: var(--space-sm) var(--space-xl);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+.tab-item.active {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.chart-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.chart-placeholder {
+  height: 300px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+.double-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.filter-bar {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.filter-item label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.filter-item select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">成本分析</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">分析各项成本支出情况</p>
+    </div>
+    <button class="btn btn-primary">导出报表</button>
+  </div>
+
+  <!-- 筛选栏 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>年份：</label>
+      <select>
+        <option>2026</option>
+        <option>2025</option>
+        <option>2024</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>月份：</label>
+      <select>
+        <option>全部</option>
+        <option>1月</option>
+        <option>2月</option>
+        <option>3月</option>
+        <option>4月</option>
+        <option>5月</option>
+        <option>6月</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>地块：</label>
+      <select>
+        <option>全部地块</option>
+        <option>A1区</option>
+        <option>A2区</option>
+        <option>B1区</option>
+        <option>B2区</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 分类标签 -->
+  <div class="tab-nav">
+    <div class="tab-item active">农资成本</div>
+    <div class="tab-item">人工成本</div>
+    <div class="tab-item">设备维护</div>
+    <div class="tab-item">其他成本</div>
+  </div>
+
+  <!-- 成本趋势图 -->
+  <div class="chart-section">
+    <h2 class="section-title">农资成本趋势</h2>
+    <div class="chart-placeholder">
+      <div style="text-align: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+          <path d="M3 3v18h18"/>
+          <path d="M7 15l3-3 5 5 4-4"/>
+        </svg>
+        <div>农资成本趋势图</div>
+        <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">1月-6月数据展示</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成本构成和对比分析 -->
+  <div class="double-section">
+    <div class="chart-section">
+      <h2 class="section-title">农资成本构成</h2>
+      <div class="chart-placeholder" style="height: 250px;">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="6"/>
+          </svg>
+          <div>成本构成饼图</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">肥料40% · 农药35% · 其他25%</div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <h2 class="section-title">同期成本对比</h2>
+      <div class="chart-placeholder" style="height: 250px;">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <rect x="3" y="5" width="4" height="14" rx="1"/>
+            <rect x="10" y="8" width="4" height="11" rx="1"/>
+            <rect x="17" y="3" width="4" height="16" rx="1"/>
+          </svg>
+          <div>同期对比柱状图</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">2024 · 2025 · 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 农资成本明细 -->
+  <div class="table-container">
+    <h2 class="section-title">农资成本明细</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>农资名称</th>
+          <th>规格</th>
+          <th>单价(元)</th>
+          <th>采购数量</th>
+          <th>金额(元)</th>
+          <th>使用地块</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>复合肥</td>
+          <td>50kg/袋</td>
+          <td>180</td>
+          <td>150</td>
+          <td>27,000</td>
+          <td>A1区、A2区</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>尿素</td>
+          <td>50kg/袋</td>
+          <td>120</td>
+          <td>100</td>
+          <td>12,000</td>
+          <td>B1区、B2区</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>多菌灵</td>
+          <td>1kg/瓶</td>
+          <td>65</td>
+          <td>80</td>
+          <td>5,200</td>
+          <td>全部地块</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>杀虫剂</td>
+          <td>500ml/瓶</td>
+          <td>45</td>
+          <td>120</td>
+          <td>5,400</td>
+          <td>全部地块</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>叶面肥</td>
+          <td>500ml/瓶</td>
+          <td>35</td>
+          <td>60</td>
+          <td>2,100</td>
+          <td>A1区、B2区</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

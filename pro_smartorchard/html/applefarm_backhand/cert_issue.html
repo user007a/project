@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 合格证开具</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-base);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.form-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.form-item label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+.form-item input, .form-item select, .form-item textarea {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-page);
+}
+.form-item textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-item.full {
+  grid-column: 1 / -1;
+}
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.btn-secondary {
+  background: var(--gray-100);
+  color: var(--text-primary);
+}
+.preview-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.cert-preview {
+  border: 2px dashed var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  background: white;
+}
+.cert-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+.cert-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+.cert-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.cert-body {
+  margin-bottom: var(--space-xl);
+}
+.cert-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.cert-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+.cert-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.cert-qr {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+.qr-box {
+  width: 120px;
+  height: 120px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+}
+.cert-footer {
+  text-align: center;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-light);
+}
+.cert-stamp {
+  display: inline-block;
+  padding: var(--space-md) var(--space-xl);
+  border: 2px solid var(--primary-500);
+  border-radius: var(--radius-sm);
+  color: var(--primary-500);
+  font-weight: var(--font-weight-bold);
+  margin-top: var(--space-sm);
+}
+.form-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item active">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">开具合格证</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">填写产品信息，生成合格证</p>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+    <!-- 表单区域 -->
+    <div class="form-section">
+      <h2 class="section-title">填写信息</h2>
+      
+      <div class="form-row">
+        <div class="form-item">
+          <label>选择模板</label>
+          <select>
+            <option>红富士合格证</option>
+            <option>嘎啦苹果合格证</option>
+            <option>礼盒装合格证</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>产品名称</label>
+          <input type="text" value="红富士苹果" readonly>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-item">
+          <label>批次号</label>
+          <input type="text" placeholder="输入批次号">
+        </div>
+        <div class="form-item">
+          <label>生产日期</label>
+          <input type="date">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-item">
+          <label>净含量</label>
+          <input type="text" placeholder="如：500g/袋">
+        </div>
+        <div class="form-item">
+          <label>等级</label>
+          <select>
+            <option>特级</option>
+            <option>一级</option>
+            <option>二级</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-item">
+          <label>检测结论</label>
+          <select>
+            <option>合格</option>
+            <option>不合格</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>检测人</label>
+          <input type="text" placeholder="输入检测人姓名">
+        </div>
+      </div>
+
+      <div class="form-item full">
+        <label>承诺声明</label>
+        <textarea readonly>本产品符合国家食品安全标准，承诺所提供的产品信息真实有效，如有不实，愿承担相应法律责任。</textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary">保存草稿</button>
+        <button class="btn btn-primary">生成合格证</button>
+      </div>
+    </div>
+
+    <!-- 预览区域 -->
+    <div class="preview-section">
+      <h2 class="section-title">预览</h2>
+      <div class="cert-preview">
+        <div class="cert-header">
+          <div class="cert-title">承诺达标合格证</div>
+          <div class="cert-subtitle">Certificate of Compliance</div>
+        </div>
+        
+        <div class="cert-body">
+          <div class="cert-row">
+            <span class="cert-label">产品名称</span>
+            <span class="cert-value">红富士苹果</span>
+          </div>
+          <div class="cert-row">
+            <span class="cert-label">批次号</span>
+            <span class="cert-value">20260613001</span>
+          </div>
+          <div class="cert-row">
+            <span class="cert-label">生产日期</span>
+            <span class="cert-value">2026-06-13</span>
+          </div>
+          <div class="cert-row">
+            <span class="cert-label">净含量</span>
+            <span class="cert-value">500g/袋</span>
+          </div>
+          <div class="cert-row">
+            <span class="cert-label">等级</span>
+            <span class="cert-value">特级</span>
+          </div>
+          <div class="cert-row">
+            <span class="cert-label">检测结论</span>
+            <span class="cert-value" style="color: var(--success);">合格</span>
+          </div>
+        </div>
+
+        <div class="cert-qr">
+          <div class="qr-box">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M7 7h3v3H7zM14 7h3v3h-3zM7 14h3v3H7z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cert-footer">
+          <div style="font-size: var(--font-size-xs); color: var(--text-secondary);">扫描二维码验证真伪</div>
+          <div class="cert-stamp">数农智果农业科技有限公司</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

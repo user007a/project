@@ -3,114 +3,376 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>数农智果 - 地块</title>
+  <title>数农智果 - 地块管理</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
-    a { text-decoration: none; color: inherit; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #f0faf4;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --gray: #95a5a6; --gray-light: #f0f0f0;
-      --bg: #f5f5f5; --white: #fff;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    /* Header */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 28px 16px 20px;
+      color: var(--bg-white);
+      position: relative;
     }
-    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 66px; }
-    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px; color: #fff; }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
-    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
-    .tab-item.active { color: var(--primary); }
-    .tab-item svg { width: 22px; height: 22px; }
-    .tab-item span { font-size: 10px; }
-    .tab-badge { position: absolute; top: 4px; right: 50%; margin-right: -18px; min-width: 16px; height: 16px; background: var(--red); color: #fff; border-radius: 8px; font-size: 10px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
-    .content { padding: 16px; padding-bottom: 72px; }
-    .stats-bar { display: flex; gap: 12px; margin-bottom: 16px; }
-    .stat-card { flex: 1; background: #fff; border-radius: var(--radius); padding: 14px; text-align: center; border: 1px solid var(--border); }
-    .stat-num { font-size: 22px; font-weight: 700; color: var(--primary); }
-    .stat-label { font-size: 11px; color: var(--text-light); margin-top: 4px; }
-    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; }
-    .filter-btn { flex: 1; height: 36px; padding: 0 12px; background: #fff; border: 1px solid var(--border); border-radius: 18px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all .2s; }
-    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
-    .plot-card { background: #fff; border-radius: var(--radius); margin-bottom: 12px; padding: 16px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
-    .plot-card:active { transform: scale(0.99); }
-    .plot-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .plot-name { font-size: 16px; font-weight: 600; color: var(--text); }
-    .plot-status { font-size: 11px; padding: 3px 10px; border-radius: 12px; }
-    .plot-status.normal { background: #e8f5ec; color: #22a84a; }
-    .plot-status.warning { background: var(--orange-light); color: var(--orange); }
-    .plot-status.overdue { background: var(--red-light); color: var(--red); }
-    .plot-info { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); }
-    .plot-info-item { display: flex; align-items: center; gap: 4px; }
-    .plot-info-item svg { width: 14px; height: 14px; }
-    .plot-tasks { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
-    .plot-tasks-title { font-size: 12px; color: var(--text-light); margin-bottom: 8px; }
-    .task-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-    .task-dot { width: 6px; height: 6px; border-radius: 50%; }
-    .task-dot.pending { background: var(--orange); }
-    .task-dot.completed { background: var(--primary); }
-    .task-dot.overdue { background: var(--red); }
-    .task-name { flex: 1; font-size: 12px; color: var(--text-secondary); }
-    .task-status { font-size: 11px; padding: 2px 6px; border-radius: 8px; }
-    .task-status.pending { background: var(--orange-light); color: var(--orange); }
-    .task-status.completed { background: #e8f5ec; color: #22a84a; }
-    .task-status.overdue { background: var(--red-light); color: var(--red); }
-    .quick-actions { display: flex; gap: 10px; margin-top: 16px; }
-    .quick-action { flex: 1; background: #fff; border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; }
-    .quick-action:active { transform: scale(0.96); }
-    .quick-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex; gap: 12px;
+      padding: 0 16px; margin-top: -20px;
+      position: relative; z-index: 10;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .stat-num {
+      font-size: var(--font-2xl); font-weight: 800;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    /* Filter Bar */
+    .filter-bar {
+      display: flex; gap: 8px;
+      padding: 16px;
+    }
+    
+    .filter-btn {
+      flex: 1;
+      height: 36px;
+      padding: 0 12px;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--bg-white);
+    }
+    
+    /* Plot Card */
+    .plot-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      margin: 0 16px 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .plot-card:active {
+      transform: scale(0.99);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .plot-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .plot-name {
+      font-size: var(--font-lg);
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .plot-status {
+      font-size: var(--font-xs);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-weight: 500;
+    }
+    
+    .plot-status.normal {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    
+    .plot-status.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+      animation: pulse 2s infinite;
+    }
+    
+    .plot-status.overdue {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+    
+    .plot-info {
+      display: flex; gap: 16px;
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+    
+    .plot-info-item {
+      display: flex; align-items: center; gap: 5px;
+    }
+    
+    .plot-info-item svg {
+      width: 15px; height: 15px;
+      flex-shrink: 0;
+    }
+    
+    .plot-tasks {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-light);
+    }
+    
+    .plot-tasks-title {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    
+    .plot-tasks-title::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    
+    .task-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+    }
+    
+    .task-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .task-dot.pending { background: var(--warning); }
+    .task-dot.completed { background: var(--success); }
+    .task-dot.overdue { background: var(--error); animation: pulse 2s infinite; }
+    
+    .task-name {
+      flex: 1;
+      font-size: var(--font-sm);
+      color: var(--text);
+    }
+    
+    .task-status {
+      font-size: var(--font-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+    }
+    
+    .task-status.pending { background: var(--warning-bg); color: var(--warning); }
+    .task-status.completed { background: var(--success-bg); color: var(--success); }
+    .task-status.overdue { background: var(--error-bg); color: var(--error); }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: flex; gap: 12px;
+      padding: 0 16px 16px;
+    }
+    
+    .quick-action {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .quick-action:active {
+      transform: scale(0.96);
+    }
+    
+    .quick-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    
     .quick-icon svg { width: 22px; height: 22px; }
-    .quick-icon.green { background: #e8f5ec; color: #22a84a; }
-    .quick-icon.blue { background: var(--blue-light); color: var(--blue); }
-    .quick-icon.orange { background: var(--orange-light); color: var(--orange); }
-    .quick-name { font-size: 12px; color: var(--text); }
-    .detail-header { padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
-    .detail-title { font-size: 18px; font-weight: 700; }
-    .detail-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
-    .detail-stats { display: flex; gap: 16px; margin-top: 12px; }
-    .detail-stat { text-align: center; }
-    .detail-stat-value { font-size: 20px; font-weight: 700; }
-    .detail-stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+    .quick-icon.green { background: var(--primary-light); color: var(--primary); }
+    .quick-icon.blue { background: var(--info-bg); color: var(--info); }
+    .quick-icon.orange { background: var(--warning-bg); color: var(--warning); }
+    
+    .quick-name {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+    }
+    
+    /* Detail Modal */
+    .detail-modal {
+      width: 100%;
+      max-width: 750px;
+      height: 100%;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+    
+    .detail-header {
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+      position: sticky; top: 0; z-index: 10;
+    }
+    
+    .detail-header-content {
+      display: flex; align-items: center; gap: 12px;
+    }
+    
+    .detail-back {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    
+    .detail-back svg { width: 18px; height: 18px; }
+    
+    .detail-title-wrap { flex: 1; }
+    .detail-title { font-size: var(--font-xl); font-weight: 700; }
+    .detail-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
     .detail-content { padding: 16px; }
-    .detail-section { background: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
-    .detail-section-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
-    .detail-info-row { display: flex; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    
+    .detail-section {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .detail-section-title {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    
+    .detail-section-title::before {
+      content: '';
+      width: 4px; height: 16px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    
+    .detail-info-row {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
     .detail-info-row:last-child { border-bottom: none; }
-    .detail-info-label { width: 70px; font-size: 13px; color: var(--text-light); flex-shrink: 0; }
-    .detail-info-value { flex: 1; font-size: 13px; color: var(--text); }
-    .today-tasks-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
-    .today-task-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
-    .today-task-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .today-task-name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .today-task-time { font-size: 11px; color: var(--text-light); }
-    .today-task-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
-    .btn-record { width: 100%; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
-    .btn-record:active { opacity: 0.9; }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
-    .modal-overlay.show { display: flex; }
-    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 85%; max-width: 320px; }
-    .modal-title { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px; }
-    .modal-btn { width: 100%; height: 44px; background: var(--primary); color: #fff; border: none; border-radius: 22px; font-size: 16px; font-weight: 600; cursor: pointer; }
-    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
-    .back-btn svg { width: 18px; height: 18px; color: #fff; }
-    .nav-tabs { display: flex; gap: 8px; margin-bottom: 16px; padding: 0 16px; }
-    .nav-tab { flex: 1; height: 36px; padding: 0 12px; background: #fff; border: 1px solid var(--border); border-radius: 18px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; }
-    .nav-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    
+    .detail-info-label {
+      width: 80px;
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    
+    .detail-info-value {
+      flex: 1;
+      font-size: var(--font-sm);
+      color: var(--text);
+    }
+    
+    .today-task-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .today-task-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .today-task-name {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .today-task-time {
+      font-size: var(--font-xs);
+      color: var(--text-light);
+      background: var(--gray-100);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+    }
+    
+    .today-task-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .btn-record {
+      width: 100%;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: var(--bg-white);
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all var(--transition-fast);
+    }
+    
+    .btn-record:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header">
+  <div class="mb-app">
+    <!-- Header -->
+    <div class="page-header">
       <div class="header-title">我的地块</div>
       <div class="header-sub">管理您负责的种植地块</div>
     </div>
 
+    <!-- Stats Bar -->
     <div class="stats-bar">
       <div class="stat-card">
         <div class="stat-num">8</div>
@@ -126,12 +388,14 @@
       </div>
     </div>
 
+    <!-- Filter Bar -->
     <div class="filter-bar">
       <button class="filter-btn active" onclick="filterPlots('all')">全部</button>
       <button class="filter-btn" onclick="filterPlots('pending')">待执行</button>
       <button class="filter-btn" onclick="filterPlots('overdue')">已逾期</button>
     </div>
 
+    <!-- Content -->
     <div class="content">
       <div class="plot-card" onclick="openPlotDetail('地块A1区')">
         <div class="plot-header">
@@ -178,7 +442,7 @@
       <div class="plot-card" onclick="openPlotDetail('地块A2区')">
         <div class="plot-header">
           <div class="plot-name">地块A2区</div>
-          <span class="plot-status warning">预警</span>
+          <span class="plot-status overdue">已逾期</span>
         </div>
         <div class="plot-info">
           <div class="plot-info-item">
@@ -226,7 +490,7 @@
             </svg>
             <span>22亩</span>
           </div>
-          <div class="plot-info-item" style="color: var(--orange);">
+          <div class="plot-info-item" style="color: var(--warning);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
@@ -235,7 +499,7 @@
         </div>
         <div class="plot-tasks">
           <div class="plot-tasks-title">今日任务 (0)</div>
-          <div style="text-align: center; padding: 8px; color: var(--text-light); font-size: 12px;">暂无任务</div>
+          <div style="text-align: center; padding: 8px; color: var(--text-light); font-size: var(--font-sm);">暂无任务</div>
         </div>
       </div>
 
@@ -270,6 +534,7 @@
         </div>
       </div>
 
+      <!-- Quick Actions -->
       <div class="quick-actions">
         <div class="quick-action" onclick="navigateToRecord()">
           <div class="quick-icon green">
@@ -304,22 +569,23 @@
       </div>
     </div>
 
-    <div class="tab-bar">
-      <div class="tab-item" onclick="navigateTo('mb_home.html')">
+    <!-- Tab Bar -->
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
         <span>首页</span>
       </div>
-      <div class="tab-item" onclick="navigateTo('mb_service.html')">
+      <div class="mb-tab-item" onclick="navigateTo('mb_service.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
         <span>服务</span>
       </div>
-      <div class="tab-item" onclick="navigateTo('mb_ai_assistant.html')">
+      <div class="mb-tab-item" onclick="navigateTo('mb_ai_assistant.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2L2 7l10 5 10-5-10-5z"/>
           <path d="M2 17l10 5 10-5"/>
@@ -327,7 +593,7 @@
         </svg>
         <span>AI</span>
       </div>
-      <div class="tab-item active">
+      <div class="mb-tab-item active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7"/>
           <rect x="14" y="3" width="7" height="7"/>
@@ -336,7 +602,7 @@
         </svg>
         <span>地块</span>
       </div>
-      <div class="tab-item" onclick="navigateTo('mb_mine.html')">
+      <div class="mb-tab-item" onclick="navigateTo('mb_mine.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
@@ -346,21 +612,24 @@
     </div>
   </div>
 
+  <!-- Detail Modal -->
   <div class="modal-overlay" id="detailModal">
-    <div style="width: 100%; max-width: 750px; height: 100%; background: #f5f5f5; overflow-y: auto;">
+    <div class="detail-modal">
       <div class="detail-header">
-        <div class="back-btn" onclick="closeDetail()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </div>
-        <div style="padding-left: 40px;">
-          <div class="detail-title" id="detailTitle">地块详情</div>
-          <div class="detail-sub" id="detailSub">查看地块详细信息</div>
+        <div class="detail-header-content">
+          <div class="detail-back" onclick="closeDetail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </div>
+          <div class="detail-title-wrap">
+            <div class="detail-title" id="detailTitle">地块详情</div>
+            <div class="detail-sub" id="detailSub">查看地块详细信息</div>
+          </div>
         </div>
       </div>
       <div class="detail-content">
-        <div class="quick-actions">
+        <div class="quick-actions" style="padding: 0;">
           <div class="quick-action" onclick="navigateToRecord()">
             <div class="quick-icon green">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -422,7 +691,7 @@
         </div>
 
         <div class="detail-section">
-          <div class="today-tasks-title">今日任务</div>
+          <div class="detail-section-title">今日任务</div>
           <div class="today-task-card">
             <div class="today-task-header">
               <div class="today-task-name">疏果作业</div>
@@ -447,17 +716,17 @@
             <div class="task-row">
               <span class="task-dot completed"></span>
               <span class="task-name">追肥作业</span>
-              <span style="font-size: 11px; color: var(--text-light);">2026-05-20</span>
+              <span style="font-size: var(--font-xs); color: var(--text-light);">2026-05-20</span>
             </div>
             <div class="task-row">
               <span class="task-dot completed"></span>
               <span class="task-name">灌溉浇水</span>
-              <span style="font-size: 11px; color: var(--text-light);">2026-05-19</span>
+              <span style="font-size: var(--font-xs); color: var(--text-light);">2026-05-19</span>
             </div>
             <div class="task-row">
               <span class="task-dot completed"></span>
               <span class="task-name">套袋作业</span>
-              <span style="font-size: 11px; color: var(--text-light);">2026-05-18</span>
+              <span style="font-size: var(--font-xs); color: var(--text-light);">2026-05-18</span>
             </div>
           </div>
         </div>
@@ -466,55 +735,7 @@
   </div>
 
   <script>
-    const plotData = [
-      {
-        id: 'A1',
-        name: '地块A1区',
-        status: 'normal',
-        variety: '红富士',
-        age: '5年',
-        area: '15亩',
-        tasks: [
-          { name: '疏果作业', status: 'pending' },
-          { name: '病虫害防治', status: 'pending' }
-        ]
-      },
-      {
-        id: 'A2',
-        name: '地块A2区',
-        status: 'warning',
-        variety: '红富士',
-        age: '5年',
-        area: '18亩',
-        tasks: [
-          { name: '灌溉浇水', status: 'overdue' }
-        ]
-      },
-      {
-        id: 'B1',
-        name: '地块B1区',
-        status: 'normal',
-        variety: '嘎啦',
-        age: '8年',
-        area: '22亩',
-        tasks: []
-      },
-      {
-        id: 'B2',
-        name: '地块B2区',
-        status: 'normal',
-        variety: '秦冠',
-        age: '10年',
-        area: '25亩',
-        tasks: [
-          { name: '追肥作业', status: 'completed' }
-        ]
-      }
-    ];
-
-    function navigateTo(page) {
-      window.location.href = page;
-    }
+    function navigateTo(page) { window.location.href = page; }
 
     function filterPlots(type) {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));

@@ -4,81 +4,286 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>数农智果 - 看计划</title>
+  <!-- H5设计系统 -->
+  <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+  <!-- 图标库 -->
+  <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html { font-size: 16px; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f5f5f5; color: #333; overflow-x: hidden; }
-    a { text-decoration: none; color: inherit; }
-    img { display: block; max-width: 100%; }
-    :root {
-      --primary: #2e9e5a; --primary-dark: #1e7e42; --primary-light: #e8f5ec;
-      --orange: #f39c12; --orange-light: #fef5e7;
-      --blue: #3498db; --blue-light: #eaf2fa;
-      --red: #e74c3c; --red-light: #fdecea;
-      --gray: #95a5a6; --gray-light: #f0f0f0;
-      --bg: #f5f5f5; --white: #fff;
-      --text: #333; --text-secondary: #666; --text-light: #999;
-      --border: #e8e8e8; --radius: 12px; --radius-lg: 16px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    /* Header */
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
     }
-    .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 66px; }
-    .header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 16px 16px 12px; color: #fff; }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .header-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-    .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 750px; height: 56px; background: #fff; display: flex; border-top: 1px solid var(--border); z-index: 100; }
-    .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-light); transition: color .2s; position: relative; cursor: pointer; }
-    .tab-item.active { color: var(--primary); }
-    .tab-item svg { width: 22px; height: 22px; }
-    .tab-item span { font-size: 10px; }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
+    /* Content */
     .content { padding: 16px; padding-bottom: 80px; }
-    .card { background: #fff; border-radius: var(--radius); margin-bottom: 16px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-    .back-btn { position: absolute; left: 12px; top: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 18px; height: 18px; color: #fff; }
-    .plan-item { padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; cursor: pointer; transition: all .2s; }
-    .plan-item:active { background: var(--gray-light); }
-    .plan-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .plan-name { font-size: 15px; font-weight: 600; color: var(--text); }
-    .plan-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-    .plan-status.doing { background: var(--primary-light); color: var(--primary); }
-    .plan-status.pending { background: var(--orange-light); color: var(--orange); }
-    .plan-status.completed { background: var(--blue-light); color: var(--blue); }
-    .plan-date { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
-    .plan-tasks { display: flex; gap: 8px; flex-wrap: wrap; }
-    .task-tag { padding: 4px 10px; background: var(--gray-light); border-radius: 12px; font-size: 12px; color: var(--text-secondary); }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
+    
+    /* Card */
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      margin-bottom: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .card-title {
+      font-size: var(--font-md);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    
+    /* Plan Item */
+    .plan-item {
+      padding: 16px;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .plan-item:active {
+      transform: scale(0.99);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .plan-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .plan-name {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .plan-status {
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-xs);
+      font-weight: 500;
+    }
+    
+    .plan-status.doing {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    
+    .plan-status.pending {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+    
+    .plan-status.completed {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+    
+    .plan-date {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    
+    .plan-tasks {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .task-tag {
+      padding: 4px 10px;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    
     .modal-overlay.show { display: flex; }
-    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 24px 20px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-    .modal-title { font-size: 18px; font-weight: 600; text-align: center; margin-bottom: 20px; }
-    .detail-section { margin-bottom: 16px; }
-    .detail-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
-    .detail-value { font-size: 14px; color: var(--text); }
-    .task-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .task-item:last-child { border-bottom: none; }
-    .task-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .task-icon svg { width: 14px; height: 14px; color: var(--primary); }
-    .task-info { flex: 1; min-width: 0; }
-    .task-name { font-size: 14px; color: var(--text); }
-    .task-time { font-size: 12px; color: var(--text-light); margin-top: 2px; }
-    .btn { width: 100%; height: 48px; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; margin-top: 16px; }
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; }
-    .timeline { position: relative; padding-left: 20px; }
-    .timeline::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
-    .timeline-item { position: relative; margin-bottom: 20px; }
-    .timeline-dot { position: absolute; left: -20px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--primary-light); }
-    .timeline-item.completed .timeline-dot { background: var(--primary); }
-    .timeline-item.pending .timeline-dot { background: var(--gray-light); border-color: var(--text-light); box-shadow: 0 0 0 2px var(--gray-light); }
+    
+    .modal-box {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 24px 20px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-title {
+      font-size: var(--font-lg);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    
+    .detail-section { margin-bottom: 18px; }
+    
+    .detail-label {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .detail-value {
+      font-size: var(--font-base);
+      color: var(--text);
+    }
+    
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 24px;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .timeline-item:last-child { margin-bottom: 0; }
+    
+    .timeline-dot {
+      position: absolute;
+      left: -24px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid var(--bg-white);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .timeline-item.completed .timeline-dot {
+      background: var(--success);
+      box-shadow: 0 0 0 3px var(--success-bg);
+    }
+    
+    .timeline-item.pending .timeline-dot {
+      background: var(--gray-300);
+      box-shadow: 0 0 0 3px var(--gray-100);
+    }
+    
+    .timeline-content {
+      padding: 12px 0;
+    }
+    
+    .timeline-title {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    
+    .timeline-time {
+      font-size: var(--font-xs);
+      color: var(--text-light);
+    }
+    
+    /* Button */
+    .btn {
+      width: 100%;
+      height: 44px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      margin-top: 16px;
+      transition: all var(--transition-fast);
+    }
+    
+    .btn:active { transform: scale(0.98); }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: var(--bg-white);
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="header">
-      <div class="back-btn" onclick="goBack()">
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </div>
-      <div style="padding-left: 40px;">
+      <div>
         <div class="header-title">农事计划</div>
         <div class="header-sub">查看和执行农事作业计划</div>
       </div>

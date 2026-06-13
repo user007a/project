@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 农资用量计算</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-base);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.form-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.form-item label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+.form-item input, .form-item select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.btn-secondary {
+  background: var(--gray-50);
+  color: var(--text-primary);
+}
+.result-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.result-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.result-card {
+  background: linear-gradient(135deg, rgba(34, 168, 74, 0.1) 0%, rgba(34, 168, 74, 0.05) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+.result-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.result-type {
+  padding: 4px 12px;
+  background: var(--primary-500);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+}
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+.result-item {
+  text-align: center;
+}
+.result-value {
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-500);
+}
+.result-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.table-container {
+  margin-top: var(--space-lg);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.form-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">农资用量计算</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">输入地块信息，自动计算推荐用量</p>
+    </div>
+  </div>
+
+  <!-- 计算表单 -->
+  <div class="form-section">
+    <h2 class="section-title">计算条件</h2>
+    
+    <div class="form-row">
+      <div class="form-item">
+        <label>地块面积(亩)</label>
+        <input type="number" placeholder="输入地块面积" value="15">
+      </div>
+      <div class="form-item">
+        <label>果树品种</label>
+        <select>
+          <option>红富士</option>
+          <option>嘎啦</option>
+          <option>金帅</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>树龄(年)</label>
+        <select>
+          <option>幼树(1-3年)</option>
+          <option>初果树(4-6年)</option>
+          <option>盛果树(7年以上)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-item">
+        <label>施肥类型</label>
+        <select>
+          <option>基肥</option>
+          <option>追肥</option>
+          <option>叶面肥</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>土壤肥力</label>
+        <select>
+          <option>高肥力</option>
+          <option>中肥力</option>
+          <option>低肥力</option>
+        </select>
+      </div>
+      <div class="form-item">
+        <label>目标产量(kg/亩)</label>
+        <input type="number" placeholder="输入目标产量" value="2000">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary">重置</button>
+      <button class="btn btn-primary">开始计算</button>
+    </div>
+  </div>
+
+  <!-- 计算结果 -->
+  <div class="result-section">
+    <h2 class="result-title">计算结果</h2>
+    
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-name">红富士苹果 基肥推荐用量</div>
+        <div class="result-type">基肥</div>
+      </div>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-value">225</div>
+          <div class="result-label">复合肥(kg)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-value">75</div>
+          <div class="result-label">尿素(kg)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-value">300</div>
+          <div class="result-label">有机肥(kg)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-value">30</div>
+          <div class="result-label">钾肥(kg)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 详细用量表 -->
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>农资名称</th>
+            <th>规格</th>
+            <th>推荐用量(kg/亩)</th>
+            <th>15亩用量(kg)</th>
+            <th>建议采购量</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>复合肥(NPK 15-15-15)</td>
+            <td>50kg/袋</td>
+            <td>15</td>
+            <td>225</td>
+            <td>5袋(250kg)</td>
+            <td>建议分两次施用</td>
+          </tr>
+          <tr>
+            <td>尿素</td>
+            <td>50kg/袋</td>
+            <td>5</td>
+            <td>75</td>
+            <td>2袋(100kg)</td>
+            <td>配合复合肥使用</td>
+          </tr>
+          <tr>
+            <td>有机肥</td>
+            <td>50kg/袋</td>
+            <td>20</td>
+            <td>300</td>
+            <td>6袋(300kg)</td>
+            <td>提前一周施入</td>
+          </tr>
+          <tr>
+            <td>钾肥</td>
+            <td>25kg/袋</td>
+            <td>2</td>
+            <td>30</td>
+            <td>2袋(50kg)</td>
+            <td>花期前后施用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>

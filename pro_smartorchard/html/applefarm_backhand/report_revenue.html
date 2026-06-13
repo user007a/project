@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数农智果 - 收入分析</title>
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+.page-container {
+  padding: var(--space-lg);
+  background: var(--bg-base);
+  min-height: calc(100vh - 140px);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+.tab-nav {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+.tab-item {
+  padding: var(--space-sm) var(--space-xl);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+.tab-item.active {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.chart-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--space-xl);
+}
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.chart-placeholder {
+  height: 300px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+.double-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.data-table th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+.data-table tr:hover { background: var(--bg-hover); }
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-primary {
+  background: var(--primary-500);
+  color: var(--text-inverse);
+}
+.filter-bar {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.filter-item label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.filter-item select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background: var(--bg-card);
+}
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.summary-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+.summary-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+.summary-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon snzg-logo-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
+        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
+        <path d="M8 12l2 2 4-4 4 4"/>
+      </svg>
+    </div>
+    <span>数农智果</span>
+  </div>
+  <nav class="nav-menu">
+    <a href="home.html" class="snzg-nav-item">系统首页</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
+    <span class="snzg-nav-sep"></span>
+    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+  </nav>
+</header>
+
+<!-- 页面内容 -->
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">收入分析</h1>
+      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">分析各项收入来源情况</p>
+    </div>
+    <button class="btn btn-primary">导出报表</button>
+  </div>
+
+  <!-- 筛选栏 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>年份：</label>
+      <select>
+        <option>2026</option>
+        <option>2025</option>
+        <option>2024</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>月份：</label>
+      <select>
+        <option>全部</option>
+        <option>1月</option>
+        <option>2月</option>
+        <option>3月</option>
+        <option>4月</option>
+        <option>5月</option>
+        <option>6月</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 收入汇总卡片 -->
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="summary-label">认养收入</div>
+      <div class="summary-value">¥ 1,423,825</div>
+      <div style="font-size: var(--font-size-sm); color: var(--success); margin-top: var(--space-xs);">↑ 18.3% 较上月</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">批发收入</div>
+      <div class="summary-value">¥ 996,678</div>
+      <div style="font-size: var(--font-size-sm); color: var(--color-success); margin-top: var(--space-xs);">↑ 8.5% 较上月</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">零售收入</div>
+      <div class="summary-value">¥ 427,147</div>
+      <div style="font-size: var(--font-size-sm); color: var(--warning); margin-top: var(--space-xs);">↓ 2.1% 较上月</div>
+    </div>
+  </div>
+
+  <!-- 分类标签 -->
+  <div class="tab-nav">
+    <div class="tab-item active">收入趋势</div>
+    <div class="tab-item">收入构成</div>
+    <div class="tab-item">客户分析</div>
+    <div class="tab-item">产品分析</div>
+  </div>
+
+  <!-- 收入趋势图 -->
+  <div class="chart-section">
+    <h2 class="section-title">收入趋势分析</h2>
+    <div class="chart-placeholder">
+      <div style="text-align: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+          <path d="M3 3v18h18"/>
+          <path d="M5 18l3-5 4 4 4-6 4 4"/>
+        </svg>
+        <div>收入趋势折线图</div>
+        <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养收入 · 批发收入 · 零售收入</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收入构成和客户排行 -->
+  <div class="double-section">
+    <div class="chart-section">
+      <h2 class="section-title">收入构成分析</h2>
+      <div class="chart-placeholder" style="height: 250px;">
+        <div style="text-align: center;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2 L12 12 L19 12 Z"/>
+          </svg>
+          <div>收入构成饼图</div>
+          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养50% · 批发35% · 零售15%</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-container">
+      <h2 class="section-title">客户收入排行</h2>
+      <table class="data-table" style="font-size: var(--font-size-sm);">
+        <thead>
+          <tr>
+            <th>排名</th>
+            <th>客户名称</th>
+            <th>收入(元)</th>
+            <th>占比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>北京XX超市</td>
+            <td>356,800</td>
+            <td>12.5%</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>上海XX电商</td>
+            <td>298,500</td>
+            <td>10.5%</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>广州XX水果店</td>
+            <td>245,200</td>
+            <td>8.6%</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>深圳XX生鲜</td>
+            <td>198,600</td>
+            <td>7.0%</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>杭州XX平台</td>
+            <td>165,400</td>
+            <td>5.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 底部 -->
+<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
+  数农智果·智慧果园管理系统 © 2026
+</footer>
+</body>
+</html>
