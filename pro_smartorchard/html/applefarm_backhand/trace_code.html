@@ -3,402 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数农智果 - 产品追溯</title>
+<title>智慧果园 - 产品追溯</title>
+<!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/sidebar-layout.css">
+  <link rel="stylesheet" href="css/page-content.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-family); background: var(--bg-base); color: var(--text-primary); font-size: var(--font-size-base); animation: pageIn var(--transition-slow) ease; }
-  @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .header { background: var(--gradient-header); height: 56px; display: flex; align-items: center; padding: 0 var(--space-xl); position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-dropdown); box-shadow: var(--shadow-lg); }
-  .logo { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-inverse); font-size: 20px; font-weight: var(--font-weight-bold); letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
-  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: var(--bg-card); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
-  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav-menu::-webkit-scrollbar { display: none; }
-  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: var(--space-xs); cursor: pointer; font-size: var(--font-size-base); border-bottom: 3px solid transparent; transition: all var(--transition-normal); white-space: nowrap; text-decoration: none; flex-shrink: 0; }
-  .snzg-nav-item:hover { color: var(--text-inverse); background: rgba(255,255,255,0.1); }
-  .snzg-nav-item.active { color: var(--text-inverse); border-bottom: 3px solid var(--text-inverse); font-weight: var(--font-weight-semibold); }
-  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 4px; flex-shrink: 0; }
-  .nav-icon { font-size: var(--font-size-lg); }
-  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-sm); background: none; border: none; }
-  .jg-hamburger span { width: 24px; height: 2px; background: var(--text-inverse); border-radius: 1px; }
-  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: var(--gradient-header); padding: var(--space-lg); z-index: 99; box-shadow: var(--shadow-lg); }
-  .jg-mobile-nav.show { display: block; }
-  .jg-mobile-nav-item { display: block; padding: var(--space-lg) var(--space-xl); color: var(--text-inverse); font-size: var(--font-size-lg); text-decoration: none; border-radius: var(--radius-sm); transition: background var(--transition-normal); }
-  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
-  .header-right { display: flex; align-items: center; gap: var(--space-lg); margin-left: auto; position: relative; }
-  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--text-inverse); font-size: 18px; }
-  .msg-badge { position: absolute; top: -4px; right: -4px; background: var(--error); color: var(--text-inverse); font-size: var(--font-size-xs); padding: 1px 4px; border-radius: var(--radius-md); font-weight: var(--font-weight-semibold); min-width: 16px; text-align: center; }
-  .snzg-user-btn { display: flex; align-items: center; gap: var(--space-xs); color: var(--text-inverse); cursor: pointer; padding: var(--space-xs) var(--space-sm); border-radius: 4px; transition: background var(--transition-normal); font-size: var(--font-size-base); background: none; border: none; }
-  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
-  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--font-size-sm); }
-  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
-  .snzg-user-menu.show { display: block; }
-  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: var(--space-lg) var(--space-xl); background: var(--gray-50); border-bottom: 1px solid var(--border-light); }
-  .snzg-user-info-avatar { width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-inverse); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
-  .snzg-user-info-name { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .snzg-user-info-role { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .snzg-user-menu-item { display: block; padding: 10px var(--space-xl); color: var(--text-primary); font-size: var(--font-size-base); cursor: pointer; transition: background var(--transition-normal); text-decoration: none; }
-  .snzg-user-menu-item:hover { background: var(--gray-100); }
-  .snzg-user-menu-item.danger { color: var(--error); }
-  .snzg-user-menu-item.danger:hover { background: var(--error-bg); }
-  .snzg-user-menu-sep { height: 1px; background: var(--border-light); margin: var(--space-xs) 0; }
-  .main-wrap { margin-top: 104px; padding: var(--space-lg) var(--space-xl) var(--space-3xl); min-height: calc(100vh - 104px); }
-  .subnav-bar { position: fixed; top: 56px; left: 0; right: 0; height: 48px; background: var(--bg-card); border-bottom: 1px solid var(--border-light); z-index: 90; display: flex; align-items: center; }
-  .nav-arrow { width: 36px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-tertiary); font-size: 20px; user-select: none; transition: all var(--transition-normal); }
-  .nav-arrow:hover { background: var(--gray-100); color: var(--text-primary); }
-  .subnav-menu { flex: 1; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
-  .subnav-menu::-webkit-scrollbar { display: none; }
-  .subnav-item { flex-shrink: 0; padding: 14px var(--space-xl); text-decoration: none; font-size: var(--font-size-base); color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all var(--transition-normal); white-space: nowrap; }
-  .subnav-item:hover { color: var(--primary-500); }
-  .subnav-item.active { color: var(--primary-500); border-bottom-color: var(--primary-500); font-weight: var(--font-weight-medium); }
-  .page-header { background: var(--bg-card); border-radius: var(--radius-md); padding: var(--space-lg) var(--space-xl); margin-bottom: var(--space-xl); box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; }
-  .page-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-  .page-title .title-icon { font-size: 22px; }
-  .page-desc { font-size: var(--font-size-base); color: var(--text-secondary); margin-top: var(--space-xs); }
-  .page-actions { display: flex; gap: var(--space-md); }
-  .jg-btn { display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--bg-card); cursor: pointer; font-size: var(--font-size-sm); color: var(--text-primary); transition: all var(--transition-normal); white-space: nowrap; font-family: inherit; }
-  .jg-btn:hover { border-color: var(--primary-500); color: var(--primary-500); box-shadow: var(--shadow-primary); }
-  .jg-btn.jg-btn-primary { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .jg-btn.jg-btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
-  .snzg-panel { background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: var(--space-xl); }
-  .snzg-panel-header { padding: var(--space-lg) var(--space-xl); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
-  .snzg-panel-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
-  .snzg-panel-title .pt-icon { font-size: var(--font-size-xl); }
-  .snzg-panel-body { padding: 14px var(--space-xl); }
-  .search-bar { display: flex; gap: var(--space-lg); align-items: center; flex-wrap: wrap; }
-  .search-input { padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--font-size-sm); width: 200px; transition: border-color var(--transition-normal); }
-  .search-input:focus { outline: none; border-color: var(--primary-500); }
-  .search-select { padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--font-size-sm); cursor: pointer; }
-  .search-select:focus { outline: none; border-color: var(--primary-500); }
-  .data-table { width: 100%; border-collapse: collapse; font-size: var(--font-size-base); }
-  .data-table th, .data-table td { padding: var(--space-lg) 14px; text-align: left; border-bottom: 1px solid var(--border-light); }
-  .data-table th { background: var(--gray-50); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .data-table tr:hover { background: var(--gray-50); }
-  .data-table .text-center { text-align: center; }
-  .data-table .type-tag { display: inline-block; padding: 2px var(--space-sm); border-radius: var(--radius-lg); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
-  .type-tag.fresh { background: var(--success-bg); color: var(--success); }
-  .type-tag.processed { background: var(--info-bg); color: var(--info); }
-  .type-tag.gift { background: var(--warning-bg); color: var(--accent-500); }
-  .data-table .status-tag { display: inline-block; padding: 2px var(--space-sm); border-radius: var(--radius-lg); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
-  .status-tag.traced { background: var(--success-bg); color: var(--success); }
-  .status-tag.tracing { background: var(--warning-bg); color: var(--accent-500); }
-  .status-tag.pending { background: #f5f0ff; color: #722ed1; }
-  .data-table .action-btns { display: flex; gap: var(--space-sm); }
-  .action-btn { padding: var(--space-xs) 10px; font-size: var(--font-size-xs); border-radius: 4px; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); transition: all var(--transition-normal); }
-  .action-btn:hover { background: var(--gray-100); }
-  .action-btn.detail { color: var(--primary-500); }
-  .action-btn.detail:hover { background: var(--success-bg); }
-  .action-btn.qrcode { color: var(--info); }
-  .action-btn.qrcode:hover { background: var(--info-bg); }
-  .action-btn.chain { color: #722ed1; }
-  .action-btn.chain:hover { background: #f5f0ff; }
-  .action-btn.upload { color: var(--accent-500); }
-  .action-btn.upload:hover { background: var(--warning-bg); }
-  .data-table .blockchain-tag { display: inline-block; padding: 2px var(--space-sm); border-radius: var(--radius-lg); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
-  .blockchain-tag.chained { background: var(--success-bg); color: var(--success); }
-  .blockchain-tag.pending { background: var(--warning-bg); color: var(--accent-500); }
-  .blockchain-tag.failed { background: var(--error-bg); color: var(--error); }
-  .pagination { display: flex; align-items: center; justify-content: center; gap: var(--space-sm); padding: var(--space-xl); }
-  .page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); border-radius: 4px; cursor: pointer; background: var(--bg-card); font-size: var(--font-size-sm); transition: all var(--transition-normal); }
-  .page-btn:hover { border-color: var(--primary-500); color: var(--primary-500); }
-  .page-btn.active { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
-  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: var(--z-modal-backdrop); display: none; align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal-content { background: var(--bg-card); border-radius: var(--radius-md); width: 90%; max-width: 600px; overflow: hidden; animation: modalIn var(--transition-normal) ease; }
-  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-  .modal-header { padding: 14px var(--space-xl); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
-  .modal-title { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .modal-close { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background var(--transition-normal); }
-  .modal-close:hover { background: var(--gray-100); }
-  .modal-body { padding: var(--space-xl); }
-  .form-group { margin-bottom: 14px; }
-  .form-label { display: block; font-size: var(--font-size-base); font-weight: var(--font-weight-medium); color: var(--text-primary); margin-bottom: var(--space-sm); }
-  .form-input { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--font-size-base); transition: border-color var(--transition-normal); }
-  .form-input:focus { outline: none; border-color: var(--primary-500); }
-  .form-textarea { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--font-size-base); resize: vertical; min-height: 80px; }
-  .form-textarea:focus { outline: none; border-color: var(--primary-500); }
-  .form-select { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--font-size-base); cursor: pointer; }
-  .form-select:focus { outline: none; border-color: var(--primary-500); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); }
-  .modal-footer { padding: var(--space-lg) var(--space-xl); border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: var(--space-md); }
-  .jg-toast { position: fixed; top: 70px; right: var(--space-xl); padding: var(--space-lg) var(--space-xl); border-radius: var(--radius-sm); color: var(--text-inverse); font-size: var(--font-size-base); z-index: var(--z-toast); animation: toastIn var(--transition-slow) ease; }
-  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-  .jg-toast-success { background: var(--success); }
-  .jg-toast-error { background: var(--error); }
-  .jg-toast-info { background: var(--info); }
-  @media (max-width: 768px) { .main-wrap { padding: 12px; } .search-bar { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .page-header { flex-direction: column; gap: 12px; align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 8px 6px; } }
+  /* 模块卡片 hover 效果 */
+  .module-card {
+    transition: all 0.2s ease;
+  }
+  .module-card:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 </style>
 </head>
-<body>
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon snzg-logo-icon">
-      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
-        <circle cx="50" cy="55" r="35" fill="#e53935"></circle>
-        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"></ellipse>
-        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"></ellipse>
-        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"></circle>
-      </svg>
+<body data-active-menu="trace" data-active-submenu="trace-code">
+
+<!-- ===== 整体布局容器 ===== -->
+<div class="app-layout">
+
+  <!-- ===== 侧边栏 ===== -->
+  <nav class="sidebar" aria-label="主导航">
+    <!-- 品牌区 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <!-- 苹果绿 Logo SVG -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3C8 1 5 3 5 6.5C5 10 8 14 11 17C14 14 17 10 17 6.5C17 3 14 1 11 3Z" fill="rgba(34,168,74,0.2)"/>
+          <path d="M11 5C9.5 4 7.5 5 7.5 7C7.5 9 9.5 12 11 14"/>
+          <path d="M11 5C12.5 4 14.5 5 14.5 7C14.5 9 12.5 12 11 14"/>
+          <path d="M11 3V1"/>
+        </svg>
+      </div>
+      <span class="sidebar-brand-text">智慧果园</span>
     </div>
-    <span>数农智果</span>
-  </div>
-  <nav class="nav-menu" id="navMenu">
-    <a class="snzg-nav-item" href="home.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
-          <polyline points="9,22 9,12 15,12 15,22"></polyline>
+
+    <!-- 菜单主体（由 JS 动态渲染） -->
+    <div class="sidebar-body"></div>
+
+    <!-- 底部功能区 -->
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn sidebar-collapse-btn" title="折叠侧边栏">
+        <span class="collapse-icon">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3L6 9L11 15"/><path d="M14 3V15"/>
+          </svg>
+        </span>
+        <span class="btn-text">折叠</span>
+      </button>
+      <button class="sidebar-footer-btn" title="系统设置" id="btn-settings">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M9 2V4M9 14V16M2 9H4M14 9H16M4.2 4.2L5.6 5.6M12.4 12.4L13.8 13.8M13.8 4.2L12.4 5.6M5.6 12.4L4.2 13.8"/>
         </svg>
-      </span>
-      系统首页
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="enterprise_base.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-          <rect x="9" y="9" width="6" height="6"></rect>
-          <line x="9" y="1" x2="9" y2="4"></line>
-          <line x="15" y="1" x2="15" y2="4"></line>
-          <line x="9" y="20" x2="9" y2="23"></line>
-          <line x="15" y="20" x2="15" y2="23"></line>
-          <line x="20" y="9" x2="23" y2="9"></line>
-          <line x="20" y="15" x2="23" y2="15"></line>
-          <line x="1" y="9" x2="4" y2="9"></line>
-          <line x="1" y="15" x2="4" y2="15"></line>
-        </svg>
-      </span>
-      企业管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="farming_plan.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
-          <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
-          <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
-          <path d="M3 9h4"></path>
-          <path d="M17 9h4"></path>
-          <path d="M12 4v3"></path>
-        </svg>
-      </span>
-      农事管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="material_info.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
-          <line x="12" y="22.08" x2="12" y2="12"></line>
-        </svg>
-      </span>
-      农资管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="device_info.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-          <line x="12" y="18" x2="12.01" y2="18"></line>
-        </svg>
-      </span>
-      设备管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="alert_settings.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
-      </span>
-      预警管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item active" href="trace_code.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-          <line x="7" y="7" x2="7.01" y2="7"></line>
-        </svg>
-      </span>
-      产品追溯
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="harvest_plan.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polygon points="10 8 16 12 10 16 10 8"></polygon>
-        </svg>
-      </span>
-      采收管理
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="model_growth.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-          <path d="M2 17l10 5 10-5"></path>
-          <path d="M2 12l10 5 10-5"></path>
-        </svg>
-      </span>
-      模型预测中心
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="system_settings.html" tabindex="0">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </span>
-      系统设置
-    </a>
+        <span class="btn-text">设置</span>
+      </button>
+    </div>
   </nav>
-  <button id="hamburgerBtn" class="jg-hamburger">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="header-right">
-    <div class="msg-btn">
-      <span>🔔</span>
-      <span class="msg-badge">3</span>
-    </div>
-    <button id="userBtn" class="snzg-user-btn">
-      <span class="snzg-user-avatar">管</span>
-      <span>管理员</span>
-    </button>
-    <div id="userMenu" class="snzg-user-menu">
-      <div class="snzg-user-info">
-        <div class="snzg-user-info-avatar">管</div>
-        <div>
-          <div class="snzg-user-info-name">系统管理员</div>
-          <div class="snzg-user-info-role">超级管理员</div>
+
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-wrapper">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <!-- 移动端汉堡菜单 -->
+      <button class="topbar-hamburger" aria-label="打开导航菜单">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 6H19M3 11H19M3 16H19"/>
+        </svg>
+      </button>
+      <!-- 右侧功能区 -->
+      <div class="topbar-right">
+        <!-- 通知铃铛 -->
+        <button class="topbar-notification" title="消息通知">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2C7 2 5 4.5 5 7.5V12L3 14H17L15 12V7.5C15 4.5 13 2 10 2Z"/>
+            <path d="M8.5 16C8.5 17 9.2 18 10 18C10.8 18 11.5 17 11.5 16"/>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <!-- 用户信息 -->
+        <div class="topbar-user">
+          <div class="topbar-user-avatar">张</div>
+          <span class="topbar-user-name">张三</span>
+          <span class="topbar-user-arrow">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M3 5L6 8L9 5"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div class="topbar-user-dropdown">
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <circle cx="8" cy="5" r="3"/><path d="M2 15C2 11.5 5 10 8 10C11 10 14 11.5 14 15"/>
+            </svg>
+            个人中心
+          </div>
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M8 2V8L11 11"/><circle cx="8" cy="8" r="6"/>
+            </svg>
+            操作日志
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--error);">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M6 2H3C2.45 2 2 2.45 2 3V13C2 13.55 2.45 14 3 14H6"/><path d="M10 11L14 8L10 5"/><path d="M14 8H6"/>
+            </svg>
+            退出登录
+          </div>
         </div>
       </div>
-      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
-      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
-      <div class="snzg-user-menu-sep"></div>
-      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+    </header>
+
+    <!-- Tab 标签栏 -->
+    <div class="tab-bar">
+      <!-- Tab 标签由 JS 动态渲染 -->
+      <div class="tab-bar-actions">
+        <button class="tab-close-all" title="关闭全部标签">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3L11 11M11 3L3 11"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-</header>
-<div id="mobileNav" class="jg-mobile-nav">
-  <a href="home.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="m3,9 9,-7 9,7v11a2,2 0,0,1 -2,2H5a2,2 0,0,1 -2,-2z"></path>
-      <polyline points="9,22 9,12 15,12 15,22"></polyline>
-    </svg>
-    系统首页
-  </a>
-  <a href="enterprise_base.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-      <rect x="9" y="9" width="6" height="6"></rect>
-      <line x="9" y="1" x2="9" y2="4"></line>
-      <line x="15" y="1" x2="15" y2="4"></line>
-      <line x="9" y="20" x2="9" y2="23"></line>
-      <line x="15" y="20" x2="15" y2="23"></line>
-      <line x="20" y="9" x2="23" y2="9"></line>
-      <line x="20" y="15" x2="23" y2="15"></line>
-      <line x="1" y="9" x2="4" y2="9"></line>
-      <line x="1" y="15" x2="4" y2="15"></line>
-    </svg>
-    企业管理
-  </a>
-  <a href="farming_plan.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 22c1.105 0 2-.895 2-2h-4a2 2 0 0 0 2 2z"></path>
-      <path d="M18 16c0-3.36-2.64-6-6-6s-6 2.64-6 6"></path>
-      <path d="M12 10c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"></path>
-      <path d="M3 9h4"></path>
-      <path d="M17 9h4"></path>
-      <path d="M12 4v3"></path>
-    </svg>
-    农事管理
-  </a>
-  <a href="material_info.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-      <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
-      <line x="12" y="22.08" x2="12" y2="12"></line>
-    </svg>
-    农资管理
-  </a>
-  <a href="device_info.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-      <line x="12" y="18" x2="12.01" y2="18"></line>
-    </svg>
-    设备管理
-  </a>
-  <a href="alert_settings.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-    </svg>
-    预警管理
-  </a>
-  <a href="trace_code.html" class="jg-mobile-nav-item active">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-      <line x="7" y="7" x2="7.01" y2="7"></line>
-    </svg>
-    产品追溯
-  </a>
-  <a href="harvest_plan.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <polygon points="10 8 16 12 10 16 10 8"></polygon>
-    </svg>
-    采收管理
-  </a>
-  <a href="model_growth.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-      <path d="M2 17l10 5 10-5"></path>
-      <path d="M2 12l10 5 10-5"></path>
-    </svg>
-    模型预测中心
-  </a>
-  <a href="system_settings.html" class="jg-mobile-nav-item">
-    <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"></circle>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-    </svg>
-    系统设置
-  </a>
-</div>
-<div class="subnav-bar">
-  <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
-  <div class="subnav-menu">
-    <a href="trace_code.html" class="subnav-item active">追溯码管理</a>
-    <a href="trace_config.html" class="subnav-item">数字履历配置</a>
-    <a href="trace_blockchain.html" class="subnav-item">区块链存证</a>
-    <a href="trace_query.html" class="subnav-item">追溯查询</a>
-  </div>
-  <div class="nav-arrow" onclick="scrollNav(1)">›</div>
-</div>
-<div class="main-wrap">
-  <div class="page-header">
-    <div>
-      <div class="page-title"><span class="title-icon">🏷️</span>产品追溯</div>
-      <div class="page-desc">产品追溯码管理、批次溯源、质量追踪</div>
-    </div>
-    <div class="page-actions">
-      <button class="jg-btn" onclick="showFilterModal()">
-        <span>⚙️</span>筛选
-      </button>
-      <button class="jg-btn jg-btn-primary" onclick="showAddModal()">
-        <span>+</span>生成追溯码
-      </button>
-    </div>
-  </div>
-  <div class="snzg-panel">
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+<div class="snzg-panel">
     <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon">📋</span>追溯批次列表</div>
+      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></span>追溯批次列表</div>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="输入追溯码/批次号..." id="searchInput">
         <select class="search-select" id="statusSelect">
@@ -407,7 +150,7 @@
           <option value="tracing">追溯中</option>
           <option value="pending">待追溯</option>
         </select>
-        <button class="jg-btn" onclick="doSearch()">搜索</button>
+        <button class="jg-btn">搜索</button>
       </div>
     </div>
     <div class="snzg-panel-body">
@@ -437,9 +180,9 @@
             <td>2024-05-15</td>
             <td>
               <div class="action-btns">
-                <button class="action-btn detail" onclick="showDetail('SNZG-2024-0001')">溯源</button>
-                <button class="action-btn qrcode" onclick="showQRCode('SNZG-2024-0001')">二维码</button>
-                <button class="action-btn chain" onclick="showChainDetail('SNZG-2024-0001')">链详情</button>
+                <button class="action-btn detail"SNZG-2024-0001')">溯源</button>
+                <button class="action-btn qrcode"SNZG-2024-0001')">二维码</button>
+                <button class="action-btn chain"SNZG-2024-0001')">链详情</button>
               </div>
             </td>
           </tr>
@@ -454,9 +197,9 @@
             <td>2024-05-16</td>
             <td>
               <div class="action-btns">
-                <button class="action-btn detail" onclick="showDetail('SNZG-2024-0002')">溯源</button>
-                <button class="action-btn qrcode" onclick="showQRCode('SNZG-2024-0002')">二维码</button>
-                <button class="action-btn chain" onclick="showChainDetail('SNZG-2024-0002')">链详情</button>
+                <button class="action-btn detail"SNZG-2024-0002')">溯源</button>
+                <button class="action-btn qrcode"SNZG-2024-0002')">二维码</button>
+                <button class="action-btn chain"SNZG-2024-0002')">链详情</button>
               </div>
             </td>
           </tr>
@@ -471,9 +214,9 @@
             <td>2024-05-17</td>
             <td>
               <div class="action-btns">
-                <button class="action-btn detail" onclick="showDetail('SNZG-2024-0003')">溯源</button>
-                <button class="action-btn qrcode" onclick="showQRCode('SNZG-2024-0003')">二维码</button>
-                <button class="action-btn upload" onclick="uploadToChain('SNZG-2024-0003')">上链</button>
+                <button class="action-btn detail"SNZG-2024-0003')">溯源</button>
+                <button class="action-btn qrcode"SNZG-2024-0003')">二维码</button>
+                <button class="action-btn upload"SNZG-2024-0003')">上链</button>
               </div>
             </td>
           </tr>
@@ -488,9 +231,9 @@
             <td>2024-05-18</td>
             <td>
               <div class="action-btns">
-                <button class="action-btn detail" onclick="showDetail('SNZG-2024-0004')">溯源</button>
-                <button class="action-btn qrcode" onclick="showQRCode('SNZG-2024-0004')">二维码</button>
-                <button class="action-btn upload" onclick="uploadToChain('SNZG-2024-0004')">重试上链</button>
+                <button class="action-btn detail"SNZG-2024-0004')">溯源</button>
+                <button class="action-btn qrcode"SNZG-2024-0004')">二维码</button>
+                <button class="action-btn upload"SNZG-2024-0004')">重试上链</button>
               </div>
             </td>
           </tr>
@@ -505,9 +248,9 @@
             <td>2024-05-20</td>
             <td>
               <div class="action-btns">
-                <button class="action-btn detail" onclick="showDetail('SNZG-2024-0005')">溯源</button>
-                <button class="action-btn qrcode" onclick="showQRCode('SNZG-2024-0005')">二维码</button>
-                <button class="action-btn upload" onclick="uploadToChain('SNZG-2024-0005')">上链</button>
+                <button class="action-btn detail"SNZG-2024-0005')">溯源</button>
+                <button class="action-btn qrcode"SNZG-2024-0005')">二维码</button>
+                <button class="action-btn upload"SNZG-2024-0005')">上链</button>
               </div>
             </td>
           </tr>
@@ -522,134 +265,15 @@
       </div>
     </div>
   </div>
-</div>
-<div id="addModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="modal-title">生成追溯码</div>
-      <div class="modal-close" onclick="closeModal('addModal')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">产品名称 *</label>
-        <select class="form-select">
-          <option value="">请选择产品</option>
-          <option value="hongfushi">烟台红富士苹果</option>
-          <option value="huangjin">招远黄金苹果</option>
-          <option value="lihe">蓬莱苹果礼盒</option>
-          <option value="guozhi">威海苹果汁</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">批次号 *</label>
-          <input type="text" class="form-input" placeholder="如：PC-20240520-01">
-        </div>
-        <div class="form-group">
-          <label class="form-label">产品类型 *</label>
-          <select class="form-select">
-            <option value="">请选择类型</option>
-            <option value="fresh">鲜果</option>
-            <option value="processed">加工品</option>
-            <option value="gift">礼盒装</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">产地来源 *</label>
-        <select class="form-select">
-          <option value="">请选择基地</option>
-          <option value="qixia">烟台栖霞基地</option>
-          <option value="zhaoyuan">招远基地</option>
-          <option value="penglai">蓬莱阁基地</option>
-          <option value="rongcheng">威海荣成基地</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">备注</label>
-        <textarea class="form-textarea" placeholder="请输入追溯备注信息"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="jg-btn" onclick="closeModal('addModal')">取消</button>
-      <button class="jg-btn jg-btn-primary" onclick="handleAdd()">确认生成</button>
-    </div>
+    </main>
   </div>
+
 </div>
-<div id="detailModal" class="modal-overlay">
-  <div class="modal-content" style="max-width: 650px;">
-    <div class="modal-header">
-      <div class="modal-title">溯源链条详情</div>
-      <div class="modal-close" onclick="closeModal('detailModal')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div style="margin-bottom: 16px; padding: 12px; background: #f6ffed; border-radius: 6px; border-left: 3px solid #52c41a;">
-        <div style="font-weight: 600; margin-bottom: 8px;">追溯码：SNZG-2024-0001</div>
-        <div style="color: #666; font-size: 12px;">批次号：PC-20240515-01 | 产品：烟台红富士苹果 | 产地：烟台栖霞基地</div>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <div style="width: 28px; height: 28px; background: #22a84a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">1</div>
-          <div><div style="font-weight: 600;">种植环节</div><div style="color: #666; font-size: 12px;">栖霞基地 A1地块 | 烟台红富士 | 种植时间：2023-03-15</div></div>
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <div style="width: 28px; height: 28px; background: #22a84a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">2</div>
-          <div><div style="font-weight: 600;">农事记录</div><div style="color: #666; font-size: 12px;">施肥3次 / 打药2次 / 灌溉5次 | 最近操作：2024-05-10 疏果</div></div>
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <div style="width: 28px; height: 28px; background: #22a84a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">3</div>
-          <div><div style="font-weight: 600;">品质检测</div><div style="color: #666; font-size: 12px;">农残检测：合格 | 糖度：14.2% | 规格：80mm+ | 检测时间：2024-05-14</div></div>
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <div style="width: 28px; height: 28px; background: #22a84a; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">4</div>
-          <div><div style="font-weight: 600;">采收包装</div><div style="color: #666; font-size: 12px;">采收时间：2024-05-15 | 包装规格：5kg/箱 | 入库温度：2-4℃</div></div>
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-          <div style="width: 28px; height: 28px; background: #1890ff; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">5</div>
-          <div><div style="font-weight: 600;">物流配送</div><div style="color: #888; font-size: 12px;">待发货</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="jg-btn" onclick="closeModal('detailModal')">关闭</button>
-      <button class="jg-btn jg-btn-primary" onclick="showToast('打印溯源报告成功', 'success')">打印溯源报告</button>
-    </div>
-  </div>
-</div>
-<div id="filterModal" class="modal-overlay">
-  <div class="modal-content" style="max-width: 400px;">
-    <div class="modal-header">
-      <div class="modal-title">筛选条件</div>
-      <div class="modal-close" onclick="closeModal('filterModal')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">追溯状态</label>
-        <select class="form-select">
-          <option value="">全部</option>
-          <option value="traced">已追溯</option>
-          <option value="tracing">追溯中</option>
-          <option value="pending">待追溯</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">产品类型</label>
-        <select class="form-select">
-          <option value="">全部</option>
-          <option value="fresh">鲜果</option>
-          <option value="processed">加工品</option>
-          <option value="gift">礼盒装</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">产地来源</label>
-        <select class="form-select">
-          <option value="">全部</option>
-          <option value="qixia">烟台栖霞基地</option>
-          <option value="zhaoyuan">招远基地</option>
-          <option value="penglai">蓬莱阁基地</option>
-          <option value="rongcheng">威海荣成基地</option>
-        </select>
-      </div>
-    </div>
-    <div class="
+
+<!-- 引入交互脚本 -->
+<script src="js/sidebar-layout.js"></script>
+
+<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
+  <script src="js/iframe-hide.js"></script>
+</body>
+</html>

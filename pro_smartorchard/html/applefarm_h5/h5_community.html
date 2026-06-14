@@ -1,759 +1,221 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>数农智果 - 认养社区</title>
-<link rel="stylesheet" href="../css/design-system.css">
-<style>
-/* ==================== 基础重置 ==================== */
-* { margin:0; padding:0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: var(--bg-page);
-  color: var(--text-primary);
-  line-height:1.5;
-  -webkit-font-smoothing: antialiased;
-  padding-bottom: calc(60px + env(safe-area-inset-bottom));
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>智慧果园 - 认养社区</title>
+  <link rel="stylesheet" href="../applefarm_mobile/css/mobile-design-system.css">
+  <style>
+    /* ========== 页面专属样式 ========== */
+    .community-header {
+      background: var(--gradient-header);
+      padding: calc(var(--safe-top) + 12px) var(--space-4) var(--space-6);
+      color: var(--text-on-primary);
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      box-shadow: var(--shadow-header);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .community-header::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -15%;
+      width: 70%; height: 120%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .community-header > * { position: relative; z-index: 1; }
+    .community-title { font-size: var(--font-xl); font-weight: var(--font-bold); margin-bottom: var(--space-1); }
+    .community-subtitle { font-size: var(--font-sm); opacity: 0.85; }
 
-/* ==================== 顶部导航 ==================== */
-.header {
-  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-}
-.header-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.header-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.95); }
-.header-title {
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
+    /* 发布栏 */
+    .publish-bar {
+      background: var(--bg-white);
+      margin: var(--space-3) var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .publish-input {
+      flex: 1;
+      padding: var(--space-2) var(--space-3);
+      background: var(--gray-50);
+      border-radius: var(--radius-full);
+      border: none;
+      font-size: var(--font-sm);
+      color: var(--text-placeholder);
+      cursor: pointer;
+    }
 
-/* ==================== 社区头部 ==================== */
-.community-header {
-  background: white;
-  margin: 12px 16px;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  position: relative;
-  overflow: hidden;
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-}
-.community-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-500), var(--primary-600), #a855f7);
-}
-.header-info {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  box-shadow: 0 4px 12px rgba(34,168,74,0.3);
-  flex-shrink: 0;
-}
-.user-info { flex: 1; }
-.user-name {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-.user-meta {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.header-stats {
-  display: flex;
-  justify-content: space-around;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-light);
-}
-.stat-item { text-align: center; }
-.stat-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary-600);
-  line-height: 1.2;
-}
-.stat-label {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-/* ==================== 发布按钮 ==================== */
-.publish-bar {
-  margin: 12px 16px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  animation: fadeInUp 0.5s ease forwards;
-  animation-delay: 0.1s;
-  opacity: 0;
-}
-.publish-input {
-  flex: 1;
-  padding: 10px 16px;
-  background: white;
-  border: 1.5px solid var(--border-light);
-  border-radius: 20px;
-  font-size: 13px;
-  color: var(--text-primary);
-  outline: none;
-  transition: all 0.3s ease;
-}
-.publish-input:focus {
-  border-color: var(--primary-400);
-  box-shadow: 0 2px 8px rgba(34,168,74,0.15);
-}
-.publish-btn {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(34,168,74,0.3);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.publish-btn:active { transform: scale(0.95); }
-
-/* ==================== 动态列表 ==================== */
-.post-section {
-  padding: 0 16px 20px;
-}
-.post-card {
-  background: white;
-  border-radius: 16px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.4s ease forwards;
-  opacity: 0;
-}
-.post-card:nth-child(1) { animation-delay: 0.15s; }
-.post-card:nth-child(2) { animation-delay: 0.2s; }
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.post-card:active {
-  transform: scale(0.99);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-/* 动态头部 */
-.post-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-}
-.post-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-  position: relative;
-}
-.post-avatar.online::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  background: #22c55e;
-  border-radius: 50%;
-  border: 2px solid white;
-}
-.post-user-info { flex: 1; }
-.post-user-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 2px;
-}
-.post-time {
-  font-size: 11px;
-  color: var(--text-light);
-}
-.post-more {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-.post-more:active { background: var(--border-light); }
-
-/* 动态内容 */
-.post-content {
-  padding: 0 16px 14px;
-}
-.post-text {
-  font-size: 14px;
-  color: var(--text-primary);
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
-.post-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-.post-tag {
-  padding: 3px 10px;
-  background: #f0fdf4;
-  color: var(--primary-600);
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 500;
-}
-.post-image {
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 60px;
-  position: relative;
-  overflow: hidden;
-}
-.post-image::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.05));
-}
-
-/* 动态底部 */
-.post-footer {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 16px;
-  border-top: 1px solid var(--border-light);
-}
-.post-action {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.post-action:active { background: var(--bg-hover); }
-.post-action.active { color: #ef4444; }
-.post-action-icon {
-  width: 18px;
-  height: 18px;
-  transition: all 0.2s;
-}
-.post-action.active .post-action-icon { color: #ef4444; }
-
-/* ==================== 骨架屏 ==================== */
-.skeleton-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: white;
-  z-index: 9999;
-  transition: opacity 0.4s ease;
-}
-.skeleton-screen.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-.skeleton-header {
-  height: 48px;
-  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-  border-radius: 0 0 12px 12px;
-}
-.skeleton-community {
-  height: 180px;
-  background: white;
-  margin: 12px 16px;
-  border-radius: 16px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.8s ease-in-out infinite;
-}
-.skeleton-post {
-  height: 280px;
-  background: white;
-  margin: 12px 16px;
-  border-radius: 16px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.8s ease-in-out infinite;
-  animation-delay: 0.1s;
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* ==================== 下拉刷新 ==================== */
-.pull-to-refresh {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-  color: white;
-  font-size: 13px;
-  transform: translateY(-100%);
-  transition: transform 0.3s ease;
-  z-index: 99;
-}
-.pull-to-refresh.show {
-  transform: translateY(0);
-}
-.pull-to-refresh .spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-right: 8px;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ==================== 底部导航 ==================== */
-.footer-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  padding: 8px 0 12px;
-  display: flex;
-  justify-content: space-around;
-  box-shadow: 0 -2px 20px rgba(0,0,0,0.08);
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 4px 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 8px;
-  position: relative;
-}
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 3px;
-  background: var(--primary-500);
-  border-radius: 0 0 3px 3px;
-}
-.nav-icon {
-  width: 22px;
-  height: 22px;
-  transition: all 0.2s;
-}
-.nav-text {
-  font-size: 10px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-.nav-item.active .nav-icon { color: var(--primary-500); }
-.nav-item.active .nav-text { color: var(--primary-500); font-weight: 600; }
-
-/* ==================== 响应式 ==================== */
-@media (max-width: 320px) {
-  .post-image { height: 160px; }
-  .stat-value { font-size: 18px; }
-}
-</style>
+    /* 动态卡片 */
+    .feed-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin: var(--space-3) var(--space-4);
+      border: 1px solid var(--border);
+    }
+    .feed-header {
+      display: flex; align-items: center; gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    .feed-avatar {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--primary-50);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+    .feed-user-info { flex: 1; }
+    .feed-username { font-size: var(--font-base); font-weight: var(--font-semibold); color: var(--text); }
+    .feed-time { font-size: var(--font-xs); color: var(--text-tertiary); }
+    .feed-content { font-size: var(--font-base); color: var(--text); line-height: 1.6; margin-bottom: var(--space-3); }
+    .feed-images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+    .feed-img {
+      height: 0;
+      padding-bottom: 100%;
+      border-radius: var(--radius-md);
+      background: var(--primary-50);
+      position: relative;
+    }
+    .feed-img span {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+    }
+    .feed-actions {
+      display: flex; gap: var(--space-6);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--border-light);
+    }
+    .feed-action {
+      display: flex; align-items: center; gap: var(--space-1);
+      font-size: var(--font-sm); color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .feed-action svg { width: 18px; height: 18px; }
+    .feed-action:active { color: var(--primary); }
+  </style>
 </head>
 <body>
+  <div class="mb-app">
+    <!-- 社区头部 -->
+    <header class="community-header">
+      <div class="community-title">认养社区</div>
+      <div class="community-subtitle">分享你的果园生活</div>
+    </header>
 
-<!-- 骨架屏 -->
-<div class="skeleton-screen" id="skeletonScreen">
-  <div class="skeleton-header"></div>
-  <div class="skeleton-community"></div>
-  <div class="skeleton-post"></div>
-  <div class="skeleton-post" style="animation-delay: 0.2s;"></div>
-</div>
-
-<!-- 下拉刷新 -->
-<div class="pull-to-refresh" id="pullToRefresh">
-  <div class="spinner"></div>
-  <span>正在刷新...</span>
-</div>
-
-<!-- 顶部导航 -->
-<header class="header">
-  <button class="header-btn" aria-label="返回" onclick="history.back()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-      <path d="M19 12H5"/>
-      <path d="M12 19l-7-7 7-7"/>
-    </svg>
-  </button>
-  <div class="header-title">认养社区</div>
-  <button class="header-btn" aria-label="发布">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-      <path d="M12 5v14M5 12h14"/>
-    </svg>
-  </button>
-</header>
-
-<!-- 社区头部 -->
-<div class="community-header">
-  <div class="header-info">
-    <div class="avatar">🍎</div>
-    <div class="user-info">
-      <div class="user-name">数农智果官方</div>
-      <div class="user-meta">认养果树 · 128棵 · 认证商家</div>
+    <!-- 发布栏 -->
+    <div class="publish-bar" onclick="showToast('发布功能开发中...')">
+      <div class="feed-avatar" style="width:32px;height:32px;font-size:16px;">😊</div>
+      <div class="publish-input">分享你的果园故事...</div>
+      <button class="mb-btn mb-btn-sm mb-btn-primary">发布</button>
     </div>
-  </div>
-  <div class="header-stats">
-    <div class="stat-item">
-      <div class="stat-value">12.8k</div>
-      <div class="stat-label">粉丝</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">256</div>
-      <div class="stat-label">动态</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">3.2k</div>
-      <div class="stat-label">获赞</div>
-    </div>
-  </div>
-</div>
 
-<!-- 发布栏 -->
-<div class="publish-bar">
-  <input type="text" class="publish-input" placeholder="分享你的果园故事..." id="publishInput">
-  <button class="publish-btn" onclick="publish()">发布</button>
-</div>
-
-<!-- 动态列表 -->
-<div class="post-section" id="postSection">
-  <!-- 动态1 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div class="post-avatar online">👩</div>
-      <div class="post-user-info">
-        <div class="post-user-name">李女士</div>
-        <div class="post-time">2小时前</div>
+    <!-- 动态列表 -->
+    <div class="feed-card">
+      <div class="feed-header">
+        <div class="feed-avatar">👩‍🌾</div>
+        <div class="feed-user-info">
+          <div class="feed-username">果园达人小李</div>
+          <div class="feed-time">2小时前</div>
+        </div>
+        <span class="mb-tag success">已认养</span>
       </div>
-      <button class="post-more" aria-label="更多" onclick="showToast('更多操作')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-          <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
-        </svg>
-      </button>
-    </div>
-    <div class="post-content">
-      <div class="post-text">我的果树今年长势很好！期待秋天的收获 🌳</div>
-      <div class="post-tags">
-        <span class="post-tag">#红富士</span>
-        <span class="post-tag">#认养果园</span>
+      <div class="feed-content">今天去看望了我认养的红富士果树，长势非常好！已经套好袋了，期待秋天的丰收 🍎</div>
+      <div class="feed-images">
+        <div class="feed-img"><span>🌳</span></div>
+        <div class="feed-img"><span>🍎</span></div>
+        <div class="feed-img"><span>🌿</span></div>
       </div>
-      <div class="post-image">🌳</div>
-    </div>
-    <div class="post-footer">
-      <div class="post-action active" onclick="toggleLike(this)">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-        </svg>
-        <span>128</span>
-      </div>
-      <div class="post-action" onclick="showToast('评论功能开发中')">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
-        </svg>
-        <span>32</span>
-      </div>
-      <div class="post-action" onclick="showToast('分享成功')">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 8h-1.5a2.5 2.5 0 000 5h1a2.5 2.5 0 010 5H14m-4.5-5h1.5a2.5 2.5 0 010 5H10m-4.5-5h1.5a2.5 2.5 0 010 5H5"/>
-        </svg>
-        <span>分享</span>
+      <div class="feed-actions">
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>128</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>36</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</div>
       </div>
     </div>
+
+    <div class="feed-card">
+      <div class="feed-header">
+        <div class="feed-avatar">👨‍🌾</div>
+        <div class="feed-user-info">
+          <div class="feed-username">果农老王</div>
+          <div class="feed-time">5小时前</div>
+        </div>
+        <span class="mb-tag warning">待收货</span>
+      </div>
+      <div class="feed-content">收到了认养果树的苹果，又大又甜！全程溯源看得见，吃得放心！强烈推荐大家认养 🎁</div>
+      <div class="feed-images">
+        <div class="feed-img"><span>📦</span></div>
+        <div class="feed-img"><span>🍎</span></div>
+      </div>
+      <div class="feed-actions">
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>256</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>52</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</div>
+      </div>
+    </div>
+
+    <div class="feed-card">
+      <div class="feed-header">
+        <div class="feed-avatar">🌸</div>
+        <div class="feed-user-info">
+          <div class="feed-username">甜蜜果缘</div>
+          <div class="feed-time">昨天</div>
+        </div>
+      </div>
+      <div class="feed-content">认养果树三年了，每年都能收到新鲜苹果，还有认养证书和果树铭牌，特别有仪式感！今年又续了两年 🌳</div>
+      <div class="feed-actions">
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>89</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>18</div>
+        <div class="feed-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>分享</div>
+      </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <nav class="mb-tab-bar">
+      <div class="mb-tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>首页</span>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('h5_store.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>商城</span>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('trace_h5.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>溯源</span>
+      </div>
+      <div class="mb-tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span>社区</span>
+      </div>
+    </nav>
   </div>
 
-  <!-- 动态2 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div class="post-avatar">👨</div>
-      <div class="post-user-info">
-        <div class="post-user-name">张先生</div>
-        <div class="post-time">5小时前</div>
-      </div>
-      <button class="post-more" aria-label="更多" onclick="showToast('更多操作')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-          <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
-        </svg>
-      </button>
-    </div>
-    <div class="post-content">
-      <div class="post-text">今天去果园看了我的两棵果树，长得很壮！感谢数农智果的精心照料 🍏</div>
-      <div class="post-tags">
-        <span class="post-tag">#果树认养</span>
-        <span class="post-tag">#嘎啦苹果</span>
-      </div>
-      <div class="post-image">🍏</div>
-    </div>
-    <div class="post-footer">
-      <div class="post-action" onclick="toggleLike(this)">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-        </svg>
-        <span>86</span>
-      </div>
-      <div class="post-action" onclick="showToast('评论功能开发中')">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
-        </svg>
-        <span>15</span>
-      </div>
-      <div class="post-action" onclick="showToast('分享成功')">
-        <svg class="post-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 8h-1.5a2.5 2.5 0 000 5h1a2.5 2.5 0 010 5H14m-4.5-5h1.5a2.5 2.5 0 010 5H10m-4.5-5h1.5a2.5 2.5 0 010 5H5"/>
-        </svg>
-        <span>分享</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 底部导航 -->
-<div class="footer-nav">
-  <div class="nav-item" onclick="location.href='h5_store.html'">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-      <polyline points="9 22 9 12 15 12 15 22"/>
-    </svg>
-    <span class="nav-text">首页</span>
-  </div>
-  <div class="nav-item" onclick="location.href='h5_cart.html'">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 01-8 0"/>
-    </svg>
-    <span class="nav-text">购物车</span>
-  </div>
-  <div class="nav-item active">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-      <path d="M16 3.13a4 4 0 010 7.75"/>
-    </svg>
-    <span class="nav-text">社区</span>
-  </div>
-  <div class="nav-item" onclick="location.href='h5_member.html'">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-      <circle cx="12" cy="7" r="4"/>
-    </svg>
-    <span class="nav-text">我的</span>
-  </div>
-</div>
-
-<script>
-// ==================== 骨架屏 ====================
-window.addEventListener('load', function() {
-  setTimeout(() => {
-    document.getElementById('skeletonScreen').classList.add('hide');
-    setTimeout(() => {
-      document.getElementById('skeletonScreen').style.display = 'none';
-    }, 400);
-  }, 600);
-});
-
-// ==================== 下拉刷新 ====================
-let startY = 0;
-let pulling = false;
-const pullThreshold = 60;
-const pullToRefresh = document.getElementById('pullToRefresh');
-
-document.addEventListener('touchstart', function(e) {
-  if (window.scrollY === 0) {
-    startY = e.touches[0].clientY;
-    pulling = true;
-  }
-}, { passive: true });
-
-document.addEventListener('touchmove', function(e) {
-  if (!pulling || window.scrollY > 0) return;
-  
-  const currentY = e.touches[0].clientY;
-  const diff = currentY - startY;
-  
-  if (diff > 0 && diff < pullThreshold) {
-    pullToRefresh.style.transform = `translateY(${diff * 0.5}px)`;
-  }
-}, { passive: true });
-
-document.addEventListener('touchend', function() {
-  if (!pulling) return;
-  
-  const currentY = event.changedTouches[0].clientY;
-  const diff = currentY - startY;
-  
-  if (diff > pullThreshold) {
-    pullToRefresh.classList.add('show');
-    setTimeout(() => {
-      pullToRefresh.classList.remove('show');
-      pullToRefresh.style.transform = 'translateY(-100%)';
-      showToast('刷新成功');
-    }, 1500);
-  } else {
-    pullToRefresh.style.transform = 'translateY(-100%)';
-  }
-  
-  pulling = false;
-});
-
-// ==================== 点赞交互 ====================
-function toggleLike(element) {
-  const svg = element.querySelector('svg');
-  const span = element.querySelector('span');
-  const count = parseInt(span.textContent);
-  
-  if (svg.getAttribute('fill') === 'none') {
-    svg.setAttribute('fill', 'currentColor');
-    element.classList.add('active');
-    span.textContent = count + 1;
-  } else {
-    svg.setAttribute('fill', 'none');
-    element.classList.remove('active');
-    span.textContent = count - 1;
-  }
-}
-
-// ==================== 发布动态 ====================
-function publish() {
-  const input = document.getElementById('publishInput');
-  const content = input.value.trim();
-  if (!content) {
-    showToast('请输入内容');
-    return;
-  }
-  showToast('发布成功');
-  input.value = '';
-}
-
-// ==================== Toast提示 ====================
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    z-index: 1000;
-    animation: fadeInOut 2s ease;
-  `;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2000);
-}
-
-// 添加CSS动画
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeInOut {
-    0% { opacity:0; transform: translate(-50%, -50%) scale(0.8); }
-    20% { opacity:1; transform: translate(-50%, -50%) scale(1); }
-    80% { opacity:1; }
-    100% { opacity:0; }
-  }
-`;
-document.head.appendChild(style);
-</script>
+  <script>
+    function navigateTo(page) { window.location.href = page; }
+    function showToast(message) {
+      var toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:999;animation:fadeInOut 2s ease;';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(function() { toast.remove(); }, 2000);
+    }
+    var style = document.createElement('style');
+    style.textContent = '@keyframes fadeInOut { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.8)} 20%{opacity:1;transform:translate(-50%,-50%) scale(1)} 80%{opacity:1} 100%{opacity:0} }';
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>

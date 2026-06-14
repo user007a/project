@@ -3,273 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数农智果 - 农事发布管理</title>
+<title>智慧果园 - 农事发布管理</title>
+<!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/sidebar-layout.css">
+  <link rel="stylesheet" href="css/page-content.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-family); background: var(--bg-base); color: var(--text-secondary); font-size: var(--font-size-base); }
-  .header { background: var(--gradient-header); height: 56px; display: flex; align-items: center; padding: 0 var(--space-xl); position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-dropdown); box-shadow: var(--shadow-md); }
-  .logo { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-inverse); font-size: 20px; font-weight: var(--font-weight-bold); letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
-  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: var(--bg-card); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
-  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav-menu::-webkit-scrollbar { display: none; }
-  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: var(--space-sm); cursor: pointer; font-size: var(--font-size-base); border-bottom: 3px solid transparent; transition: all var(--transition-normal); white-space: nowrap; text-decoration: none; flex-shrink: 0; }
-  .snzg-nav-item:hover { color: var(--text-inverse); background: rgba(255,255,255,0.1); }
-  .snzg-nav-item.active { color: var(--text-inverse); border-bottom: 3px solid var(--text-inverse); font-weight: var(--font-weight-semibold); }
-  .snzg-nav-sep { width: 1px; height: var(--space-2xl); background: rgba(255,255,255,0.4); margin: 0 var(--space-xs); flex-shrink: 0; }
-  .nav-icon { font-size: var(--font-size-lg); }
-  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-sm); background: none; border: none; }
-  .jg-hamburger span { width: var(--space-2xl); height: 2px; background: var(--text-inverse); border-radius: 1px; }
-  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: var(--gradient-header); padding: var(--space-md); z-index: 99; box-shadow: var(--shadow-md); }
-  .jg-mobile-nav.show { display: block; }
-  .jg-mobile-nav-item { display: block; padding: var(--space-md) var(--space-lg); color: var(--text-inverse); font-size: var(--font-size-lg); text-decoration: none; border-radius: var(--radius-sm); transition: background var(--transition-normal); }
-  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
-  .subnav-bar { display: flex; align-items: center; background: var(--bg-card); border-radius: var(--radius-md); padding: var(--space-xs); margin-bottom: var(--space-lg); box-shadow: var(--shadow-xs); }
-  .nav-arrow { width: var(--space-2xl); height: var(--space-2xl); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-disabled); font-size: 20px; border-radius: var(--radius-sm); transition: all var(--transition-normal); }
-  .nav-arrow:hover { background: var(--gray-100); color: var(--text-tertiary); }
-  .subnav-menu { flex: 1; display: flex; gap: var(--space-xs); overflow-x: auto; scrollbar-width: none; }
-  .subnav-menu::-webkit-scrollbar { display: none; }
-  .subnav-item { padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); font-size: var(--font-size-base); color: var(--text-tertiary); text-decoration: none; white-space: nowrap; transition: all var(--transition-normal); }
-  .subnav-item:hover { background: var(--gray-100); color: var(--text-secondary); }
-  .subnav-item.active { background: var(--primary-500); color: var(--text-inverse); }
-  .header-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; position: relative; }
-  .msg-btn { width: var(--space-3xl); height: var(--space-3xl); background: rgba(255,255,255,0.15); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--text-inverse); font-size: var(--font-size-xl); }
-  .msg-badge { position: absolute; top: -4px; right: -4px; background: var(--danger-500); color: var(--text-inverse); font-size: var(--font-size-xs); padding: 1px var(--space-xs); border-radius: var(--radius-lg); font-weight: var(--font-weight-semibold); min-width: var(--space-2xl); text-align: center; }
-  .snzg-user-btn { display: flex; align-items: center; gap: var(--space-xs); color: var(--text-inverse); cursor: pointer; padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-xs); transition: background var(--transition-normal); font-size: var(--font-size-base); background: none; border: none; }
-  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
-  .snzg-user-avatar { width: var(--space-2xl); height: var(--space-2xl); background: rgba(255,255,255,0.25); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: var(--font-size-sm); }
-  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 200px; z-index: var(--z-dropdown); overflow: hidden; display: none; }
-  .snzg-user-menu.show { display: block; }
-  .snzg-user-info { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); background: var(--gray-50); border-bottom: 1px solid var(--border-light); }
-  .snzg-user-info-avatar { width: var(--space-3xl); height: var(--space-3xl); background: var(--gradient-header); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: var(--text-inverse); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
-  .snzg-user-info-name { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-secondary); }
-  .snzg-user-info-role { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .snzg-user-menu-item { display: block; padding: var(--space-sm) var(--space-lg); color: var(--text-secondary); font-size: var(--font-size-base); cursor: pointer; transition: background var(--transition-normal); text-decoration: none; }
-  .snzg-user-menu-item:hover { background: var(--gray-100); }
-  .snzg-user-menu-item.danger { color: var(--danger-500); }
-  .snzg-user-menu-item.danger:hover { background: var(--danger-50); }
-  .snzg-user-menu-sep { height: 1px; background: var(--border-light); margin: var(--space-xs) 0; }
-  .main-wrap { margin-top: 56px; padding: var(--space-lg) var(--space-xl) var(--space-2xl); min-height: calc(100vh - 56px); }
-  .page-header { background: var(--bg-card); border-radius: var(--radius-md); padding: var(--space-lg) var(--space-xl); margin-bottom: var(--space-lg); box-shadow: var(--shadow-xs); display: flex; align-items: center; justify-content: space-between; }
-  .page-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
-  .page-title .title-icon { font-size: 22px; }
-  .page-desc { font-size: var(--font-size-base); color: var(--text-tertiary); margin-top: var(--space-xs); }
-  .page-actions { display: flex; gap: var(--space-sm); }
-  .jg-btn { display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); border: 1px solid var(--border-base); background: var(--bg-card); cursor: pointer; font-size: var(--font-size-xs); color: var(--text-secondary); transition: all var(--transition-normal); white-space: nowrap; font-family: inherit; }
-  .jg-btn:hover { border-color: var(--primary-500); color: var(--primary-500); box-shadow: var(--shadow-primary); }
-  .jg-btn.jg-btn-primary { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .jg-btn.jg-btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
-  .jg-btn.jg-btn-danger { background: var(--bg-card); color: var(--danger-500); border-color: var(--danger-500); }
-  .jg-btn.jg-btn-danger:hover { background: var(--danger-50); }
-  .snzg-panel { background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); overflow: hidden; margin-bottom: var(--space-lg); }
-  .snzg-panel-header { padding: var(--space-md) var(--space-lg); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
-  .snzg-panel-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-xs); }
-  .snzg-panel-title .pt-icon { font-size: var(--font-size-xl); }
-  .snzg-panel-body { padding: var(--space-md) var(--space-lg); }
-  .farming-type-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg); }
-  .farming-type-card { padding: var(--space-xl) var(--space-lg); text-align: center; border: 2px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-normal); }
-  .farming-type-card:hover { border-color: var(--primary-500); background: var(--success-50); }
-  .farming-type-card.active { border-color: var(--primary-500); background: var(--success-50); }
-  .farming-type-card .type-icon { font-size: 32px; margin-bottom: var(--space-sm); }
-  .farming-type-card .type-name { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--text-secondary); }
-  .search-bar { display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap; }
-  .search-input { padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-base); border-radius: var(--radius-sm); font-size: var(--font-size-xs); width: 200px; transition: border-color var(--transition-normal); }
-  .search-input:focus { outline: none; border-color: var(--primary-500); }
-  .search-select { padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-base); border-radius: var(--radius-sm); font-size: var(--font-size-xs); cursor: pointer; }
-  .search-select:focus { outline: none; border-color: var(--primary-500); }
-  .data-table { width: 100%; border-collapse: collapse; font-size: var(--font-size-base); }
-  .data-table th, .data-table td { padding: var(--space-md) 14px; text-align: left; border-bottom: 1px solid var(--border-light); }
-  .data-table th { background: var(--gray-50); font-weight: var(--font-weight-semibold); color: var(--text-secondary); }
-  .data-table tr:hover { background: var(--gray-50); }
-  .data-table .text-center { text-align: center; }
-  .data-table .tree-info { display: flex; align-items: center; gap: var(--space-sm); }
-  .data-table .tree-icon { font-size: 24px; }
-  .data-table .tree-name { font-weight: var(--font-weight-semibold); }
-  .data-table .tree-code { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .data-table .farming-type-tag { display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 10px; border-radius: var(--radius-lg); font-size: var(--font-size-xs); }
-  .farming-type-tag.fertilize { background: var(--success-50); color: var(--success-500); }
-  .farming-type-tag.water { background: var(--info-50); color: var(--info-500); }
-  .farming-type-tag.prune { background: var(--warning-50); color: var(--warning-500); }
-  .farming-type-tag.bag { background: #f5f0ff; color: #722ed1; }
-  .farming-type-tag.other { background: var(--gray-100); color: var(--text-disabled); }
-  .data-table .status-tag { display: inline-block; padding: 2px var(--space-sm); border-radius: var(--radius-lg); font-size: var(--font-size-xs); font-weight: 500; }
-  .status-tag.pushed { background: var(--success-50); color: var(--success-500); }
-  .status-tag.pending { background: var(--warning-50); color: var(--warning-500); }
-  .status-tag.failed { background: var(--danger-50); color: var(--danger-500); }
-  .data-table .action-btns { display: flex; gap: var(--space-sm); }
-  .action-btn { padding: var(--space-xs) 10px; font-size: var(--font-size-xs); border-radius: var(--radius-xs); cursor: pointer; border: none; background: transparent; color: var(--text-tertiary); transition: all var(--transition-normal); }
-  .action-btn:hover { background: var(--gray-100); }
-  .action-btn.edit { color: var(--info-500); }
-  .action-btn.edit:hover { background: var(--info-50); }
-  .action-btn.view { color: var(--primary-500); }
-  .action-btn.view:hover { background: var(--success-50); }
-  .action-btn.repush { color: var(--warning-500); }
-  .action-btn.repush:hover { background: var(--warning-50); }
-  .pagination { display: flex; align-items: center; justify-content: center; gap: var(--space-sm); padding: var(--space-lg); }
-  .page-btn { width: var(--space-2xl); height: var(--space-2xl); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-base); border-radius: var(--radius-xs); cursor: pointer; background: var(--bg-card); font-size: var(--font-size-xs); transition: all var(--transition-normal); }
-  .page-btn:hover { border-color: var(--primary-500); color: var(--primary-500); }
-  .page-btn.active { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .page-btn.disabled { opacity: 0.5; cursor: not-allowed; }
-  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: var(--z-modal-backdrop); display: none; align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal-content { background: var(--bg-card); border-radius: var(--radius-md); width: 90%; max-width: 700px; overflow: hidden; animation: modalIn var(--transition-normal) ease; }
-  @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-  .modal-header { padding: var(--space-md) var(--space-lg); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
-  .modal-title { font-size: 15px; font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .modal-close { width: var(--space-2xl); height: var(--space-2xl); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); cursor: pointer; transition: background var(--transition-normal); }
-  .modal-close:hover { background: var(--gray-100); }
-  .modal-body { padding: var(--space-lg); max-height: 70vh; overflow-y: auto; }
-  .form-group { margin-bottom: var(--space-md); }
-  .form-label { display: block; font-size: var(--font-size-base); font-weight: 500; color: var(--text-secondary); margin-bottom: var(--space-xs); }
-  .form-input { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-base); border-radius: var(--radius-sm); font-size: var(--font-size-base); transition: border-color var(--transition-normal); }
-  .form-input:focus { outline: none; border-color: var(--primary-500); }
-  .form-textarea { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-base); border-radius: var(--radius-sm); font-size: var(--font-size-base); resize: vertical; min-height: 100px; }
-  .form-textarea:focus { outline: none; border-color: var(--primary-500); }
-  .form-select { width: 100%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--border-base); border-radius: var(--radius-sm); font-size: var(--font-size-base); cursor: pointer; }
-  .form-select:focus { outline: none; border-color: var(--primary-500); }
-  .photo-upload { border: 2px dashed var(--border-base); border-radius: var(--radius-md); padding: 30px; text-align: center; cursor: pointer; transition: border-color var(--transition-normal); background: var(--gray-50); }
-  .photo-upload:hover { border-color: var(--primary-500); }
-  .photo-upload .upload-icon { font-size: 32px; margin-bottom: var(--space-sm); }
-  .photo-upload .upload-text { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .photo-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm); margin-top: var(--space-md); }
-  .photo-preview img { width: 100%; height: 80px; object-fit: cover; border-radius: var(--radius-sm); }
-  .photo-item { position: relative; }
-  .photo-item .delete-btn { position: absolute; top: 5px; right: 5px; width: var(--space-2xl); height: var(--space-2xl); border-radius: var(--radius-full); background: rgba(255,77,79,0.9); color: var(--text-inverse); border: none; cursor: pointer; font-size: var(--font-size-xs); display: flex; align-items: center; justify-content: center; }
-  .push-option { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md); background: var(--gray-50); border-radius: var(--radius-sm); margin-top: var(--space-md); }
-  .push-option input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-  .modal-footer { padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: var(--space-sm); }
-  .jg-toast { position: fixed; top: 70px; right: var(--space-xl); padding: var(--space-md) var(--space-xl); border-radius: var(--radius-sm); color: var(--text-inverse); font-size: var(--font-size-base); z-index: var(--z-toast); animation: toastIn var(--transition-slow) ease; }
-  @keyframes toastIn { from { opacity: 0; transform: translateX(var(--space-xl)); } to { opacity: 1; transform: translateX(0); } }
-  .jg-toast-success { background: var(--success-500); }
-  .jg-toast-error { background: var(--danger-500); }
-  .jg-toast-info { background: var(--info-500); }
-  @media (max-width: 768px) { .main-wrap { padding: var(--space-md); } .search-bar { flex-direction: column; align-items: stretch; } .search-input { width: 100%; } .page-header { flex-direction: column; gap: var(--space-md); align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } .farming-type-grid { grid-template-columns: repeat(3, 1fr); } .data-table { font-size: var(--font-size-xs); } .data-table th, .data-table td { padding: var(--space-sm) var(--space-xs); } .photo-preview { grid-template-columns: repeat(2, 1fr); } }
+  /* 模块卡片 hover 效果 */
+  .module-card {
+    transition: all 0.2s ease;
+  }
+  .module-card:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 </style>
 </head>
-<body>
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon snzg-logo-icon">
-      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
-        <circle cx="50" cy="55" r="35" fill="#e53935"/>
-        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
-        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
-        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
-      </svg>
-    </div>
-    <span>数农智果</span>
-  </div>
-  <div class="nav-menu">
-    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="device_info.html" class="snzg-nav-item"><span class="nav-icon">📡</span><span>设备管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="alert_settings.html" class="snzg-nav-item"><span class="nav-icon">🔔</span><span>预警管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="harvest_plan.html" class="snzg-nav-item"><span class="nav-icon">🍎</span><span>采收管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="adoption_tree.html" class="snzg-nav-item active"><span class="nav-icon">🌳</span><span>认养管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="model_growth.html" class="snzg-nav-item"><span class="nav-icon">🧠</span> 模型预测中心</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
-  </div>
-  <button id="hamburgerBtn" class="jg-hamburger">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="header-right">
-    <div class="msg-btn">
-      <span>🔔</span>
-      <span class="msg-badge">3</span>
-    </div>
-    <button id="userBtn" class="snzg-user-btn">
-      <span class="snzg-user-avatar">管</span>
-      <span>管理员</span>
-    </button>
-    <div id="userMenu" class="snzg-user-menu">
-      <div class="snzg-user-info">
-        <div class="snzg-user-info-avatar">管</div>
-        <div>
-          <div class="snzg-user-info-name">系统管理员</div>
-          <div class="snzg-user-info-role">超级管理员</div>
-        </div>
+<body data-active-menu="adoption" data-active-submenu="adoption-farming">
+
+<!-- ===== 整体布局容器 ===== -->
+<div class="app-layout">
+
+  <!-- ===== 侧边栏 ===== -->
+  <nav class="sidebar" aria-label="主导航">
+    <!-- 品牌区 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <!-- 苹果绿 Logo SVG -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3C8 1 5 3 5 6.5C5 10 8 14 11 17C14 14 17 10 17 6.5C17 3 14 1 11 3Z" fill="rgba(34,168,74,0.2)"/>
+          <path d="M11 5C9.5 4 7.5 5 7.5 7C7.5 9 9.5 12 11 14"/>
+          <path d="M11 5C12.5 4 14.5 5 14.5 7C14.5 9 12.5 12 11 14"/>
+          <path d="M11 3V1"/>
+        </svg>
       </div>
-      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
-      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
-      <div class="snzg-user-menu-sep"></div>
-      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+      <span class="sidebar-brand-text">智慧果园</span>
     </div>
-  </div>
-</div>
-<div id="mobileNav" class="jg-mobile-nav">
-  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
-  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
-  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
-  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
-  <a href="device_info.html" class="jg-mobile-nav-item">📡 设备管理</a>
-  <a href="alert_settings.html" class="jg-mobile-nav-item">🔔 预警管理</a>
-  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
-  <a href="harvest_plan.html" class="jg-mobile-nav-item">🍎 采收管理</a>
-  <a href="adoption_tree.html" class="jg-mobile-nav-item active">🌳 认养管理</a>
-  <a href="model_growth.html" class="jg-mobile-nav-item">🧠 模型预测中心</a>
-  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
-</div>
-<div class="main-wrap">
-  <div class="subnav-bar">
-    <div class="nav-arrow" onclick="scrollNav(-1)">‹</div>
-    <div class="subnav-menu">
-      <a href="adoption_tree.html" class="subnav-item">认养果树管理</a>
-      <a href="adoption_order.html" class="subnav-item">认养订单管理</a>
-      <a href="adoption_farming.html" class="subnav-item active">农事发布管理</a>
-      <a href="adoption_harvest.html" class="subnav-item">采摘管理</a>
-    </div>
-    <div class="nav-arrow" onclick="scrollNav(1)">›</div>
-  </div>
-  <div class="page-header">
-    <div>
-      <div class="page-title"><span class="title-icon">🌱</span>认养农事发布管理</div>
-      <div class="page-desc">为认养果树发布农事记录并推送通知给认养人</div>
-    </div>
-    <div class="page-actions">
-      <button class="jg-btn jg-btn-primary" onclick="showPublishModal()">
-        <span>📝</span>发布农事记录
+
+    <!-- 菜单主体（由 JS 动态渲染） -->
+    <div class="sidebar-body"></div>
+
+    <!-- 底部功能区 -->
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn sidebar-collapse-btn" title="折叠侧边栏">
+        <span class="collapse-icon">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3L6 9L11 15"/><path d="M14 3V15"/>
+          </svg>
+        </span>
+        <span class="btn-text">折叠</span>
+      </button>
+      <button class="sidebar-footer-btn" title="系统设置" id="btn-settings">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M9 2V4M9 14V16M2 9H4M14 9H16M4.2 4.2L5.6 5.6M12.4 12.4L13.8 13.8M13.8 4.2L12.4 5.6M5.6 12.4L4.2 13.8"/>
+        </svg>
+        <span class="btn-text">设置</span>
       </button>
     </div>
-  </div>
-  <div class="snzg-panel">
+  </nav>
+
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-wrapper">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <!-- 移动端汉堡菜单 -->
+      <button class="topbar-hamburger" aria-label="打开导航菜单">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 6H19M3 11H19M3 16H19"/>
+        </svg>
+      </button>
+      <!-- 右侧功能区 -->
+      <div class="topbar-right">
+        <!-- 通知铃铛 -->
+        <button class="topbar-notification" title="消息通知">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2C7 2 5 4.5 5 7.5V12L3 14H17L15 12V7.5C15 4.5 13 2 10 2Z"/>
+            <path d="M8.5 16C8.5 17 9.2 18 10 18C10.8 18 11.5 17 11.5 16"/>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <!-- 用户信息 -->
+        <div class="topbar-user">
+          <div class="topbar-user-avatar">张</div>
+          <span class="topbar-user-name">张三</span>
+          <span class="topbar-user-arrow">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M3 5L6 8L9 5"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div class="topbar-user-dropdown">
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <circle cx="8" cy="5" r="3"/><path d="M2 15C2 11.5 5 10 8 10C11 10 14 11.5 14 15"/>
+            </svg>
+            个人中心
+          </div>
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M8 2V8L11 11"/><circle cx="8" cy="8" r="6"/>
+            </svg>
+            操作日志
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--error);">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M6 2H3C2.45 2 2 2.45 2 3V13C2 13.55 2.45 14 3 14H6"/><path d="M10 11L14 8L10 5"/><path d="M14 8H6"/>
+            </svg>
+            退出登录
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab 标签栏 -->
+    <div class="tab-bar">
+      <!-- Tab 标签由 JS 动态渲染 -->
+      <div class="tab-bar-actions">
+        <button class="tab-close-all" title="关闭全部标签">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3L11 11M11 3L3 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+<div class="snzg-panel">
     <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon">📝</span>快速发布</div>
+      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>快速发布</div>
     </div>
     <div class="snzg-panel-body">
       <div style="margin-bottom: 16px;">
         <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">选择农事类型</div>
         <div class="farming-type-grid">
-          <div class="farming-type-card active" data-type="fertilize" onclick="selectFarmingType(this)">
-            <div class="type-icon">🧪</div>
+          <div class="farming-type-card active" data-type="fertilize">
+            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M9 3h6"/><path d="M10 9V3h4v6l5 8.5a2 2 0 0 1-1.7 3H6.7a2 2 0 0 1-1.7-3L10 9z"/></svg></div>
             <div class="type-name">施肥</div>
           </div>
-          <div class="farming-type-card" data-type="water" onclick="selectFarmingType(this)">
-            <div class="type-icon">💧</div>
+          <div class="farming-type-card" data-type="water">
+            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
             <div class="type-name">浇水</div>
           </div>
-          <div class="farming-type-card" data-type="prune" onclick="selectFarmingType(this)">
+          <div class="farming-type-card" data-type="prune">
             <div class="type-icon">✂️</div>
             <div class="type-name">修剪</div>
           </div>
-          <div class="farming-type-card" data-type="bag" onclick="selectFarmingType(this)">
-            <div class="type-icon">🎒</div>
+          <div class="farming-type-card" data-type="bag">
+            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M4 10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10z"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 21v-5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/></svg></div>
             <div class="type-name">套袋</div>
           </div>
-          <div class="farming-type-card" data-type="other" onclick="selectFarmingType(this)">
-            <div class="type-icon">📋</div>
+          <div class="farming-type-card" data-type="other">
+            <div class="type-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></div>
             <div class="type-name">其他</div>
           </div>
         </div>
@@ -297,8 +192,8 @@
       </div>
       <div class="form-group">
         <label class="form-label">现场照片</label>
-        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-          <div class="upload-icon">📷</div>
+        <div class="photo-upload"photoInput').click()">
+          <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
           <div class="upload-text">点击上传现场照片<br>支持 JPG、PNG 格式，最多9张</div>
           <input type="file" id="photoInput" style="display:none;" accept="image/*" multiple>
         </div>
@@ -309,15 +204,15 @@
         <label for="pushNotification">推送通知给认养人</label>
       </div>
       <div style="margin-top: 16px;">
-        <button class="jg-btn jg-btn-primary" onclick="handleQuickPublish()">
-          <span>📤</span>发布并推送
+        <button class="jg-btn jg-btn-primary">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg></span>发布并推送
         </button>
       </div>
     </div>
   </div>
   <div class="snzg-panel">
     <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon">📋</span>发布记录</div>
+      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></span>发布记录</div>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="搜索果树..." id="searchInput">
         <select class="search-select" id="typeSelect">
@@ -334,7 +229,7 @@
           <option value="pending">待推送</option>
           <option value="failed">推送失败</option>
         </select>
-        <button class="jg-btn" onclick="doSearch()">搜索</button>
+        <button class="jg-btn">搜索</button>
       </div>
     </div>
     <div class="snzg-panel-body">
@@ -354,51 +249,51 @@
           <tr>
             <td>
               <div class="tree-info">
-                <span class="tree-icon">🌳</span>
+                <span class="tree-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 22v-7"/><path d="M7 15h10l-5-8-5 8z"/><path d="M12 7l3.5-5h-7L12 7z"/></svg></span>
                 <div>
                   <div class="tree-name">红富士 #A025</div>
                   <div class="tree-code">洛川基地 · 张三</div>
                 </div>
               </div>
             </td>
-            <td><span class="farming-type-tag fertilize">🧪 施肥</span></td>
+            <td><span class="farming-type-tag fertilize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M9 3h6"/><path d="M10 9V3h4v6l5 8.5a2 2 0 0 1-1.7 3H6.7a2 2 0 0 1-1.7-3L10 9z"/></svg> 施肥</span></td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">今日对果树进行有机肥施用，每棵施用10公斤有机肥...</td>
-            <td class="text-center"><span style="color: #22a84a; cursor: pointer;" onclick="showPhotos()">查看 3 张</span></td>
+            <td class="text-center"><span style="color: #22a84a; cursor: pointer;">查看 3 张</span></td>
             <td style="font-size: 12px; color: #888;">2026-05-22 09:30</td>
             <td><span class="status-tag pushed">✓ 已推送</span></td>
             <td>
               <div class="action-btns">
-                <button class="action-btn view" onclick="showRecordDetail()">详情</button>
-                <button class="action-btn repush" onclick="handleRepush()">重推</button>
+                <button class="action-btn view">详情</button>
+                <button class="action-btn repush">重推</button>
               </div>
             </td>
           </tr>
           <tr>
             <td>
               <div class="tree-info">
-                <span class="tree-icon">🌳</span>
+                <span class="tree-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 22v-7"/><path d="M7 15h10l-5-8-5 8z"/><path d="M12 7l3.5-5h-7L12 7z"/></svg></span>
                 <div>
                   <div class="tree-name">嘎啦 #B012</div>
                   <div class="tree-code">洛川基地 · 李四</div>
                 </div>
               </div>
             </td>
-            <td><span class="farming-type-tag water">💧 浇水</span></td>
+            <td><span class="farming-type-tag water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg> 浇水</span></td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">对果树进行灌溉，保证水分充足...</td>
-            <td class="text-center"><span style="color: #22a84a; cursor: pointer;" onclick="showPhotos()">查看 2 张</span></td>
+            <td class="text-center"><span style="color: #22a84a; cursor: pointer;">查看 2 张</span></td>
             <td style="font-size: 12px; color: #888;">2026-05-21 14:20</td>
             <td><span class="status-tag pushed">✓ 已推送</span></td>
             <td>
               <div class="action-btns">
-                <button class="action-btn view" onclick="showRecordDetail()">详情</button>
-                <button class="action-btn repush" onclick="handleRepush()">重推</button>
+                <button class="action-btn view">详情</button>
+                <button class="action-btn repush">重推</button>
               </div>
             </td>
           </tr>
           <tr>
             <td>
               <div class="tree-info">
-                <span class="tree-icon">🌳</span>
+                <span class="tree-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 22v-7"/><path d="M7 15h10l-5-8-5 8z"/><path d="M12 7l3.5-5h-7L12 7z"/></svg></span>
                 <div>
                   <div class="tree-name">秦冠 #C008</div>
                   <div class="tree-code">洛川基地 · 王五</div>
@@ -407,35 +302,35 @@
             </td>
             <td><span class="farming-type-tag prune">✂️ 修剪</span></td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">对树枝进行修剪，去除病枝和过密枝条...</td>
-            <td class="text-center"><span style="color: #22a84a; cursor: pointer;" onclick="showPhotos()">查看 4 张</span></td>
+            <td class="text-center"><span style="color: #22a84a; cursor: pointer;">查看 4 张</span></td>
             <td style="font-size: 12px; color: #888;">2026-05-20 10:15</td>
             <td><span class="status-tag failed">✕ 推送失败</span></td>
             <td>
               <div class="action-btns">
-                <button class="action-btn view" onclick="showRecordDetail()">详情</button>
-                <button class="action-btn repush" onclick="handleRepush()">重推</button>
+                <button class="action-btn view">详情</button>
+                <button class="action-btn repush">重推</button>
               </div>
             </td>
           </tr>
           <tr>
             <td>
               <div class="tree-info">
-                <span class="tree-icon">🌳</span>
+                <span class="tree-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 22v-7"/><path d="M7 15h10l-5-8-5 8z"/><path d="M12 7l3.5-5h-7L12 7z"/></svg></span>
                 <div>
                   <div class="tree-name">嘎啦 #B015</div>
                   <div class="tree-code">洛川基地 · 钱七</div>
                 </div>
               </div>
             </td>
-            <td><span class="farming-type-tag bag">🎒 套袋</span></td>
+            <td><span class="farming-type-tag bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M4 10a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10z"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M8 21v-5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"/></svg> 套袋</span></td>
             <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">为果实套袋，防止病虫害和鸟害...</td>
-            <td class="text-center"><span style="color: #22a84a; cursor: pointer;" onclick="showPhotos()">查看 5 张</span></td>
+            <td class="text-center"><span style="color: #22a84a; cursor: pointer;">查看 5 张</span></td>
             <td style="font-size: 12px; color: #888;">2026-05-19 15:45</td>
             <td><span class="status-tag pushed">✓ 已推送</span></td>
             <td>
               <div class="action-btns">
-                <button class="action-btn view" onclick="showRecordDetail()">详情</button>
-                <button class="action-btn repush" onclick="handleRepush()">重推</button>
+                <button class="action-btn view">详情</button>
+                <button class="action-btn repush">重推</button>
               </div>
             </td>
           </tr>
@@ -450,76 +345,15 @@
       </div>
     </div>
   </div>
-</div>
-<div id="publishModal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="modal-title">发布农事记录</div>
-      <div class="modal-close" onclick="closeModal('publishModal')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">选择认养果树 *</label>
-        <select class="form-select">
-          <option value="">请选择果树</option>
-          <option value="A025">红富士 #A025 - 洛川基地 - 认养人：张三</option>
-          <option value="A018">红富士 #A018 - 洛川基地 - 认养人：李四</option>
-          <option value="B012">嘎啦 #B012 - 洛川基地 - 认养人：王五</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">农事类型 *</label>
-        <select class="form-select" id="farmingType">
-          <option value="">请选择类型</option>
-          <option value="fertilize">施肥</option>
-          <option value="water">浇水</option>
-          <option value="prune">修剪</option>
-          <option value="bag">套袋</option>
-          <option value="other">其他</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">农事描述 *</label>
-        <textarea class="form-textarea" placeholder="请详细描述本次农事活动..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">现场照片</label>
-        <div class="photo-upload" onclick="document.getElementById('photoInput2').click()">
-          <div class="upload-icon">📷</div>
-          <div class="upload-text">点击上传现场照片（最多9张）</div>
-          <input type="file" id="photoInput2" style="display:none;" accept="image/*" multiple>
-        </div>
-        <div class="photo-preview" id="photoPreview2"></div>
-      </div>
-      <div class="push-option">
-        <input type="checkbox" id="pushNotification2" checked>
-        <label for="pushNotification2">✓ 推送通知给认养人（微信服务号）</label>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="jg-btn" onclick="closeModal('publishModal')">取消</button>
-      <button class="jg-btn jg-btn-primary" onclick="handlePublish()">发布并推送</button>
-    </div>
+    </main>
   </div>
+
 </div>
-<script>
-function scrollNav(direction) { var menu = document.querySelector('.subnav-menu'); menu.scrollBy({ left: direction * 100, behavior: 'smooth' }); }
-function showPublishModal() { document.getElementById('publishModal').classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-function selectFarmingType(el) { document.querySelectorAll('.farming-type-card').forEach(card => card.classList.remove('active')); el.classList.add('active'); }
-function doSearch() { showToast('搜索功能开发中', 'info'); }
-function showRecordDetail() { showToast('详情功能开发中', 'info'); }
-function showPhotos() { showToast('查看照片功能开发中', 'info'); }
-function handleRepush() { showToast('重新推送成功', 'success'); }
-function handleQuickPublish() { showToast('发布并推送成功', 'success'); }
-function handlePublish() { closeModal('publishModal'); showToast('发布并推送成功', 'success'); }
-function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
-function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
-document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
-document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
-document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
-document.getElementById('photoInput') && document.getElementById('photoInput').addEventListener('change', function(e) { var files = e.target.files; if (files.length > 0) { var preview = document.getElementById('photoPreview'); preview.innerHTML = ''; for (var i = 0; i < Math.min(files.length, 9); i++) { var div = document.createElement('div'); div.className = 'photo-item'; div.style.cssText = 'background:#f5f5f5;height:80px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;position:relative;'; div.innerHTML = '🖼️<button class="delete-btn" onclick="this.parentElement.remove()">✕</button>'; preview.appendChild(div); } showToast('已选择 ' + Math.min(files.length, 9) + ' 张照片', 'info'); } });
-document.getElementById('photoInput2') && document.getElementById('photoInput2').addEventListener('change', function(e) { var files = e.target.files; if (files.length > 0) { var preview = document.getElementById('photoPreview2'); preview.innerHTML = ''; for (var i = 0; i < Math.min(files.length, 9); i++) { var div = document.createElement('div'); div.className = 'photo-item'; div.style.cssText = 'background:#f5f5f5;height:80px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;position:relative;'; div.innerHTML = '🖼️<button class="delete-btn" onclick="this.parentElement.remove()">✕</button>'; preview.appendChild(div); } showToast('已选择 ' + Math.min(files.length, 9) + ' 张照片', 'info'); } });
-</script>
+
+<!-- 引入交互脚本 -->
+<script src="js/sidebar-layout.js"></script>
+
+<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
+  <script src="js/iframe-hide.js"></script>
 </body>
 </html>

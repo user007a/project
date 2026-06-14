@@ -3,13 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>数农智果 - 巡果园</title>
+  <title>智慧果园 - 巡果园</title>
   <!-- H5设计系统 v2 — Supabase × Airbnb × Notion 混合设计基因 -->
   <link rel="stylesheet" href="css/mobile-design-system.css">
   <!-- 图标库 -->
   <script src="../applefarm_backhand/icons/icons.js"></script>
   <style>
     /* ========== 页面专属样式（仅保留设计系统未覆盖的部分） ========== */
+    
+    /* Header */
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-content { padding-left: 44px; }
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
 
     /* --- 状态统计卡片 --- */
     .patrol-stats {
@@ -343,6 +371,87 @@
       border-color: var(--error);
     }
 
+    /* --- 离开确认弹窗 --- */
+    .leave-modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+    .leave-modal-overlay.show { display: flex; }
+    
+    .leave-modal {
+      width: 85%; max-width: 340px;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      animation: scaleIn 0.3s ease;
+      text-align: center;
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .leave-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto var(--space-4);
+      border-radius: 50%;
+      background: var(--warning-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .leave-icon svg { width: 32px; height: 32px; color: var(--warning); }
+    
+    .leave-title {
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text);
+      margin-bottom: var(--space-2);
+    }
+    
+    .leave-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: var(--space-5);
+    }
+    
+    .leave-buttons {
+      display: flex;
+      gap: var(--space-3);
+    }
+    
+    .leave-btn {
+      flex: 1;
+      height: 44px;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-base);
+      font-weight: var(--font-medium);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .leave-btn.cancel {
+      background: var(--gray-100);
+      color: var(--text-secondary);
+    }
+    
+    .leave-btn.confirm {
+      background: var(--gradient-primary);
+      color: var(--text-on-primary);
+    }
+    
+    .leave-btn:active { transform: scale(0.98); }
+
     /* --- 底部提示 --- */
     .footer-tip {
       padding: var(--space-4);
@@ -581,10 +690,41 @@
     </div>
   </div>
 
+  <!-- 离开确认弹窗 -->
+  <div class="leave-modal-overlay" id="leaveModal">
+    <div class="leave-modal">
+      <div class="leave-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <div class="leave-title">确认离开</div>
+      <div class="leave-desc">您还有 <span style="color: var(--warning); font-weight: 600;">2</span> 个打卡点未完成，确定要退出吗？</div>
+      <div class="leave-buttons">
+        <button class="leave-btn cancel" onclick="cancelLeave()">留在页面</button>
+        <button class="leave-btn confirm" onclick="confirmLeave()">确认离开</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     var reportType = '';
 
     function goBack() {
+      var pendingCount = 2;
+      if (pendingCount > 0) {
+        document.getElementById('leaveModal').classList.add('show');
+      } else {
+        window.history.back();
+      }
+    }
+    
+    function cancelLeave() {
+      document.getElementById('leaveModal').classList.remove('show');
+    }
+    
+    function confirmLeave() {
+      document.getElementById('leaveModal').classList.remove('show');
       window.history.back();
     }
 

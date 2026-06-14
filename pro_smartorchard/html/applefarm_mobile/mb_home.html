@@ -3,67 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>数农智果 - 首页</title>
+  <title>智慧果园 - 首页</title>
   <!-- H5设计系统 v2 — Supabase × Airbnb × Notion 混合设计基因 -->
   <link rel="stylesheet" href="css/mobile-design-system.css">
   <style>
     /* ========== 页面专属样式（仅保留设计系统未覆盖的部分） ========== */
 
-    /* --- Header 内天气与状态栏 --- */
+    /* --- Header 背景 --- */
+    .mb-header-home {
+      background: var(--gradient-primary);
+      position: relative;
+    }
+    
+    .mb-header-home::before {
+      display: none;
+    }
+    
+    .mb-header-home::after {
+      display: none;
+    }
+    
+    /* --- Header 内天气与状态栏 v2 美化升级 --- */
     .header-weather {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--font-sm);
-      background: rgba(255,255,255,0.1);
-      padding: var(--space-1) var(--space-2);
-      border-radius: var(--radius-md);
-    }
-    .header-weather svg { width: 20px; height: 20px; }
-    .weather-temp { font-weight: 700; font-size: var(--font-md); }
-    .weather-desc { font-size: var(--font-xs); opacity: 0.9; }
-
-    /* 状态栏：待办 + 预警 + 风险 */
-    .header-status-bar {
-      display: flex;
-      gap: var(--space-2);
-      background: rgba(255,255,255,0.15);
-      border-radius: var(--radius-md);
-      padding: var(--space-2) var(--space-3);
-    }
-    .header-status-item {
       display: flex;
       align-items: center;
       gap: var(--space-1);
       font-size: var(--font-sm);
+      background: rgba(255,255,255,0.16);
+      padding: 6px 10px;
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .header-status-item svg { width: 16px; height: 16px; }
+    .header-weather svg { width: 18px; height: 18px; opacity: 0.9; }
+    .weather-temp { font-weight: 700; font-size: var(--font-md); text-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .weather-desc { font-size: var(--font-2xs); opacity: 0.85; margin-left: 2px; }
+
+    /* 状态栏：待办 + 预警 + 风险 v2 美化 */
+    .header-status-bar {
+      display: flex;
+      gap: 6px;
+      background: rgba(255,255,255,0.16);
+      border-radius: var(--radius-lg);
+      padding: 6px 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .header-status-item {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: var(--font-2xs);
+    }
+    .header-status-item svg { width: 14px; height: 14px; opacity: 0.85; }
     .header-status-num {
-      font-size: var(--font-md);
+      font-size: var(--font-sm);
       font-weight: 700;
     }
-    .header-status-item.warning .header-status-num { color: #ff6b6b; }
-    .header-status-item.risk .header-status-num { color: #ffd93d; }
+    .header-status-item.warning .header-status-num { color: #ff9a9e; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .header-status-item.risk .header-status-num { color: #ffe082; text-shadow: 0 1px 2px rgba(0,0,0,0.12); }
 
     /* Header 底部：天气 + 状态并排 */
     .header-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
 
-    /* --- 滚动消息标签 --- */
+    /* --- 滚动消息标签 v2 — 修复紫色违规 --- */
     .marquee-tag {
-      font-size: var(--font-2xs);
-      padding: 1px 6px;
+      font-size: 10px;
+      padding: 1px 7px;
       border-radius: var(--radius-sm);
-      margin-right: 4px;
-      font-weight: 500;
+      margin-right: 5px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      vertical-align: middle;
     }
-    .marquee-tag.model { background: #667eea; color: #fff; }
+    .marquee-tag.model { background: linear-gradient(135deg, var(--primary), var(--primary-500)); color: #fff; }
     .marquee-tag.alert { background: var(--error); color: #fff; }
     .marquee-tag.news { background: var(--primary-100); color: var(--primary-700); }
-    .marquee-content span { margin-right: 60px; }
+    .marquee-tag.farming { background: var(--success-bg); color: var(--success); }
+    .marquee-tag.device { background: var(--info-bg); color: var(--info); }
+    .marquee-tag.manual { background: var(--warning-bg); color: var(--warning); }
+    .mb-marquee-content span { margin-right: 60px; cursor: pointer; }
+    .mb-marquee-content span:hover { opacity: 0.8; }
+    .mb-marquee-content span:active { transform: scale(0.98); }
+    
+    /* --- 消息详情弹窗 --- */
+    .msg-detail-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+    .msg-detail-overlay.show { display: flex; }
+    .msg-detail-modal {
+      background: #fff;
+      border-radius: var(--radius-xl);
+      padding: 24px 20px;
+      width: 85%;
+      max-width: 340px;
+      animation: scaleIn 0.3s ease;
+    }
+    .msg-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .msg-detail-tag {
+      font-size: var(--font-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+    .msg-detail-tag.model { background: var(--primary); color: #fff; }
+    .msg-detail-tag.alert { background: var(--error); color: #fff; }
+    .msg-detail-tag.farming { background: var(--success-bg); color: var(--success); }
+    .msg-detail-tag.device { background: var(--info-bg); color: var(--info); }
+    .msg-detail-tag.manual { background: var(--warning-bg); color: var(--warning); }
+    .msg-detail-time {
+      font-size: var(--font-xs);
+      color: var(--text-light);
+    }
+    .msg-detail-title {
+      font-size: var(--font-md);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .msg-detail-content {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .msg-detail-source {
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .msg-detail-source-title {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .msg-detail-source-text {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+    }
+    .msg-detail-btn {
+      width: 100%;
+      height: 44px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: 600;
+      cursor: pointer;
+    }
 
     /* --- 环境数值行 --- */
     .env-value-wrap {
@@ -163,8 +277,7 @@
       <div class="mb-header-home">
         <!-- 品牌展示 -->
         <div class="header-brand">
-          <div class="header-title">烟台红富士苹果种植基地</div>
-          <div class="header-subtitle">数字化智慧果园管理平台</div>
+          <div class="header-title">烟台苹果基地</div>
         </div>
 
         <!-- 核心数据统计 -->
@@ -221,14 +334,16 @@
       <div class="mb-marquee">
         <svg class="mb-marquee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <div class="mb-marquee-wrap">
-          <div class="marquee-content">
-            <span><span class="marquee-tag model">AI</span>95%地块进入膨大期，关注水肥管理</span>
-            <span><span class="marquee-tag alert">预警</span>B3区土壤湿度偏低55%，建议灌溉</span>
-            <span><span class="marquee-tag model">AI</span>明日锈病风险中等，建议喷施多菌灵</span>
-            <span><span class="marquee-tag news">通知</span>今日下午2点套袋技术培训</span>
-            <span><span class="marquee-tag model">AI</span>预测下月收购价上升3-5%</span>
-            <span><span class="marquee-tag alert">预警</span>本周末有雷阵雨，做好防涝准备</span>
-            <span><span class="marquee-tag model">AI</span>95%地块进入膨大期，关注水肥管理</span>
+          <div class="mb-marquee-content" id="marqueeContent">
+            <span onclick="showMsgDetail(0)"><span class="marquee-tag model">AI</span>95%地块进入膨大期，建议加强水肥管理</span>
+            <span onclick="showMsgDetail(1)"><span class="marquee-tag alert">预警</span>B3区土壤湿度偏低55%，建议立即灌溉</span>
+            <span onclick="showMsgDetail(2)"><span class="marquee-tag farming">农事</span>今日已完成A1区套袋作业3200株</span>
+            <span onclick="showMsgDetail(3)"><span class="marquee-tag device">设备</span>气象站3号传感器数据异常，已修复</span>
+            <span onclick="showMsgDetail(4)"><span class="marquee-tag model">AI</span>明日锈病风险中等，建议喷施多菌灵</span>
+            <span onclick="showMsgDetail(5)"><span class="marquee-tag manual">通知</span>今日下午2点套袋技术培训，请准时参加</span>
+            <span onclick="showMsgDetail(6)"><span class="marquee-tag model">AI</span>预测下月收购价上升3-5%，建议适时销售</span>
+            <span onclick="showMsgDetail(7)"><span class="marquee-tag alert">预警</span>本周末有雷阵雨，请做好防涝排水准备</span>
+            <span onclick="showMsgDetail(0)"><span class="marquee-tag model">AI</span>95%地块进入膨大期，建议加强水肥管理</span>
           </div>
         </div>
       </div>
@@ -272,13 +387,13 @@
         </div>
       </div>
 
-      <!-- 环境监测（三列网格） -->
+      <!-- 环境监测（一行展示） -->
       <div class="mb-section">
         <div class="flex justify-between items-center mb-3">
           <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>环境监测</div>
           <span class="text-xs text-secondary" onclick="navigateTo('mb_device.html')">查看全部 ›</span>
         </div>
-        <div class="mb-env-grid">
+        <div class="mb-env-grid" style="grid-template-columns: repeat(4, 1fr);">
           <div class="mb-env-card">
             <div class="mb-env-name">温度</div>
             <div class="env-value-wrap"><span class="mb-env-value">26</span><span class="mb-env-unit">°C</span></div>
@@ -290,24 +405,14 @@
             <div class="mb-env-trend up">↑3</div>
           </div>
           <div class="mb-env-card">
-            <div class="mb-env-name">土壤</div>
-            <div class="env-value-wrap"><span class="mb-env-value">55</span><span class="mb-env-unit">%</span></div>
-            <div class="mb-env-trend down">↓5</div>
-          </div>
-          <div class="mb-env-card">
             <div class="mb-env-name">光照</div>
             <div class="env-value-wrap"><span class="mb-env-value">850</span><span class="mb-env-unit">lux</span></div>
             <div class="mb-env-trend">正常</div>
           </div>
           <div class="mb-env-card">
-            <div class="mb-env-name">风速</div>
-            <div class="env-value-wrap"><span class="mb-env-value">6.3</span><span class="mb-env-unit">m/s</span></div>
-            <div class="mb-env-trend">东南风</div>
-          </div>
-          <div class="mb-env-card">
-            <div class="mb-env-name">降雨</div>
-            <div class="env-value-wrap"><span class="mb-env-value">0</span><span class="mb-env-unit">mm</span></div>
-            <div class="mb-env-trend">无雨</div>
+            <div class="mb-env-name">土壤</div>
+            <div class="env-value-wrap"><span class="mb-env-value">55</span><span class="mb-env-unit">%</span></div>
+            <div class="mb-env-trend down">↓5</div>
           </div>
         </div>
       </div>
@@ -363,6 +468,23 @@
       </div>
     </div><!-- /real-content -->
 
+    <!-- 消息详情弹窗 -->
+    <div class="msg-detail-overlay" id="msgDetailOverlay">
+      <div class="msg-detail-modal">
+        <div class="msg-detail-header">
+          <span class="msg-detail-tag" id="msgDetailTag">AI</span>
+          <span class="msg-detail-time" id="msgDetailTime">今天 09:30</span>
+        </div>
+        <div class="msg-detail-title" id="msgDetailTitle">消息标题</div>
+        <div class="msg-detail-content" id="msgDetailContent">消息内容</div>
+        <div class="msg-detail-source">
+          <div class="msg-detail-source-title">来源依据</div>
+          <div class="msg-detail-source-text" id="msgDetailSource">来源信息</div>
+        </div>
+        <button class="msg-detail-btn" onclick="closeMsgDetail()">我知道了</button>
+      </div>
+    </div>
+
     <!-- 底部导航 -->
     <div class="mb-tab-bar">
       <div class="mb-tab-item active">
@@ -390,6 +512,90 @@
   </div>
 
   <script>
+    // 消息数据
+    var msgData = [
+      {
+        tag: 'model',
+        tagText: 'AI',
+        time: '今天 09:30',
+        title: '95%地块进入膨大期，建议加强水肥管理',
+        content: '根据物候期监测模型分析，当前基地95%的苹果树已进入果实膨大期。此阶段是果实快速生长的关键时期，对水分和养分需求较大。建议适当增加灌溉频次，追施磷钾肥促进果实发育。',
+        source: '物候期预测模型 · 数据来源：气象站实时监测 + 地块传感器数据'
+      },
+      {
+        tag: 'alert',
+        tagText: '预警',
+        time: '今天 08:15',
+        title: 'B3区土壤湿度偏低55%，建议立即灌溉',
+        content: 'B3区土壤湿度传感器监测数据显示当前湿度仅为55%，低于膨大期适宜湿度范围（65%-80%）。持续低湿度将影响果实正常发育，可能导致果实偏小。建议立即安排灌溉作业。',
+        source: '土壤湿度预警系统 · 数据来源：B3区土壤传感器 #TS-B3-02'
+      },
+      {
+        tag: 'farming',
+        tagText: '农事',
+        time: '今天 17:00',
+        title: '今日已完成A1区套袋作业3200株',
+        content: 'A1区套袋作业已按计划完成，共套袋3200株红富士苹果树。使用双层纸袋，套袋质量合格率98%。作业人员：张三、李四、王五。预计明日继续完成A2区套袋作业。',
+        source: '农事记录系统 · 记录人：张三 · 审核状态：已通过'
+      },
+      {
+        tag: 'device',
+        tagText: '设备',
+        time: '今天 14:30',
+        title: '气象站3号传感器数据异常，已修复',
+        content: '气象站3号温度传感器在上午10:20出现数据异常波动，经技术人员现场排查，发现为传感器接线松动导致。已于14:00完成修复，当前数据恢复正常。建议定期检查设备连接状态。',
+        source: '设备运维系统 · 维修人员：刘工 · 故障类型：接线松动'
+      },
+      {
+        tag: 'model',
+        tagText: 'AI',
+        time: '今天 07:00',
+        title: '明日锈病风险中等，建议喷施多菌灵',
+        content: '病虫害预测模型分析显示，明日气象条件（湿度75%、温度22-28°C、有降雨概率）有利于苹果锈病孢子传播。当前锈病风险等级为"中等"。建议明日喷施多菌灵进行预防性防治。',
+        source: '病虫害预测模型 · 数据来源：气象预报 + 病害历史数据'
+      },
+      {
+        tag: 'manual',
+        tagText: '通知',
+        time: '今天 10:00',
+        title: '今日下午2点套袋技术培训，请准时参加',
+        content: '为提高套袋作业质量，今日下午2点在基地会议室举办套袋技术培训。培训内容包括：套袋时机选择、纸袋类型选用、套袋操作规范、套袋后管理等。请相关作业人员准时参加。',
+        source: '人工发布 · 发布人：基地管理员 · 发布时间：2026-06-14 10:00'
+      },
+      {
+        tag: 'model',
+        tagText: 'AI',
+        time: '昨天 16:00',
+        title: '预测下月收购价上升3-5%，建议适时销售',
+        content: '市场价格预测模型分析显示，受今年全国苹果产量预估下降8%影响，预计下月红富士收购价格将上涨3-5%。当前收购价约3.2元/斤，建议根据果实成熟度和市场行情适时安排销售。',
+        source: '价格预测模型 · 数据来源：全国产量统计 + 市场行情数据'
+      },
+      {
+        tag: 'alert',
+        tagText: '预警',
+        time: '昨天 18:00',
+        title: '本周末有雷阵雨，请做好防涝排水准备',
+        content: '气象预报显示本周末（周六、周日）将有雷阵雨天气，预计累计降雨量30-50mm。请提前检查果园排水沟渠，确保排水畅通。低洼地块需特别注意防涝，避免积水影响果树根系。',
+        source: '气象预警系统 · 数据来源：气象局天气预报'
+      }
+    ];
+    
+    function showMsgDetail(index) {
+      var msg = msgData[index];
+      var tagEl = document.getElementById('msgDetailTag');
+      tagEl.textContent = msg.tagText;
+      tagEl.className = 'msg-detail-tag ' + msg.tag;
+      document.getElementById('msgDetailTime').textContent = msg.time;
+      document.getElementById('msgDetailTitle').textContent = msg.title;
+      document.getElementById('msgDetailContent').textContent = msg.content;
+      document.getElementById('msgDetailSource').textContent = msg.source;
+      document.getElementById('msgDetailOverlay').classList.add('show');
+    }
+    
+    function closeMsgDetail() {
+      document.getElementById('msgDetailOverlay').classList.remove('show');
+    }
+    
     function navigateTo(page) {
       window.location.href = page;
     }

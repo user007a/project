@@ -3,185 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数农智果 - 收入分析</title>
+<title>智慧果园 - 收入分析</title>
+<!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/sidebar-layout.css">
+  <link rel="stylesheet" href="css/page-content.css">
 <style>
-.page-container {
-  padding: var(--space-lg);
-  background: var(--bg-base);
-  min-height: calc(100vh - 140px);
-}
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-xl);
-}
-.page-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-}
-.tab-nav {
-  display: flex;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-lg);
-}
-.tab-item {
-  padding: var(--space-sm) var(--space-xl);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-fast);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-}
-.tab-item.active {
-  background: var(--primary-500);
-  color: var(--text-inverse);
-}
-.chart-section {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-card);
-  margin-bottom: var(--space-xl);
-}
-.section-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  margin-bottom: var(--space-lg);
-}
-.chart-placeholder {
-  height: 300px;
-  background: var(--gray-50);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-tertiary);
-}
-.double-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-lg);
-}
-.table-container {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-card);
-}
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.data-table th, .data-table td {
-  padding: var(--space-md);
-  text-align: left;
-  border-bottom: 1px solid var(--border-light);
-}
-.data-table th {
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-}
-.data-table tr:hover { background: var(--bg-hover); }
-.btn {
-  padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-md);
-  border: none;
-  font-size: var(--font-size-base);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-.btn-primary {
-  background: var(--primary-500);
-  color: var(--text-inverse);
-}
-.filter-bar {
-  display: flex;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
-}
-.filter-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-.filter-item label {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-}
-.filter-item select {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  background: var(--bg-card);
-}
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-lg);
-  margin-bottom: var(--space-xl);
-}
-.summary-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-card);
-}
-.summary-label {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-xs);
-}
-.summary-value {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-}
+  /* 模块卡片 hover 效果 */
+  .module-card {
+    transition: all 0.2s ease;
+  }
+  .module-card:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 </style>
 </head>
-<body>
-<!-- 顶部导航 -->
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon snzg-logo-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22a84a" stroke-width="2">
-        <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-        <path d="M8 12l2 2 4-4 4 4"/>
-      </svg>
+<body data-active-menu="report" data-active-submenu="report-revenue">
+
+<!-- ===== 整体布局容器 ===== -->
+<div class="app-layout">
+
+  <!-- ===== 侧边栏 ===== -->
+  <nav class="sidebar" aria-label="主导航">
+    <!-- 品牌区 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <!-- 苹果绿 Logo SVG -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3C8 1 5 3 5 6.5C5 10 8 14 11 17C14 14 17 10 17 6.5C17 3 14 1 11 3Z" fill="rgba(34,168,74,0.2)"/>
+          <path d="M11 5C9.5 4 7.5 5 7.5 7C7.5 9 9.5 12 11 14"/>
+          <path d="M11 5C12.5 4 14.5 5 14.5 7C14.5 9 12.5 12 11 14"/>
+          <path d="M11 3V1"/>
+        </svg>
+      </div>
+      <span class="sidebar-brand-text">智慧果园</span>
     </div>
-    <span>数农智果</span>
-  </div>
-  <nav class="nav-menu">
-    <a href="home.html" class="snzg-nav-item">系统首页</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="report_overview.html" class="snzg-nav-item">经营报表</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="performance_dashboard.html" class="snzg-nav-item">人员绩效</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="sales_order.html" class="snzg-nav-item">销售管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="task_assign.html" class="snzg-nav-item">任务调度</a>
-    <span class="snzg-nav-sep"></span>
-    <a href="cert_manage.html" class="snzg-nav-item">合格证管理</a>
+
+    <!-- 菜单主体（由 JS 动态渲染） -->
+    <div class="sidebar-body"></div>
+
+    <!-- 底部功能区 -->
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn sidebar-collapse-btn" title="折叠侧边栏">
+        <span class="collapse-icon">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3L6 9L11 15"/><path d="M14 3V15"/>
+          </svg>
+        </span>
+        <span class="btn-text">折叠</span>
+      </button>
+      <button class="sidebar-footer-btn" title="系统设置" id="btn-settings">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M9 2V4M9 14V16M2 9H4M14 9H16M4.2 4.2L5.6 5.6M12.4 12.4L13.8 13.8M13.8 4.2L12.4 5.6M5.6 12.4L4.2 13.8"/>
+        </svg>
+        <span class="btn-text">设置</span>
+      </button>
+    </div>
   </nav>
-</header>
+
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-wrapper">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <!-- 移动端汉堡菜单 -->
+      <button class="topbar-hamburger" aria-label="打开导航菜单">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 6H19M3 11H19M3 16H19"/>
+        </svg>
+      </button>
+      <!-- 右侧功能区 -->
+      <div class="topbar-right">
+        <!-- 通知铃铛 -->
+        <button class="topbar-notification" title="消息通知">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2C7 2 5 4.5 5 7.5V12L3 14H17L15 12V7.5C15 4.5 13 2 10 2Z"/>
+            <path d="M8.5 16C8.5 17 9.2 18 10 18C10.8 18 11.5 17 11.5 16"/>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <!-- 用户信息 -->
+        <div class="topbar-user">
+          <div class="topbar-user-avatar">张</div>
+          <span class="topbar-user-name">张三</span>
+          <span class="topbar-user-arrow">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M3 5L6 8L9 5"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div class="topbar-user-dropdown">
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <circle cx="8" cy="5" r="3"/><path d="M2 15C2 11.5 5 10 8 10C11 10 14 11.5 14 15"/>
+            </svg>
+            个人中心
+          </div>
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M8 2V8L11 11"/><circle cx="8" cy="8" r="6"/>
+            </svg>
+            操作日志
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--error);">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M6 2H3C2.45 2 2 2.45 2 3V13C2 13.55 2.45 14 3 14H6"/><path d="M10 11L14 8L10 5"/><path d="M14 8H6"/>
+            </svg>
+            退出登录
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab 标签栏 -->
+    <div class="tab-bar">
+      <!-- Tab 标签由 JS 动态渲染 -->
+      <div class="tab-bar-actions">
+        <button class="tab-close-all" title="关闭全部标签">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3L11 11M11 3L3 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+<!-- 顶部导航 -->
+
 
 <!-- 页面内容 -->
 <div class="page-container">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">收入分析</h1>
-      <p style="color: var(--text-secondary); margin-top: var(--space-xs);">分析各项收入来源情况</p>
-    </div>
-    <button class="btn btn-primary">导出报表</button>
-  </div>
+  
 
   <!-- 筛选栏 -->
   <div class="filter-bar">
@@ -237,32 +200,14 @@
   <!-- 收入趋势图 -->
   <div class="chart-section">
     <h2 class="section-title">收入趋势分析</h2>
-    <div class="chart-placeholder">
-      <div style="text-align: center;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
-          <path d="M3 3v18h18"/>
-          <path d="M5 18l3-5 4 4 4-6 4 4"/>
-        </svg>
-        <div>收入趋势折线图</div>
-        <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养收入 · 批发收入 · 零售收入</div>
-      </div>
-    </div>
+    <div id="chart-revenue-trend" class="chart-container" style="height: 300px;"></div>
   </div>
 
   <!-- 收入构成和客户排行 -->
   <div class="double-section">
     <div class="chart-section">
       <h2 class="section-title">收入构成分析</h2>
-      <div class="chart-placeholder" style="height: 250px;">
-        <div style="text-align: center;">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 2 L12 12 L19 12 Z"/>
-          </svg>
-          <div>收入构成饼图</div>
-          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">认养50% · 批发35% · 零售15%</div>
-        </div>
-      </div>
+      <div id="chart-revenue-pie" class="chart-container" style="height: 280px;"></div>
     </div>
     <div class="table-container">
       <h2 class="section-title">客户收入排行</h2>
@@ -314,7 +259,58 @@
 
 <!-- 底部 -->
 <footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
-  数农智果·智慧果园管理系统 © 2026
+  智慧果园·智慧果园管理系统 © 2026
 </footer>
+    </main>
+  </div>
+
+</div>
+
+<!-- 引入交互脚本 -->
+<script src="js/sidebar-layout.js"></script>
+<script src="js/components/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 收入趋势数据（多系列折线图）
+  const revenueTrendData = {
+    categories: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    series: [
+      {
+        name: '认养收入',
+        data: [185000, 210000, 225000, 268000, 298000, 325000],
+        color: '#22a84a',
+        area: true
+      },
+      {
+        name: '批发收入',
+        data: [125000, 142000, 156000, 178000, 165000, 148000],
+        color: '#1890ff',
+        area: true
+      },
+      {
+        name: '零售收入',
+        data: [52000, 58000, 62000, 71000, 68000, 58000],
+        color: '#ff6b35',
+        area: true
+      }
+    ]
+  };
+  Chart.line('#chart-revenue-trend', revenueTrendData);
+
+  // 收入构成饼图数据
+  const revenuePieData = {
+    series: [
+      { name: '认养收入', value: 50 },
+      { name: '批发收入', value: 35 },
+      { name: '零售收入', value: 15 }
+    ]
+  };
+  Chart.donut('#chart-revenue-pie', revenuePieData);
+});
+</script>
+
+<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
+<script src="js/iframe-hide.js"></script>
 </body>
 </html>

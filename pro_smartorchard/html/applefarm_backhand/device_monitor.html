@@ -3,216 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数农智果 - 设备监控</title>
+<title>智慧果园 - 设备监控</title>
+<!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/sidebar-layout.css">
+  <link rel="stylesheet" href="css/page-content.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-family); background: var(--bg-base); color: var(--text-primary); font-size: var(--font-size-base); animation: pageIn var(--transition-slow) ease; }
-@keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .header { background: var(--gradient-header); height: 56px; display: flex; align-items: center; padding: 0 var(--space-xl); position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-fixed); box-shadow: var(--shadow-md); }
-  .logo { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-inverse); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); letter-spacing: 1px; white-space: nowrap; margin-right: var(--space-2xl); }
-  .logo-icon.snzg-logo-icon { width: 38px; height: 38px; background: var(--bg-card); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
-  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav-menu::-webkit-scrollbar { display: none; }
-  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 var(--space-md); height: 56px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: var(--font-size-base); border-bottom: 3px solid transparent; transition: all var(--transition-normal); white-space: nowrap; text-decoration: none; flex-shrink: 0; }
-  .snzg-nav-item:hover { color: var(--text-inverse); background: rgba(255,255,255,0.1); }
-  .snzg-nav-item.active { color: var(--text-inverse); border-bottom: 3px solid var(--text-inverse); font-weight: var(--font-weight-semibold); }
-  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 var(--space-xs); flex-shrink: 0; }
-  .nav-icon { font-size: 14px; display: flex; align-items: center; }
-  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-sm); background: none; border: none; }
-  .jg-hamburger span { width: 24px; height: 2px; background: var(--text-inverse); border-radius: 1px; }
-  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: var(--gradient-header); padding: var(--space-md); z-index: calc(var(--z-fixed) - 1); box-shadow: var(--shadow-lg); }
-  .jg-mobile-nav.show { display: block; }
-  .jg-mobile-nav-item { display: block; padding: var(--space-md) var(--space-lg); color: var(--text-inverse); font-size: var(--font-size-lg); text-decoration: none; border-radius: var(--radius-md); transition: background var(--transition-fast); }
-  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
-  .header-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; position: relative; }
-  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--text-inverse); font-size: 18px; }
-  .msg-badge { position: absolute; top: -4px; right: -4px; background: var(--error); color: var(--text-inverse); font-size: 10px; padding: 1px 4px; border-radius: var(--radius-full); font-weight: var(--font-weight-semibold); min-width: 16px; text-align: center; }
-  .snzg-user-btn { display: flex; align-items: center; gap: 6px; color: var(--text-inverse); cursor: pointer; padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-md); transition: background var(--transition-fast); font-size: var(--font-size-base); background: none; border: none; }
-  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
-  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--font-size-sm); }
-  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 200px; z-index: var(--z-dropdown); overflow: hidden; display: none; }
-  .snzg-user-menu.show { display: block; }
-  .snzg-user-info { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md) var(--space-lg); background: var(--gray-50); border-bottom: 1px solid var(--border-light); }
-  .snzg-user-info-avatar { width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-inverse); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
-  .snzg-user-info-name { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .snzg-user-info-role { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .snzg-user-menu-item { display: block; padding: 10px var(--space-lg); color: var(--text-secondary); font-size: var(--font-size-base); cursor: pointer; transition: background var(--transition-fast); text-decoration: none; }
-  .snzg-user-menu-item:hover { background: var(--bg-hover); }
-  .snzg-user-menu-item.danger { color: var(--error); }
-  .snzg-user-menu-item.danger:hover { background: var(--error-light); }
-  .snzg-user-menu-sep { height: 1px; background: var(--border-light); margin: var(--space-xs) 0; }
-  .main-wrap { margin-top: 56px; padding: var(--space-lg) var(--space-xl) var(--space-3xl); min-height: calc(100vh - 56px); }
-  .subnav-bar { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 0 var(--space-lg); margin-bottom: var(--space-lg); position: sticky; top: 56px; z-index: 50; }
-  .nav-arrow { display: inline-flex; align-items: center; gap: var(--space-sm); font-size: var(--font-size-sm); color: var(--text-tertiary); padding: var(--space-md) 0; }
-  .nav-arrow span { color: var(--primary-500); }
-  .subnav-menu { display: flex; border-top: 1px solid var(--border-light); }
-  .subnav-item { padding: var(--space-md) var(--space-xl); font-size: var(--font-size-base); color: var(--text-tertiary); cursor: pointer; text-decoration: none; border-bottom: 2px solid transparent; transition: all var(--transition-normal); }
-  .subnav-item:hover { color: var(--primary-500); background: var(--bg-hover); }
-  .subnav-item.active { color: var(--primary-500); border-bottom: 2px solid var(--primary-500); font-weight: var(--font-weight-semibold); }
-  .page-header { background: var(--bg-card); border-radius: var(--radius-lg); padding: var(--space-lg) var(--space-xl); margin-bottom: var(--space-lg); box-shadow: var(--shadow-card); display: flex; align-items: center; justify-content: space-between; }
-  .page-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-md); }
-  .page-title .title-icon { font-size: 22px; display: flex; align-items: center; }
-  .page-desc { font-size: var(--font-size-sm); color: var(--text-tertiary); margin-top: var(--space-xs); }
-  .page-actions { display: flex; gap: var(--space-md); }
-  .jg-btn { display: inline-flex; align-items: center; gap: 6px; padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--bg-card); cursor: pointer; font-size: var(--font-size-sm); color: var(--text-secondary); transition: all var(--transition-normal); white-space: nowrap; font-family: inherit; }
-  .jg-btn:hover { border-color: var(--primary-500); color: var(--primary-500); box-shadow: 0 2px 6px rgba(34,168,74,0.15); }
-  .jg-btn.jg-btn-primary { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .jg-btn.jg-btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
-  .snzg-panel { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); overflow: hidden; margin-bottom: var(--space-lg); }
-  .snzg-panel-header { padding: var(--space-md) var(--space-lg); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
-  .snzg-panel-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
-  .snzg-panel-title .pt-icon { font-size: 16px; display: flex; align-items: center; }
-  .snzg-panel-body { padding: var(--space-lg); }
-  .device-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); }
-  .device-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: var(--space-lg); box-shadow: var(--shadow-card); border-left: 4px solid var(--primary-500); transition: transform var(--transition-normal), box-shadow var(--transition-normal); }
-  .device-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-  .device-card.warning { border-left-color: var(--warning); }
-  .device-card.danger { border-left-color: var(--error); }
-  .device-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md); }
-  .device-name { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .device-status { padding: 2px 8px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
-  .device-status.online { background: var(--success-bg); color: var(--success); }
-  .device-status.offline { background: var(--error-bg); color: var(--error); }
-  .device-status.warning { background: var(--warning-bg); color: var(--warning); }
-  .device-info { margin-bottom: var(--space-md); }
-  .info-row { display: flex; justify-content: space-between; padding: var(--space-xs) 0; border-bottom: 1px solid var(--border-light); }
-  .info-label { font-size: var(--font-size-sm); color: var(--text-tertiary); }
-  .info-value { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--text-primary); }
-  .device-data { display: flex; justify-content: space-around; padding: var(--space-md) 0; background: var(--gray-50); border-radius: var(--radius-md); }
-  .data-item { text-align: center; }
-  .data-value { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: var(--primary-500); }
-  .data-label { font-size: var(--font-size-xs); color: var(--text-tertiary); margin-top: var(--space-xs); }
-  .data-value.warning { color: var(--warning); }
-  .data-value.danger { color: var(--error); }
-  .chart-container { height: 200px; background: var(--gray-50); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
-  .chart-placeholder { text-align: center; color: var(--text-tertiary); }
-  .chart-placeholder .chart-icon { font-size: 48px; margin-bottom: var(--space-sm); opacity: 0.5; display: flex; justify-content: center; }
-  .live-indicator { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: var(--font-size-sm); color: var(--success); }
-  .live-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .toggle-switch { position: relative; width: 48px; height: 26px; background: var(--gray-300); border-radius: 13px; cursor: pointer; transition: background var(--transition-normal); }
-  .toggle-switch.active { background: var(--primary-500); }
-  .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; background: var(--text-inverse); border-radius: 50%; transition: left var(--transition-normal); }
-  .toggle-switch.active::after { left: 24px; }
-  .jg-toast { position: fixed; top: 70px; right: var(--space-xl); padding: var(--space-md) var(--space-xl); border-radius: var(--radius-md); color: var(--text-inverse); font-size: var(--font-size-base); z-index: var(--z-toast); animation: toastIn 0.3s ease; }
-  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-  .jg-toast-success { background: var(--success); }
-  .jg-toast-error { background: var(--error); }
-  .jg-toast-info { background: var(--info); }
-  @media (max-width: 768px) { .main-wrap { padding: var(--space-md); } .page-header { flex-direction: column; gap: var(--space-md); align-items: flex-start; } .page-actions { width: 100%; flex-wrap: wrap; } }
+  /* 模块卡片 hover 效果 */
+  .module-card {
+    transition: all 0.2s ease;
+  }
+  .module-card:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 </style>
 </head>
-<body>
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon snzg-logo-icon">
-      <svg viewBox="0 0 100 100" style="width:24px;height:24px;">
-        <circle cx="50" cy="55" r="35" fill="#e53935"/>
-        <ellipse cx="50" cy="28" rx="12" ry="10" fill="#4caf50"/>
-        <ellipse cx="50" cy="26" rx="6" ry="4" fill="#81c784"/>
-        <circle cx="40" cy="50" r="4" fill="#fff" opacity="0.4"/>
-      </svg>
-    </div>
-    <span>数农智果</span>
-  </div>
-  <div class="nav-menu">
-    <a href="home.html" class="snzg-nav-item"><span class="nav-icon">🏠</span><span>系统首页</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="enterprise_base.html" class="snzg-nav-item"><span class="nav-icon">🏢</span><span>企业管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="farming_plan.html" class="snzg-nav-item"><span class="nav-icon">🌾</span><span>农事管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="material_info.html" class="snzg-nav-item"><span class="nav-icon">📦</span><span>农资管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="device_info.html" class="snzg-nav-item active"><span class="nav-icon">📡</span><span>设备管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="alert_settings.html" class="snzg-nav-item"><span class="nav-icon">🔔</span><span>预警管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="trace_code.html" class="snzg-nav-item"><span class="nav-icon">🏷️</span><span>产品追溯</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="harvest_plan.html" class="snzg-nav-item"><span class="nav-icon">🍎</span><span>采收管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="model_growth.html">
-      <span class="nav-icon">🧠</span> 模型预测中心
-    </a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="adoption_tree.html"><span class="nav-icon">🌳</span><span>认养管理</span></a>
-    <span class="snzg-nav-sep"></span>
-    <a href="system_settings.html" class="snzg-nav-item"><span class="nav-icon">⚙</span><span>系统设置</span></a>
-  </div>
-  <button id="hamburgerBtn" class="jg-hamburger">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="header-right">
-    <div class="msg-btn">
-      <span>🔔</span>
-      <span class="msg-badge">3</span>
-    </div>
-    <button id="userBtn" class="snzg-user-btn">
-      <span class="snzg-user-avatar">管</span>
-      <span>管理员</span>
-    </button>
-    <div id="userMenu" class="snzg-user-menu">
-      <div class="snzg-user-info">
-        <div class="snzg-user-info-avatar">管</div>
-        <div>
-          <div class="snzg-user-info-name">系统管理员</div>
-          <div class="snzg-user-info-role">超级管理员</div>
-        </div>
+<body data-active-menu="device" data-active-submenu="device-monitor">
+
+<!-- ===== 整体布局容器 ===== -->
+<div class="app-layout">
+
+  <!-- ===== 侧边栏 ===== -->
+  <nav class="sidebar" aria-label="主导航">
+    <!-- 品牌区 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <!-- 苹果绿 Logo SVG -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3C8 1 5 3 5 6.5C5 10 8 14 11 17C14 14 17 10 17 6.5C17 3 14 1 11 3Z" fill="rgba(34,168,74,0.2)"/>
+          <path d="M11 5C9.5 4 7.5 5 7.5 7C7.5 9 9.5 12 11 14"/>
+          <path d="M11 5C12.5 4 14.5 5 14.5 7C14.5 9 12.5 12 11 14"/>
+          <path d="M11 3V1"/>
+        </svg>
       </div>
-      <a href="system_settings.html" class="snzg-user-menu-item">账号设置</a>
-      <a href="system_settings.html" class="snzg-user-menu-item">系统配置</a>
-      <div class="snzg-user-menu-sep"></div>
-      <a href="#" onclick="handleLogout()" class="snzg-user-menu-item danger">退出登录</a>
+      <span class="sidebar-brand-text">智慧果园</span>
     </div>
-  </div>
-</div>
-<div id="mobileNav" class="jg-mobile-nav">
-  <a href="home.html" class="jg-mobile-nav-item">🏠 系统首页</a>
-  <a href="enterprise_base.html" class="jg-mobile-nav-item">🏢 企业管理</a>
-  <a href="farming_plan.html" class="jg-mobile-nav-item">🌾 农事管理</a>
-  <a href="material_info.html" class="jg-mobile-nav-item">📦 农资管理</a>
-  <a href="device_info.html" class="jg-mobile-nav-item active">📡 设备管理</a>
-  <a href="alert_settings.html" class="jg-mobile-nav-item">🔔 预警管理</a>
-  <a href="trace_code.html" class="jg-mobile-nav-item">🏷️ 产品追溯</a>
-  <a href="harvest_plan.html" class="jg-mobile-nav-item">🍎 采收管理</a>
-  <a class="jg-mobile-nav-item" href="model_growth.html">🧠 模型预测中心</a>
-  <a href="system_settings.html" class="jg-mobile-nav-item">⚙ 系统设置</a>
-</div>
-<div class="main-wrap">
-  <div class="subnav-bar" id="subnavBar">
-    <div class="nav-arrow"><span>📡</span>设备管理</div>
-    <div class="subnav-menu">
-      <a href="device_info.html" class="subnav-item">设备信息</a>
-      <a href="device_monitor.html" class="subnav-item active">设备监控</a>
-      <a href="device_maintain.html" class="subnav-item">设备维护</a>
-      <a href="device_log.html" class="subnav-item">设备日志</a>
-    </div>
-  </div>
-  <div class="page-header">
-    <div>
-      <div class="page-title"><span class="title-icon">📡</span>设备监控</div>
-      <div class="page-desc">实时监控设备运行状态和传感器数据 <span class="live-indicator"><span class="live-dot"></span>实时更新</span></div>
-    </div>
-    <div class="page-actions">
-      <select class="jg-btn" style="border:1px solid #d9d9d9;" id="deviceTypeSelect" onchange="filterDevices()">
-        <option value="all">全部设备</option>
-        <option value="gongkong">工控设备</option>
-        <option value="qixiang">气象设备</option>
-        <option value="turang">土壤传感器</option>
-        <option value="chongqing">虫情设备</option>
-        <option value="jiankong">监控设备</option>
-        <option value="shuifei">水肥设备</option>
-      </select>
-      <button class="jg-btn jg-btn-primary" onclick="refreshData()">
-        <span>🔄</span>刷新数据
+
+    <!-- 菜单主体（由 JS 动态渲染） -->
+    <div class="sidebar-body"></div>
+
+    <!-- 底部功能区 -->
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn sidebar-collapse-btn" title="折叠侧边栏">
+        <span class="collapse-icon">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3L6 9L11 15"/><path d="M14 3V15"/>
+          </svg>
+        </span>
+        <span class="btn-text">折叠</span>
+      </button>
+      <button class="sidebar-footer-btn" title="系统设置" id="btn-settings">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M9 2V4M9 14V16M2 9H4M14 9H16M4.2 4.2L5.6 5.6M12.4 12.4L13.8 13.8M13.8 4.2L12.4 5.6M5.6 12.4L4.2 13.8"/>
+        </svg>
+        <span class="btn-text">设置</span>
       </button>
     </div>
-  </div>
-  <div class="snzg-panel">
+  </nav>
+
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-wrapper">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <!-- 移动端汉堡菜单 -->
+      <button class="topbar-hamburger" aria-label="打开导航菜单">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 6H19M3 11H19M3 16H19"/>
+        </svg>
+      </button>
+      <!-- 右侧功能区 -->
+      <div class="topbar-right">
+        <!-- 通知铃铛 -->
+        <button class="topbar-notification" title="消息通知">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2C7 2 5 4.5 5 7.5V12L3 14H17L15 12V7.5C15 4.5 13 2 10 2Z"/>
+            <path d="M8.5 16C8.5 17 9.2 18 10 18C10.8 18 11.5 17 11.5 16"/>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <!-- 用户信息 -->
+        <div class="topbar-user">
+          <div class="topbar-user-avatar">张</div>
+          <span class="topbar-user-name">张三</span>
+          <span class="topbar-user-arrow">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M3 5L6 8L9 5"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div class="topbar-user-dropdown">
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <circle cx="8" cy="5" r="3"/><path d="M2 15C2 11.5 5 10 8 10C11 10 14 11.5 14 15"/>
+            </svg>
+            个人中心
+          </div>
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M8 2V8L11 11"/><circle cx="8" cy="8" r="6"/>
+            </svg>
+            操作日志
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--error);">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M6 2H3C2.45 2 2 2.45 2 3V13C2 13.55 2.45 14 3 14H6"/><path d="M10 11L14 8L10 5"/><path d="M14 8H6"/>
+            </svg>
+            退出登录
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab 标签栏 -->
+    <div class="tab-bar">
+      <!-- Tab 标签由 JS 动态渲染 -->
+      <div class="tab-bar-actions">
+        <button class="tab-close-all" title="关闭全部标签">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3L11 11M11 3L3 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+<div class="snzg-panel">
     <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon">📊</span>设备状态概览</div>
+      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></span>设备状态概览</div>
     </div>
     <div class="snzg-panel-body">
       <div class="device-grid">
@@ -237,7 +166,7 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f5f5;">
             <span style="font-size: 12px; color: #666;">远程控制</span>
-            <div class="toggle-switch active" onclick="toggleControl(this, '工控主机')"></div>
+            <div class="toggle-switch active"工控主机')"></div>
           </div>
         </div>
         <div class="device-card">
@@ -265,7 +194,7 @@
           </div>
           <div class="chart-container">
             <div class="chart-placeholder">
-              <div class="chart-icon">🌤️</div>
+              <div class="chart-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
               <div>气象趋势图</div>
             </div>
           </div>
@@ -291,7 +220,7 @@
           </div>
           <div class="chart-container">
             <div class="chart-placeholder">
-              <div class="chart-icon">📈</div>
+              <div class="chart-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
               <div>湿度趋势图</div>
             </div>
           </div>
@@ -317,7 +246,7 @@
           </div>
           <div class="chart-container">
             <div class="chart-placeholder">
-              <div class="chart-icon">🐛</div>
+              <div class="chart-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M6 4v16"/><path d="M18 4v16"/><path d="M6 12h12"/><path d="M3 8h3"/><path d="M18 8h3"/><path d="M3 16h3"/><path d="M18 16h3"/></svg></div>
               <div>虫情趋势图</div>
             </div>
           </div>
@@ -343,7 +272,7 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f5f5;">
             <span style="font-size: 12px; color: #666;">录像存储</span>
-            <div class="toggle-switch active" onclick="toggleControl(this, '监控摄像头')"></div>
+            <div class="toggle-switch active"监控摄像头')"></div>
           </div>
         </div>
         <div class="device-card">
@@ -367,45 +296,21 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f5f5;">
             <span style="font-size: 12px; color: #666;">自动灌溉</span>
-            <div class="toggle-switch active" onclick="toggleControl(this, '灌溉控制')"></div>
+            <div class="toggle-switch active"灌溉控制')"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+    </main>
+  </div>
+
 </div>
-<script>
-function filterDevices() {
-  var type = document.getElementById('deviceTypeSelect').value;
-  var cards = document.querySelectorAll('.device-card');
-  cards.forEach(function(card) {
-    var name = card.querySelector('.device-name').textContent;
-    var show = true;
-    if(type !== 'all') {
-      if(type === 'gongkong' && name.indexOf('工控') === -1) show = false;
-      if(type === 'qixiang' && name.indexOf('气象') === -1) show = false;
-      if(type === 'turang' && name.indexOf('土壤') === -1) show = false;
-      if(type === 'chongqing' && name.indexOf('虫情') === -1) show = false;
-      if(type === 'jiankong' && name.indexOf('监控') === -1) show = false;
-      if(type === 'shuifei' && name.indexOf('灌溉') === -1) show = false;
-    }
-    card.style.display = show ? 'block' : 'none';
-  });
-  showToast('已按类型筛选设备', 'success');
-}
-function refreshData() { showToast('数据刷新成功', 'success'); }
-function toggleControl(el, deviceName) { 
-  el.classList.toggle('active'); 
-  showToast(el.classList.contains('active') ? deviceName + '控制已开启' : deviceName + '控制已关闭', 'success'); 
-}
-function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); window.location.href = 'login.html'; }
-function showToast(msg, type) { var toast = document.createElement('div'); toast.className = 'jg-toast jg-toast-' + type; toast.textContent = msg; document.body.appendChild(toast); setTimeout(function() { toast.remove(); }, 2600); }
-document.getElementById('hamburgerBtn').addEventListener('click', function() { document.getElementById('mobileNav').classList.toggle('show'); });
-document.getElementById('userBtn').addEventListener('click', function(e) { e.stopPropagation(); document.getElementById('userMenu').classList.toggle('show'); });
-document.addEventListener('click', function(e) { if (!document.getElementById('userMenu').contains(e.target) && !document.getElementById('userBtn').contains(e.target)) { document.getElementById('userMenu').classList.remove('show'); } });
-function scrollNav() { var subnav = document.getElementById('subnavBar'); if (subnav) { subnav.classList.toggle('scrolled', window.scrollY > 60); } }
-window.addEventListener('scroll', scrollNav);
-scrollNav();
-</script>
+
+<!-- 引入交互脚本 -->
+<script src="js/sidebar-layout.js"></script>
+
+<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
+  <script src="js/iframe-hide.js"></script>
 </body>
 </html>

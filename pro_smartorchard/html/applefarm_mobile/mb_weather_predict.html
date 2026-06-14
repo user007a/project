@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>数农智果 - 气象早知道</title>
+  <title>智慧果园 - 气象预测</title>
   <!-- H5设计系统 -->
   <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
   <link rel="stylesheet" href="css/mobile-design-system.css">
@@ -13,11 +13,32 @@
     /* 基础重置 - 继承设计系统 */
     .app { width: 100%; max-width: 750px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 66px; }
 
-    /* 页面头部 */
-    .header-bg { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding-bottom: var(--space-4); }
-    .page-header { display: flex; align-items: center; padding: var(--space-4); padding-top: 44px; }
-    .header-back { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--bg-white); font-size: var(--font-xl); cursor: pointer; }
-    .header-title { flex: 1; text-align: center; font-size: var(--font-lg); font-weight: 700; color: var(--bg-white); margin-right: 32px; }
+    /* Header */
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
 
     .content { padding: var(--space-4); }
 
@@ -67,10 +88,15 @@
 </head>
 <body>
   <div class="app">
-    <div class="header-bg">
-      <div class="page-header">
-        <div class="header-back" onclick="history.back()">←</div>
-        <div class="header-title">气象早知道</div>
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="padding-left: 44px;">
+        <div class="header-title">气象预测</div>
+        <div class="header-sub">未来天气趋势分析</div>
       </div>
     </div>
     
@@ -189,6 +215,7 @@
   
   <script>
     function navigateTo(page) { window.location.href = page; }
+    function goBack() { window.location.href = 'mb_service.html'; }
   </script>
 </body>
 </html>

@@ -3,271 +3,160 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>病虫害模型 - 模型预测中心 - 数农智果</title>
+<title>病虫害模型 - 模型预测中心 - 智慧果园</title>
+<!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/sidebar-layout.css">
+  <link rel="stylesheet" href="css/page-content.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: var(--font-family); background: var(--bg-base); color: var(--text-primary); font-size: var(--font-size-base); animation: pageIn 0.25s ease; }
-  @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .header { background: var(--gradient-header); height: 56px; display: flex; align-items: center; padding: 0 var(--space-xl); position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-dropdown); box-shadow: var(--shadow-md); }
-  .logo { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-inverse); font-size: 20px; font-weight: var(--font-weight-bold); letter-spacing: 1px; white-space: nowrap; margin-right: 30px; }
-  .logo-icon { width: 38px; height: 38px; background: var(--bg-card); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-  .nav-menu { display: flex; align-items: center; flex: 1; gap: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav-menu::-webkit-scrollbar { display: none; }
-  .snzg-nav-item { color: rgba(255,255,255,0.9); padding: 0 14px; height: 56px; display: flex; align-items: center; gap: var(--space-sm); cursor: pointer; font-size: var(--font-size-base); border-bottom: 3px solid transparent; transition: all var(--transition-normal); white-space: nowrap; text-decoration: none; flex-shrink: 0; }
-  .snzg-nav-item:hover { color: var(--text-inverse); background: rgba(255,255,255,0.1); }
-  .snzg-nav-item.active { color: var(--text-inverse); border-bottom: 3px solid var(--text-inverse); font-weight: var(--font-weight-semibold); }
-  .snzg-nav-sep { width: 1px; height: 24px; background: rgba(255,255,255,0.4); margin: 0 var(--space-xs); flex-shrink: 0; }
-  .nav-icon { font-size: var(--font-size-lg); }
-
-  .jg-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-sm); background: none; border: none; }
-  .jg-hamburger span { width: 24px; height: 2px; background: var(--text-inverse); border-radius: 1px; }
-  .jg-mobile-nav { display: none; position: fixed; top: 56px; left: 0; right: 0; background: var(--gradient-header); padding: var(--space-md); z-index: 99; box-shadow: var(--shadow-md); }
-  .jg-mobile-nav.show { display: block; }
-  .jg-mobile-nav-item { display: block; padding: var(--space-md) var(--space-lg); color: var(--text-inverse); font-size: var(--font-size-lg); text-decoration: none; border-radius: var(--radius-sm); transition: background var(--transition-normal); }
-  .jg-mobile-nav-item:hover { background: rgba(255,255,255,0.15); }
-  .jg-mobile-nav-item.active { background: rgba(255,255,255,0.2); font-weight: var(--font-weight-semibold); }
-
-  .header-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; position: relative; }
-  .msg-btn { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; color: var(--text-inverse); font-size: 18px; }
-  .msg-badge { position: absolute; top: -4px; right: -4px; background: var(--error); color: var(--text-inverse); font-size: var(--font-size-xs); padding: 1px var(--space-xs); border-radius: 8px; font-weight: var(--font-weight-semibold); min-width: 16px; text-align: center; }
-  .snzg-user-btn { display: flex; align-items: center; gap: var(--space-sm); color: var(--text-inverse); cursor: pointer; padding: 4px var(--space-sm); border-radius: 4px; transition: background var(--transition-normal); font-size: var(--font-size-base); background: none; border: none; }
-  .snzg-user-btn:hover { background: rgba(255,255,255,0.15); }
-  .snzg-user-avatar { width: 28px; height: 28px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--font-size-sm); }
-  .snzg-user-menu { position: absolute; top: 52px; right: 0; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 200px; z-index: 200; overflow: hidden; display: none; }
-  .snzg-user-menu.show { display: block; }
-  .snzg-user-info { display: flex; align-items: center; gap: 10px; padding: var(--space-md) var(--space-lg); background: var(--gray-50); border-bottom: 1px solid var(--border-light); }
-  .snzg-user-info-avatar { width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-inverse); font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
-  .snzg-user-info-name { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-  .snzg-user-info-role { font-size: var(--font-size-xs); color: var(--text-tertiary); }
-  .snzg-user-menu-item { display: block; padding: 10px var(--space-lg); color: var(--text-primary); font-size: var(--font-size-base); cursor: pointer; transition: background var(--transition-normal); text-decoration: none; }
-  .snzg-user-menu-item:hover { background: var(--gray-100); }
-  .snzg-user-menu-item.danger { color: var(--error); }
-  .snzg-user-menu-item.danger:hover { background: var(--error-light); }
-  .snzg-user-menu-sep { height: 1px; background: var(--border-light); margin: var(--space-xs) 0; }
-
-  .main-wrap { margin-top: 56px; padding: var(--space-lg) var(--space-xl) var(--space-2xl); min-height: calc(100vh - 56px); }
-
-  .subnav-bar { background: var(--bg-card); padding: 0 var(--space-xl); height: 48px; display: flex; align-items: center; gap: var(--space-sm); box-shadow: var(--shadow-xs); position: sticky; top: 56px; z-index: 50; overflow-x: auto; scrollbar-width: none; }
-  .subnav-bar::-webkit-scrollbar { display: none; }
-  .subnav-back { display: flex; align-items: center; gap: var(--space-xs); color: var(--text-secondary); font-size: var(--font-size-base); cursor: pointer; text-decoration: none; padding: 6px 10px; border-radius: 4px; transition: all var(--transition-normal); }
-  .subnav-back:hover { color: var(--primary-500); background: var(--primary-50); }
-  .subnav-sep { width: 1px; height: 20px; background: var(--gray-200); margin: 0 var(--space-sm); flex-shrink: 0; }
-  .subnav-item { padding: 6px 14px; font-size: var(--font-size-base); color: var(--text-secondary); cursor: pointer; border-radius: 16px; transition: all var(--transition-normal); text-decoration: none; white-space: nowrap; flex-shrink: 0; }
-  .subnav-item:hover { color: var(--primary-500); }
-  .subnav-item.active { background: var(--primary-500); color: var(--text-inverse); }
-
-  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); flex-wrap: wrap; gap: var(--space-md); }
-  .page-title { font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
-  .page-title-icon { font-size: var(--font-size-3xl); }
-  .page-actions { display: flex; gap: 10px; }
-  .jg-btn { display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); border: 1px solid var(--gray-300); background: var(--bg-card); cursor: pointer; font-size: var(--font-size-base); color: var(--text-primary); transition: all var(--transition-normal); white-space: nowrap; font-family: inherit; }
-  .jg-btn:hover { border-color: var(--primary-500); color: var(--primary-500); box-shadow: var(--shadow-primary); }
-  .jg-btn.jg-btn-primary { background: var(--primary-500); color: var(--text-inverse); border-color: var(--primary-500); }
-  .jg-btn.jg-btn-primary:hover { background: var(--primary-600); border-color: var(--primary-600); }
-
-  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-  .snzg-stat-card { background: var(--bg-card); border-radius: var(--radius-md); padding: var(--space-lg); cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow-xs); position: relative; overflow: hidden; }
-  .snzg-stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-  .snzg-stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-  .snzg-stat-card.red::before { background: var(--error); }
-  .snzg-stat-card.orange::before { background: var(--accent-500); }
-  .snzg-stat-card.green::before { background: var(--primary-500); }
-  .snzg-stat-card.blue::before { background: var(--info); }
-  .metric-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm); }
-  .metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; }
-  .snzg-stat-card.red .metric-icon { background: var(--error-light); }
-  .snzg-stat-card.orange .metric-icon { background: #fff7e6; }
-  .snzg-stat-card.green .metric-icon { background: var(--primary-50); }
-  .snzg-stat-card.blue .metric-icon { background: var(--info-bg); }
-  .metric-label { font-size: var(--font-size-sm); color: var(--text-secondary); }
-  .metric-value { font-size: 26px; font-weight: var(--font-weight-bold); line-height: 1.2; margin-bottom: 6px; }
-  .snzg-stat-card.red .metric-value { color: var(--error); }
-  .snzg-stat-card.orange .metric-value { color: var(--accent-500); }
-  .snzg-stat-card.green .metric-value { color: var(--primary-500); }
-  .snzg-stat-card.blue .metric-value { color: var(--info); }
-  .metric-unit { font-size: var(--font-size-lg); font-weight: var(--font-weight-normal); }
-  .metric-footer { font-size: var(--font-size-xs); color: var(--text-secondary); }
-
-  .main-grid { display: grid; grid-template-columns: 60% 40%; gap: var(--space-lg); margin-bottom: var(--space-lg); }
-  .snzg-panel { background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); overflow: hidden; }
-  .snzg-panel-header { padding: var(--space-md) var(--space-lg); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); }
-  .snzg-panel-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); display: flex; align-items: center; gap: var(--space-sm); }
-  .snzg-panel-title .pt-icon { font-size: var(--font-size-xl); }
-  .snzg-panel-badge { display: inline-block; background: var(--error); color: var(--text-inverse); font-size: var(--font-size-xs); padding: 1px 6px; border-radius: 8px; font-weight: var(--font-weight-semibold); min-width: 18px; text-align: center; }
-  .snzg-panel-link { font-size: var(--font-size-sm); color: var(--primary-500); cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 2px; }
-  .snzg-panel-link:hover { color: var(--primary-600); text-decoration: underline; }
-  .snzg-panel-body { padding: 14px var(--space-lg); }
-
-  .risk-map { height: 280px; background: linear-gradient(160deg, #1a2e1a 0%, #2d4a2d 30%, #3d5c3d 60%, #2a3a2a 100%); border-radius: 0 0 8px 8px; position: relative; overflow: hidden; }
-  .map-legend { position: absolute; bottom: 10px; right: 10px; background: rgba(20,30,20,0.85); border-radius: 6px; padding: 8px 12px; font-size: 11px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.3); color: #ddd; }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-  .pest-selector { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .pest-tag { padding: 6px 14px; border-radius: 16px; font-size: 12px; cursor: pointer; border: 1px solid #d9d9d9; background: #fff; color: #666; transition: all 0.2s; }
-  .pest-tag:hover { border-color: #22a84a; color: #22a84a; }
-  .pest-tag.active { background: #22a84a; color: #fff; border-color: #22a84a; }
-
-  .factor-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
-  .factor-card { background: #fafafa; border-radius: 8px; padding: 12px; }
-  .factor-name { font-size: 12px; color: #666; margin-bottom: 4px; }
-  .factor-value { font-size: 16px; font-weight: 600; color: #333; }
-  .factor-status { font-size: 11px; margin-top: 4px; }
-  .factor-status.danger { color: #ff4d4f; }
-  .factor-status.warning { color: #fa8c16; }
-  .factor-status.normal { color: #22a84a; }
-
-  .treatment-card { background: #f0faf3; border-radius: 8px; padding: 16px; border-left: 4px solid #22a84a; }
-  .treatment-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px; }
-  .treatment-desc { font-size: 12px; color: #666; line-height: 1.6; margin-bottom: 12px; }
-  .treatment-meta { display: flex; gap: 16px; font-size: 11px; color: #999; }
-  .treatment-action { display: inline-block; margin-top: 12px; padding: 6px 16px; background: #22a84a; color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
-  .treatment-action:hover { background: #1a9940; }
-
-  .accuracy-table { width: 100%; border-collapse: collapse; }
-  .accuracy-table th, .accuracy-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
-  .accuracy-table th { background: #fafafa; font-weight: 600; color: #666; }
-  .accuracy-table tr:hover { background: #f9f9f9; }
-  .accuracy-value { font-weight: 600; }
-  .accuracy-value.high { color: #22a84a; }
-  .accuracy-value.medium { color: #fa8c16; }
-  .accuracy-value.low { color: #ff4d4f; }
-
-  .chart-container { padding: 16px; }
-  .chart-svg { width: 100%; height: 180px; }
-
-  .jg-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 10px var(--space-xl); border-radius: var(--radius-sm); font-size: var(--font-size-base); z-index: 9999; animation: toastIn 0.3s ease; }
-  .jg-toast.jg-toast-info { background: var(--info-bg); color: var(--info); border: 1px solid var(--info-border); }
-  .jg-toast.jg-toast-success { background: var(--primary-50); color: var(--primary-500); border: 1px solid var(--success-border); }
-  @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--gray-100); }
-  ::-webkit-scrollbar-thumb { background: var(--gray-400); border-radius: 3px; }
-
-  @media (max-width: 1344px) {
-    .nav-menu { display: none; }
-    .jg-hamburger { display: flex; }
-    .metrics-row { grid-template-columns: repeat(2, 1fr); }
-    .main-grid { grid-template-columns: 1fr; }
-    .factor-list { grid-template-columns: 1fr; }
+  /* 模块卡片 hover 效果 */
+  .module-card {
+    transition: all 0.2s ease;
   }
-  @media (max-width: 768px) {
-    .metrics-row { grid-template-columns: 1fr; }
+  .module-card:hover {
+    background: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
   }
 </style>
 </head>
-<body>
+<body data-active-menu="model" data-active-submenu="model-pest">
 
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon">
-      <svg width="38" height="38" viewBox="0 0 38 38">
-        <rect width="38" height="38" fill="#fff" rx="4"/>
-        <circle cx="19" cy="18" r="12" fill="#ff6b35"/>
-        <circle cx="15" cy="15" r="2" fill="#fff" opacity="0.6"/>
-        <circle cx="23" cy="15" r="1.5" fill="#fff" opacity="0.4"/>
-        <path d="M12 28 Q19 34 26 28" fill="none" stroke="#22a84a" stroke-width="2.5" stroke-linecap="round"/>
-        <rect x="14" y="30" width="10" height="4" rx="2" fill="#22a84a"/>
-      </svg>
-    </div>
-    <span style="margin-left:48px;">数农智果</span>
-  </div>
-  <nav class="nav-menu" id="navMenu">
-    <a class="snzg-nav-item" href="home.html"><span class="nav-icon">🏠</span> 系统首页</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="enterprise_base.html"><span class="nav-icon">🏢</span> 企业管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="farming_plan.html"><span class="nav-icon">🌾</span> 农事管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="material_info.html"><span class="nav-icon">📦</span> 农资管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="device_monitor.html"><span class="nav-icon">📡</span> 设备管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="alert_device.html"><span class="nav-icon">🔔</span> 预警管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="trace_code.html"><span class="nav-icon">🏷️</span> 产品追溯</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="harvest_plan.html"><span class="nav-icon">🍎</span> 采收管理</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item active" href="model_growth.html"><span class="nav-icon">🧠</span> 模型预测中心</a>
-    <span class="snzg-nav-sep"></span>
-    <a class="snzg-nav-item" href="system_settings.html"><span class="nav-icon">⚙</span> 系统设置</a>
-  </nav>
-  <button class="jg-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
-  <div class="header-right">
-    <div class="msg-btn" onclick="showToast('您有3条病虫害预警', 'info')">✉<span class="msg-badge">3</span></div>
-    <button class="snzg-user-btn" id="userBtn">
-      <div class="snzg-user-avatar">👤</div>
-      <span>管理员</span>
-      <span style="font-size:10px;opacity:0.8">▾</span>
-    </button>
-    <div class="snzg-user-menu" id="userMenu">
-      <div class="snzg-user-info">
-        <div class="snzg-user-info-avatar">管</div>
-        <div><div class="snzg-user-info-name">管理员</div><div class="snzg-user-info-role">系统管理员</div></div>
+<!-- ===== 整体布局容器 ===== -->
+<div class="app-layout">
+
+  <!-- ===== 侧边栏 ===== -->
+  <nav class="sidebar" aria-label="主导航">
+    <!-- 品牌区 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <!-- 苹果绿 Logo SVG -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 3C8 1 5 3 5 6.5C5 10 8 14 11 17C14 14 17 10 17 6.5C17 3 14 1 11 3Z" fill="rgba(34,168,74,0.2)"/>
+          <path d="M11 5C9.5 4 7.5 5 7.5 7C7.5 9 9.5 12 11 14"/>
+          <path d="M11 5C12.5 4 14.5 5 14.5 7C14.5 9 12.5 12 11 14"/>
+          <path d="M11 3V1"/>
+        </svg>
       </div>
-      <a class="snzg-user-menu-item" href="#">⚙ 个人设置</a>
-      <a class="snzg-user-menu-item" onclick="showToast('修改密码功能开发中', 'info')">🔑 修改密码</a>
-      <div class="snzg-user-menu-sep"></div>
-      <a class="snzg-user-menu-item danger" onclick="handleLogout()">🔒 退出登录</a>
+      <span class="sidebar-brand-text">智慧果园</span>
     </div>
-  </div>
-</header>
 
-<div class="jg-mobile-nav" id="mobileNav">
-  <a class="jg-mobile-nav-item" href="home.html">🏠 系统首页</a>
-  <a class="jg-mobile-nav-item" href="enterprise_base.html">🏢 企业管理</a>
-  <a class="jg-mobile-nav-item" href="farming_plan.html">🌾 农事管理</a>
-  <a class="jg-mobile-nav-item" href="material_info.html">📦 农资管理</a>
-  <a class="jg-mobile-nav-item" href="device_monitor.html">📡 设备管理</a>
-  <a class="jg-mobile-nav-item" href="alert_device.html">🔔 预警管理</a>
-  <a class="jg-mobile-nav-item" href="trace_code.html">🏷️ 产品追溯</a>
-  <a class="jg-mobile-nav-item" href="harvest_plan.html">🍎 采收管理</a>
-  <a class="jg-mobile-nav-item active" href="model_growth.html">🧠 模型预测中心</a>
-  <a class="jg-mobile-nav-item" href="system_settings.html">⚙ 系统设置</a>
-</div>
+    <!-- 菜单主体（由 JS 动态渲染） -->
+    <div class="sidebar-body"></div>
 
-<div class="subnav-bar">
-  <a class="subnav-back" href="home.html">← 返回</a>
-  <span class="subnav-sep"></span>
-  <a class="subnav-item" href="model_growth.html">🌱 生长模型</a>
-  <a class="subnav-item" href="model_weather.html">🌤️ 气象模型</a>
-  <a class="subnav-item active" href="model_pest.html">🐛 病虫害模型</a>
-  <a class="subnav-item" href="model_phenology.html">📅 物候期模型</a>
-  <a class="subnav-item" href="model_yield.html">📊 产量预估模型</a>
-  <a class="subnav-item" href="model_price.html">💰 价格预测模型</a>
-</div>
-
-<div class="main-wrap">
-  <div class="page-header">
-    <div class="page-title"><span class="page-title-icon">🐛</span> 病虫害模型</div>
-    <div class="page-actions">
-      <button class="jg-btn" onclick="showToast('刷新数据成功', 'success')">🔄 刷新数据</button>
-      <button class="jg-btn jg-btn-primary" onclick="showToast('生成防治计划功能开发中', 'info')">📋 生成防治计划</button>
+    <!-- 底部功能区 -->
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn sidebar-collapse-btn" title="折叠侧边栏">
+        <span class="collapse-icon">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 3L6 9L11 15"/><path d="M14 3V15"/>
+          </svg>
+        </span>
+        <span class="btn-text">折叠</span>
+      </button>
+      <button class="sidebar-footer-btn" title="系统设置" id="btn-settings">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="9" r="2.5"/>
+          <path d="M9 2V4M9 14V16M2 9H4M14 9H16M4.2 4.2L5.6 5.6M12.4 12.4L13.8 13.8M13.8 4.2L12.4 5.6M5.6 12.4L4.2 13.8"/>
+        </svg>
+        <span class="btn-text">设置</span>
+      </button>
     </div>
-  </div>
+  </nav>
 
-  <div class="metrics-row">
+  <!-- 移动端遮罩层 -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-wrapper">
+
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <!-- 移动端汉堡菜单 -->
+      <button class="topbar-hamburger" aria-label="打开导航菜单">
+        <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M3 6H19M3 11H19M3 16H19"/>
+        </svg>
+      </button>
+      <!-- 右侧功能区 -->
+      <div class="topbar-right">
+        <!-- 通知铃铛 -->
+        <button class="topbar-notification" title="消息通知">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 2C7 2 5 4.5 5 7.5V12L3 14H17L15 12V7.5C15 4.5 13 2 10 2Z"/>
+            <path d="M8.5 16C8.5 17 9.2 18 10 18C10.8 18 11.5 17 11.5 16"/>
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <!-- 用户信息 -->
+        <div class="topbar-user">
+          <div class="topbar-user-avatar">张</div>
+          <span class="topbar-user-name">张三</span>
+          <span class="topbar-user-arrow">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M3 5L6 8L9 5"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div class="topbar-user-dropdown">
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <circle cx="8" cy="5" r="3"/><path d="M2 15C2 11.5 5 10 8 10C11 10 14 11.5 14 15"/>
+            </svg>
+            个人中心
+          </div>
+          <div class="dropdown-item">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M8 2V8L11 11"/><circle cx="8" cy="8" r="6"/>
+            </svg>
+            操作日志
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--error);">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <path d="M6 2H3C2.45 2 2 2.45 2 3V13C2 13.55 2.45 14 3 14H6"/><path d="M10 11L14 8L10 5"/><path d="M14 8H6"/>
+            </svg>
+            退出登录
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab 标签栏 -->
+    <div class="tab-bar">
+      <!-- Tab 标签由 JS 动态渲染 -->
+      <div class="tab-bar-actions">
+        <button class="tab-close-all" title="关闭全部标签">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3L11 11M11 3L3 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+<div class="metrics-row">
     <div class="snzg-stat-card red">
-      <div class="metric-header"><span class="metric-icon">🔴</span><span class="metric-label">高风险地块</span></div>
+      <div class="metric-header"><span class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/></svg></span><span class="metric-label">高风险地块</span></div>
       <div class="metric-value">8<span class="metric-unit">块</span></div>
       <div class="metric-footer">需立即防治</div>
     </div>
     <div class="snzg-stat-card orange">
-      <div class="metric-header"><span class="metric-icon">🟠</span><span class="metric-label">中风险地块</span></div>
+      <div class="metric-header"><span class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/></svg></span><span class="metric-label">中风险地块</span></div>
       <div class="metric-value">23<span class="metric-unit">块</span></div>
       <div class="metric-footer">需密切关注</div>
     </div>
     <div class="snzg-stat-card green">
-      <div class="metric-header"><span class="metric-icon">🟢</span><span class="metric-label">低风险地块</span></div>
+      <div class="metric-header"><span class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/></svg></span><span class="metric-label">低风险地块</span></div>
       <div class="metric-value">95<span class="metric-unit">块</span></div>
       <div class="metric-footer">状态良好</div>
     </div>
     <div class="snzg-stat-card blue">
-      <div class="metric-header"><span class="metric-icon">📝</span><span class="metric-label">今日防治建议</span></div>
+      <div class="metric-header"><span class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span><span class="metric-label">今日防治建议</span></div>
       <div class="metric-value">6<span class="metric-unit">项</span></div>
       <div class="metric-footer">基于模型推荐</div>
     </div>
@@ -277,7 +166,7 @@
     <div>
       <div class="snzg-panel" style="margin-bottom:16px;">
         <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon">🗺️</span> 病虫害风险地图</div>
+          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" x2="8" y1="2" y2="18"/><line x1="16" x2="16" y1="6" y2="22"/></svg></span> 病虫害风险地图</div>
           <a class="snzg-panel-link" href="enterprise_plot.html">查看地块详情 →</a>
         </div>
         <div class="risk-map">
@@ -312,7 +201,7 @@
 
       <div class="snzg-panel">
         <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon">📈</span> 未来7天风险趋势</div>
+          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span> 未来7天风险趋势</div>
         </div>
         <div class="chart-container">
           <svg class="chart-svg" viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
@@ -349,7 +238,7 @@
     <div>
       <div class="snzg-panel" style="margin-bottom:16px;">
         <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon">🔬</span> 模型推演详情</div>
+          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M6 18 8 10H2l2 8"/><path d="M8 10 14 4"/><path d="m18 10-8 8"/><circle cx="18" cy="10" r="4"/></svg></span> 模型推演详情</div>
         </div>
         <div class="snzg-panel-body">
           <div class="pest-selector">
@@ -382,17 +271,17 @@
             </div>
           </div>
           <div class="treatment-card">
-            <div class="treatment-title">💡 防治建议</div>
+            <div class="treatment-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> 防治建议</div>
             <div class="treatment-desc">建议在降雨前喷施代森锰锌或甲基硫菌灵进行预防，间隔10-15天再喷一次。注意喷药时要均匀周到，叶片正反面都要喷到。</div>
             <div class="treatment-meta"><span>最佳窗口：未来3天</span><span>有效期：10-15天</span></div>
-            <div class="treatment-action" onclick="showToast('已生成防治任务', 'success')">采纳建议</div>
+            <div class="treatment-action"已生成防治任务', 'success')">采纳建议</div>
           </div>
         </div>
       </div>
 
       <div class="snzg-panel">
         <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon">📊</span> 模型准确率统计</div>
+          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></span> 模型准确率统计</div>
         </div>
         <div class="snzg-panel-body">
           <table class="accuracy-table">
@@ -435,40 +324,15 @@
       </div>
     </div>
   </div>
+    </main>
+  </div>
+
 </div>
 
-<script>
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const mobileNav = document.getElementById('mobileNav');
-if (hamburgerBtn && mobileNav) {
-  hamburgerBtn.addEventListener('click', function() { mobileNav.classList.toggle('show'); });
-}
+<!-- 引入交互脚本 -->
+<script src="js/sidebar-layout.js"></script>
 
-const userBtn = document.getElementById('userBtn');
-const userMenu = document.getElementById('userMenu');
-if (userBtn && userMenu) {
-  userBtn.addEventListener('click', function(e) { e.stopPropagation(); userMenu.classList.toggle('show'); });
-  document.addEventListener('click', function(e) { if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) { userMenu.classList.remove('show'); } });
-}
-
-function handleLogout() { sessionStorage.removeItem('snzg_logged_in'); sessionStorage.removeItem('snzg_user'); window.location.href = 'login.html'; }
-
-function showToast(msg, type) {
-  type = type || 'info';
-  var toast = document.createElement('div');
-  toast.className = 'jg-toast jg-toast-' + type;
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(function() { toast.remove(); }, 2600);
-}
-
-document.querySelectorAll('.pest-tag').forEach(function(tag) {
-  tag.addEventListener('click', function() {
-    document.querySelectorAll('.pest-tag').forEach(function(t) { t.classList.remove('active'); });
-    this.classList.add('active');
-    showToast('已切换到 ' + this.textContent + ' 模型', 'info');
-  });
-});
-</script>
+<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
+  <script src="js/iframe-hide.js"></script>
 </body>
 </html>

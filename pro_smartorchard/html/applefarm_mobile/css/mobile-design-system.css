@@ -178,7 +178,9 @@
 
   /* ---------- 渐变色规范 — v2 ---------- */
   --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-600) 100%);
-  --gradient-header: linear-gradient(135deg, var(--primary-700) 0%, var(--primary) 50%, var(--primary-600) 100%);
+  --gradient-header: linear-gradient(145deg, #1a6a38 0%, #2e9e5a 35%, #3eb87a 65%, #2e8a4e 100%);
+  /* Header 装饰：微妙的光晕叠加 */
+  --gradient-header-glow: radial-gradient(ellipse 80% 50% at 70% 0%, rgba(255,255,255,0.12) 0%, transparent 60%);
   --gradient-skeleton: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
 
   /* ---------- 动画过渡 ---------- */
@@ -319,61 +321,141 @@ img {
  * 04. Header 组件 — 三种变体 (v2)
  * ============================================ */
 
-/* --- 变体 A：主页型 Header --- */
+/* --- 变体 A：主页型 Header（v2 美化升级） --- */
 .mb-header-home {
   background: var(--gradient-header);
   padding: 12px 16px 20px;
   color: var(--text-on-primary);
-  border-radius: 0 0 18px 18px;
-  box-shadow: var(--shadow-header);
+  border-radius: 0 0 20px 20px;
+  box-shadow:
+    0 4px 24px rgba(46,158,90,0.3),
+    0 1px 3px rgba(0,0,0,0.08);
   position: relative;
+  overflow: hidden;
   /* 安全区域适配 */
   padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
 }
 
+/* Header 装饰性背景光晕 */
+.mb-header-home::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -15%;
+  width: 70%;
+  height: 120%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.10) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 右下角微光装饰圆点 */
+.mb-header-home::after {
+  content: '';
+  position: absolute;
+  bottom: 8%;
+  right: 6%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mb-header-home > * {
+  position: relative;
+  z-index: 1;
+}
+
 .mb-header-home .header-brand {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 品牌 Logo 图标占位 */
+.mb-header-home .header-brand::before {
+  content: '';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8'%3E%3Cpath d='M12 22c4-2 8-6.5 8-12V5l-8-3-8 3v5c0 5.5 4 10 8 12z'/%3E%3Cpath d='M12 8v4'/%3E%3Cpath d='M12 16h.01'/%3E%3C/svg%3E");
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .mb-header-home .header-title {
   font-size: var(--font-xl);
   font-weight: var(--font-bold);
   letter-spacing: 0.5px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .mb-header-home .header-subtitle {
   font-size: var(--font-xs);
-  opacity: 0.9;
+  opacity: 0.88;
   margin-top: 2px;
+  letter-spacing: 0.3px;
 }
 
-/* 统计区（首页4宫格） */
+/* 统计区（首页4宫格）v2 美化升级 */
 .mb-header-home .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .mb-header-home .stat-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-md);
-  padding: 8px 4px;
+  padding: 10px 4px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+/* 统计卡片顶部高光 */
+.mb-header-home .stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+.mb-header-home .stat-card:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.26);
 }
 
 .mb-header-home .stat-value {
-  font-size: var(--font-lg);
+  font-size: var(--font-md);
   font-weight: var(--font-extrabold);
   font-family: var(--font-family-number);
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
 .mb-header-home .stat-label {
-  font-size: var(--font-xs);
-  opacity: 0.85;
-  margin-top: 1px;
+  font-size: var(--font-2xs);
+  opacity: 0.82;
+  margin-top: 3px;
+  letter-spacing: 0.5px;
 }
 
 /* --- 变体 B：详情页型 Header --- */
@@ -1409,7 +1491,7 @@ img {
 .mb-model-icon.blue { background: var(--info-light); color: var(--info-dark); }
 .mb-model-icon.orange { background: var(--warning-light); color: var(--warning-dark); }
 .mb-model-icon.red { background: var(--error-light); color: var(--error-dark); }
-.mb-model-icon.purple { background: linear-gradient(135deg, #667eea, #764ba2); color: var(--bg-white); }
+.mb-model-icon.purple { background: linear-gradient(135deg, var(--sky-500), var(--sky-700)); color: var(--bg-white); }
 
 .mb-model-name {
   font-size: var(--font-md);
