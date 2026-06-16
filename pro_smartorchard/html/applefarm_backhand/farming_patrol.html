@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>智慧果园 - 日常巡园</title>
+<title>智慧果园 - 巡园管理</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
@@ -17,6 +17,49 @@
     background: var(--bg-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+  }
+
+  /* checkbox列样式 */
+  .checkbox-col {
+    width: 40px;
+    text-align: center;
+  }
+  .checkbox-col input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  /* 日期输入框样式 */
+  .search-date {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    min-width: 140px;
+  }
+  .search-date:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  /* 操作按钮区样式 */
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* 页面分区样式 */
+  .page-section {
+    margin-bottom: 20px;
+  }
+
+  /* 数据区样式 */
+  .data-section .data-table {
+    margin-bottom: 16px;
   }
 </style>
 </head>
@@ -139,312 +182,468 @@
 
     <!-- 主内容区 -->
     <main class="main-content">
-<div class="patrol-stats">
-    <div class="patrol-stat-card green">
-      <div class="stat-value">23</div>
-      <div class="stat-label">今日巡园次数</div>
+      <div class="content-wrapper">
+        <!-- ===== 页面头部 ===== -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">巡园管理</h1>
+            <p class="page-subtitle">管理果园巡园工作，及时发现和处理异常问题</p>
+          </div>
+        </div>
+
+        <!-- 统计卡片区 -->
+        <div class="patrol-stats">
+          <div class="patrol-stat-card green">
+            <div class="stat-value">23</div>
+            <div class="stat-label">今日巡园次数</div>
+          </div>
+          <div class="patrol-stat-card orange">
+            <div class="stat-value">5</div>
+            <div class="stat-label">发现异常问题</div>
+          </div>
+          <div class="patrol-stat-card red">
+            <div class="stat-value">87%</div>
+            <div class="stat-label">问题处理率</div>
+          </div>
+          <div class="patrol-stat-card blue">
+            <div class="stat-value">92%</div>
+            <div class="stat-label">打卡完成率</div>
+          </div>
+        </div>
+
+        <!-- 搜索栏区 -->
+        <div class="page-section search-section">
+          <div class="search-bar">
+            <select class="search-select" id="baseSelect">
+              <option value="">选择基地</option>
+              <option value="ytqx">烟台栖霞基地</option>
+              <option value="whrc">威海荣成基地</option>
+              <option value="qdlx">青岛莱西基地</option>
+              <option value="zy">招远基地</option>
+              <option value="pl">蓬莱阁基地</option>
+            </select>
+            <select class="search-select" id="patrolTypeSelect">
+              <option value="">巡查类型</option>
+              <option value="daily">日常巡园</option>
+              <option value="special">专项检查</option>
+              <option value="pest">病虫害巡查</option>
+              <option value="weather">气象巡查</option>
+              <option value="growth">生长巡查</option>
+            </select>
+            <select class="search-select" id="statusSelect">
+              <option value="">全部状态</option>
+              <option value="normal">无异常</option>
+              <option value="warning">发现病虫害</option>
+              <option value="danger">设备异常</option>
+              <option value="other">其他异常</option>
+            </select>
+            <input type="date" class="search-date" id="dateStart">
+            <span class="date-separator">至</span>
+            <input type="date" class="search-date" id="dateEnd">
+            <input type="text" class="search-input" placeholder="搜索巡园人员..." id="searchInput">
+            <button class="jg-btn" onclick="handleSearch()">搜索</button>
+          </div>
+        </div>
+
+        <!-- 操作按钮区 -->
+        <div class="page-section action-bar">
+          <div class="action-buttons">
+            <button class="jg-btn jg-btn-primary" onclick="Modal.show('modal-add-patrol')">
+              <span>+</span>新建巡查
+            </button>
+            <button class="jg-btn" onclick="Modal.show('modal-export')">
+              <span>↓</span>导出巡查
+            </button>
+            <button class="jg-btn" onclick="refreshData()">
+              <span>⟳</span>刷新数据
+            </button>
+          </div>
+        </div>
+
+        <!-- 数据列表区 -->
+        <div class="page-section data-section">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="checkbox-col"><input type="checkbox" id="selectAll"></th>
+                <th>巡查编号</th>
+                <th>所属基地</th>
+                <th>巡查类型</th>
+                <th>巡查地块</th>
+                <th>巡查人员</th>
+                <th>巡查时间</th>
+                <th>发现问题</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+            </tbody>
+          </table>
+        </div>
+        <div id="pagination-container">
+        </div>
+      </div>
+
     </div>
-    <div class="patrol-stat-card orange">
-      <div class="stat-value">5</div>
-      <div class="stat-label">发现异常问题</div>
-    </div>
-    <div class="patrol-stat-card red">
-      <div class="stat-value">87%</div>
-      <div class="stat-label">问题处理率</div>
-    </div>
-    <div class="patrol-stat-card blue">
-      <div class="stat-value">92%</div>
-      <div class="stat-label">打卡完成率</div>
-    </div>
-  </div>
-  <div class="snzg-panel">
-    <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg></span>巡园计划列表</div>
-      <div class="page-actions">
-        <button class="jg-btn jg-btn-primary">
-          <span>+</span>新增计划
+  </main>
+</div>
+  <div id="modal-add-patrol" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">新建巡查记录</h3>
+        <button class="modal-close">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4L12 12M12 4L4 12"/>
+          </svg>
         </button>
       </div>
-    </div>
-    <div class="snzg-panel-body">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>计划编号</th>
-            <th>所属基地</th>
-            <th>计划类型</th>
-            <th>计划人员</th>
-            <th>计划日期</th>
-            <th>计划地块</th>
-            <th>状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>PLAN-001</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>日常巡园</td>
-            <td>李技术员</td>
-            <td>2024-04-15</td>
-            <td>D-001, D-002, D-003</td>
-            <td><span class="status-tag normal">已完成</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"PLAN-001')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PLAN-002</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>日常巡园</td>
-            <td>王主管</td>
-            <td>2024-04-15</td>
-            <td>D-004, D-005</td>
-            <td><span class="status-tag warning">进行中</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"PLAN-002')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PLAN-003</strong></td>
-            <td>威海荣成基地</td>
-            <td>专项检查</td>
-            <td>张技术员</td>
-            <td>2024-04-16</td>
-            <td>D-006, D-007</td>
-            <td><span class="status-tag warning">待执行</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"PLAN-003')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PLAN-004</strong></td>
-            <td>青岛莱西基地</td>
-            <td>病虫害巡查</td>
-            <td>刘技术员</td>
-            <td>2024-04-16</td>
-            <td>D-008, D-009</td>
-            <td><span class="status-tag warning">待执行</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"PLAN-004')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PLAN-005</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>日常巡园</td>
-            <td>赵技术员</td>
-            <td>2024-04-14</td>
-            <td>D-010</td>
-            <td><span class="status-tag normal">已完成</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"PLAN-005')">详情</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="snzg-panel">
-    <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></span>巡园记录列表</div>
-      <div class="search-bar">
-        <select class="search-select" id="baseSelect">
-          <option value="">选择基地</option>
-          <option value="ytqx">烟台栖霞基地</option>
-          <option value="whrc">威海荣成基地</option>
-        </select>
-        <input type="text" class="search-input" placeholder="搜索巡园人员..." id="searchInput">
-        <button class="jg-btn">搜索</button>
+      <div class="modal-body">
+        <form id="form-add-patrol" class="modal-form">
+          <div class="form-group">
+            <label>所属基地</label>
+            <select class="form-control">
+              <option value="">请选择基地</option>
+              <option value="ytqx">烟台栖霞基地</option>
+              <option value="whrc">威海荣成基地</option>
+              <option value="qdlx">青岛莱西基地</option>
+              <option value="zy">招远基地</option>
+              <option value="pl">蓬莱阁基地</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>巡查类型</label>
+            <select class="form-control">
+              <option value="">请选择类型</option>
+              <option value="daily">日常巡园</option>
+              <option value="special">专项检查</option>
+              <option value="pest">病虫害巡查</option>
+              <option value="weather">气象巡查</option>
+              <option value="growth">生长巡查</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>巡查地块</label>
+            <input type="text" class="form-control" placeholder="例如：D-001, D-002">
+          </div>
+          <div class="form-group">
+            <label>巡查人员</label>
+            <input type="text" class="form-control" placeholder="请输入巡查人员">
+          </div>
+          <div class="form-group">
+            <label>巡查时间</label>
+            <input type="datetime-local" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>发现问题</label>
+            <select class="form-control">
+              <option value="normal">无异常</option>
+              <option value="warning">发现病虫害</option>
+              <option value="danger">设备异常</option>
+              <option value="other">其他异常</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>问题描述</label>
+            <textarea class="form-control" rows="3" placeholder="请输入问题描述"></textarea>
+          </div>
+        </form>
       </div>
-    </div>
-    <div class="snzg-panel-body">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>巡园编号</th>
-            <th>所属基地</th>
-            <th>巡园人员</th>
-            <th>巡园日期</th>
-            <th>巡园时长</th>
-            <th>发现问题</th>
-            <th>处理状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>PAT-001</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>李技术员</td>
-            <td>2024-04-15 08:30</td>
-            <td>1小时20分</td>
-            <td>无异常</td>
-            <td><span class="status-tag normal">正常</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PAT-002</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>王主管</td>
-            <td>2024-04-15 14:00</td>
-            <td>2小时15分</td>
-            <td>发现病虫害</td>
-            <td><span class="status-tag warning">待处理</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail">详情</button>
-                <button class="action-btn delete">删除</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>PAT-003</strong></td>
-            <td>威海荣成基地</td>
-            <td>张技术员</td>
-            <td>2024-04-15 09:00</td>
-            <td>1小时45分</td>
-            <td>设备异常</td>
-            <td><span class="status-tag danger">紧急</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail">详情</button>
-                <button class="action-btn delete">删除</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="pagination">
-        <button class="page-btn disabled">‹</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">›</button>
+      <div class="modal-footer">
+        <button class="jg-btn" onclick="Modal.hide('modal-add-patrol')">取消</button>
+        <button class="jg-btn jg-btn-primary" onclick="submitAddPatrol()">确定</button>
       </div>
     </div>
   </div>
-  <div class="snzg-panel">
-    <div class="snzg-panel-header">
-      <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>异常上报列表</div>
-      <div class="page-actions">
-        <button class="jg-btn jg-btn-primary">
-          <span>+</span>上报异常
+
+  <!-- 导出巡查模态框 -->
+  <div id="modal-export" class="modal-overlay">
+    <div class="modal-box" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 class="modal-title">导出巡查记录</h3>
+        <button class="modal-close">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4L12 12M12 4L4 12"/>
+          </svg>
         </button>
       </div>
-    </div>
-    <div class="snzg-panel-body">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>上报编号</th>
-            <th>所属基地</th>
-            <th>异常类型</th>
-            <th>上报人</th>
-            <th>上报时间</th>
-            <th>涉及地块</th>
-            <th>处理状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>REP-001</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>病虫害异常</td>
-            <td>王主管</td>
-            <td>2024-04-15 14:30</td>
-            <td>D-004</td>
-            <td><span class="status-tag warning">待处理</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"REP-001')">详情</button>
-                <button class="action-btn" style="color: #52c41a;"REP-001')">处理</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>REP-002</strong></td>
-            <td>威海荣成基地</td>
-            <td>设备故障</td>
-            <td>张技术员</td>
-            <td>2024-04-15 09:15</td>
-            <td>D-006</td>
-            <td><span class="status-tag danger">紧急</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"REP-002')">详情</button>
-                <button class="action-btn" style="color: #52c41a;"REP-002')">处理</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>REP-003</strong></td>
-            <td>青岛莱西基地</td>
-            <td>气象异常</td>
-            <td>刘技术员</td>
-            <td>2024-04-14 16:20</td>
-            <td>D-008</td>
-            <td><span class="status-tag normal">已处理</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"REP-003')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>REP-004</strong></td>
-            <td>烟台栖霞基地</td>
-            <td>生长异常</td>
-            <td>李技术员</td>
-            <td>2024-04-14 10:45</td>
-            <td>D-002</td>
-            <td><span class="status-tag normal">已处理</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"REP-004')">详情</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>REP-005</strong></td>
-            <td>威海荣成基地</td>
-            <td>土壤异常</td>
-            <td>赵技术员</td>
-            <td>2024-04-13 15:30</td>
-            <td>D-007</td>
-            <td><span class="status-tag normal">已处理</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn detail"REP-005')">详情</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">请选择导出格式：</p>
+        <div style="display: flex; gap: 12px;">
+          <button class="jg-btn jg-btn-primary" onclick="exportPatrol('excel')">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;">
+              <path d="M10 2H2v16h16V8l-6-6z"/>
+              <path d="M14 2v6h6M13 9H7M13 13H7M13 17H7"/>
+            </svg>
+            Excel格式
+          </button>
+          <button class="jg-btn" onclick="exportPatrol('pdf')">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;">
+              <path d="M10 2H2v16h16V8l-6-6z"/>
+              <path d="M14 2v6h6M13 9H7M13 13H7M13 17H7"/>
+            </svg>
+            PDF格式
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="jg-btn" onclick="Modal.hide('modal-export')">关闭</button>
+      </div>
     </div>
   </div>
-    </main>
+
+  <!-- 详情模态框 -->
+  <div id="modal-detail" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">巡查详情</h3>
+        <button class="modal-close">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4L12 12M12 4L4 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="detail-content">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">巡查编号</div>
+              <div id="detail-id" style="font-weight: 600;">PAT-001</div>
+            </div>
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">所属基地</div>
+              <div id="detail-base" style="font-weight: 600;">烟台栖霞基地</div>
+            </div>
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">巡查类型</div>
+              <div id="detail-type" style="font-weight: 600;">日常巡园</div>
+            </div>
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">巡查地块</div>
+              <div id="detail-plots" style="font-weight: 600;">D-001, D-002, D-003</div>
+            </div>
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">巡查人员</div>
+              <div id="detail-person" style="font-weight: 600;">李技术员</div>
+            </div>
+            <div style="padding: 12px; background: var(--gray-50); border-radius: 8px;">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">巡查时间</div>
+              <div id="detail-time" style="font-weight: 600;">2024-04-15 08:30</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding: 12px; background: var(--gray-50); border-radius: 8px;">
+            <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">问题描述</div>
+            <div id="detail-desc" style="font-weight: 500;">巡查区域内果树生长正常，无病虫害迹象，设备运行良好。</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="jg-btn" onclick="Modal.hide('modal-detail')">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑模态框 -->
+  <div id="modal-edit" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑巡查记录</h3>
+        <button class="modal-close">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4L12 12M12 4L4 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form-edit-patrol" class="modal-form">
+          <div class="form-group">
+            <label>所属基地</label>
+            <select class="form-control" id="edit-base">
+              <option value="ytqx" selected>烟台栖霞基地</option>
+              <option value="whrc">威海荣成基地</option>
+              <option value="qdlx">青岛莱西基地</option>
+              <option value="zy">招远基地</option>
+              <option value="pl">蓬莱阁基地</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>巡查类型</label>
+            <select class="form-control" id="edit-type">
+              <option value="daily" selected>日常巡园</option>
+              <option value="special">专项检查</option>
+              <option value="pest">病虫害巡查</option>
+              <option value="weather">气象巡查</option>
+              <option value="growth">生长巡查</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>巡查地块</label>
+            <input type="text" class="form-control" id="edit-plots" value="D-001, D-002, D-003">
+          </div>
+          <div class="form-group">
+            <label>巡查人员</label>
+            <input type="text" class="form-control" id="edit-person" value="李技术员">
+          </div>
+          <div class="form-group">
+            <label>巡查时间</label>
+            <input type="datetime-local" class="form-control" id="edit-time" value="2024-04-15T08:30">
+          </div>
+          <div class="form-group">
+            <label>问题描述</label>
+            <textarea class="form-control" rows="3" id="edit-desc">巡查区域内果树生长正常，无病虫害迹象，设备运行良好。</textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="jg-btn" onclick="Modal.hide('modal-edit')">取消</button>
+        <button class="jg-btn jg-btn-primary" onclick="submitEditPatrol()">确定</button>
+      </div>
+    </div>
   </div>
 
 </div>
 
 <!-- 引入交互脚本 -->
 <script src="js/sidebar-layout.js"></script>
+<script src="js/common-functions.js"></script>
+<script>
+// 当前页面数据
+var currentPatrolId = '';
+
+// Mock数据 - 23条巡查记录
+const mockData = [
+  { id: 'PAT-001', base: '烟台栖霞基地', type: '日常巡园', plots: 'D-001, D-002, D-003', inspector: '李技术员', time: '2024-04-15 08:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-002', base: '烟台栖霞基地', type: '日常巡园', plots: 'D-004, D-005', inspector: '王主管', time: '2024-04-15 14:00', issue: 'warning', issueName: '发现病虫害' },
+  { id: 'PAT-003', base: '威海荣成基地', type: '专项检查', plots: 'D-006, D-007', inspector: '张技术员', time: '2024-04-15 09:00', issue: 'danger', issueName: '设备异常' },
+  { id: 'PAT-004', base: '青岛莱西基地', type: '日常巡园', plots: 'D-008, D-009', inspector: '刘技术员', time: '2024-04-16 08:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-005', base: '招远基地', type: '专项检查', plots: 'D-010, D-011', inspector: '赵技术员', time: '2024-04-16 10:30', issue: 'warning', issueName: '发现病虫害' },
+  { id: 'PAT-006', base: '蓬莱阁基地', type: '日常巡园', plots: 'D-012, D-013', inspector: '孙技术员', time: '2024-04-16 14:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-007', base: '烟台栖霞基地', type: '专项检查', plots: 'D-014, D-015', inspector: '周技术员', time: '2024-04-17 08:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-008', base: '威海荣成基地', type: '日常巡园', plots: 'D-016, D-017', inspector: '吴技术员', time: '2024-04-17 09:00', issue: 'warning', issueName: '发现病虫害' },
+  { id: 'PAT-009', base: '青岛莱西基地', type: '专项检查', plots: 'D-018, D-019', inspector: '郑技术员', time: '2024-04-17 14:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-010', base: '招远基地', type: '日常巡园', plots: 'D-020, D-021', inspector: '王技术员', time: '2024-04-18 08:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-011', base: '蓬莱阁基地', type: '专项检查', plots: 'D-022, D-023', inspector: '冯技术员', time: '2024-04-18 10:00', issue: 'danger', issueName: '设备异常' },
+  { id: 'PAT-012', base: '烟台栖霞基地', type: '日常巡园', plots: 'D-001, D-002', inspector: '陈技术员', time: '2024-04-18 14:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-013', base: '威海荣成基地', type: '专项检查', plots: 'D-003, D-004', inspector: '褚技术员', time: '2024-04-19 08:30', issue: 'warning', issueName: '发现病虫害' },
+  { id: 'PAT-014', base: '青岛莱西基地', type: '日常巡园', plots: 'D-005, D-006', inspector: '卫技术员', time: '2024-04-19 09:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-015', base: '招远基地', type: '专项检查', plots: 'D-007, D-008', inspector: '蒋技术员', time: '2024-04-19 14:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-016', base: '蓬莱阁基地', type: '日常巡园', plots: 'D-009, D-010', inspector: '沈技术员', time: '2024-04-20 08:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-017', base: '烟台栖霞基地', type: '专项检查', plots: 'D-011, D-012', inspector: '韩技术员', time: '2024-04-20 10:30', issue: 'warning', issueName: '发现病虫害' },
+  { id: 'PAT-018', base: '威海荣成基地', type: '日常巡园', plots: 'D-013, D-014', inspector: '杨技术员', time: '2024-04-20 14:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-019', base: '青岛莱西基地', type: '专项检查', plots: 'D-015, D-016', inspector: '朱技术员', time: '2024-04-21 08:30', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-020', base: '招远基地', type: '日常巡园', plots: 'D-017, D-018', inspector: '秦技术员', time: '2024-04-21 09:00', issue: 'danger', issueName: '设备异常' },
+  { id: 'PAT-021', base: '蓬莱阁基地', type: '专项检查', plots: 'D-019, D-020', inspector: '尤技术员', time: '2024-04-21 14:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-022', base: '烟台栖霞基地', type: '日常巡园', plots: 'D-021, D-022', inspector: '许技术员', time: '2024-04-22 08:00', issue: 'normal', issueName: '无异常' },
+  { id: 'PAT-023', base: '威海荣成基地', type: '专项检查', plots: 'D-023, D-001', inspector: '何技术员', time: '2024-04-22 10:00', issue: 'warning', issueName: '发现病虫害' }
+];
+
+// 获取问题标签
+function getIssueTag(issue) {
+  const issueMap = {
+    'normal': '<span class="status-tag normal">无异常</span>',
+    'warning': '<span class="status-tag warning">发现病虫害</span>',
+    'danger': '<span class="status-tag danger">设备异常</span>'
+  };
+  return issueMap[issue] || issueMap['normal'];
+}
+
+// 渲染表格行
+function renderRow(item, index) {
+  return `<tr>
+    <td class="checkbox-col"><input type="checkbox"></td>
+    <td><strong>${item.id}</strong></td>
+    <td>${item.base}</td>
+    <td>${item.type}</td>
+    <td>${item.plots}</td>
+    <td>${item.inspector}</td>
+    <td>${item.time}</td>
+    <td>${getIssueTag(item.issue)}</td>
+    <td>
+      <div class="action-btns">
+        <button class="action-btn detail" onclick="showDetail('${item.id}')">详情</button>
+        <button class="action-btn edit" onclick="showEdit('${item.id}')">编辑</button>
+        <button class="action-btn delete" onclick="showDeleteConfirm('${item.id}')">删除</button>
+      </div>
+    </td>
+  </tr>`;
+}
+
+// 搜索功能
+function handleSearch() {
+  var keyword = document.getElementById('searchInput').value.trim();
+  var base = document.getElementById('baseSelect').value;
+  var patrolType = document.getElementById('patrolTypeSelect').value;
+
+  var filteredData = mockData.filter(item => {
+    if (keyword && !item.id.includes(keyword)) return false;
+    if (base && !item.base.includes(base)) return false;
+    if (patrolType && item.type !== patrolType) return false;
+    return true;
+  });
+
+  Pagination.updateData(filteredData);
+  Toast.info('找到 ' + filteredData.length + ' 条记录');
+}
+
+// 刷新数据
+function refreshData() {
+  Toast.success('数据已刷新');
+}
+
+// 显示详情
+function showDetail(id) {
+  currentPatrolId = id;
+  document.getElementById('detail-id').textContent = id;
+  Modal.show('modal-detail');
+}
+
+// 显示编辑
+function showEdit(id) {
+  currentPatrolId = id;
+  Modal.show('modal-edit');
+}
+
+// 显示删除确认
+function showDeleteConfirm(id) {
+  currentPatrolId = id;
+  ConfirmDialog.show({
+    title: '删除巡查记录',
+    message: '确定要删除巡查记录 "' + id + '" 吗？此操作不可撤销。',
+    onConfirm: function() {
+      Toast.success('巡查记录 "' + currentPatrolId + '" 已删除');
+    }
+  });
+}
+
+// 提交新建巡查
+function submitAddPatrol() {
+  Toast.success('巡查记录创建成功');
+  Modal.hide('modal-add-patrol');
+}
+
+// 提交编辑巡查
+function submitEditPatrol() {
+  Toast.success('巡查记录 "' + currentPatrolId + '" 已更新');
+  Modal.hide('modal-edit');
+}
+
+// 导出巡查
+function exportPatrol(format) {
+  Toast.success('巡查记录已导出为' + (format === 'excel' ? 'Excel' : 'PDF') + '格式');
+  Modal.hide('modal-export');
+}
+
+// 初始化分页
+document.addEventListener('DOMContentLoaded', function() {
+  Pagination.init({
+    currentPage: 1,
+    pageSize: 10,
+    data: mockData,
+    containerId: 'pagination-container',
+    tbodyId: 'dataTableBody',
+    renderRow: renderRow
+  });
+});
+</script>
 
 <!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
   <script src="js/iframe-hide.js"></script>

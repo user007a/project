@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>物候期模型 - 模型预测中心 - 智慧果园</title>
+<title>智慧果园 - 物候期模型</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
@@ -17,6 +17,366 @@
     background: var(--bg-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+  }
+  
+  /* 物候期页面专属样式 */
+  .phenology-overview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* 紧凑型统计卡片 - 参考巡园管理 */
+  .patrol-stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  
+  .patrol-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .patrol-stat-card .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  
+  .patrol-stat-card .stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  
+  .patrol-stat-card.green .stat-value { color: #22a84a; }
+  .patrol-stat-card.blue .stat-value { color: #4a90d9; }
+  .patrol-stat-card.red .stat-value { color: #ff4d4f; }
+  .patrol-stat-card.orange .stat-value { color: #fa8c16; }
+  .patrol-stat-card.purple .stat-value { color: #722ed1; }
+  
+  .phenology-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  
+  .phenology-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  
+  .phenology-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  
+  .phenology-variety {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .phenology-stage {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .phenology-stage.enlarging { background: #e6f4ff; color: #096dd9; }
+  .phenology-stage.coloring { background: #f5f0ff; color: #722ed1; }
+  .phenology-stage.harvesting { background: #fff1f0; color: #cf1322; }
+  .phenology-stage.dormancy { background: #f5f5f5; color: #666; }
+  .phenology-stage.sprouting { background: #d4f4dd; color: #1a8a3c; }
+  .phenology-stage.flowering { background: #ffe6f0; color: #c44d7d; }
+  .phenology-stage.fruiting { background: #fff7e6; color: #d48806; }
+  
+  .phenology-progress {
+    height: 8px;
+    background: #eef1ef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  
+  .phenology-progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  
+  .phenology-progress-bar.blue { background: linear-gradient(90deg, #1890ff, #40a9ff); }
+  .phenology-progress-bar.purple { background: linear-gradient(90deg, #722ed1, #9254de); }
+  .phenology-progress-bar.red { background: linear-gradient(90deg, #ff4d4f, #ff7875); }
+  .phenology-progress-bar.green { background: linear-gradient(90deg, #52c41a, #73d13d); }
+  
+  .phenology-deviation {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  
+  .phenology-deviation.delay { color: #fa8c16; }
+  .phenology-deviation.advance { color: #722ed1; }
+  
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* 物候期年历 */
+  .calendar-container {
+    background: #fafcfc;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  
+  .calendar-months {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  
+  .calendar-month {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-align: center;
+    padding: 4px 0;
+  }
+  
+  .calendar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .calendar-label {
+    width: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+  
+  .calendar-bar {
+    flex: 1;
+    height: 24px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .calendar-segment {
+    position: absolute;
+    top: 2px;
+    height: 20px;
+    border-radius: 3px;
+  }
+  
+  .calendar-segment.dormancy { background: #e6e6e6; }
+  .calendar-segment.sprouting { background: #d4f4dd; }
+  .calendar-segment.flowering { background: #ffe6f0; }
+  .calendar-segment.fruiting { background: #fff7e6; }
+  .calendar-segment.enlarging { background: #e6f4ff; }
+  .calendar-segment.coloring { background: #f5f0ff; }
+  .calendar-segment.harvesting { background: #fff1f0; }
+  
+  .calendar-today {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #ff4d4f;
+  }
+  
+  /* 任务列表 */
+  .task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: linear-gradient(135deg, #fafcfc 0%, #f5f9f5 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 12px;
+    transition: all 0.25s ease;
+  }
+  
+  .task-item:hover {
+    background: linear-gradient(135deg, #f0faf3 0%, #e8f5ec 100%);
+    border-color: rgba(34, 168, 74, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 168, 74, 0.08);
+  }
+  
+  .task-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .task-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .task-icon.water { background: linear-gradient(135deg, #bae0ff, #91d5ff); color: #096dd9; }
+  .task-icon.fertilizer { background: linear-gradient(135deg, #d4f4dd, #aeeab8); color: #1a8a3c; }
+  .task-icon.pest { background: linear-gradient(135deg, #ffd1d1, #ffccc7); color: #cf1322; }
+  
+  .task-content {
+    flex: 1;
+  }
+  
+  .task-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  
+  .task-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  
+  .task-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+  }
+  
+  .task-action {
+    padding: 8px 16px;
+    background: var(--primary-500);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    height: fit-content;
+  }
+  
+  .task-action:hover {
+    background: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 168, 74, 0.25);
+  }
+  
+  /* 偏差列表 */
+  .deviation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .deviation-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #fafcfc;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+  }
+  
+  .deviation-item:hover {
+    background: #f5f9f5;
+  }
+  
+  .deviation-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .deviation-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #f0f4f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-tertiary);
+  }
+  
+  .deviation-content {
+    flex: 1;
+  }
+  
+  .deviation-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  
+  .deviation-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  
+  .deviation-value {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  
+  .deviation-value.delay {
+    background: #fff1b8;
+    color: #8c6d10;
+  }
+  
+  .deviation-value.advance {
+    background: #f5f0ff;
+    color: #722ed1;
+  }
+  
+  .chart-container {
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #f8fbf9 0%, #f0f4f3 100%);
+    border-radius: 10px;
+    padding: 16px;
   }
 </style>
 </head>
@@ -139,30 +499,29 @@
 
     <!-- 主内容区 -->
     <main class="main-content">
+      <!-- 页面头部 -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">物候期模型</h1>
+          <p class="page-subtitle">跟踪果树物候期变化，预测关键农事节点</p>
+        </div>
+      </div>
 <div class="phenology-overview">
-    <div class="phenology-card">
-      <div class="phenology-card-header">
-        <span class="phenology-variety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 3c-1.5-1.5-5-1-5 3 0 4 3 8 5 10 2-2 5-6 5-10 0-4-3.5-4.5-5-3z"/><path d="M12 3V1"/></svg> 红富士</span>
-        <span class="phenology-stage enlarging">膨大期</span>
-      </div>
-      <div class="phenology-progress"><div class="phenology-progress-bar blue" style="width:65%"></div></div>
-      <div class="phenology-deviation delay">⏱ 较常年推迟3天</div>
+    <div class="patrol-stat-card green">
+      <div class="stat-value">膨大期</div>
+      <div class="stat-label">红富士 - 主流品种</div>
     </div>
-    <div class="phenology-card">
-      <div class="phenology-card-header">
-        <span class="phenology-variety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 3c-1.5-1.5-5-1-5 3 0 4 3 8 5 10 2-2 5-6 5-10 0-4-3.5-4.5-5-3z"/><path d="M12 3V1"/></svg> 嘎啦</span>
-        <span class="phenology-stage coloring">着色期</span>
-      </div>
-      <div class="phenology-progress"><div class="phenology-progress-bar purple" style="width:45%"></div></div>
-      <div class="phenology-deviation advance">⏱ 较常年提前2天</div>
+    <div class="patrol-stat-card purple">
+      <div class="stat-value">着色期</div>
+      <div class="stat-label">嘎啦 - 早熟品种</div>
     </div>
-    <div class="phenology-card">
-      <div class="phenology-card-header">
-        <span class="phenology-variety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M9 2v6.5C9 12 6 15 4 18h16c-2-3-5-6-5-9.5V2"/><path d="M9 2h6"/></svg> 金帅</span>
-        <span class="phenology-stage harvesting">采收期</span>
-      </div>
-      <div class="phenology-progress"><div class="phenology-progress-bar red" style="width:20%"></div></div>
-      <div class="phenology-deviation normal">⏱ 与常年持平</div>
+    <div class="patrol-stat-card orange">
+      <div class="stat-value">采收期</div>
+      <div class="stat-label">金帅 - 中熟品种</div>
+    </div>
+    <div class="patrol-stat-card blue">
+      <div class="stat-value">3个</div>
+      <div class="stat-label">品种物候期跟踪</div>
     </div>
   </div>
 
@@ -243,7 +602,7 @@
                 <div class="task-desc">红富士进入膨大期关键阶段，建议增加灌溉频率，确保果实正常膨大。</div>
                 <div class="task-meta"><span>适用：红富士</span><span>优先级：高</span></div>
               </div>
-              <button class="task-action"已生成灌溉任务', 'success')">发布任务</button>
+              <button class="task-action" onclick="Toast.show('已生成灌溉任务', 'success')">发布任务</button>
             </li>
             <li class="task-item">
               <div class="task-icon fertilizer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M7 20h10"/><path d="M10 20c5.5-3 6-9 6-12-2 0-5 1-7 4-2-3-5-4-7-4 0 3 .5 9 6 12z"/></svg></div>
@@ -252,7 +611,7 @@
                 <div class="task-desc">追施高钾复合肥，促进果实膨大和糖分积累，建议用量0.5-1kg/株。</div>
                 <div class="task-meta"><span>适用：红富士</span><span>优先级：高</span></div>
               </div>
-              <button class="task-action"已生成追肥任务', 'success')">发布任务</button>
+              <button class="task-action" onclick="Toast.show('已生成追肥任务', 'success')">发布任务</button>
             </li>
             <li class="task-item">
               <div class="task-icon pest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M6 4v16"/><path d="M18 4v16"/><path d="M6 12h12"/><path d="M3 8h3"/><path d="M18 8h3"/><path d="M3 16h3"/><path d="M18 16h3"/></svg></div>
@@ -261,7 +620,7 @@
                 <div class="task-desc">嘎啦进入着色期，注意防治炭疽病和轮纹病，建议喷施保护性杀菌剂。</div>
                 <div class="task-meta"><span>适用：嘎啦</span><span>优先级：中</span></div>
               </div>
-              <button class="task-action"已生成防治任务', 'success')">发布任务</button>
+              <button class="task-action" onclick="Toast.show('已生成防治任务', 'success')">发布任务</button>
             </li>
           </ul>
         </div>
@@ -339,6 +698,7 @@
 </div>
 
 <!-- 引入交互脚本 -->
+<script src="js/components/modal.js"></script>
 <script src="js/sidebar-layout.js"></script>
 
 <!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->

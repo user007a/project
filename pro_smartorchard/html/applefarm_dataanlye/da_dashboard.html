@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>智慧果园 | 企业管理驾驶舱</title>
+    <title>智慧果园数据驾驶舱</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../applefarm_backhand/css/design-system.css">
+    <link rel="stylesheet" href="css/dashboard-design-system.css">
     <style>
         * {
             margin: 0;
@@ -33,18 +33,18 @@
         }
         .title-section h1 {
             font-size: 28px;
-            font-weight: var(--font-weight-semibold);
-            background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+            font-weight: 600;
+            background: linear-gradient(135deg, #146c31, #22a84a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 10px;
         }
         .title-section p {
-            color: var(--text-secondary);
-            margin-top: var(--space-xs);
+            color: #434343;
+            margin-top: 6px;
             font-size: 20px;
         }
         .date-badge {
@@ -1102,7 +1102,7 @@
 <div class="dashboard-container">
     <div class="header">
         <div class="title-section">
-            <h1><i class="fas fa-apple-alt" style="color:#2b6e3c;"></i> 智慧果园企业管理驾驶舱</h1>
+            <h1><i class="fas fa-apple-alt" style="color:#2b6e3c;"></i> 智慧果园数据驾驶舱</h1>
             <p>智慧果园 | 数字赋能 | 精准管控 | 降本增效</p>
         </div>
         <div class="platform-entries">
@@ -2229,6 +2229,7 @@ function initCharts() {
             backgroundColor: 'transparent'
         }]
     });
+    charts.push(farmingStatusChart);
 
     const yieldChart = echarts.init(document.getElementById('yieldChart'));
     yieldChart.setOption({
@@ -2242,6 +2243,7 @@ function initCharts() {
         }],
         backgroundColor: 'transparent'
     });
+    charts.push(yieldChart);
 
     const orderTrendChart = echarts.init(document.getElementById('orderTrendChart'));
     orderTrendChart.setOption({
@@ -2257,6 +2259,7 @@ function initCharts() {
         }],
         backgroundColor: 'transparent'
     });
+    charts.push(orderTrendChart);
 
     const staffRankChart = echarts.init(document.getElementById('staffRankChart'));
     staffRankChart.setOption({
@@ -2271,6 +2274,7 @@ function initCharts() {
         }],
         backgroundColor: 'transparent'
     });
+    charts.push(staffRankChart);
 
     const droneAChart = echarts.init(document.getElementById('droneAChart'));
     droneAChart.setOption({
@@ -2285,38 +2289,39 @@ function initCharts() {
         grid: { left: 0, right: 0, top: 10, bottom: 20 },
         backgroundColor: 'transparent'
     });
+    charts.push(droneAChart);
 
     window.addEventListener('resize', () => {
-            droneAChart.resize();
-            farmingStatusChart.resize();
-            yieldChart.resize();
-            orderTrendChart.resize();
-            staffRankChart.resize();
-            if (staffDistributionChart) staffDistributionChart.resize();
-            if (baseAreaChart) baseAreaChart.resize();
-            if (plotVarietyChart) plotVarietyChart.resize();
-            if (areaDistributionChart) areaDistributionChart.resize();
-            if (yieldDistributionChart) yieldDistributionChart.resize();
-            if (revenueDistributionChart) revenueDistributionChart.resize();
+        charts.forEach(chart => {
+            if (chart && typeof chart.resize === 'function') {
+                try {
+                    chart.resize();
+                } catch (e) {
+                    console.warn('Chart resize error:', e);
+                }
+            }
         });
+    });
     }
 
-    let staffDistributionChart, baseAreaChart, plotVarietyChart, areaDistributionChart, yieldDistributionChart, revenueDistributionChart, traceStatusChart;
     let chartsInitialized = false;
+    const charts = [];
 
     function initModalCharts() {
         if (chartsInitialized) {
-            if (staffDistributionChart) staffDistributionChart.resize();
-            if (baseAreaChart) baseAreaChart.resize();
-            if (plotVarietyChart) plotVarietyChart.resize();
-            if (areaDistributionChart) areaDistributionChart.resize();
-            if (yieldDistributionChart) yieldDistributionChart.resize();
-            if (revenueDistributionChart) revenueDistributionChart.resize();
-            if (traceStatusChart) traceStatusChart.resize();
+            charts.forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    try {
+                        chart.resize();
+                    } catch (e) {
+                        console.warn('Chart resize error:', e);
+                    }
+                }
+            });
             return;
         }
 
-        staffDistributionChart = echarts.init(document.getElementById('staffDistributionChart'));
+        const staffDistributionChart = echarts.init(document.getElementById('staffDistributionChart'));
         staffDistributionChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             xAxis: { type: 'category', data: ['南阳', '驻马店', '三门峡', '洛阳', '商丘', '周口', '新乡', '信阳'] },
@@ -2328,8 +2333,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(staffDistributionChart);
 
-        baseAreaChart = echarts.init(document.getElementById('baseAreaChart'));
+        const baseAreaChart = echarts.init(document.getElementById('baseAreaChart'));
         baseAreaChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             xAxis: { type: 'category', data: ['南阳', '驻马店', '三门峡', '洛阳', '商丘', '周口', '新乡', '信阳'] },
@@ -2341,8 +2347,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(baseAreaChart);
 
-        plotVarietyChart = echarts.init(document.getElementById('plotVarietyChart'));
+        const plotVarietyChart = echarts.init(document.getElementById('plotVarietyChart'));
         plotVarietyChart.setOption({
             tooltip: { trigger: 'item', formatter: '{b}: {c}块 ({d}%)' },
             series: [{
@@ -2358,8 +2365,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(plotVarietyChart);
 
-        areaDistributionChart = echarts.init(document.getElementById('areaDistributionChart'));
+        const areaDistributionChart = echarts.init(document.getElementById('areaDistributionChart'));
         areaDistributionChart.setOption({
             tooltip: { trigger: 'item', formatter: '{b}: {c}亩 ({d}%)' },
             series: [{
@@ -2376,8 +2384,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(areaDistributionChart);
 
-        yieldDistributionChart = echarts.init(document.getElementById('yieldDistributionChart'));
+        const yieldDistributionChart = echarts.init(document.getElementById('yieldDistributionChart'));
         yieldDistributionChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             xAxis: { type: 'category', data: ['南阳', '驻马店', '三门峡', '洛阳', '商丘', '周口', '新乡', '信阳'] },
@@ -2389,8 +2398,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(yieldDistributionChart);
 
-        revenueDistributionChart = echarts.init(document.getElementById('revenueDistributionChart'));
+        const revenueDistributionChart = echarts.init(document.getElementById('revenueDistributionChart'));
         revenueDistributionChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
             xAxis: { type: 'category', data: ['南阳', '驻马店', '三门峡', '洛阳', '商丘', '周口', '新乡', '信阳'] },
@@ -2402,8 +2412,9 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(revenueDistributionChart);
 
-        traceStatusChart = echarts.init(document.getElementById('traceStatusChart'));
+        const traceStatusChart = echarts.init(document.getElementById('traceStatusChart'));
         traceStatusChart.setOption({
             tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
             series: [{
@@ -2421,6 +2432,7 @@ function initCharts() {
             }],
             backgroundColor: 'transparent'
         });
+        charts.push(traceStatusChart);
 
         chartsInitialized = true;
     }

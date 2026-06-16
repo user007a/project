@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>智慧果园 - 成本分析</title>
+<title>智慧果园 - 成本报表</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
@@ -144,21 +144,24 @@
 
 <!-- 页面内容 -->
 <div class="page-container">
-  
+  <!-- 页面头部 -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">成本报表</h1>
+      <p class="page-subtitle">分析各项成本支出，支持成本构成和趋势分析</p>
+    </div>
+  </div>
 
-  <!-- 筛选栏 -->
-  <div class="filter-bar">
-    <div class="filter-item">
-      <label>年份：</label>
-      <select>
+  <!-- 搜索栏 -->
+  <div class="search-section">
+    <div class="search-bar">
+      <select class="search-select">
         <option>2026</option>
         <option>2025</option>
         <option>2024</option>
       </select>
-    </div>
-    <div class="filter-item">
-      <label>月份：</label>
-      <select>
+      <span style="color: var(--text-tertiary); padding: 0 4px;">年</span>
+      <select class="search-select">
         <option>全部</option>
         <option>1月</option>
         <option>2月</option>
@@ -167,16 +170,17 @@
         <option>5月</option>
         <option>6月</option>
       </select>
-    </div>
-    <div class="filter-item">
-      <label>地块：</label>
-      <select>
+      <select class="search-select">
         <option>全部地块</option>
         <option>A1区</option>
         <option>A2区</option>
         <option>B1区</option>
         <option>B2区</option>
       </select>
+      <div class="search-actions" style="margin-left: auto;">
+        <button class="jg-btn-primary">查询</button>
+        <button class="jg-btn-outline">导出</button>
+      </div>
     </div>
   </div>
 
@@ -188,21 +192,19 @@
     <div class="tab-item">其他成本</div>
   </div>
 
-  <!-- 成本趋势图 -->
-  <div class="chart-section">
-    <h2 class="section-title">农资成本趋势</h2>
-    <div id="chart-cost-trend" class="chart-container" style="height: 300px;"></div>
-  </div>
-
-  <!-- 成本构成和对比分析 -->
-  <div class="double-section">
-    <div class="chart-section">
-      <h2 class="section-title">农资成本构成</h2>
-      <div id="chart-cost-pie" class="chart-container" style="height: 280px;"></div>
+  <!-- 三个图表并排 - 农资成本趋势、农资成本构成、同期成本对比 -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
+    <div class="chart-section" style="margin-bottom: 0;">
+      <h2 class="section-title">农资成本趋势</h2>
+      <div id="chart-cost-trend" class="chart-container" style="height: 260px;"></div>
     </div>
-    <div class="chart-section">
+    <div class="chart-section" style="margin-bottom: 0;">
+      <h2 class="section-title">农资成本构成</h2>
+      <div id="chart-cost-pie" class="chart-container" style="height: 260px;"></div>
+    </div>
+    <div class="chart-section" style="margin-bottom: 0;">
       <h2 class="section-title">同期成本对比</h2>
-      <div id="chart-cost-compare" class="chart-container" style="height: 280px;"></div>
+      <div id="chart-cost-compare" class="chart-container" style="height: 260px;"></div>
     </div>
   </div>
 

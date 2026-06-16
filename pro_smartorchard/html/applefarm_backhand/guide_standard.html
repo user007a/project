@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>智慧果园 - 作业标准库</title>
+<title>智慧果园 - 农事标准</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
-  <link rel="stylesheet" href="css/page-content.css">
+<link rel="stylesheet" href="css/page-content.css">
 <style>
-  /* 模块卡片 hover 效果 */
   .module-card {
     transition: all 0.2s ease;
   }
@@ -139,148 +138,431 @@
 
     <!-- 主内容区 -->
     <main class="main-content">
-<!-- 顶部导航 -->
+      <div class="content-wrapper">
+        <!-- 页面头部 -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">种植标准</h1>
+            <p class="page-subtitle">管理果园种植技术标准，规范农事操作流程</p>
+          </div>
+        </div>
 
+        <!-- 统计卡片区 -->
+        <div class="patrol-stats">
+          <div class="patrol-stat-card green">
+            <div class="stat-value">23</div>
+            <div class="stat-label">标准总数</div>
+          </div>
+          <div class="patrol-stat-card orange">
+            <div class="stat-value">8</div>
+            <div class="stat-label">必学标准</div>
+          </div>
+          <div class="patrol-stat-card blue">
+            <div class="stat-value">2,847</div>
+            <div class="stat-label">总浏览量</div>
+          </div>
+          <div class="patrol-stat-card pink">
+            <div class="stat-value">5</div>
+            <div class="stat-label">标准类型</div>
+          </div>
+        </div>
 
-<!-- 页面内容 -->
-<div class="page-container">
-  
+        <!-- 搜索栏区 -->
+        <div class="page-section search-section">
+          <div class="search-bar">
+            <select class="search-select" id="typeSelect">
+              <option value="">全部类型</option>
+              <option value="fertilizer">施肥</option>
+              <option value="pesticide">施药</option>
+              <option value="pruning">修剪</option>
+              <option value="irrigation">灌溉</option>
+              <option value="thinning">疏果</option>
+            </select>
+            <select class="search-select" id="seasonSelect">
+              <option value="">全部季节</option>
+              <option value="spring">春季</option>
+              <option value="summer">夏季</option>
+              <option value="autumn">秋季</option>
+              <option value="winter">冬季</option>
+              <option value="all">全年</option>
+            </select>
+            <select class="search-select" id="levelSelect">
+              <option value="">全部难度</option>
+              <option value="basic">基础</option>
+              <option value="intermediate">进阶</option>
+              <option value="required">必学</option>
+            </select>
+            <input type="text" class="search-input" placeholder="搜索作业标准..." id="searchInput">
+            <button class="jg-btn" onclick="handleSearch()">搜索</button>
+          </div>
+        </div>
 
-  <!-- 搜索栏 -->
-  <div class="search-bar">
-    <input type="text" class="search-input" placeholder="搜索作业标准...">
-    <select class="filter-select">
-      <option>全部类型</option>
-      <option>施肥</option>
-      <option>施药</option>
-      <option>修剪</option>
-      <option>灌溉</option>
-      <option>疏果</option>
-    </select>
-    <select class="filter-select">
-      <option>全部季节</option>
-      <option>春季</option>
-      <option>夏季</option>
-      <option>秋季</option>
-      <option>冬季</option>
-    </select>
-    <button class="btn btn-secondary">筛选</button>
-  </div>
+        <!-- 操作按钮区 -->
+        <div class="page-section action-bar">
+          <button class="jg-btn jg-btn-primary" onclick="Modal.show('modal-add-standard')">新增标准</button>
+          <button class="jg-btn" onclick="Modal.show('modal-export')">导出标准</button>
+        </div>
 
-  <!-- 作业标准卡片 -->
-  <div class="card-grid">
-    <div class="guide-card">
-      <div class="guide-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <path d="M8 12l2 2 4-4 4 4"/>
-        </svg>
+        <!-- 数据列表区 -->
+        <div class="page-section data-section">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="checkbox-col"><input type="checkbox" id="selectAll"></th>
+                <th>标准名称</th>
+                <th>类型</th>
+                <th>季节</th>
+                <th>难度等级</th>
+                <th>浏览次数</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+            </tbody>
+          </table>
+        </div>
+        <div id="pagination-container">
+        </div>
       </div>
-      <div class="guide-title">春季施肥作业标准</div>
-      <div class="guide-desc">春季施肥是苹果树生长的关键环节，正确的施肥方法能有效促进花芽分化和果实发育。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">春季</span>
-        <span class="guide-tag">施肥</span>
-        <span class="guide-tag">必学</span>
-      </div>
+
     </div>
+  </main>
+</div>
 
-    <div class="guide-card">
-      <div class="guide-icon" style="background: #f59e0b;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <path d="M8 12h8M8 16h8M8 8h8"/>
+<!-- 新增标准模态框 -->
+<div id="modal-add-standard" class="modal-overlay">
+  <div class="modal-box" style="max-width: 600px;">
+    <div class="modal-header">
+      <h3 class="modal-title">新增作业标准</h3>
+      <button class="modal-close">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4L12 12M12 4L4 12"/>
         </svg>
-      </div>
-      <div class="guide-title">病虫害防治指南</div>
-      <div class="guide-desc">详细介绍常见病虫害的识别方法和防治措施，确保果园健康。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">病虫害</span>
-        <span class="guide-tag">防治</span>
-        <span class="guide-tag">必学</span>
-      </div>
+      </button>
     </div>
-
-    <div class="guide-card">
-      <div class="guide-icon" style="background: #3b82f6;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <path d="M8 12l4-4 4 4M8 16l4-4 4 4"/>
-        </svg>
-      </div>
-      <div class="guide-title">冬季修剪技术标准</div>
-      <div class="guide-desc">冬季修剪是苹果树整形修剪的重要时期，合理修剪能调整树势，提高产量。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">冬季</span>
-        <span class="guide-tag">修剪</span>
-        <span class="guide-tag">进阶</span>
-      </div>
+    <div class="modal-body">
+      <form id="form-add-standard">
+        <div class="form-row">
+          <div class="form-item">
+            <label>标准名称</label>
+            <input type="text" class="form-input" placeholder="请输入标准名称">
+          </div>
+          <div class="form-item">
+            <label>类型</label>
+            <select class="form-select">
+              <option value="">请选择类型</option>
+              <option value="fertilizer">施肥</option>
+              <option value="pesticide">防治</option>
+              <option value="pruning">修剪</option>
+              <option value="irrigation">灌溉</option>
+              <option value="thinning">疏果</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label>适用季节</label>
+            <select class="form-select">
+              <option value="">请选择季节</option>
+              <option value="spring">春季</option>
+              <option value="summer">夏季</option>
+              <option value="autumn">秋季</option>
+              <option value="winter">冬季</option>
+              <option value="all">全年</option>
+            </select>
+          </div>
+          <div class="form-item">
+            <label>难度等级</label>
+            <select class="form-select">
+              <option value="">请选择难度</option>
+              <option value="basic">基础</option>
+              <option value="intermediate">进阶</option>
+              <option value="required">必学</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label>标准内容</label>
+            <textarea class="form-textarea" placeholder="请输入标准内容"></textarea>
+          </div>
+        </div>
+      </form>
     </div>
-
-    <div class="guide-card">
-      <div class="guide-icon" style="background: #a855f7;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <path d="M8 16l4-4 4 4M12 8v8"/>
-        </svg>
-      </div>
-      <div class="guide-title">灌溉管理规范</div>
-      <div class="guide-desc">科学的灌溉管理能有效节约用水，保证苹果树的正常生长需求。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">灌溉</span>
-        <span class="guide-tag">水分管理</span>
-        <span class="guide-tag">基础</span>
-      </div>
-    </div>
-
-    <div class="guide-card">
-      <div class="guide-icon" style="background: #ec4899;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <path d="M8 8h8M8 12h8M8 16h8"/>
-        </svg>
-      </div>
-      <div class="guide-title">疏花疏果技术</div>
-      <div class="guide-desc">合理的疏花疏果能保证果实品质，提高商品果率，增加经济效益。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">春季</span>
-        <span class="guide-tag">疏果</span>
-        <span class="guide-tag">必学</span>
-      </div>
-    </div>
-
-    <div class="guide-card">
-      <div class="guide-icon" style="background: #ef4444;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/>
-          <circle cx="12" cy="8" r="3"/>
-          <path d="M15 12h-6"/>
-        </svg>
-      </div>
-      <div class="guide-title">套袋作业规范</div>
-      <div class="guide-desc">果实套袋能有效保护果实，减少病虫害危害，提高果实外观品质。</div>
-      <div class="guide-tags">
-        <span class="guide-tag">夏季</span>
-        <span class="guide-tag">套袋</span>
-        <span class="guide-tag">进阶</span>
-      </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="Modal.hide('modal-add-standard')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleAddStandard()">保存</button>
     </div>
   </div>
 </div>
 
-<!-- 底部 -->
-<footer style="background: var(--bg-card); padding: var(--space-lg); text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); margin-top: auto;">
-  智慧果园·智慧果园管理系统 © 2026
-</footer>
-    </main>
+<!-- 导出标准模态框 -->
+<div id="modal-export" class="modal-overlay">
+  <div class="modal-box" style="max-width: 420px;">
+    <div class="modal-header">
+      <h3 class="modal-title">导出作业标准</h3>
+      <button class="modal-close">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4L12 12M12 4L4 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-item">
+          <label>选择导出格式</label>
+          <select class="form-select">
+            <option value="excel">Excel (.xlsx)</option>
+            <option value="pdf">PDF (.pdf)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-item">
+          <label>导出范围</label>
+          <div style="display:flex;gap:16px;">
+            <label class="checkbox-label">
+              <input type="radio" name="exportScope" value="all" checked>
+              <span>全部数据</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="radio" name="exportScope" value="selected">
+              <span>选中数据</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="Modal.hide('modal-export')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleExport()">导出</button>
+    </div>
   </div>
+</div>
 
+<!-- 查看详情模态框 -->
+<div id="modal-detail" class="modal-overlay">
+  <div class="modal-box" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3 class="modal-title">作业标准详情</h3>
+      <button class="modal-close">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4L12 12M12 4L4 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">标准名称</span>
+          <span class="detail-value">春季施肥作业标准</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">类型</span>
+          <span class="detail-value">施肥</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">适用季节</span>
+          <span class="detail-value">春季</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">难度等级</span>
+          <span class="detail-value"><span class="status-tag warning">必学</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">浏览次数</span>
+          <span class="detail-value">128</span>
+        </div>
+        <div class="detail-item" style="grid-column: span 2;">
+          <span class="detail-label">标准内容</span>
+          <span class="detail-value" style="text-align:left;">春季是苹果树施肥的关键时期，应在萌芽前施入基肥，以有机肥为主，配合适量复合肥。施肥时注意深度和均匀度，避免伤根。</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn jg-btn-primary" onclick="Modal.hide('modal-detail')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑标准模态框 -->
+<div id="modal-edit" class="modal-overlay">
+  <div class="modal-box" style="max-width: 600px;">
+    <div class="modal-header">
+      <h3 class="modal-title">编辑作业标准</h3>
+      <button class="modal-close">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4L12 12M12 4L4 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="form-edit-standard">
+        <div class="form-row">
+          <div class="form-item">
+            <label>标准名称</label>
+            <input type="text" class="form-input" value="春季施肥作业标准">
+          </div>
+          <div class="form-item">
+            <label>类型</label>
+            <select class="form-select">
+              <option value="fertilizer" selected>施肥</option>
+              <option value="pesticide">防治</option>
+              <option value="pruning">修剪</option>
+              <option value="irrigation">灌溉</option>
+              <option value="thinning">疏果</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label>适用季节</label>
+            <select class="form-select">
+              <option value="spring" selected>春季</option>
+              <option value="summer">夏季</option>
+              <option value="autumn">秋季</option>
+              <option value="winter">冬季</option>
+              <option value="all">全年</option>
+            </select>
+          </div>
+          <div class="form-item">
+            <label>难度等级</label>
+            <select class="form-select">
+              <option value="basic">基础</option>
+              <option value="intermediate">进阶</option>
+              <option value="required" selected>必学</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label>标准内容</label>
+            <textarea class="form-textarea">春季是苹果树施肥的关键时期，应在萌芽前施入基肥，以有机肥为主，配合适量复合肥。施肥时注意深度和均匀度，避免伤根。</textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="jg-btn" onclick="Modal.hide('modal-edit')">取消</button>
+      <button class="jg-btn jg-btn-primary" onclick="handleEditStandard()">保存</button>
+    </div>
+  </div>
 </div>
 
 <!-- 引入交互脚本 -->
 <script src="js/sidebar-layout.js"></script>
+<script src="js/common-functions.js"></script>
+<script>
+// Mock数据 - 23条农事标准
+const mockData = [
+  { id: 'STD-001', name: '春季施肥作业标准', type: '施肥', season: '春季', level: 'required', levelName: '必学', views: 128 },
+  { id: 'STD-002', name: '病虫害防治指南', type: '防治', season: '全年', level: 'required', levelName: '必学', views: 256 },
+  { id: 'STD-003', name: '苹果树修剪技术规范', type: '修剪', season: '冬季', level: 'intermediate', levelName: '进阶', views: 189 },
+  { id: 'STD-004', name: '灌溉管理作业标准', type: '灌溉', season: '夏季', level: 'basic', levelName: '基础', views: 95 },
+  { id: 'STD-005', name: '疏花疏果操作规范', type: '管理', season: '春季', level: 'intermediate', levelName: '进阶', views: 142 },
+  { id: 'STD-006', name: '套袋技术标准', type: '管理', season: '夏季', level: 'basic', levelName: '基础', views: 78 },
+  { id: 'STD-007', name: '秋季施肥作业标准', type: '施肥', season: '秋季', level: 'required', levelName: '必学', views: 156 },
+  { id: 'STD-008', name: '冬季清园作业规范', type: '管理', season: '冬季', level: 'basic', levelName: '基础', views: 88 },
+  { id: 'STD-009', name: '苹果采收作业标准', type: '采收', season: '秋季', level: 'required', levelName: '必学', views: 201 },
+  { id: 'STD-010', name: '农药使用安全规范', type: '防治', season: '全年', level: 'required', levelName: '必学', views: 312 },
+  { id: 'STD-011', name: '果树嫁接技术标准', type: '繁殖', season: '春季', level: 'intermediate', levelName: '进阶', views: 167 },
+  { id: 'STD-012', name: '土壤改良作业规范', type: '管理', season: '秋季', level: 'basic', levelName: '基础', views: 92 },
+  { id: 'STD-013', name: '果园排水管理标准', type: '管理', season: '夏季', level: 'basic', levelName: '基础', views: 65 },
+  { id: 'STD-014', name: '苹果分级包装标准', type: '采收', season: '秋季', level: 'intermediate', levelName: '进阶', views: 178 },
+  { id: 'STD-015', name: '果园除草作业规范', type: '管理', season: '全年', level: 'basic', levelName: '基础', views: 54 },
+  { id: 'STD-016', name: '苹果树病虫害识别手册', type: '防治', season: '全年', level: 'required', levelName: '必学', views: 289 },
+  { id: 'STD-017', name: '果园施肥量计算标准', type: '施肥', season: '全年', level: 'intermediate', levelName: '进阶', views: 134 },
+  { id: 'STD-018', name: '苹果树整形修剪规范', type: '修剪', season: '冬季', level: 'required', levelName: '必学', views: 223 },
+  { id: 'STD-019', name: '果园防霜冻作业标准', type: '管理', season: '春季', level: 'intermediate', levelName: '进阶', views: 98 },
+  { id: 'STD-020', name: '苹果贮藏保鲜标准', type: '采收', season: '秋季', level: 'intermediate', levelName: '进阶', views: 156 },
+  { id: 'STD-021', name: '果园有机肥施用规范', type: '施肥', season: '秋季', level: 'basic', levelName: '基础', views: 87 },
+  { id: 'STD-022', name: '苹果树花果管理标准', type: '管理', season: '春季', level: 'intermediate', levelName: '进阶', views: 145 },
+  { id: 'STD-023', name: '果园病虫害综合防治技术', type: '防治', season: '全年', level: 'required', levelName: '必学', views: 267 }
+];
 
-<!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
-  <script src="js/iframe-hide.js"></script>
+// 获取难度标签
+function getLevelTag(level) {
+  const levelMap = {
+    'required': '<span class="status-tag warning">必学</span>',
+    'intermediate': '<span class="status-tag done">进阶</span>',
+    'basic': '<span class="status-tag normal">基础</span>'
+  };
+  return levelMap[level] || levelMap['basic'];
+}
+
+// 渲染表格行
+function renderRow(item, index) {
+  return `<tr>
+    <td class="checkbox-col"><input type="checkbox" name="standard" value="${item.id}"></td>
+    <td><strong>${item.name}</strong></td>
+    <td>${item.type}</td>
+    <td>${item.season}</td>
+    <td>${getLevelTag(item.level)}</td>
+    <td>${item.views}</td>
+    <td>
+      <div class="action-btns">
+        <button class="action-btn detail" onclick="Modal.show('modal-detail')">查看</button>
+        <button class="action-btn edit" onclick="Modal.show('modal-edit')">编辑</button>
+        <button class="action-btn delete" onclick="handleDeleteStandard()">删除</button>
+      </div>
+    </td>
+  </tr>`;
+}
+
+// 搜索功能
+function handleSearch() {
+  const keyword = document.getElementById('searchInput').value;
+
+  var filteredData = mockData.filter(item => {
+    if (keyword && !item.name.includes(keyword) && !item.type.includes(keyword)) return false;
+    return true;
+  });
+
+  Pagination.updateData(filteredData);
+  Toast.info('找到 ' + filteredData.length + ' 条记录');
+}
+
+// 新增标准
+function handleAddStandard() {
+  Modal.hide('modal-add-standard');
+  Toast.success('作业标准创建成功');
+}
+
+// 导出标准
+function handleExport() {
+  Modal.hide('modal-export');
+  Toast.success('导出成功，文件已下载');
+}
+
+// 编辑标准
+function handleEditStandard() {
+  Modal.hide('modal-edit');
+  Toast.success('作业标准更新成功');
+}
+
+// 删除标准
+function handleDeleteStandard() {
+  ConfirmDialog.show({
+    title: '确认删除',
+    message: '确定要删除这个作业标准吗？此操作不可撤销。',
+    onConfirm: function() {
+      Toast.success('删除成功');
+    }
+  });
+}
+
+// 初始化分页
+document.addEventListener('DOMContentLoaded', function() {
+  Pagination.init({
+    currentPage: 1,
+    pageSize: 10,
+    data: mockData,
+    containerId: 'pagination-container',
+    tbodyId: 'dataTableBody',
+    renderRow: renderRow
+  });
+});
+</script>
+<script src="js/iframe-hide.js"></script>
 </body>
 </html>

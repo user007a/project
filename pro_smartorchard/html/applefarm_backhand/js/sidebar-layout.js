@@ -916,8 +916,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* 非框架页：初始化 Tab 栏 */
   if (!isFramePage) {
     tabManager = new TabManager({
-    maxTabs: 15,
-    onTabSwitch: (id, tab) => {
+      maxTabs: 15,
+      onTabSwitch: (id, tab) => {
       /* Tab 切换回调：同步侧边栏高亮 + 页面导航 */
       if (sidebarManager) {
         sidebarManager._setActive(id);
@@ -940,6 +940,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   tabManager.init();
+  }
 
   /* 根据当前 URL 路径自动匹配菜单 */
   const currentPath = window.location.pathname;

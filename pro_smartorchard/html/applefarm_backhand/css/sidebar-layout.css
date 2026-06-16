@@ -352,31 +352,9 @@
   margin: var(--space-xs) 0;
 }
 
-/* 移动端汉堡菜单按钮 */
+/* PC端移除移动端汉堡菜单 */
 .topbar-hamburger {
-  display: none;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-  background: transparent;
-  border: none;
-  margin-right: var(--space-md);
-  flex-shrink: 0;
-}
-
-.topbar-hamburger:hover {
-  background: var(--gray-100);
-  color: var(--text-primary);
-}
-
-.topbar-hamburger svg {
-  width: 22px;
-  height: 22px;
+  display: none !important;
 }
 
 /* ============================================
@@ -646,13 +624,9 @@
 /* === 二级子菜单 === */
 .sidebar-submenu {
   overflow: hidden;
-  max-height: 0;
+  max-height: 600px;
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--sidebar-bg-elevated);
-}
-
-.sidebar-submenu.open {
-  max-height: 600px;
 }
 
 /* 二级子菜单项 */
@@ -789,23 +763,7 @@
 }
 
 /* ============================================
- * 07. 移动端侧边栏 Overlay
- * ============================================ */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 350;
-  transition: opacity var(--transition-normal);
-}
-
-.sidebar-overlay.show {
-  display: block;
-}
-
-/* ============================================
- * 08. 主内容区
+ * 07. 主内容区
  * ============================================ */
 .main-content {
   flex: 1;
@@ -815,7 +773,7 @@
 }
 
 /* ============================================
- * 09. 侧边栏滚动条定制
+ * 08. 侧边栏滚动条定制
  * ============================================ */
 .sidebar-body::-webkit-scrollbar {
   width: 4px;
@@ -835,133 +793,8 @@
 }
 
 /* ============================================
- * 10. 响应式布局
+ * 09. 超大桌面优化
  * ============================================ */
-
-/* === 平板 (768-1023px) === */
-@media (max-width: 1023px) {
-  .sidebar {
-    width: var(--sidebar-width-collapsed);
-  }
-
-  .sidebar .menu-text,
-  .sidebar .menu-arrow,
-  .sidebar .sidebar-brand-text {
-    display: none;
-  }
-
-  .sidebar .sidebar-menu-item {
-    justify-content: center;
-    padding: 0;
-  }
-
-  .sidebar .sidebar-menu-item .menu-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .sidebar .sidebar-submenu {
-    display: none;
-  }
-
-  .sidebar .sidebar-footer-btn .btn-text {
-    display: none;
-  }
-
-  .main-wrapper {
-    margin-left: var(--sidebar-width-collapsed);
-  }
-
-  /* 平板端折叠 tooltip */
-  .sidebar .sidebar-menu-item:hover .sidebar-tooltip {
-    display: block;
-  }
-
-  .tab-bar {
-    max-width: 100%;
-  }
-}
-
-/* === 手机 (<768px) === */
-@media (max-width: 767px) {
-  .sidebar {
-    transform: translateX(-100%);
-    width: var(--sidebar-width);
-    box-shadow: var(--shadow-sidebar);
-  }
-
-  .sidebar.mobile-open {
-    transform: translateX(0);
-  }
-
-  .sidebar.mobile-open ~ .sidebar-overlay {
-    display: block;
-  }
-
-  /* 手机端展开态显示文字 */
-  .sidebar .menu-text,
-  .sidebar .menu-arrow,
-  .sidebar .sidebar-brand-text {
-    display: initial;
-  }
-
-  .sidebar .sidebar-menu-item {
-    justify-content: flex-start;
-    padding: 0 var(--sidebar-item-px);
-  }
-
-  .sidebar .sidebar-menu-item .menu-icon {
-    width: var(--sidebar-icon-size);
-    height: var(--sidebar-icon-size);
-  }
-
-  .sidebar .sidebar-submenu {
-    display: block;
-  }
-
-  .sidebar .sidebar-footer-btn .btn-text {
-    display: initial;
-  }
-
-  .main-wrapper {
-    margin-left: 0;
-  }
-
-  .main-wrapper.sidebar-collapsed {
-    margin-left: 0;
-  }
-
-  /* 手机端隐藏Tab栏 */
-  .tab-bar {
-    display: none;
-  }
-
-  /* 手机端显示汉堡菜单 */
-  .topbar-hamburger {
-    display: flex;
-  }
-
-  .topbar-user-name {
-    display: none;
-  }
-
-  .main-content {
-    padding: var(--space-md);
-  }
-}
-
-/* === 小手机 (<575px) === */
-@media (max-width: 575px) {
-  .topbar {
-    padding: 0 var(--space-sm);
-  }
-
-  .main-content {
-    padding: var(--space-sm);
-  }
-}
-
-/* === 超大桌面 (≥1440px) === */
 @media (min-width: 1440px) {
   .main-content {
     padding: var(--space-xl) var(--space-2xl) var(--space-3xl);
@@ -969,7 +802,7 @@
 }
 
 /* ============================================
- * 11. 覆盖旧布局样式
+ * 10. 覆盖旧布局样式
  * ============================================ */
 
 /* 禁用旧版顶部导航在侧边栏布局中的显示 */

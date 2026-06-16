@@ -140,6 +140,51 @@
       padding: 0 4px;
     }
     
+    /* Expert Card */
+    .expert-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      margin-bottom: var(--space-3);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+    
+    .expert-header { display: flex; align-items: center; gap: var(--space-3); }
+    
+    .expert-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .expert-avatar svg { width: 24px; height: 24px; color: var(--primary); }
+    
+    .expert-info { flex: 1; }
+    
+    .expert-name { font-size: var(--font-sm); font-weight: 600; color: var(--text); }
+    
+    .expert-title { font-size: var(--font-xs); color: var(--text-secondary); }
+    
+    .expert-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: var(--space-2);
+    }
+    
+    .expert-tag {
+      padding: 2px 8px;
+      background: var(--gray-100);
+      border-radius: var(--radius-full);
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+    }
+    
     /* Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: center; }
     .modal-overlay.show { display: flex; }
@@ -302,22 +347,6 @@
             </div>
             <div class="service-name">识病虫</div>
           </div>
-          <div class="service-item" onclick="openWeather()">
-            <div class="service-icon orange">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2"/>
-                <path d="M12 20v2"/>
-                <path d="m4.93 4.93 1.41 1.41"/>
-                <path d="m17.66 17.66 1.41 1.41"/>
-                <path d="M2 12h2"/>
-                <path d="M20 12h2"/>
-                <path d="m6.34 17.66-1.41 1.41"/>
-                <path d="m19.07 4.93-1.41 1.41"/>
-              </svg>
-            </div>
-            <div class="service-name">看天气</div>
-          </div>
         </div>
       </div>
 
@@ -378,6 +407,47 @@
         </div>
       </div>
 
+      <div class="card">
+        <div class="card-title">推荐专家</div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <div class="expert-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="expert-info">
+              <div class="expert-name">王教授</div>
+              <div class="expert-title">农业大学果树学教授</div>
+            </div>
+          </div>
+          <div class="expert-tags">
+            <span class="expert-tag">苹果栽培</span>
+            <span class="expert-tag">病虫害防治</span>
+            <span class="expert-tag">施肥管理</span>
+          </div>
+        </div>
+        <div class="expert-card">
+          <div class="expert-header">
+            <div class="expert-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="expert-info">
+              <div class="expert-name">李农艺师</div>
+              <div class="expert-title">资深苹果种植专家</div>
+            </div>
+          </div>
+          <div class="expert-tags">
+            <span class="expert-tag">物候期管理</span>
+            <span class="expert-tag">水肥一体化</span>
+            <span class="expert-tag">采收技术</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="mb-tab-bar">
@@ -482,10 +552,6 @@
     function openDisease() {
       localStorage.setItem('serviceAction', 'disease');
       navigateTo('mb_disease.html');
-    }
-    function openWeather() {
-      localStorage.setItem('serviceAction', 'weather');
-      navigateTo('mb_weather_predict.html');
     }
     function openTroubleshoot() {
       localStorage.setItem('serviceAction', 'troubleshoot');

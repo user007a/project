@@ -18,6 +18,138 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
+
+  /* 紧凑表格样式 */
+  .compact-table {
+    min-width: auto !important;
+    font-size: 12.5px !important;
+    width: 100%;
+  }
+  .compact-table th,
+  .compact-table td {
+    padding: 10px 10px !important;
+    white-space: nowrap;
+  }
+  .compact-table th {
+    font-size: 11px !important;
+    letter-spacing: 0.3px;
+  }
+  .compact-table td {
+    line-height: 1.4;
+  }
+
+  /* 评级标签样式 */
+  .score-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .score-badge.excellent {
+    background: linear-gradient(135deg, rgba(24, 144, 255, 0.15), rgba(24, 144, 255, 0.08));
+    color: #1890ff;
+    border: 1px solid rgba(24, 144, 255, 0.3);
+  }
+  .score-badge.good {
+    background: linear-gradient(135deg, rgba(34, 168, 74, 0.15), rgba(34, 168, 74, 0.08));
+    color: #22a84a;
+    border: 1px solid rgba(34, 168, 74, 0.3);
+  }
+  .score-badge.pass {
+    background: linear-gradient(135deg, rgba(255, 183, 77, 0.15), rgba(255, 183, 77, 0.08));
+    color: #ffb74d;
+    border: 1px solid rgba(255, 183, 77, 0.3);
+  }
+  .score-badge.fail {
+    background: linear-gradient(135deg, rgba(245, 108, 108, 0.15), rgba(245, 108, 108, 0.08));
+    color: #f56c6c;
+    border: 1px solid rgba(245, 108, 108, 0.3);
+  }
+
+  /* 筛选栏样式 */
+  .filter-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #fff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-label {
+    font-size: 13px;
+    color: #6b7b6b;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .filter-select-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .filter-select {
+    appearance: none;
+    background: #f7f9f7;
+    border: 1px solid #e8ede8;
+    border-radius: 8px;
+    padding: 10px 32px 10px 14px;
+    font-size: 14px;
+    color: #3a4a3a;
+    cursor: pointer;
+    min-width: 140px;
+    transition: all 0.2s ease;
+  }
+  .filter-select:hover {
+    border-color: #46c365;
+    background: #f0faf3;
+  }
+  .filter-select:focus {
+    outline: none;
+    border-color: #22a84a;
+    box-shadow: 0 0 0 3px rgba(34, 168, 74, 0.1);
+  }
+  .select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: #8b9b8b;
+    pointer-events: none;
+  }
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #22a84a, #46c365);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+  .filter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(34, 168, 74, 0.3);
+  }
+  .filter-btn:active {
+    transform: translateY(0);
+  }
 </style>
 </head>
 <body data-active-menu="performance" data-active-submenu="performance-dashboard">
@@ -144,79 +276,93 @@
 
 <!-- 页面内容 -->
 <div class="page-container">
-  
-
-  <!-- 筛选栏 -->
-  <div class="filter-bar">
-    <div class="filter-item">
-      <label>周期：</label>
-      <select>
-        <option>本月</option>
-        <option>上月</option>
-        <option>本季度</option>
-        <option>本年度</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label>班组：</label>
-      <select>
-        <option>全部班组</option>
-        <option>一班</option>
-        <option>二班</option>
-        <option>三班</option>
-      </select>
+  <!-- 页面头部 -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">员工绩效</h1>
+      <p class="page-subtitle">查看员工绩效统计，了解团队表现</p>
     </div>
   </div>
 
-  <!-- 统计卡片 -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">总人数</div>
+  <!-- 筛选栏 -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <label class="filter-label">周期</label>
+      <div class="filter-select-wrapper">
+        <select class="filter-select">
+          <option>本月</option>
+          <option>上月</option>
+          <option>本季度</option>
+          <option>本年度</option>
+        </select>
+        <svg class="select-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 5L7 9L11 5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">班组</label>
+      <div class="filter-select-wrapper">
+        <select class="filter-select">
+          <option>全部班组</option>
+          <option>一班</option>
+          <option>二班</option>
+          <option>三班</option>
+        </select>
+        <svg class="select-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 5L7 9L11 5"/>
+        </svg>
+      </div>
+    </div>
+    <button class="filter-btn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="8" r="6"/>
+        <path d="M8 5V8L10 10"/>
+      </svg>
+      筛选
+    </button>
+  </div>
+
+  <!-- 统计卡片 - 小尺寸样式 -->
+  <div class="patrol-stats">
+    <div class="patrol-stat-card green">
       <div class="stat-value">28</div>
+      <div class="stat-label">总人数</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">平均完成率</div>
+    <div class="patrol-stat-card blue">
       <div class="stat-value">92.5%</div>
+      <div class="stat-label">平均完成率</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">平均质量评分</div>
+    <div class="patrol-stat-card orange">
       <div class="stat-value">88.3</div>
+      <div class="stat-label">平均质量评分</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">优秀员工</div>
+    <div class="patrol-stat-card purple">
       <div class="stat-value">6人</div>
+      <div class="stat-label">优秀员工</div>
     </div>
   </div>
 
   <!-- 绩效趋势图 -->
   <div class="chart-section">
     <h2 class="section-title">绩效趋势分析</h2>
-    <div class="chart-placeholder">
-      <div style="text-align: center;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
-          <path d="M3 3v18h18"/>
-          <path d="M5 16l4-6 4 4 4-6 3 3"/>
-        </svg>
-        <div>绩效趋势折线图</div>
-        <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">完成率 · 质量评分 · 工作量</div>
-      </div>
-    </div>
+    <div id="chart-performance-trend" class="chart-container" style="height: 300px;"></div>
   </div>
 
   <!-- 绩效排行和统计 -->
   <div class="double-section">
-    <div class="table-container">
+    <div class="table-container" style="overflow-x: hidden;">
       <h2 class="section-title">绩效排名</h2>
-      <table class="data-table" style="font-size: var(--font-size-sm);">
+      <table class="data-table compact-table">
         <thead>
           <tr>
             <th>排名</th>
             <th>姓名</th>
             <th>班组</th>
-            <th>任务完成率</th>
-            <th>质量评分</th>
+            <th>完成率</th>
+            <th>质量</th>
             <th>工作量</th>
-            <th>综合评分</th>
+            <th>综合</th>
             <th>评级</th>
           </tr>
         </thead>
@@ -276,16 +422,7 @@
     </div>
     <div class="chart-section">
       <h2 class="section-title">绩效分布</h2>
-      <div class="chart-placeholder" style="height: 340px;">
-        <div style="text-align: center;">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="12" r="6"/>
-          </svg>
-          <div>绩效分布饼图</div>
-          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">优秀21% · 良好43% · 合格29% · 待提升7%</div>
-        </div>
-      </div>
+      <div id="chart-performance-pie" class="chart-container" style="height: 280px;"></div>
     </div>
   </div>
 </div>
@@ -301,6 +438,48 @@
 
 <!-- 引入交互脚本 -->
 <script src="js/sidebar-layout.js"></script>
+<script src="js/components/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 绩效趋势数据
+  const performanceTrendData = {
+    categories: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    series: [
+      {
+        name: '完成率',
+        data: [88, 92, 95, 90, 94, 92],
+        color: '#22a84a',
+        area: true
+      },
+      {
+        name: '质量评分',
+        data: [85, 88, 90, 87, 92, 88],
+        color: '#1890ff',
+        area: true
+      },
+      {
+        name: '工作量',
+        data: [35, 40, 45, 38, 42, 48],
+        color: '#ff6b35',
+        area: true
+      }
+    ]
+  };
+  Chart.line('#chart-performance-trend', performanceTrendData);
+
+  // 绩效分布饼图数据
+  const performancePieData = {
+    series: [
+      { name: '优秀', value: 21 },
+      { name: '良好', value: 43 },
+      { name: '合格', value: 29 },
+      { name: '待提升', value: 7 }
+    ]
+  };
+  Chart.donut('#chart-performance-pie', performancePieData);
+});
+</script>
 
 <!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
   <script src="js/iframe-hide.js"></script>

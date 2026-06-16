@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>智慧果园 - 收入分析</title>
+<title>智慧果园 - 营收报表</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
@@ -144,21 +144,24 @@
 
 <!-- 页面内容 -->
 <div class="page-container">
-  
+  <!-- 页面头部 -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">收入报表</h1>
+      <p class="page-subtitle">分析销售收入构成，支持收入来源和趋势分析</p>
+    </div>
+  </div>
 
-  <!-- 筛选栏 -->
-  <div class="filter-bar">
-    <div class="filter-item">
-      <label>年份：</label>
-      <select>
+  <!-- 搜索栏 -->
+  <div class="search-section">
+    <div class="search-bar">
+      <select class="search-select">
         <option>2026</option>
         <option>2025</option>
         <option>2024</option>
       </select>
-    </div>
-    <div class="filter-item">
-      <label>月份：</label>
-      <select>
+      <span style="color: var(--text-tertiary); padding: 0 4px;">年</span>
+      <select class="search-select">
         <option>全部</option>
         <option>1月</option>
         <option>2月</option>
@@ -167,25 +170,34 @@
         <option>5月</option>
         <option>6月</option>
       </select>
+      <div class="search-actions" style="margin-left: auto;">
+        <button class="jg-btn-primary">查询</button>
+        <button class="jg-btn-outline">导出</button>
+      </div>
     </div>
   </div>
 
-  <!-- 收入汇总卡片 -->
-  <div class="summary-cards">
-    <div class="summary-card">
-      <div class="summary-label">认养收入</div>
-      <div class="summary-value">¥ 1,423,825</div>
-      <div style="font-size: var(--font-size-sm); color: var(--success); margin-top: var(--space-xs);">↑ 18.3% 较上月</div>
+  <!-- 统计卡片 - 小尺寸样式 -->
+  <div class="patrol-stats">
+    <div class="patrol-stat-card green">
+      <div class="stat-value">¥ 1,423,825</div>
+      <div class="stat-label">认养收入</div>
+      <div class="stat-trend" style="font-size: 12px; color: var(--success);">↑ 18.3% 较上月</div>
     </div>
-    <div class="summary-card">
-      <div class="summary-label">批发收入</div>
-      <div class="summary-value">¥ 996,678</div>
-      <div style="font-size: var(--font-size-sm); color: var(--color-success); margin-top: var(--space-xs);">↑ 8.5% 较上月</div>
+    <div class="patrol-stat-card blue">
+      <div class="stat-value">¥ 996,678</div>
+      <div class="stat-label">批发收入</div>
+      <div class="stat-trend" style="font-size: 12px; color: var(--success);">↑ 8.5% 较上月</div>
     </div>
-    <div class="summary-card">
-      <div class="summary-label">零售收入</div>
-      <div class="summary-value">¥ 427,147</div>
-      <div style="font-size: var(--font-size-sm); color: var(--warning); margin-top: var(--space-xs);">↓ 2.1% 较上月</div>
+    <div class="patrol-stat-card orange">
+      <div class="stat-value">¥ 427,147</div>
+      <div class="stat-label">零售收入</div>
+      <div class="stat-trend" style="font-size: 12px; color: var(--error);">↓ 2.1% 较上月</div>
+    </div>
+    <div class="patrol-stat-card purple">
+      <div class="stat-value">¥ 2,847,650</div>
+      <div class="stat-label">总收入</div>
+      <div class="stat-trend" style="font-size: 12px; color: var(--success);">↑ 12.5% 较上月</div>
     </div>
   </div>
 
@@ -197,19 +209,17 @@
     <div class="tab-item">产品分析</div>
   </div>
 
-  <!-- 收入趋势图 -->
-  <div class="chart-section">
-    <h2 class="section-title">收入趋势分析</h2>
-    <div id="chart-revenue-trend" class="chart-container" style="height: 300px;"></div>
-  </div>
-
-  <!-- 收入构成和客户排行 -->
-  <div class="double-section">
-    <div class="chart-section">
-      <h2 class="section-title">收入构成分析</h2>
-      <div id="chart-revenue-pie" class="chart-container" style="height: 280px;"></div>
+  <!-- 三个图表并排 - 收入趋势分析、收入构成分析、客户收入排行 -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
+    <div class="chart-section" style="margin-bottom: 0;">
+      <h2 class="section-title">收入趋势分析</h2>
+      <div id="chart-revenue-trend" class="chart-container" style="height: 260px;"></div>
     </div>
-    <div class="table-container">
+    <div class="chart-section" style="margin-bottom: 0;">
+      <h2 class="section-title">收入构成分析</h2>
+      <div id="chart-revenue-pie" class="chart-container" style="height: 260px;"></div>
+    </div>
+    <div class="table-container" style="margin-bottom: 0;">
       <h2 class="section-title">客户收入排行</h2>
       <table class="data-table" style="font-size: var(--font-size-sm);">
         <thead>

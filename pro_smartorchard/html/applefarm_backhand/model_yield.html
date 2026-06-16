@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>产量预估模型 - 模型预测中心 - 智慧果园</title>
+<title>智慧果园 - 产量模型</title>
 <!-- 使用设计系统: Design System v2.0 + sidebar-layout -->
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/sidebar-layout.css">
@@ -18,6 +18,346 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
+  
+  /* 产量预估页面专属样式 */
+  /* 紧凑型统计卡片 - 参考巡园管理 */
+  .patrol-stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  
+  .patrol-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .patrol-stat-card .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  
+  .patrol-stat-card .stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  
+  .patrol-stat-card.green .stat-value { color: #22a84a; }
+  .patrol-stat-card.blue .stat-value { color: #4a90d9; }
+  .patrol-stat-card.red .stat-value { color: #ff4d4f; }
+  .patrol-stat-card.orange .stat-value { color: #fa8c16; }
+  .patrol-stat-card.purple .stat-value { color: #722ed1; }
+  
+  /* 产量统计行 */
+  .yield-stats {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .yield-stats .patrol-stat-card {
+    padding: 12px 8px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .yield-stats .patrol-stat-card .stat-value {
+    font-size: 18px;
+  }
+  
+  .yield-stats .patrol-stat-card .stat-label {
+    font-size: 11px;
+  }
+  
+  .yield-dashboard {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .yield-main {
+    background: linear-gradient(135deg, #22a84a 0%, #1a8a3c 100%);
+    border-radius: 20px;
+    padding: 28px 32px;
+    color: #fff;
+    min-width: 280px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .yield-main::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 80%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  .yield-main-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  
+  .yield-main-value {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  
+  .yield-main-unit {
+    font-size: 20px;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  
+  .yield-main-label {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 12px;
+  }
+  
+  .yield-main-range {
+    font-size: 12px;
+    opacity: 0.7;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  
+  .yield-main-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .yield-main-trend.up {
+    color: #a8e6cf;
+  }
+  
+  .yield-main-trend.down {
+    color: #ffb7b2;
+  }
+  
+  .yield-details {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .yield-detail-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
+  }
+  
+  .yield-detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  
+  .yield-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .yield-detail-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f0faf3, #d4f4dd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a8a3c;
+  }
+  
+  .yield-detail-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  
+  .yield-detail-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  
+  .yield-detail-unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    margin-left: 2px;
+  }
+  
+  .yield-detail-change {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .yield-detail-change.up { color: #52c41a; }
+  .yield-detail-change.down { color: #ff4d4f; }
+  
+  .main-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  /* 图表容器 */
+  .chart-container {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #f8fbf9 0%, #f0f4f3 100%);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  
+  .chart-svg {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* 地块表格 */
+  .plot-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  
+  .plot-table th {
+    background: #f7f9f7;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid #e8ede8;
+  }
+  
+  .plot-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f4f6f4;
+    color: var(--text-secondary);
+  }
+  
+  .plot-table tbody tr:hover {
+    background: #f2f8f4;
+  }
+  
+  .plot-yield {
+    font-weight: 600;
+    color: var(--primary-600);
+  }
+  
+  /* 因子列表 */
+  .factor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .factor-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px;
+    background: #fafcfc;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+  }
+  
+  .factor-item:hover {
+    background: #f5f9f5;
+    border-color: rgba(34, 168, 74, 0.08);
+  }
+  
+  .factor-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  
+  .factor-icon.positive {
+    background: linear-gradient(135deg, #d4f4dd, #aeeab8);
+  }
+  
+  .factor-icon.negative {
+    background: linear-gradient(135deg, #ffd1d1, #ffccc7);
+  }
+  
+  .factor-content {
+    flex: 1;
+  }
+  
+  .factor-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  
+  .factor-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+  }
+  
+  .factor-impact {
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  
+  .factor-impact.positive { color: #52c41a; }
+  .factor-impact.negative { color: #ff4d4f; }
 </style>
 </head>
 <body data-active-menu="model" data-active-submenu="model-yield">
@@ -139,69 +479,50 @@
 
     <!-- 主内容区 -->
     <main class="main-content">
-<div class="yield-dashboard">
-    <div class="yield-main">
-      <div class="yield-main-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 3c-1.5-1.5-5-1-5 3 0 4 3 8 5 10 2-2 5-6 5-10 0-4-3.5-4.5-5-3z"/><path d="M12 3V1"/></svg></div>
-      <div class="yield-main-value">126.8<span class="yield-main-unit">吨</span></div>
-      <div class="yield-main-label">预估总产量</div>
-      <div class="yield-main-range">置信区间：117.2 ~ 136.4 吨 (±8%)</div>
-      <div class="yield-main-trend up">↑ 较上年增长 12.5%</div>
+      <!-- 页面头部 -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">产量预测模型</h1>
+          <p class="page-subtitle">预测果园产量，支持产量规划和决策</p>
+        </div>
+      </div>
+<div class="yield-stats">
+    <div class="patrol-stat-card green">
+      <div class="stat-value">126.8<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">预估总产量</div>
     </div>
-    <div class="yield-details">
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg></span>
-          <span class="yield-detail-title">烟台基地</span>
-        </div>
-        <div class="yield-detail-value">45.2<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change up">↑ 15% 较上年</div>
-      </div>
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg></span>
-          <span class="yield-detail-title">栖霞基地</span>
-        </div>
-        <div class="yield-detail-value">32.8<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change up">↑ 8% 较上年</div>
-      </div>
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg></span>
-          <span class="yield-detail-title">蓬莱基地</span>
-        </div>
-        <div class="yield-detail-value">28.5<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change down">↓ 3% 较上年</div>
-      </div>
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 3c-1.5-1.5-5-1-5 3 0 4 3 8 5 10 2-2 5-6 5-10 0-4-3.5-4.5-5-3z"/><path d="M12 3V1"/></svg></span>
-          <span class="yield-detail-title">红富士</span>
-        </div>
-        <div class="yield-detail-value">86.5<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change up">↑ 10% 较上年</div>
-      </div>
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M12 3c-1.5-1.5-5-1-5 3 0 4 3 8 5 10 2-2 5-6 5-10 0-4-3.5-4.5-5-3z"/><path d="M12 3V1"/></svg></span>
-          <span class="yield-detail-title">嘎啦</span>
-        </div>
-        <div class="yield-detail-value">25.3<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change up">↑ 18% 较上年</div>
-      </div>
-      <div class="yield-detail-card">
-        <div class="yield-detail-header">
-          <span class="yield-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M9 2v6.5C9 12 6 15 4 18h16c-2-3-5-6-5-9.5V2"/><path d="M9 2h6"/></svg></span>
-          <span class="yield-detail-title">金帅</span>
-        </div>
-        <div class="yield-detail-value">15.0<span class="yield-detail-unit">吨</span></div>
-        <div class="yield-detail-change down">↓ 5% 较上年</div>
-      </div>
+    <div class="patrol-stat-card blue">
+      <div class="stat-value">45.2<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">烟台基地</div>
+    </div>
+    <div class="patrol-stat-card orange">
+      <div class="stat-value">32.8<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">栖霞基地</div>
+    </div>
+    <div class="patrol-stat-card purple">
+      <div class="stat-value">28.5<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">蓬莱基地</div>
+    </div>
+    <div class="patrol-stat-card green">
+      <div class="stat-value">86.5<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">红富士</div>
+    </div>
+    <div class="patrol-stat-card orange">
+      <div class="stat-value">25.3<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">嘎啦</div>
+    </div>
+    <div class="patrol-stat-card blue">
+      <div class="stat-value">15.0<span style="font-size:14px;font-weight:400;">吨</span></div>
+      <div class="stat-label">金帅</div>
+    </div>
+    <div class="patrol-stat-card red">
+      <div class="stat-value">↑12.5%</div>
+      <div class="stat-label">较上年增长</div>
     </div>
   </div>
 
   <div class="main-grid">
-    <div>
-      <div class="snzg-panel" style="margin-bottom:16px;">
+      <div class="snzg-panel">
         <div class="snzg-panel-header">
           <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span> 各基地产量对比</div>
         </div>
@@ -234,6 +555,48 @@
             <text x="445" y="195" font-size="9" fill="#666" text-anchor="middle">招远</text>
             <text x="505" y="195" font-size="9" fill="#666" text-anchor="middle">莱阳</text>
           </svg>
+        </div>
+      </div>
+
+      <div class="snzg-panel">
+        <div class="snzg-panel-header">
+          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> 影响因子分析</div>
+        </div>
+        <div class="snzg-panel-body">
+          <div class="factor-list">
+            <div class="factor-item">
+              <div class="factor-icon positive">☀️</div>
+              <div class="factor-content">
+                <div class="factor-name">光照充足</div>
+                <div class="factor-desc">今年日照时数较常年多12%</div>
+              </div>
+              <span class="factor-impact positive">+8%</span>
+            </div>
+            <div class="factor-item">
+              <div class="factor-icon positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+              <div class="factor-content">
+                <div class="factor-name">灌溉及时</div>
+                <div class="factor-desc">水肥一体化覆盖率提升</div>
+              </div>
+              <span class="factor-impact positive">+5%</span>
+            </div>
+            <div class="factor-item">
+              <div class="factor-icon negative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M6 4v16"/><path d="M18 4v16"/><path d="M6 12h12"/><path d="M3 8h3"/><path d="M18 8h3"/><path d="M3 16h3"/><path d="M18 16h3"/></svg></div>
+              <div class="factor-content">
+                <div class="factor-name">病虫害影响</div>
+                <div class="factor-desc">部分地块轮纹病发生</div>
+              </div>
+              <span class="factor-impact negative">-3%</span>
+            </div>
+            <div class="factor-item">
+              <div class="factor-icon negative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg></div>
+              <div class="factor-content">
+                <div class="factor-name">高温影响</div>
+                <div class="factor-desc">7月高温天数较多</div>
+              </div>
+              <span class="factor-impact negative">-2%</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -284,50 +647,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="snzg-panel" style="margin-bottom:16px;">
-        <div class="snzg-panel-header">
-          <div class="snzg-panel-title"><span class="pt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> 影响因子分析</div>
-        </div>
-        <div class="snzg-panel-body">
-          <div class="factor-list">
-            <div class="factor-item">
-              <div class="factor-icon positive">☀️</div>
-              <div class="factor-content">
-                <div class="factor-name">光照充足</div>
-                <div class="factor-desc">今年日照时数较常年多12%</div>
-              </div>
-              <span class="factor-impact positive">+8%</span>
-            </div>
-            <div class="factor-item">
-              <div class="factor-icon positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
-              <div class="factor-content">
-                <div class="factor-name">灌溉及时</div>
-                <div class="factor-desc">水肥一体化覆盖率提升</div>
-              </div>
-              <span class="factor-impact positive">+5%</span>
-            </div>
-            <div class="factor-item">
-              <div class="factor-icon negative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M6 4v16"/><path d="M18 4v16"/><path d="M6 12h12"/><path d="M3 8h3"/><path d="M18 8h3"/><path d="M3 16h3"/><path d="M18 16h3"/></svg></div>
-              <div class="factor-content">
-                <div class="factor-name">病虫害影响</div>
-                <div class="factor-desc">部分地块轮纹病发生</div>
-              </div>
-              <span class="factor-impact negative">-3%</span>
-            </div>
-            <div class="factor-item">
-              <div class="factor-icon negative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg></div>
-              <div class="factor-content">
-                <div class="factor-name">高温影响</div>
-                <div class="factor-desc">7月高温天数较多</div>
-              </div>
-              <span class="factor-impact negative">-2%</span>
-            </div>
-          </div>
         </div>
       </div>
 

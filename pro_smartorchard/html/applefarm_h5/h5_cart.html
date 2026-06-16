@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>智慧果园 - 购物车</title>
+  <title>数农智果 - 购物车</title>
   <link rel="stylesheet" href="../applefarm_mobile/css/mobile-design-system.css">
   <style>
     /* ========== 页面专属样式 ========== */
@@ -106,7 +106,7 @@
 
     <!-- 购物车列表 -->
     <div class="cart-list">
-      <div class="cart-item">
+      <div class="cart-item" data-id="redFuji">
         <input type="checkbox" class="cart-checkbox" checked>
         <div class="cart-img">🍎</div>
         <div class="cart-info">
@@ -117,16 +117,16 @@
           <div class="flex justify-between items-center">
             <span class="cart-price">¥68</span>
             <div class="cart-quantity">
-              <button class="qty-btn">−</button>
+              <button class="qty-btn" onclick="changeQuantity('redFuji', -1)">−</button>
               <span class="qty-value">1</span>
-              <button class="qty-btn">+</button>
+              <button class="qty-btn" onclick="changeQuantity('redFuji', 1)">+</button>
             </div>
           </div>
         </div>
-        <button class="cart-delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="cart-delete" onclick="removeItem('redFuji')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
 
-      <div class="cart-item">
+      <div class="cart-item" data-id="giftBox">
         <input type="checkbox" class="cart-checkbox" checked>
         <div class="cart-img">🎁</div>
         <div class="cart-info">
@@ -137,16 +137,16 @@
           <div class="flex justify-between items-center">
             <span class="cart-price">¥168</span>
             <div class="cart-quantity">
-              <button class="qty-btn">−</button>
+              <button class="qty-btn" onclick="changeQuantity('giftBox', -1)">−</button>
               <span class="qty-value">1</span>
-              <button class="qty-btn">+</button>
+              <button class="qty-btn" onclick="changeQuantity('giftBox', 1)">+</button>
             </div>
           </div>
         </div>
-        <button class="cart-delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="cart-delete" onclick="removeItem('giftBox')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
 
-      <div class="cart-item">
+      <div class="cart-item" data-id="gala">
         <input type="checkbox" class="cart-checkbox">
         <div class="cart-img">🍏</div>
         <div class="cart-info">
@@ -157,25 +157,25 @@
           <div class="flex justify-between items-center">
             <span class="cart-price">¥58</span>
             <div class="cart-quantity">
-              <button class="qty-btn">−</button>
+              <button class="qty-btn" onclick="changeQuantity('gala', -1)">−</button>
               <span class="qty-value">2</span>
-              <button class="qty-btn">+</button>
+              <button class="qty-btn" onclick="changeQuantity('gala', 1)">+</button>
             </div>
           </div>
         </div>
-        <button class="cart-delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="cart-delete" onclick="removeItem('gala')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>
 
     <!-- 底部操作栏 -->
     <div class="footer-bar">
-      <input type="checkbox" class="footer-checkbox" checked>
-      <span class="footer-text">全选</span>
+      <input type="checkbox" class="footer-checkbox" checked onclick="toggleSelectAll(this)">
+      <span class="footer-text" onclick="toggleSelectAll(document.querySelector('.footer-checkbox'))">全选</span>
       <div class="footer-price">
         <div class="price-label">合计</div>
-        <div class="price-value">¥236</div>
+        <div class="price-value" id="totalPrice">¥236</div>
       </div>
-      <button class="mb-btn mb-btn-primary mb-btn-lg" onclick="checkout()">结算(2)</button>
+      <button class="mb-btn mb-btn-primary mb-btn-lg" onclick="checkout()" id="checkoutBtn">结算(2)</button>
     </div>
 
     <!-- 底部导航 -->
@@ -184,9 +184,103 @@
   </div>
 
   <script>
+    // 购物车数据
+    var cartData = {
+      redFuji: { price: 68, quantity: 1 },
+      giftBox: { price: 168, quantity: 1 },
+      gala: { price: 58, quantity: 2 }
+    };
+
     function navigateTo(page) { window.location.href = page; }
     function checkout() { window.location.href = 'h5_checkout.html'; }
     function clearCart() { showToast('购物车已清空'); }
+
+    // 数量调整
+    function changeQuantity(itemId, delta) {
+      var item = cartData[itemId];
+      if (!item) return;
+      
+      item.quantity = Math.max(1, item.quantity + delta);
+      
+      // 更新显示
+      var cartItem = document.querySelector('.cart-item[data-id="' + itemId + '"]');
+      if (cartItem) {
+        var qtyElement = cartItem.querySelector('.qty-value');
+        if (qtyElement) {
+          qtyElement.textContent = item.quantity;
+        }
+      }
+      
+      updateTotal();
+    }
+
+    // 删除商品
+    function removeItem(itemId) {
+      if (confirm('确定要删除该商品吗？')) {
+        var cartItem = document.querySelector('.cart-item[data-id="' + itemId + '"]');
+        if (cartItem) {
+          cartItem.remove();
+          delete cartData[itemId];
+          updateTotal();
+          showToast('已删除');
+        }
+      }
+    }
+
+    // 全选/取消全选
+    function toggleSelectAll(checkbox) {
+      var checkboxes = document.querySelectorAll('.cart-checkbox');
+      checkboxes.forEach(function(cb) {
+        cb.checked = checkbox.checked;
+        cb.dispatchEvent(new Event('change'));
+      });
+      updateTotal();
+    }
+
+    // 更新总价和结算数量
+    function updateTotal() {
+      var checkboxes = document.querySelectorAll('.cart-checkbox');
+      var totalPrice = 0;
+      var selectedCount = 0;
+
+      checkboxes.forEach(function(cb) {
+        var cartItem = cb.closest('.cart-item');
+        var itemId = cartItem.getAttribute('data-id');
+        var item = cartData[itemId];
+        
+        if (item && cb.checked) {
+          totalPrice += item.price * item.quantity;
+          selectedCount++;
+        }
+      });
+
+      // 更新显示
+      var totalElement = document.getElementById('totalPrice');
+      var checkoutBtn = document.getElementById('checkoutBtn');
+      
+      if (totalElement) {
+        totalElement.textContent = '¥' + totalPrice;
+      }
+      
+      if (checkoutBtn) {
+        checkoutBtn.textContent = '结算(' + selectedCount + ')';
+      }
+    }
+
+    // 单个商品选中状态变化
+    document.querySelectorAll('.cart-checkbox').forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        updateTotal();
+        // 更新全选框状态
+        var allChecked = document.querySelectorAll('.cart-checkbox').length === 
+                        document.querySelectorAll('.cart-checkbox:checked').length;
+        var footerCheckbox = document.querySelector('.footer-checkbox');
+        if (footerCheckbox) {
+          footerCheckbox.checked = allChecked;
+        }
+      });
+    });
+
     function showToast(message) {
       var toast = document.createElement('div');
       toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.7);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:999;animation:fadeInOut 2s ease;';

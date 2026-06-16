@@ -18,6 +18,151 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
+
+  /* 员工信息卡片 */
+  .profile-section {
+    background: linear-gradient(135deg, #f0faf3 0%, #f8fdfa 100%);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(34, 168, 74, 0.1);
+  }
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22a84a, #46c365);
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(34, 168, 74, 0.25);
+  }
+  .profile-info {
+    flex: 1;
+  }
+  .profile-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2e1a;
+    margin-bottom: 6px;
+  }
+  .profile-meta {
+    font-size: 14px;
+    color: #6b7b6b;
+  }
+  .score-card {
+    background: #fff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(34, 168, 74, 0.1);
+  }
+  .score-value {
+    font-size: 40px;
+    font-weight: 700;
+    color: #22a84a;
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 13px;
+    color: #6b7b6b;
+    margin-top: 4px;
+  }
+
+  /* 指标卡片 */
+  .metric-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .metric-label {
+    font-size: 13px;
+    color: #6b7b6b;
+    font-weight: 500;
+  }
+  .metric-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a2e1a;
+  }
+  .metric-progress {
+    height: 6px;
+    background: #e8ede8;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .metric-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .metric-progress-fill.green {
+    background: linear-gradient(90deg, #46c365, #22a84a);
+  }
+  .metric-progress-fill.blue {
+    background: linear-gradient(90deg, #40a9ff, #1890ff);
+  }
+
+  /* 紧凑表格 */
+  .compact-table {
+    min-width: auto !important;
+    font-size: 13px !important;
+  }
+  .compact-table th,
+  .compact-table td {
+    padding: 12px 14px !important;
+  }
+
+  /* 任务类型标签 */
+  .type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(34, 168, 74, 0.1);
+    color: #22a84a;
+    font-size: 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* 状态徽章 */
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .status-badge.success {
+    background: rgba(34, 168, 74, 0.1);
+    color: #22a84a;
+  }
+
+  /* 评分单元格 */
+  .score-value-cell {
+    font-weight: 600;
+    color: #22a84a;
+  }
+  .score-value-cell.excellent {
+    color: #1890ff;
+  }
 </style>
 </head>
 <body data-active-menu="performance" data-active-submenu="performance-detail">
@@ -144,68 +289,89 @@
 
 <!-- 页面内容 -->
 <div class="page-container">
-  
-
-  <!-- 员工信息 -->
-  <div class="profile-section">
-    <div class="profile-header">
-      <div class="profile-avatar">张</div>
-      <div class="profile-info">
-        <div class="profile-name">张三</div>
-        <div class="profile-meta">一班 · 农工 · 入职时间：2024-03-15</div>
-      </div>
-      <div class="score-card">
-        <div class="score-value">96</div>
-        <div class="score-label">综合评分</div>
-        <div style="margin-top: var(--space-sm);"><span class="status-badge excellent">优秀</span></div>
-      </div>
+  <!-- 页面头部 -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">员工详情</h1>
+      <p class="page-subtitle">查看员工详细信息和工作绩效</p>
     </div>
   </div>
 
-  <!-- 关键指标 -->
+  <!-- 员工信息 - 紧凑布局 -->
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 16px 20px; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+    <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #22a84a, #46c365); color: #fff; font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(34, 168, 74, 0.25);">张</div>
+    <div style="flex: 1;">
+      <div style="font-size: 18px; font-weight: 700; color: #1a2e1a;">张三</div>
+      <div style="font-size: 13px; color: #6b7b6b;">一班 · 农工 · 入职时间：2024-03-15</div>
+    </div>
+  </div>
+
+  <!-- 统计卡片 - 小尺寸样式，一行四个 -->
+  <div class="patrol-stats" style="margin-bottom: 16px;">
+    <div class="patrol-stat-card green">
+      <div class="stat-value">96</div>
+      <div class="stat-label">综合评分</div>
+    </div>
+    <div class="patrol-stat-card blue">
+      <div class="stat-value">100%</div>
+      <div class="stat-label">任务完成率</div>
+    </div>
+    <div class="patrol-stat-card orange">
+      <div class="stat-value">95分</div>
+      <div class="stat-label">作业质量评分</div>
+    </div>
+    <div class="patrol-stat-card purple">
+      <div class="stat-value">48</div>
+      <div class="stat-label">工作量完成</div>
+    </div>
+  </div>
+
+  <!-- 指标和趋势 - 两列布局 -->
   <div class="double-section">
     <div class="chart-section">
       <h2 class="section-title">绩效指标</h2>
-      <div class="metric-item">
-        <div class="metric-label">任务完成率</div>
-        <div class="metric-value">100%</div>
-        <div class="progress-bar"><div class="progress-fill green" style="width: 100%;"></div></div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">任务完成率</span>
+          <span class="metric-value">100%</span>
+        </div>
+        <div class="metric-progress"><div class="metric-progress-fill green" style="width: 100%;"></div></div>
       </div>
-      <div class="metric-item">
-        <div class="metric-label">作业质量评分</div>
-        <div class="metric-value">95分</div>
-        <div class="progress-bar"><div class="progress-fill green" style="width: 95%;"></div></div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">作业质量评分</span>
+          <span class="metric-value">95分</span>
+        </div>
+        <div class="metric-progress"><div class="metric-progress-fill green" style="width: 95%;"></div></div>
       </div>
-      <div class="metric-item">
-        <div class="metric-label">工作量完成</div>
-        <div class="metric-value">48任务</div>
-        <div class="progress-bar"><div class="progress-fill blue" style="width: 96%;"></div></div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">工作量完成</span>
+          <span class="metric-value">48任务</span>
+        </div>
+        <div class="metric-progress"><div class="metric-progress-fill blue" style="width: 96%;"></div></div>
       </div>
-      <div class="metric-item">
-        <div class="metric-label">出勤天数</div>
-        <div class="metric-value">22天</div>
-        <div class="progress-bar"><div class="progress-fill green" style="width: 100%;"></div></div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">出勤天数</span>
+          <span class="metric-value">22天</span>
+        </div>
+        <div class="metric-progress"><div class="metric-progress-fill green" style="width: 100%;"></div></div>
       </div>
     </div>
     <div class="chart-section">
       <h2 class="section-title">月度趋势</h2>
-      <div class="chart-placeholder">
-        <div style="text-align: center;">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" style="margin-bottom: var(--space-sm);">
-            <path d="M3 3v18h18"/>
-            <path d="M5 18l4-10 4 6 4-8 3 3"/>
-          </svg>
-          <div>月度绩效趋势</div>
-          <div style="font-size: var(--font-size-sm); color: var(--text-placeholder);">近6个月数据</div>
-        </div>
-      </div>
+      <div id="chart-monthly-trend" class="chart-container" style="height: 280px;"></div>
     </div>
   </div>
 
   <!-- 任务完成记录 -->
   <div class="table-container">
-    <h2 class="section-title">本月任务完成记录</h2>
-    <table class="data-table">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 class="section-title">本月任务完成记录</h2>
+      <span style="font-size: 13px; color: #6b7b6b;">共完成 5 项任务</span>
+    </div>
+    <table class="data-table compact-table">
       <thead>
         <tr>
           <th>任务名称</th>
@@ -220,42 +386,42 @@
         <tr>
           <td>春季施肥作业</td>
           <td>A1区</td>
-          <td>施肥</td>
+          <td><span class="type-badge">施肥</span></td>
           <td>2026-06-10</td>
-          <td>98</td>
-          <td><span style="color: var(--color-success);">已完成</span></td>
+          <td><span class="score-value-cell">98</span></td>
+          <td><span class="status-badge success">已完成</span></td>
         </tr>
         <tr>
           <td>病虫害防治</td>
           <td>A2区</td>
-          <td>施药</td>
+          <td><span class="type-badge">施药</span></td>
           <td>2026-06-08</td>
-          <td>95</td>
-          <td><span style="color: var(--color-success);">已完成</span></td>
+          <td><span class="score-value-cell">95</span></td>
+          <td><span class="status-badge success">已完成</span></td>
         </tr>
         <tr>
           <td>果树修剪</td>
           <td>B1区</td>
-          <td>修剪</td>
+          <td><span class="type-badge">修剪</span></td>
           <td>2026-06-05</td>
-          <td>92</td>
-          <td><span style="color: var(--color-success);">已完成</span></td>
+          <td><span class="score-value-cell">92</span></td>
+          <td><span class="status-badge success">已完成</span></td>
         </tr>
         <tr>
           <td>浇水灌溉</td>
           <td>A1区</td>
-          <td>灌溉</td>
+          <td><span class="type-badge">灌溉</span></td>
           <td>2026-06-03</td>
-          <td>100</td>
-          <td><span style="color: var(--color-success);">已完成</span></td>
+          <td><span class="score-value-cell excellent">100</span></td>
+          <td><span class="status-badge success">已完成</span></td>
         </tr>
         <tr>
           <td>疏花疏果</td>
           <td>B2区</td>
-          <td>疏果</td>
+          <td><span class="type-badge">疏果</span></td>
           <td>2026-06-01</td>
-          <td>96</td>
-          <td><span style="color: var(--color-success);">已完成</span></td>
+          <td><span class="score-value-cell">96</span></td>
+          <td><span class="status-badge success">已完成</span></td>
         </tr>
       </tbody>
     </table>
@@ -273,6 +439,25 @@
 
 <!-- 引入交互脚本 -->
 <script src="js/sidebar-layout.js"></script>
+<script src="js/components/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 月度绩效趋势数据
+  const monthlyTrendData = {
+    categories: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    series: [
+      {
+        name: '综合评分',
+        data: [88, 92, 90, 94, 93, 96],
+        color: '#22a84a',
+        area: true
+      }
+    ]
+  };
+  Chart.line('#chart-monthly-trend', monthlyTrendData);
+});
+</script>
 
 <!-- 已通过质量审查（第2轮修正）- 严过审 2025-01-18 -->
   <script src="js/iframe-hide.js"></script>
