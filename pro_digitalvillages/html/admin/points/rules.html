@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>积分规则配置</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">积分管理</a> / <span>积分规则</span>
+  </div>
+
+  <!-- 操作按钮 -->
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="openModal('addRuleModal')">+ 新增规则</button>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="text-center"><input type="checkbox"></th>
+          <th>规则名称</th>
+          <th>加减分类型</th>
+          <th>分值</th>
+          <th>适用范围</th>
+          <th>已使用次数</th>
+          <th>状态</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="参与志愿服务" data-type="加分" data-score="10" data-scope="全村" data-desc="积极参与村内组织的各类志愿服务活动，每次加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>参与志愿服务</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+10</span></td>
+          <td>全村</td>
+          <td>56次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="门前卫生达标" data-type="加分" data-score="5" data-scope="全村" data-desc="村民门前卫生检查达标，每次加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>门前卫生达标</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+5</span></td>
+          <td>全村</td>
+          <td>128次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="乱扔垃圾" data-type="减分" data-score="-10" data-scope="全村" data-desc="在公共区域乱扔垃圾，经查实后减分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>乱扔垃圾</td>
+          <td><span class="tag tag-red">减分</span></td>
+          <td><span class="text-red fw-bold">-10</span></td>
+          <td>全村</td>
+          <td>12次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="参加党员学习" data-type="加分" data-score="5" data-scope="指定组" data-desc="参加村党支部组织的党员学习活动，每次加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>参加党员学习</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+5</span></td>
+          <td>指定组</td>
+          <td>34次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="参加文体活动" data-type="加分" data-score="3" data-scope="全村" data-desc="参加村内组织的各类文体活动，每次加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>参加文体活动</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+3</span></td>
+          <td>全村</td>
+          <td>89次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="邻里纠纷调解成功" data-type="加分" data-score="8" data-scope="全村" data-desc="成功调解邻里纠纷，经双方确认后加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>邻里纠纷调解成功</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+8</span></td>
+          <td>全村</td>
+          <td>23次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="违规搭建" data-type="减分" data-score="-20" data-scope="全村" data-desc="未经批准擅自在村内违规搭建建筑物，经查实后减分。" data-status="停用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>违规搭建</td>
+          <td><span class="tag tag-red">减分</span></td>
+          <td><span class="text-red fw-bold">-20</span></td>
+          <td>全村</td>
+          <td>5次</td>
+          <td><span class="tag tag-gray">停用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-success" onclick="showConfirm({title:'启用确认',message:'确定启用该规则吗？',onConfirm:function(){showToast('已启用','success')}})">启用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="主动参与垃圾分类" data-type="加分" data-score="2" data-scope="指定组" data-desc="主动参与村组垃圾分类活动，每次加分。" data-status="启用">
+          <td class="text-center"><input type="checkbox"></td>
+          <td>主动参与垃圾分类</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td><span class="text-green fw-bold">+2</span></td>
+          <td>指定组</td>
+          <td>67次</td>
+          <td><span class="tag tag-green">启用</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editRuleModal');fillRuleEdit(this)">编辑</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该规则吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该规则吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="page-info">共 8 条记录，每页 10 条</div>
+      <div class="page-btns">
+        <a class="page-btn disabled">&laquo;</a>
+        <a class="page-btn active">1</a>
+        <a class="page-btn disabled">&raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 新增规则弹窗 -->
+<div class="modal-overlay" id="addRuleModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>新增规则</h3>
+      <span class="modal-close" onclick="closeModal('addRuleModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>规则名称 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入规则名称">
+      </div>
+      <div class="form-group">
+        <label>加减分类型 <span class="required">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="addRuleType" value="加分" checked> 加分</label>
+          <label><input type="radio" name="addRuleType" value="减分"> 减分</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>分值 <span class="required">*</span></label>
+        <input type="number" class="form-input" placeholder="请输入分值">
+      </div>
+      <div class="form-group">
+        <label>适用范围</label>
+        <select class="form-select">
+          <option>全村</option>
+          <option>指定组</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>规则描述</label>
+        <textarea class="form-textarea" placeholder="请输入规则描述"></textarea>
+      </div>
+      <div class="form-group">
+        <label>状态</label>
+        <select class="form-select">
+          <option>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addRuleModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('addRuleModal');showToast('新增成功','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑规则弹窗 -->
+<div class="modal-overlay" id="editRuleModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>编辑规则</h3>
+      <span class="modal-close" onclick="closeModal('editRuleModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>规则名称 <span class="required">*</span></label>
+        <input type="text" class="form-input" value="参与志愿服务">
+      </div>
+      <div class="form-group">
+        <label>加减分类型 <span class="required">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="editRuleType" value="加分" checked> 加分</label>
+          <label><input type="radio" name="editRuleType" value="减分"> 减分</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>分值 <span class="required">*</span></label>
+        <input type="number" class="form-input" value="10">
+      </div>
+      <div class="form-group">
+        <label>适用范围</label>
+        <select class="form-select">
+          <option>全村</option>
+          <option>指定组</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>规则描述</label>
+        <textarea class="form-textarea">积极参与村内组织的各类志愿服务活动，每次加分。</textarea>
+      </div>
+      <div class="form-group">
+        <label>状态</label>
+        <select class="form-select">
+          <option>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('editRuleModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('editRuleModal');showToast('保存成功','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillRuleEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editRuleModal');
+  if (!row || !modal) return;
+  var inputs = modal.querySelectorAll('.form-input');
+  var textareas = modal.querySelectorAll('.form-textarea');
+  var selects = modal.querySelectorAll('.form-select');
+  var radios = modal.querySelectorAll('input[name="editRuleType"]');
+  if (inputs[0]) inputs[0].value = row.dataset.name || '';
+  var scoreVal = Math.abs(parseInt(row.dataset.score) || 0);
+  if (inputs[1]) inputs[1].value = scoreVal;
+  if (radios.length >= 2) {
+    radios[0].checked = (row.dataset.type === '加分');
+    radios[1].checked = (row.dataset.type === '减分');
+  }
+  if (selects[0]) {
+    for (var i = 0; i < selects[0].options.length; i++) {
+      selects[0].options[i].selected = (selects[0].options[i].text === (row.dataset.scope || '全村'));
+    }
+  }
+  if (textareas[0]) textareas[0].value = row.dataset.desc || '';
+  if (selects[1]) {
+    for (var i = 0; i < selects[1].options.length; i++) {
+      selects[1].options[i].selected = (selects[1].options[i].text === (row.dataset.status || '启用'));
+    }
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据字典管理</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">系统管理</a> / <span>数据字典</span>
+  </div>
+
+  <!-- 左右分栏 -->
+  <div class="split-layout">
+    <!-- 左侧字典分类 -->
+    <div class="split-left">
+      <div class="split-left-header">
+        <h4>字典分类</h4>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addDictCategoryModal')">+ 新增分类</button>
+      </div>
+      <div class="dict-item active">
+        <div>
+          <div class="dict-name">产业类型</div>
+          <div class="dict-code">industry_type</div>
+        </div>
+        <span class="dict-count">5项</span>
+      </div>
+      <div class="dict-item">
+        <div>
+          <div class="dict-name">事件类型</div>
+          <div class="dict-code">event_type</div>
+        </div>
+        <span class="dict-count">5项</span>
+      </div>
+      <div class="dict-item">
+        <div>
+          <div class="dict-name">村干部职务</div>
+          <div class="dict-code">cadre_position</div>
+        </div>
+        <span class="dict-count">4项</span>
+      </div>
+      <div class="dict-item">
+        <div>
+          <div class="dict-name">兑换商品分类</div>
+          <div class="dict-code">exchange_category</div>
+        </div>
+        <span class="dict-count">4项</span>
+      </div>
+      <div class="dict-item">
+        <div>
+          <div class="dict-name">学历</div>
+          <div class="dict-code">education_level</div>
+        </div>
+        <span class="dict-count">7项</span>
+      </div>
+      <div class="dict-item">
+        <div>
+          <div class="dict-name">政治面貌</div>
+          <div class="dict-code">political_status</div>
+        </div>
+        <span class="dict-count">5项</span>
+      </div>
+    </div>
+
+    <!-- 右侧字典项列表 -->
+    <div class="split-right">
+      <div style="padding:16px;border-bottom:1px solid #ebeef5;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>产业类型</strong>
+          <span class="text-gray" style="margin-left:8px;">industry_type</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('addDictItemModal')">+ 新增字典项</button>
+      </div>
+
+      <div class="table-wrap" style="border:none;">
+        <table>
+          <thead>
+            <tr>
+              <th class="text-center"><input type="checkbox"></th>
+              <th>字典项标签</th>
+              <th>字典项值</th>
+              <th>排序号</th>
+              <th>状态</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-label="种植业" data-value="planting" data-sort="1" data-status="启用">
+              <td class="text-center"><input type="checkbox"></td>
+              <td>种植业</td>
+              <td><code style="font-family:Consolas,monospace;color:#606266;">planting</code></td>
+              <td>1</td>
+              <td><span class="tag tag-green">启用</span></td>
+              <td class="col-actions">
+                <button class="btn-text btn-text-primary" onclick="openModal('editDictItemModal');fillDictEdit(this)">编辑</button>
+                <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该字典项吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该字典项吗？',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+              </td>
+            </tr>
+            <tr data-label="养殖业" data-value="breeding" data-sort="2" data-status="启用">
+              <td class="text-center"><input type="checkbox"></td>
+              <td>养殖业</td>
+              <td><code style="font-family:Consolas,monospace;color:#606266;">breeding</code></td>
+              <td>2</td>
+              <td><span class="tag tag-green">启用</span></td>
+              <td class="col-actions">
+                <button class="btn-text btn-text-primary" onclick="openModal('editDictItemModal');fillDictEdit(this)">编辑</button>
+                <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该字典项吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该字典项吗？',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+              </td>
+            </tr>
+            <tr data-label="加工业" data-value="processing" data-sort="3" data-status="启用">
+              <td class="text-center"><input type="checkbox"></td>
+              <td>加工业</td>
+              <td><code style="font-family:Consolas,monospace;color:#606266;">processing</code></td>
+              <td>3</td>
+              <td><span class="tag tag-green">启用</span></td>
+              <td class="col-actions">
+                <button class="btn-text btn-text-primary" onclick="openModal('editDictItemModal');fillDictEdit(this)">编辑</button>
+                <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该字典项吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该字典项吗？',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+              </td>
+            </tr>
+            <tr data-label="服务业" data-value="service" data-sort="4" data-status="启用">
+              <td class="text-center"><input type="checkbox"></td>
+              <td>服务业</td>
+              <td><code style="font-family:Consolas,monospace;color:#606266;">service</code></td>
+              <td>4</td>
+              <td><span class="tag tag-green">启用</span></td>
+              <td class="col-actions">
+                <button class="btn-text btn-text-primary" onclick="openModal('editDictItemModal');fillDictEdit(this)">编辑</button>
+                <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该字典项吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该字典项吗？',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+              </td>
+            </tr>
+            <tr data-label="电商" data-value="ecommerce" data-sort="5" data-status="启用">
+              <td class="text-center"><input type="checkbox"></td>
+              <td>电商</td>
+              <td><code style="font-family:Consolas,monospace;color:#606266;">ecommerce</code></td>
+              <td>5</td>
+              <td><span class="tag tag-green">启用</span></td>
+              <td class="col-actions">
+                <button class="btn-text btn-text-primary" onclick="openModal('editDictItemModal');fillDictEdit(this)">编辑</button>
+                <button class="btn-text btn-text-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该字典项吗？',onConfirm:function(){showToast('已停用','success')}})">停用</button>
+                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该字典项吗？',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 新增字典分类弹窗 -->
+<div class="modal-overlay" id="addDictCategoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>新增字典分类</h3>
+      <div class="modal-close" onclick="closeModal('addDictCategoryModal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>分类名称 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入分类名称" required>
+      </div>
+      <div class="form-group">
+        <label>分类编码 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入分类编码，如 industry_type" required>
+      </div>
+      <div class="form-group">
+        <label>备注</label>
+        <textarea class="form-textarea" placeholder="请输入备注信息"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addDictCategoryModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('addDictCategoryModal');showToast('分类已添加','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新增字典项弹窗 -->
+<div class="modal-overlay" id="addDictItemModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>新增字典项</h3>
+      <div class="modal-close" onclick="closeModal('addDictItemModal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>字典项标签 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入字典项标签" required>
+      </div>
+      <div class="form-group">
+        <label>字典项值 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入字典项值，如 planting" required>
+      </div>
+      <div class="form-group">
+        <label>排序号</label>
+        <input type="number" class="form-input" placeholder="请输入排序号">
+      </div>
+      <div class="form-group">
+        <label>状态</label>
+        <select class="form-select" style="width:100%;">
+          <option>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addDictItemModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('addDictItemModal');showToast('字典项已添加','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑字典项弹窗 -->
+<div class="modal-overlay" id="editDictItemModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>编辑字典项</h3>
+      <div class="modal-close" onclick="closeModal('editDictItemModal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>字典项标签 <span class="required">*</span></label>
+        <input type="text" class="form-input" value="种植业" required>
+      </div>
+      <div class="form-group">
+        <label>字典项值 <span class="required">*</span></label>
+        <input type="text" class="form-input" value="planting" required>
+      </div>
+      <div class="form-group">
+        <label>排序号</label>
+        <input type="number" class="form-input" value="1">
+      </div>
+      <div class="form-group">
+        <label>状态</label>
+        <select class="form-select" style="width:100%;">
+          <option selected>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('editDictItemModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('editDictItemModal');showToast('字典项已更新','success')">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillDictEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editDictItemModal');
+  if (!row || !modal) return;
+  var d = row.dataset;
+  var inputs = modal.querySelectorAll('.form-input');
+  var selects = modal.querySelectorAll('.form-select');
+  if (inputs[0]) inputs[0].value = d.label || '';
+  if (inputs[1]) inputs[1].value = d.value || '';
+  if (inputs[2]) inputs[2].value = d.sort || '';
+  if (selects[0]) {
+    for (var i = 0; i < selects[0].options.length; i++) {
+      selects[0].options[i].selected = (selects[0].options[i].text === (d.status || '启用'));
+    }
+  }
+}
+</script>
+
+</body>
+</html>

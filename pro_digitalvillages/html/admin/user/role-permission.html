@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>角色权限 - 数字乡村管理系统</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body style="background:#f0f2f5">
+
+  <!-- 面包屑 -->
+  <ul class="breadcrumb">
+    <li><a href="javascript:void(0)">用户与组织</a></li>
+    <li>角色权限</li>
+  </ul>
+
+  <!-- 操作按钮 -->
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="openModal('addRoleModal')">+ 新增角色</button>
+  </div>
+
+  <!-- 表格 -->
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>角色名称</th>
+          <th>角色编码</th>
+          <th>角色描述</th>
+          <th>关联人员数</th>
+          <th>状态</th>
+          <th>预置</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>超级管理员</strong></td>
+          <td style="color:#909399;font-family:monospace">super_admin</td>
+          <td>拥有所有权限</td>
+          <td>1人</td>
+          <td><span class="tag tag-success">启用</span></td>
+          <td><span class="tag tag-warning">预置</span></td>
+          <td class="op-cell">
+            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
+            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
+            <span style="color:#c0c4cc;font-size:12px">停用</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>村委负责人</strong></td>
+          <td style="color:#909399;font-family:monospace">village_leader</td>
+          <td>管理村务业务</td>
+          <td>2人</td>
+          <td><span class="tag tag-success">启用</span></td>
+          <td><span class="tag tag-warning">预置</span></td>
+          <td class="op-cell">
+            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
+            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
+            <a href="javascript:void(0)" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})">停用</a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>村干部</strong></td>
+          <td style="color:#909399;font-family:monospace">village_cadre</td>
+          <td>部分业务权限</td>
+          <td>4人</td>
+          <td><span class="tag tag-success">启用</span></td>
+          <td><span class="tag tag-warning">预置</span></td>
+          <td class="op-cell">
+            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
+            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
+            <a href="javascript:void(0)" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})">停用</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 权限配置全屏弹窗 -->
+  <div class="modal-overlay" id="permModal">
+    <div class="modal modal-full">
+      <div class="modal-header">
+        <h3>权限配置 - 村委负责人</h3>
+        <span class="modal-close" onclick="closeModal('permModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <!-- 左侧：功能权限 -->
+          <div>
+            <h4 style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #ebeef5">功能权限</h4>
+            <ul class="perm-tree">
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 首页
+                </div>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 用户与组织
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 村民管理</li>
+                  <li><input type="checkbox" checked> 村干部管理</li>
+                  <li><input type="checkbox" checked> 组织架构（查看）</li>
+                  <li><input type="checkbox"> 角色权限</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 村务公开
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 内容列表</li>
+                  <li><input type="checkbox" checked> 待审核列表</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 产业管理
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 产业列表</li>
+                  <li><input type="checkbox" checked> 产业数据</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 积分管理
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 积分规则</li>
+                  <li><input type="checkbox" checked> 积分审核</li>
+                  <li><input type="checkbox" checked> 积分兑换</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 事件管理
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 事件列表</li>
+                  <li><input type="checkbox" checked> 事件统计</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 通知公告
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 公告列表</li>
+                  <li><input type="checkbox" checked> 已发列表</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox" checked> 数据统计
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox" checked> 数据报表</li>
+                </ul>
+              </li>
+              <li>
+                <div class="perm-group">
+                  <input type="checkbox"> 系统管理
+                </div>
+                <ul class="perm-children">
+                  <li><input type="checkbox"> 数据字典</li>
+                  <li><input type="checkbox"> 操作日志</li>
+                  <li><input type="checkbox"> 系统参数</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 右侧：数据权限 -->
+          <div>
+            <h4 style="font-size:15px;font-weight:600;color:#333;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #ebeef5">数据权限</h4>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="form-group">
+                <label>数据范围</label>
+                <select class="form-select">
+                  <option>全部数据</option>
+                  <option selected>本村数据</option>
+                  <option>本组数据</option>
+                  <option>本人数据</option>
+                  <option>自定义</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>可访问网格</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+                  <label class="checkbox"><input type="checkbox" checked> 第一网格</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第二网格</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第三网格</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第四网格</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第五网格</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第六网格</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>可管理村民组</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+                  <label class="checkbox"><input type="checkbox" checked> 第一村民小组</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第二村民小组</label>
+                  <label class="checkbox"><input type="checkbox" checked> 第三村民小组</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>特殊权限</label>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+                  <label class="checkbox"><input type="checkbox" checked> 查看村民详情</label>
+                  <label class="checkbox"><input type="checkbox" checked> 导出数据</label>
+                  <label class="checkbox"><input type="checkbox"> 删除数据</label>
+                  <label class="checkbox"><input type="checkbox"> 审核发布</label>
+                  <label class="checkbox"><input type="checkbox"> 积分审批</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('permModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('permModal');showToast('权限配置保存成功', 'success')">保存配置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增角色弹窗 -->
+  <div class="modal-overlay" id="addRoleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>新增角色</h3>
+        <span class="modal-close" onclick="closeModal('addRoleModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>角色名称 <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="请输入角色名称" required>
+        </div>
+        <div class="form-group">
+          <label>角色编码 <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="请输入角色编码（英文）" required>
+        </div>
+        <div class="form-group">
+          <label>角色描述</label>
+          <textarea class="form-textarea" placeholder="请输入角色描述"></textarea>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select class="form-select">
+            <option>启用</option>
+            <option>停用</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('addRoleModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('addRoleModal');showToast('角色添加成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑角色信息弹窗 -->
+  <div class="modal-overlay" id="editRoleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>编辑角色信息</h3>
+        <span class="modal-close" onclick="closeModal('editRoleModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>角色名称 <span class="required">*</span></label>
+          <input type="text" class="form-input" value="村委负责人" required>
+        </div>
+        <div class="form-group">
+          <label>角色编码 <span class="required">*</span></label>
+          <input type="text" class="form-input" value="village_leader" readonly style="background:#f5f7fa;color:#909399">
+        </div>
+        <div class="form-group">
+          <label>角色描述</label>
+          <textarea class="form-textarea">管理村务业务</textarea>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select class="form-select">
+            <option selected>启用</option>
+            <option>停用</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('editRoleModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('editRoleModal');showToast('保存成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

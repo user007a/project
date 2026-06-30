@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产业信息列表</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">产业管理</a> / <span>产业信息列表</span>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="stat-cards cols-4">
+    <div class="stat-card">
+      <div class="stat-label">产业总数</div>
+      <div class="stat-value">12 <span class="text-sm text-gray">个</span></div>
+      <div class="stat-desc">覆盖全村主要产业</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">总产值</div>
+      <div class="stat-value">1,286 <span class="text-sm text-gray">万元</span></div>
+      <div class="stat-desc">2026年上半年累计</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">总从业人数</div>
+      <div class="stat-value">356 <span class="text-sm text-gray">人</span></div>
+      <div class="stat-desc">带动本地就业</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">正常经营</div>
+      <div class="stat-value">10 <span class="text-sm text-gray">个</span></div>
+      <div class="stat-desc">占比 83.3%</div>
+    </div>
+  </div>
+
+  <!-- 操作按钮 -->
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="openModal('addIndustryModal')">+ 新增产业</button>
+    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+  </div>
+
+  <!-- 搜索筛选 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>名称</label>
+      <input type="text" placeholder="请输入产业名称">
+    </div>
+    <div class="filter-item">
+      <label>产业类型</label>
+      <select>
+        <option value="">全部类型</option>
+        <option>种植业</option>
+        <option>养殖业</option>
+        <option>加工业</option>
+        <option>服务业</option>
+        <option>电商</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>经营主体</label>
+      <select>
+        <option value="">全部</option>
+        <option>合作社</option>
+        <option>种养大户</option>
+        <option>家庭农场</option>
+        <option>企业</option>
+        <option>个体户</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>状态</label>
+      <select>
+        <option value="">全部状态</option>
+        <option>正常经营</option>
+        <option>暂停经营</option>
+        <option>已注销</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary btn-sm">查询</button>
+      <button class="btn btn-sm">重置</button>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>产业类型</th>
+          <th>经营主体类型</th>
+          <th>负责人</th>
+          <th class="text-right">年产值(万元)</th>
+          <th class="text-right">从业人数</th>
+          <th>联系电话</th>
+          <th>状态</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="幸福种植合作社" data-type="种植业" data-person="张三" data-count="45" data-phone="138****5678" data-address="幸福村一组" data-value="320" data-growth="+8.5%" data-desc="幸福种植合作社成立于2025年，主要从事水稻、蔬菜等农作物种植，拥有耕地500余亩，采用现代化种植技术，年产值320万元，带动周边45名村民就业。">
+          <td>幸福种植合作社</td>
+          <td><span class="tag tag-green">种植业</span></td>
+          <td>合作社</td>
+          <td>张三</td>
+          <td class="text-right">320</td>
+          <td class="text-right">45</td>
+          <td>138****5678</td>
+          <td><span class="tag tag-green">正常经营</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="兴旺养殖场" data-type="养殖业" data-person="李四" data-count="30" data-phone="139****1234" data-address="幸福村二组" data-value="280" data-growth="+5.2%" data-desc="兴旺养殖场专业从事生猪养殖，年出栏生猪约2000头，配套建设了现代化猪舍和粪污处理设施。">
+          <td>兴旺养殖场</td>
+          <td><span class="tag tag-orange">养殖业</span></td>
+          <td>种养大户</td>
+          <td>李四</td>
+          <td class="text-right">280</td>
+          <td class="text-right">30</td>
+          <td>139****1234</td>
+          <td><span class="tag tag-green">正常经营</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="绿水农产品加工厂" data-type="加工业" data-person="王五" data-count="80" data-phone="136****9012" data-address="幸福村工业园" data-value="260" data-growth="+12.3%" data-desc="绿水农产品加工厂主要从事农产品精深加工，产品包括有机大米、蔬菜干制品等，销往周边城市超市和电商平台。">
+          <td>绿水农产品加工厂</td>
+          <td><span class="tag tag-blue">加工业</span></td>
+          <td>企业</td>
+          <td>王五</td>
+          <td class="text-right">260</td>
+          <td class="text-right">80</td>
+          <td>136****9012</td>
+          <td><span class="tag tag-green">正常经营</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="田园家庭农场" data-type="种植业" data-person="赵六" data-count="18" data-phone="137****3456" data-address="幸福村三组" data-value="150" data-growth="-3.1%" data-desc="田园家庭农场以有机蔬菜种植为主，采用生态循环农业模式，产品直供城市社区团购平台。">
+          <td>田园家庭农场</td>
+          <td><span class="tag tag-green">种植业</span></td>
+          <td>家庭农场</td>
+          <td>赵六</td>
+          <td class="text-right">150</td>
+          <td class="text-right">18</td>
+          <td>137****3456</td>
+          <td><span class="tag tag-yellow">暂停经营</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="幸福农家乐" data-type="服务业" data-person="孙七" data-count="12" data-phone="158****7890" data-address="幸福村四组" data-value="120" data-growth="+15.8%" data-desc="幸福农家乐提供乡村餐饮、民宿住宿、果蔬采摘等体验服务，是村内重点乡村旅游接待点。">
+          <td>幸福农家乐</td>
+          <td><span class="tag tag-purple">服务业</span></td>
+          <td>个体户</td>
+          <td>孙七</td>
+          <td class="text-right">120</td>
+          <td class="text-right">12</td>
+          <td>158****7890</td>
+          <td><span class="tag tag-green">正常经营</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-name="乡村优选电商服务站" data-type="电商" data-person="周八" data-count="25" data-phone="135****2345" data-address="幸福村村委会旁" data-value="156" data-growth="+22.6%" data-desc="乡村优选电商服务站帮助村民将特色农产品上线销售，提供电商培训、包装设计和物流配送一站式服务。">
+          <td>乡村优选电商服务站</td>
+          <td><span class="tag tag-cyan">电商</span></td>
+          <td>合作社</td>
+          <td>周八</td>
+          <td class="text-right">156</td>
+          <td class="text-right">25</td>
+          <td>135****2345</td>
+          <td><span class="tag tag-gray">已注销</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <div class="page-btns">
+        <a class="page-btn disabled">&laquo;</a>
+        <a class="page-btn active">1</a>
+        <a class="page-btn disabled">&raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function fillIndustryDetail(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('viewIndustryModal');
+  if (!row || !modal) return;
+  var m = {
+    '产业名称': row.dataset.name,
+    '产业类型': row.dataset.type,
+    '负责人': row.dataset.person,
+    '从业人数': row.dataset.count + '人',
+    '联系电话': row.dataset.phone,
+    '产业地址': row.dataset.address,
+    '年产值': row.dataset.value + '万元',
+    '同比增长': row.dataset.growth
+  };
+  modal.querySelectorAll('.detail-item').forEach(function(item) {
+    var l = item.querySelector('.detail-label');
+    var v = item.querySelector('.detail-value');
+    if (l && v && m[l.textContent]) {
+      if (l.textContent === '产业类型') {
+        v.innerHTML = '<span class="tag tag-' + getIndustryTagClass(m[l.textContent]) + '">' + m[l.textContent] + '</span>';
+      } else if (l.textContent === '同比增长') {
+        var g = m[l.textContent];
+        v.textContent = g;
+        v.style.color = g.indexOf('-') >= 0 ? '#f56c6c' : '#67c23a';
+      } else {
+        v.textContent = m[l.textContent];
+      }
+    }
+  });
+  var descItem = modal.querySelector('.detail-item.detail-full:last-child .detail-value');
+  if (descItem && row.dataset.desc) descItem.textContent = row.dataset.desc;
+}
+function fillIndustryEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editIndustryModal');
+  if (!row || !modal) return;
+  var inputs = modal.querySelectorAll('.form-input');
+  var textareas = modal.querySelectorAll('.form-textarea');
+  var selects = modal.querySelectorAll('.form-select');
+  if (inputs[0]) inputs[0].value = row.dataset.name || '';
+  if (inputs[1]) inputs[1].value = row.dataset.person || '';
+  if (inputs[2]) inputs[2].value = row.dataset.count || '';
+  if (inputs[3]) inputs[3].value = row.dataset.phone || '';
+  if (textareas[0]) textareas[0].value = row.dataset.address || '';
+  if (textareas[1]) textareas[1].value = row.dataset.desc || '';
+  if (selects[0]) { for (var i=0;i<selects[0].options.length;i++) { if (selects[0].options[i].text === (row.dataset.type||'')) selects[0].selectedIndex = i; } }
+}
+function getIndustryTagClass(text) {
+  if (['种植业'].indexOf(text) >= 0) return 'green';
+  if (['养殖业'].indexOf(text) >= 0) return 'orange';
+  if (['加工业'].indexOf(text) >= 0) return 'blue';
+  if (['服务业'].indexOf(text) >= 0) return 'purple';
+  if (['电商'].indexOf(text) >= 0) return 'cyan';
+  return 'gray';
+}
+</script>
+<script src="../js/admin.js"></script>
+
+<!-- 新增产业弹窗 -->
+<div class="modal-overlay" id="addIndustryModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>新增产业</h3>
+      <button class="modal-close" onclick="closeModal('addIndustryModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">产业名称 <span class="text-danger">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入产业名称" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">产业类型</label>
+          <select class="form-select">
+            <option value="">请选择类型</option>
+            <option>种植业</option>
+            <option>养殖业</option>
+            <option>加工业</option>
+            <option>服务业</option>
+            <option>电商</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">负责人</label>
+          <input type="text" class="form-input" placeholder="请输入负责人姓名">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">从业人数</label>
+          <input type="number" class="form-input" placeholder="请输入从业人数">
+        </div>
+        <div class="form-group">
+          <label class="form-label">联系电话</label>
+          <input type="text" class="form-input" placeholder="请输入联系电话">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">产业地址</label>
+        <textarea class="form-textarea" rows="2" placeholder="请输入产业地址"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">产业描述</label>
+        <textarea class="form-textarea" rows="3" placeholder="请输入产业描述"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">相关照片</label>
+        <div class="upload-area">
+          <div class="upload-icon">+</div>
+          <div class="upload-text">点击或拖拽文件到此区域</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addIndustryModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('addIndustryModal');showToast('保存成功','success')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 查看产业详情弹窗 -->
+<div class="modal-overlay" id="viewIndustryModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>产业详情</h3>
+      <button class="modal-close" onclick="closeModal('viewIndustryModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">产业名称</span>
+          <span class="detail-value">幸福种植合作社</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">产业类型</span>
+          <span class="detail-value"><span class="tag tag-green">种植业</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">负责人</span>
+          <span class="detail-value">张三</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">从业人数</span>
+          <span class="detail-value">45人</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">联系电话</span>
+          <span class="detail-value">138****5678</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">产业地址</span>
+          <span class="detail-value">幸福村一组</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">年产值</span>
+          <span class="detail-value">320万元</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">同比增长</span>
+          <span class="detail-value" style="color:#67c23a;">+8.5%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">创建时间</span>
+          <span class="detail-value">2025-03-15</span>
+        </div>
+        <div class="detail-item detail-full">
+          <span class="detail-label">产业描述</span>
+          <span class="detail-value">幸福种植合作社成立于2025年，主要从事水稻、蔬菜等农作物种植，拥有耕地500余亩，采用现代化种植技术，年产值320万元，带动周边45名村民就业。</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('viewIndustryModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑产业弹窗 -->
+<div class="modal-overlay" id="editIndustryModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>编辑产业</h3>
+      <button class="modal-close" onclick="closeModal('editIndustryModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">产业名称 <span class="text-danger">*</span></label>
+        <input type="text" class="form-input" value="幸福种植合作社" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">产业类型</label>
+          <select class="form-select">
+            <option>种植业</option>
+            <option>养殖业</option>
+            <option>加工业</option>
+            <option>服务业</option>
+            <option>电商</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">负责人</label>
+          <input type="text" class="form-input" value="张三">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">从业人数</label>
+          <input type="number" class="form-input" value="45">
+        </div>
+        <div class="form-group">
+          <label class="form-label">联系电话</label>
+          <input type="text" class="form-input" value="138****5678">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">产业地址</label>
+        <textarea class="form-textarea" rows="2">幸福村一组</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">产业描述</label>
+        <textarea class="form-textarea" rows="3">幸福种植合作社成立于2025年，主要从事水稻、蔬菜等农作物种植，拥有耕地500余亩。</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">相关照片</label>
+        <div class="upload-area">
+          <div class="upload-icon">+</div>
+          <div class="upload-text">点击或拖拽文件到此区域</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('editIndustryModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('editIndustryModal');showToast('保存成功','success')">保存</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

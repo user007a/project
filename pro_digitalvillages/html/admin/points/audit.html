@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>积分审核</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">积分管理</a> / <span>积分审核</span>
+  </div>
+
+  <!-- 操作按钮 -->
+  <div class="action-bar">
+    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+  </div>
+
+  <!-- Tab筛选 -->
+  <div class="tab-bar">
+    <div class="tab-item active">待审核 <span class="tab-badge">5</span></div>
+    <div class="tab-item">已通过</div>
+    <div class="tab-item">已驳回</div>
+  </div>
+
+  <!-- 搜索筛选 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>村民姓名</label>
+      <input type="text" placeholder="请输入村民姓名">
+    </div>
+    <div class="filter-item">
+      <label>审核状态</label>
+      <select>
+        <option value="">全部</option>
+        <option>待审核</option>
+        <option>已通过</option>
+        <option>已驳回</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>积分类型</label>
+      <select>
+        <option value="">全部</option>
+        <option>加分</option>
+        <option>减分</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>申请时间</label>
+      <input type="date"> - <input type="date">
+    </div>
+    <div class="filter-item">
+      <label>所属组</label>
+      <select>
+        <option value="">全部</option>
+        <option>第一组</option>
+        <option>第二组</option>
+        <option>第三组</option>
+        <option>第四组</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary btn-sm">查询</button>
+      <button class="btn btn-sm">重置</button>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>村民姓名</th>
+          <th>所属组</th>
+          <th>积分规则</th>
+          <th>积分类型</th>
+          <th>申请分值</th>
+          <th>实际分值</th>
+          <th>申请时间</th>
+          <th>审核状态</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="李大华" data-group="第一组" data-rule="参与志愿服务" data-type="加分" data-score="+10" data-actual="—" data-time="2026-06-30 09:15" data-status="待审核" data-opinion="">
+          <td>李大华</td>
+          <td>第一组</td>
+          <td>参与志愿服务</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td>+10</td>
+          <td>—</td>
+          <td>2026-06-30 09:15</td>
+          <td><span class="tag tag-yellow">待审核</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
+            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          </td>
+        </tr>
+        <tr data-name="王小明" data-group="第二组" data-rule="门前卫生达标" data-type="加分" data-score="+5" data-actual="—" data-time="2026-06-30 08:30" data-status="待审核" data-opinion="">
+          <td>王小明</td>
+          <td>第二组</td>
+          <td>门前卫生达标</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td>+5</td>
+          <td>—</td>
+          <td>2026-06-30 08:30</td>
+          <td><span class="tag tag-yellow">待审核</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
+            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          </td>
+        </tr>
+        <tr data-name="张美丽" data-group="第三组" data-rule="乱扔垃圾" data-type="减分" data-score="-10" data-actual="—" data-time="2026-06-29 16:42" data-status="待审核" data-opinion="">
+          <td>张美丽</td>
+          <td>第三组</td>
+          <td>乱扔垃圾</td>
+          <td><span class="tag tag-red">减分</span></td>
+          <td>-10</td>
+          <td>—</td>
+          <td>2026-06-29 16:42</td>
+          <td><span class="tag tag-yellow">待审核</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
+            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          </td>
+        </tr>
+        <tr data-name="赵国强" data-group="第一组" data-rule="参加文体活动" data-type="加分" data-score="+3" data-actual="—" data-time="2026-06-29 14:20" data-status="待审核" data-opinion="">
+          <td>赵国强</td>
+          <td>第一组</td>
+          <td>参加文体活动</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td>+3</td>
+          <td>—</td>
+          <td>2026-06-29 14:20</td>
+          <td><span class="tag tag-yellow">待审核</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
+            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          </td>
+        </tr>
+        <tr data-name="刘建国" data-group="第四组" data-rule="邻里纠纷调解成功" data-type="加分" data-score="+8" data-actual="—" data-time="2026-06-28 10:55" data-status="待审核" data-opinion="">
+          <td>刘建国</td>
+          <td>第四组</td>
+          <td>邻里纠纷调解成功</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td>+8</td>
+          <td>—</td>
+          <td>2026-06-28 10:55</td>
+          <td><span class="tag tag-yellow">待审核</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
+            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
+            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          </td>
+        </tr>
+        <tr data-name="陈秀英" data-group="第二组" data-rule="参与志愿服务" data-type="加分" data-score="+10" data-actual="+10" data-time="2026-06-27 09:10" data-status="已通过" data-opinion="材料齐全，审核通过。">
+          <td>陈秀英</td>
+          <td>第二组</td>
+          <td>参与志愿服务</td>
+          <td><span class="tag tag-green">加分</span></td>
+          <td>+10</td>
+          <td>+10</td>
+          <td>2026-06-27 09:10</td>
+          <td><span class="tag tag-green">已通过</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewAuditDetailModal');fillAuditDetail(this,'view')">详情</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <div class="page-btns">
+        <a class="page-btn disabled">&laquo;</a>
+        <a class="page-btn active">1</a>
+        <a class="page-btn disabled">&raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 通过审核弹窗 -->
+<div class="modal-overlay" id="approvePointsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>通过审核</h3>
+      <span class="modal-close" onclick="closeModal('approvePointsModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">村民姓名</span>
+          <span class="detail-value">李大华</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">积分规则</span>
+          <span class="detail-value">参与志愿服务</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">申请分值</span>
+          <span class="detail-value">+10</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:16px;">
+        <label>实际分值</label>
+        <input type="number" class="form-input" value="10">
+      </div>
+      <div class="form-group">
+        <label>审核意见</label>
+        <textarea class="form-textarea" placeholder="请输入审核意见（选填）"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('approvePointsModal')">取消</button>
+      <button class="btn btn-success" onclick="closeModal('approvePointsModal');showToast('审核通过','success')">通过审核</button>
+    </div>
+  </div>
+</div>
+
+<!-- 驳回审核弹窗 -->
+<div class="modal-overlay" id="rejectPointsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>驳回审核</h3>
+      <span class="modal-close" onclick="closeModal('rejectPointsModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">村民姓名</span>
+          <span class="detail-value">李大华</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">积分规则</span>
+          <span class="detail-value">参与志愿服务</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">申请分值</span>
+          <span class="detail-value">+10</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:16px;">
+        <label>驳回原因 <span class="required">*</span></label>
+        <textarea class="form-textarea" placeholder="请输入驳回原因"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('rejectPointsModal')">取消</button>
+      <button class="btn btn-danger" onclick="closeModal('rejectPointsModal');showToast('已驳回','success')">确认驳回</button>
+    </div>
+  </div>
+</div>
+
+<!-- 调整分值弹窗 -->
+<div class="modal-overlay" id="adjustPointsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>调整分值</h3>
+      <span class="modal-close" onclick="closeModal('adjustPointsModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">村民姓名</span>
+          <span class="detail-value">李大华</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">积分规则</span>
+          <span class="detail-value">参与志愿服务</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">申请分值</span>
+          <span class="detail-value">+10</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:16px;">
+        <label>调整后分值 <span class="required">*</span></label>
+        <input type="number" class="form-input" placeholder="请输入调整后分值">
+      </div>
+      <div class="form-group">
+        <label>调整原因 <span class="required">*</span></label>
+        <textarea class="form-textarea" placeholder="请输入调整原因"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('adjustPointsModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('adjustPointsModal');showToast('调整成功','success')">确认调整</button>
+    </div>
+  </div>
+</div>
+
+<!-- 审核详情弹窗 -->
+<div class="modal-overlay" id="viewAuditDetailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>审核详情</h3>
+      <span class="modal-close" onclick="closeModal('viewAuditDetailModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">村民姓名</span>
+          <span class="detail-value">陈秀英</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">所属组</span>
+          <span class="detail-value">第二组</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">积分规则</span>
+          <span class="detail-value">参与志愿服务</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">积分类型</span>
+          <span class="detail-value">加分</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">申请分值</span>
+          <span class="detail-value">+10</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">实际分值</span>
+          <span class="detail-value">+10</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">申请时间</span>
+          <span class="detail-value">2026-06-27 09:10</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">审核状态</span>
+          <span class="detail-value"><span class="tag tag-green">已通过</span></span>
+        </div>
+        <div class="detail-item detail-full">
+          <span class="detail-label">审核意见</span>
+          <span class="detail-value">材料齐全，审核通过。</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('viewAuditDetailModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillAuditDetail(btn, type) {
+  var row = btn.closest('tr');
+  if (!row) return;
+  var d = row.dataset;
+  var modalId, modal;
+  if (type === 'approve') modalId = 'approvePointsModal';
+  else if (type === 'reject') modalId = 'rejectPointsModal';
+  else if (type === 'adjust') modalId = 'adjustPointsModal';
+  else if (type === 'view') modalId = 'viewAuditDetailModal';
+  else return;
+  modal = document.getElementById(modalId);
+  if (!modal) return;
+  var values = modal.querySelectorAll('.detail-value');
+  if (type === 'view') {
+    if (values[0]) values[0].textContent = d.name || '';
+    if (values[1]) values[1].textContent = d.group || '';
+    if (values[2]) values[2].textContent = d.rule || '';
+    if (values[3]) values[3].textContent = d.type || '';
+    if (values[4]) values[4].textContent = d.score || '';
+    if (values[5]) values[5].textContent = d.actual || '';
+    if (values[6]) values[6].textContent = d.time || '';
+    if (values[7]) values[7].innerHTML = '<span class="tag tag-' + (d.status === '已通过' ? 'green' : d.status === '已驳回' ? 'red' : 'yellow') + '">' + d.status + '</span>';
+    if (values[8]) values[8].textContent = d.opinion || '';
+    return;
+  }
+  if (values[0]) values[0].textContent = d.name || '';
+  if (values[1]) values[1].textContent = d.rule || '';
+  if (values[2]) values[2].textContent = d.score || '';
+  if (type === 'approve') {
+    var inputs = modal.querySelectorAll('.form-input');
+    if (inputs[0]) inputs[0].value = Math.abs(parseInt(d.score) || 0);
+  }
+}
+</script>
+
+</body>
+</html>

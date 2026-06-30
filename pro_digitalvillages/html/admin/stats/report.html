@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据统计与报表</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <style>
+    .report-layout { display: flex; gap: 16px; }
+    .report-main { flex: 1; min-width: 0; }
+    .report-chart-area { display: flex; gap: 16px; flex-wrap: wrap; }
+    .report-chart-left { flex: 1; min-width: 400px; }
+    .report-chart-right { flex: 1; min-width: 400px; }
+    .report-data-table th { font-size: 13px; padding: 8px 10px; }
+    .report-data-table td { font-size: 13px; padding: 8px 10px; }
+  </style>
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">数据统计</a> / <span>数据报表</span>
+  </div>
+
+  <!-- 5个维度统计卡片 -->
+  <div class="stat-cards cols-5">
+    <div class="dimension-card dim-green">
+      <div class="dim-title">产业兴旺</div>
+      <div class="dim-value">1,286万</div>
+      <div class="dim-sub">产业总数 12 个</div>
+      <div class="dim-trend">+8.5%</div>
+    </div>
+    <div class="dimension-card dim-cyan">
+      <div class="dim-title">生态宜居</div>
+      <div class="dim-value">85.7%</div>
+      <div class="dim-sub">事件处置率</div>
+      <div class="dim-trend">同比 +3.2%</div>
+    </div>
+    <div class="dimension-card dim-orange">
+      <div class="dim-title">乡风文明</div>
+      <div class="dim-value">72%</div>
+      <div class="dim-sub">参与率 / 兑换率 65%</div>
+      <div class="dim-trend">+5.0%</div>
+    </div>
+    <div class="dimension-card dim-blue">
+      <div class="dim-title">治理有效</div>
+      <div class="dim-value">88.9%</div>
+      <div class="dim-sub">处置率 / 平均时长 18h</div>
+      <div class="dim-trend">+2.1%</div>
+    </div>
+    <div class="dimension-card dim-purple">
+      <div class="dim-title">生活富裕</div>
+      <div class="dim-value">28,600元</div>
+      <div class="dim-sub">人均收入 / 参保率 92%</div>
+      <div class="dim-trend">+6.8%</div>
+    </div>
+  </div>
+
+  <!-- 筛选区 -->
+  <div class="filter-bar" style="margin-bottom:16px;">
+    <div class="filter-item">
+      <label>时间范围</label>
+      <input type="date"> - <input type="date">
+    </div>
+    <div class="filter-item">
+      <label>所属组</label>
+      <select>
+        <option value="">全部</option>
+        <option>第一组</option>
+        <option>第二组</option>
+        <option>第三组</option>
+        <option>第四组</option>
+      </select>
+    </div>
+    <div class="filter-item" style="display:flex;gap:8px;align-items:center;">
+      <button class="btn btn-primary btn-sm" onclick="openModal('exportReportModal')">导出当前维度</button>
+      <button class="btn btn-sm" onclick="openModal('exportReportModal')">导出全维度汇总</button>
+    </div>
+  </div>
+
+  <!-- Tab切换 -->
+  <div class="tab-bar">
+    <div class="tab-item active">产业兴旺</div>
+    <div class="tab-item">乡风文明</div>
+    <div class="tab-item">治理有效</div>
+  </div>
+
+  <!-- 详细数据区（两列） -->
+  <div class="report-chart-area">
+    <!-- 左侧图表区 -->
+    <div class="report-chart-left">
+      <div class="detail-card">
+        <h4>各产业产值分布（万元）</h4>
+        <div class="chart-placeholder">
+          <div class="chart-bar" style="height:160px;">
+            <span class="bar-value">320</span>
+            <span class="bar-label">种植业</span>
+          </div>
+          <div class="chart-bar" style="height:140px;">
+            <span class="bar-value">280</span>
+            <span class="bar-label">养殖业</span>
+          </div>
+          <div class="chart-bar" style="height:130px;">
+            <span class="bar-value">260</span>
+            <span class="bar-label">加工业</span>
+          </div>
+          <div class="chart-bar" style="height:75px;">
+            <span class="bar-value">150</span>
+            <span class="bar-label">家庭农场</span>
+          </div>
+          <div class="chart-bar" style="height:60px;">
+            <span class="bar-value">120</span>
+            <span class="bar-label">服务业</span>
+          </div>
+          <div class="chart-bar" style="height:78px;">
+            <span class="bar-value">156</span>
+            <span class="bar-label">电商</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧数据表格 -->
+    <div class="report-chart-right">
+      <div class="detail-card">
+        <h4>产业数据明细</h4>
+        <table class="report-data-table" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="background:#fafafa;padding:8px 10px;font-size:13px;border-bottom:1px solid #ebeef5;text-align:left;">产业名称</th>
+              <th style="background:#fafafa;padding:8px 10px;font-size:13px;border-bottom:1px solid #ebeef5;text-align:right;">产值(万)</th>
+              <th style="background:#fafafa;padding:8px 10px;font-size:13px;border-bottom:1px solid #ebeef5;text-align:right;">从业人数</th>
+              <th style="background:#fafafa;padding:8px 10px;font-size:13px;border-bottom:1px solid #ebeef5;text-align:left;">同比</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>幸福种植合作社</td>
+              <td style="text-align:right;">320</td>
+              <td style="text-align:right;">45</td>
+              <td><span class="text-green">+12.3%</span></td>
+            </tr>
+            <tr>
+              <td>兴旺养殖场</td>
+              <td style="text-align:right;">280</td>
+              <td style="text-align:right;">30</td>
+              <td><span class="text-green">+5.6%</span></td>
+            </tr>
+            <tr>
+              <td>绿水农产品加工厂</td>
+              <td style="text-align:right;">260</td>
+              <td style="text-align:right;">80</td>
+              <td><span class="text-green">+8.2%</span></td>
+            </tr>
+            <tr>
+              <td>田园家庭农场</td>
+              <td style="text-align:right;">150</td>
+              <td style="text-align:right;">18</td>
+              <td><span class="text-red">-3.4%</span></td>
+            </tr>
+            <tr>
+              <td>幸福农家乐</td>
+              <td style="text-align:right;">120</td>
+              <td style="text-align:right;">12</td>
+              <td><span class="text-green">+15.0%</span></td>
+            </tr>
+            <tr>
+              <td>乡村优选电商服务站</td>
+              <td style="text-align:right;">156</td>
+              <td style="text-align:right;">25</td>
+              <td><span class="text-green">+22.1%</span></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="font-weight:600;border-top:2px solid #ebeef5;">
+              <td>合计</td>
+              <td style="text-align:right;">1,286</td>
+              <td style="text-align:right;">210</td>
+              <td><span class="text-green">+8.5%</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 导出报表弹窗 -->
+<div class="modal-overlay" id="exportReportModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>导出报表</h3>
+      <div class="modal-close" onclick="closeModal('exportReportModal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>导出范围</label>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:4px;">
+          <label class="checkbox"><input type="checkbox" checked> 产业兴旺</label>
+          <label class="checkbox"><input type="checkbox" checked> 生态宜居</label>
+          <label class="checkbox"><input type="checkbox" checked> 乡风文明</label>
+          <label class="checkbox"><input type="checkbox" checked> 治理有效</label>
+          <label class="checkbox"><input type="checkbox" checked> 生活富裕</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>时间范围</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="date" class="form-input" style="flex:1;"> <span>至</span> <input type="date" class="form-input" style="flex:1;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>导出格式</label>
+        <select class="form-select" style="width:100%;">
+          <option>Excel</option>
+          <option>PDF</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>数据粒度</label>
+        <select class="form-select" style="width:100%;">
+          <option>汇总</option>
+          <option>明细</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('exportReportModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('exportReportModal');showToast('导出任务已提交','success')">开始导出</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

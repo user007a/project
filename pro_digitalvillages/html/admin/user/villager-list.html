@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>村民管理 - 数字乡村管理系统</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body style="background:#f0f2f5">
+
+  <!-- 面包屑 -->
+  <ul class="breadcrumb">
+    <li><a href="javascript:void(0)">用户与组织</a></li>
+    <li>村民管理</li>
+  </ul>
+
+  <!-- 操作按钮 -->
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="openModal('addVillagerModal')">+ 新增村民</button>
+    <button class="btn" onclick="showToast('请选择Excel文件进行导入','info')">批量导入</button>
+    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+    <button class="btn btn-danger" onclick="showConfirm({title:'批量删除',message:'确定删除选中的村民记录吗？此操作不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">批量删除</button>
+  </div>
+
+  <!-- 搜索筛选区 -->
+  <div class="search-filter">
+    <div class="filter-item">
+      <label>姓名</label>
+      <input type="text" class="form-input" placeholder="请输入姓名" style="width:120px">
+    </div>
+    <div class="filter-item">
+      <label>身份证号</label>
+      <input type="text" class="form-input" placeholder="请输入身份证号" style="width:180px">
+    </div>
+    <div class="filter-item">
+      <label>手机号</label>
+      <input type="text" class="form-input" placeholder="请输入手机号" style="width:140px">
+    </div>
+    <div class="filter-item">
+      <label>所属组</label>
+      <select class="form-select" style="width:120px">
+        <option value="">全部</option>
+        <option>第一组</option>
+        <option>第二组</option>
+        <option>第三组</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>政治面貌</label>
+      <select class="form-select" style="width:120px">
+        <option value="">全部</option>
+        <option>中共党员</option>
+        <option>共青团员</option>
+        <option>群众</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>党员筛选</label>
+      <label class="form-switch" style="margin-top:2px">
+        <input type="checkbox">
+        <span class="switch-slider"></span>
+      </label>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary" onclick="showToast('查询完成', 'success')">查 询</button>
+      <button class="btn">重 置</button>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="checkbox-cell"><input type="checkbox" class="select-all"></th>
+          <th>姓名</th>
+          <th>性别</th>
+          <th>身份证号</th>
+          <th>手机号</th>
+          <th>所属组</th>
+          <th>政治面貌</th>
+          <th>党员标签</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="张三" data-gender="男" data-idcard="320***********1234" data-phone="138****5678" data-group="第一组" data-grid="第一网格" data-edu="高中" data-politics="中共党员" data-points="85">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>张三</td>
+          <td>男</td>
+          <td>320***********1234</td>
+          <td>138****5678</td>
+          <td>第一组</td>
+          <td>中共党员</td>
+          <td><span class="tag tag-primary">党员</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="李四" data-gender="女" data-idcard="320***********2345" data-phone="139****6789" data-group="第二组" data-grid="第二网格" data-edu="初中" data-politics="群众" data-points="72">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>李四</td>
+          <td>女</td>
+          <td>320***********2345</td>
+          <td>139****6789</td>
+          <td>第二组</td>
+          <td>群众</td>
+          <td></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="王五" data-gender="男" data-idcard="320***********3456" data-phone="137****7890" data-group="第一组" data-grid="第一网格" data-edu="大专" data-politics="中共党员" data-points="90">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>王五</td>
+          <td>男</td>
+          <td>320***********3456</td>
+          <td>137****7890</td>
+          <td>第一组</td>
+          <td>中共党员</td>
+          <td><span class="tag tag-primary">党员</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="赵六" data-gender="女" data-idcard="320***********4567" data-phone="136****8901" data-group="第三组" data-grid="第三网格" data-edu="本科" data-politics="共青团员" data-points="65">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>赵六</td>
+          <td>女</td>
+          <td>320***********4567</td>
+          <td>136****8901</td>
+          <td>第三组</td>
+          <td>共青团员</td>
+          <td></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="陈七" data-gender="男" data-idcard="320***********5678" data-phone="135****9012" data-group="第二组" data-grid="第二网格" data-edu="小学" data-politics="群众" data-points="45">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>陈七</td>
+          <td>男</td>
+          <td>320***********5678</td>
+          <td>135****9012</td>
+          <td>第二组</td>
+          <td>群众</td>
+          <td></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="刘八" data-gender="女" data-idcard="320***********6789" data-phone="158****0123" data-group="第一组" data-grid="第一网格" data-edu="高中" data-politics="中共党员" data-points="78">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>刘八</td>
+          <td>女</td>
+          <td>320***********6789</td>
+          <td>158****0123</td>
+          <td>第一组</td>
+          <td>中共党员</td>
+          <td><span class="tag tag-primary">党员</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="周九" data-gender="男" data-idcard="320***********7890" data-phone="159****1234" data-group="第三组" data-grid="第三网格" data-edu="中专" data-politics="群众" data-points="55">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>周九</td>
+          <td>男</td>
+          <td>320***********7890</td>
+          <td>159****1234</td>
+          <td>第三组</td>
+          <td>群众</td>
+          <td></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="吴十" data-gender="女" data-idcard="320***********8901" data-phone="188****2345" data-group="第二组" data-grid="第二网格" data-edu="本科" data-politics="中共党员" data-points="92">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>吴十</td>
+          <td>女</td>
+          <td>320***********8901</td>
+          <td>188****2345</td>
+          <td>第二组</td>
+          <td>中共党员</td>
+          <td><span class="tag tag-primary">党员</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="孙一一" data-gender="男" data-idcard="320***********9012" data-phone="187****3456" data-group="第一组" data-grid="第一网格" data-edu="大专" data-politics="群众" data-points="68">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>孙一一</td>
+          <td>男</td>
+          <td>320***********9012</td>
+          <td>187****3456</td>
+          <td>第一组</td>
+          <td>群众</td>
+          <td></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+        <tr data-name="郑十二" data-gender="女" data-idcard="320***********0123" data-phone="186****4567" data-group="第三组" data-grid="第三网格" data-edu="高中" data-politics="中共党员" data-points="80">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>郑十二</td>
+          <td>女</td>
+          <td>320***********0123</td>
+          <td>186****4567</td>
+          <td>第三组</td>
+          <td>中共党员</td>
+          <td><span class="tag tag-primary">党员</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewVillagerModal');fillVillagerDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editVillagerModal');fillVillagerEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村民吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a><a href="javascript:void(0)" onclick="showConfirm({title:'重置密码',message:'确定重置该村民的登录密码为默认密码吗？',onConfirm:function(){showToast('密码已重置','success')}})">重置密码</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 分页 -->
+  <div class="pagination" style="background:#fff;padding:12px 16px;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <span class="page-info">第 1 页 / 共 15 页</span>
+    <select class="page-size-select">
+      <option>20条/页</option>
+      <option>50条/页</option>
+      <option>100条/页</option>
+    </select>
+    <span class="page-btn disabled">&laquo; 上一页</span>
+    <span class="page-btn active">1</span>
+    <span class="page-btn">2</span>
+    <span class="page-btn">3</span>
+    <span class="page-btn">4</span>
+    <span class="page-btn">5</span>
+    <span class="page-btn">...</span>
+    <span class="page-btn">15</span>
+    <span class="page-btn">下一页 &raquo;</span>
+  </div>
+
+  <!-- 新增村民弹窗 -->
+  <div class="modal-overlay" id="addVillagerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>新增村民</h3>
+        <span class="modal-close" onclick="closeModal('addVillagerModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="请输入姓名" required>
+        </div>
+        <div class="form-group">
+          <label>性别</label>
+          <select class="form-select">
+            <option>男</option>
+            <option>女</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>身份证号</label>
+          <input type="text" class="form-input" placeholder="请输入身份证号">
+        </div>
+        <div class="form-group">
+          <label>手机号</label>
+          <input type="text" class="form-input" placeholder="请输入手机号">
+        </div>
+        <div class="form-group">
+          <label>所属组</label>
+          <select class="form-select">
+            <option>第一组</option>
+            <option>第二组</option>
+            <option>第三组</option>
+            <option>第四组</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>所属网格</label>
+          <select class="form-select">
+            <option>第一网格</option>
+            <option>第二网格</option>
+            <option>第三网格</option>
+            <option>第四网格</option>
+            <option>第五网格</option>
+            <option>第六网格</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>学历</label>
+          <select class="form-select">
+            <option>小学</option>
+            <option>初中</option>
+            <option>高中</option>
+            <option>中专</option>
+            <option>大专</option>
+            <option>本科</option>
+            <option>研究生</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>政治面貌</label>
+          <select class="form-select">
+            <option>群众</option>
+            <option>中共党员</option>
+            <option>中共预备党员</option>
+            <option>共青团员</option>
+            <option>民主党派</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>家庭住址</label>
+          <textarea class="form-textarea" placeholder="请输入家庭住址"></textarea>
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea class="form-textarea" placeholder="请输入备注信息"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('addVillagerModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('addVillagerModal');showToast('保存成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 查看村民详情弹窗 -->
+  <div class="modal-overlay" id="viewVillagerModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>村民详情</h3>
+        <span class="modal-close" onclick="closeModal('viewVillagerModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">姓名</div>
+            <div class="detail-value">张三</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">性别</div>
+            <div class="detail-value">男</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">身份证号</div>
+            <div class="detail-value">510XXXXXXXXXXXXX</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">手机号</div>
+            <div class="detail-value">138****8888</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">所属组</div>
+            <div class="detail-value">第一组</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">所属网格</div>
+            <div class="detail-value">第一网格</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">学历</div>
+            <div class="detail-value">高中</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">政治面貌</div>
+            <div class="detail-value">群众</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">积分</div>
+            <div class="detail-value">85分</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">家庭地址</div>
+            <div class="detail-value">幸福村一组12号</div>
+          </div>
+          <div class="detail-item" style="grid-column:span 2">
+            <div class="detail-label">备注</div>
+            <div class="detail-value"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('viewVillagerModal')">关 闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑村民弹窗 -->
+  <div class="modal-overlay" id="editVillagerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>编辑村民</h3>
+        <span class="modal-close" onclick="closeModal('editVillagerModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" value="张三" required>
+        </div>
+        <div class="form-group">
+          <label>性别</label>
+          <select class="form-select">
+            <option selected>男</option>
+            <option>女</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>身份证号</label>
+          <input type="text" class="form-input" value="510XXXXXXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label>手机号</label>
+          <input type="text" class="form-input" value="13888888888">
+        </div>
+        <div class="form-group">
+          <label>所属组</label>
+          <select class="form-select">
+            <option selected>第一组</option>
+            <option>第二组</option>
+            <option>第三组</option>
+            <option>第四组</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>所属网格</label>
+          <select class="form-select">
+            <option selected>第一网格</option>
+            <option>第二网格</option>
+            <option>第三网格</option>
+            <option>第四网格</option>
+            <option>第五网格</option>
+            <option>第六网格</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>学历</label>
+          <select class="form-select">
+            <option>小学</option>
+            <option>初中</option>
+            <option selected>高中</option>
+            <option>中专</option>
+            <option>大专</option>
+            <option>本科</option>
+            <option>研究生</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>政治面貌</label>
+          <select class="form-select">
+            <option selected>群众</option>
+            <option>中共党员</option>
+            <option>中共预备党员</option>
+            <option>共青团员</option>
+            <option>民主党派</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>家庭住址</label>
+          <textarea class="form-textarea">幸福村一组12号</textarea>
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea class="form-textarea" placeholder="请输入备注信息"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('editVillagerModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('editVillagerModal');showToast('保存成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+function fillVillagerDetail(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('viewVillagerModal');
+  if (!row || !modal) return;
+  var fields = { '姓名': row.dataset.name, '性别': row.dataset.gender, '身份证号': row.dataset.idcard, '手机号': row.dataset.phone, '所属组': row.dataset.group, '所属网格': row.dataset.grid, '学历': row.dataset.edu, '政治面貌': row.dataset.politics, '积分': (row.dataset.points || '0') + '分', '家庭地址': row.dataset.name + '家' };
+  var items = modal.querySelectorAll('.detail-item');
+  items.forEach(function(item) {
+    var label = item.querySelector('.detail-label');
+    var value = item.querySelector('.detail-value');
+    if (label && value && fields[label.textContent]) {
+      value.textContent = fields[label.textContent];
+    }
+  });
+}
+function fillVillagerEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editVillagerModal');
+  if (!row || !modal) return;
+  var inputs = modal.querySelectorAll('.form-input, .form-textarea');
+  var selects = modal.querySelectorAll('.form-select');
+  // Name
+  if (inputs[0]) inputs[0].value = row.dataset.name || '';
+  // Phone (3rd input, after gender select and idcard)
+  if (inputs[2]) inputs[2].value = row.dataset.phone || '';
+  // Address
+  if (inputs[inputs.length-2]) inputs[inputs.length-2].value = (row.dataset.name || '') + '家';
+  // Selects: gender, group, grid, edu, politics
+  if (selects[0]) { for (var i=0;i<selects[0].options.length;i++) { if (selects[0].options[i].text === (row.dataset.gender||'')) selects[0].selectedIndex = i; } }
+  if (selects[1]) { for (var i=0;i<selects[1].options.length;i++) { if (selects[1].options[i].text === (row.dataset.group||'')) selects[1].selectedIndex = i; } }
+  if (selects[2]) { for (var i=0;i<selects[2].options.length;i++) { if (selects[2].options[i].text === (row.dataset.grid||'')) selects[2].selectedIndex = i; } }
+  if (selects[3]) { for (var i=0;i<selects[3].options.length;i++) { if (selects[3].options[i].text === (row.dataset.edu||'')) selects[3].selectedIndex = i; } }
+  if (selects[4]) { for (var i=0;i<selects[4].options.length;i++) { if (selects[4].options[i].text === (row.dataset.politics||'')) selects[4].selectedIndex = i; } }
+}
+</script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

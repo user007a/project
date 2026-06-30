@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>村干部管理 - 数字乡村管理系统</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body style="background:#f0f2f5">
+
+  <!-- 面包屑 -->
+  <ul class="breadcrumb">
+    <li><a href="javascript:void(0)">用户与组织</a></li>
+    <li>村干部管理</li>
+  </ul>
+
+  <!-- 操作按钮 -->
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="openModal('addCadreModal')">+ 新增村干部</button>
+    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+  </div>
+
+  <!-- 搜索筛选区 -->
+  <div class="search-filter">
+    <div class="filter-item">
+      <label>姓名</label>
+      <input type="text" class="form-input" placeholder="请输入姓名" style="width:120px">
+    </div>
+    <div class="filter-item">
+      <label>职务</label>
+      <select class="form-select" style="width:160px">
+        <option value="">全部</option>
+        <option>村党支部书记</option>
+        <option>村委会主任</option>
+        <option>村委委员</option>
+        <option>网格员</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>负责网格</label>
+      <select class="form-select" style="width:120px">
+        <option value="">全部</option>
+        <option>第一网格</option>
+        <option>第二网格</option>
+        <option>第三网格</option>
+        <option>第四网格</option>
+        <option>第五网格</option>
+        <option>第六网格</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>状态</label>
+      <select class="form-select" style="width:100px">
+        <option value="">全部</option>
+        <option>在任</option>
+        <option>离任</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary" onclick="showToast('查询完成', 'success')">查 询</button>
+      <button class="btn">重 置</button>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="card" style="padding:0;overflow-x:auto">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="checkbox-cell"><input type="checkbox" class="select-all"></th>
+          <th>姓名</th>
+          <th>手机号</th>
+          <th>职务</th>
+          <th>负责网格</th>
+          <th>分管工作</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-name="李书记" data-position="村党支部书记, 村委会主任" data-phone="138****0001" data-group="第一网格" data-work="全面工作" data-date="2020-01-01" data-status="在任">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>李书记</td>
+          <td>138****0001</td>
+          <td>村党支部书记, 村委会主任</td>
+          <td>第一网格</td>
+          <td>全面工作</td>
+          <td><span class="tag tag-success">在任</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewCadreModal');fillCadreDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editCadreModal');fillCadreEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村干部吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a></td>
+        </tr>
+        <tr data-name="王主任" data-position="村委会主任" data-phone="139****0002" data-group="第二网格" data-work="日常管理" data-date="2021-03-15" data-status="在任">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>王主任</td>
+          <td>139****0002</td>
+          <td>村委会主任</td>
+          <td>第二网格</td>
+          <td>日常管理</td>
+          <td><span class="tag tag-success">在任</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewCadreModal');fillCadreDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editCadreModal');fillCadreEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村干部吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a></td>
+        </tr>
+        <tr data-name="张委员" data-position="村委委员" data-phone="137****0003" data-group="第三网格" data-work="综合治理" data-date="2022-06-01" data-status="在任">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>张委员</td>
+          <td>137****0003</td>
+          <td>村委委员</td>
+          <td>第三网格</td>
+          <td>综合治理</td>
+          <td><span class="tag tag-success">在任</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewCadreModal');fillCadreDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editCadreModal');fillCadreEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村干部吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a></td>
+        </tr>
+        <tr data-name="赵网格员" data-position="网格员" data-phone="136****0004" data-group="第一网格" data-work="网格巡查" data-date="2023-01-10" data-status="在任">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>赵网格员</td>
+          <td>136****0004</td>
+          <td>网格员</td>
+          <td>第一网格</td>
+          <td>网格巡查</td>
+          <td><span class="tag tag-success">在任</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewCadreModal');fillCadreDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editCadreModal');fillCadreEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村干部吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a></td>
+        </tr>
+        <tr data-name="刘主任" data-position="村委会主任" data-phone="135****0005" data-group="第二网格" data-work="" data-date="2018-09-01" data-status="离任">
+          <td class="checkbox-cell"><input type="checkbox"></td>
+          <td>刘主任</td>
+          <td>135****0005</td>
+          <td>村委会主任</td>
+          <td>第二网格</td>
+          <td style="color:#c0c4cc">-</td>
+          <td><span class="tag tag-info">离任</span></td>
+          <td class="op-cell"><a href="javascript:void(0)" onclick="openModal('viewCadreModal');fillCadreDetail(this)">查看</a><a href="javascript:void(0)" onclick="openModal('editCadreModal');fillCadreEdit(this)">编辑</a><a href="javascript:void(0)" class="danger" onclick="showConfirm({title:'删除确认',message:'确定删除该村干部吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 分页 -->
+  <div class="pagination" style="background:#fff;padding:12px 16px;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <span class="page-info">共 5 条记录</span>
+    <span class="page-btn disabled">&laquo; 上一页</span>
+    <span class="page-btn active">1</span>
+    <span class="page-btn disabled">下一页 &raquo;</span>
+  </div>
+
+  <!-- 新增村干部弹窗 -->
+  <div class="modal-overlay" id="addCadreModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>新增村干部</h3>
+        <span class="modal-close" onclick="closeModal('addCadreModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="请输入姓名" required>
+        </div>
+        <div class="form-group">
+          <label>职务 <span class="required">*</span></label>
+          <select class="form-select">
+            <option>村书记</option>
+            <option>村主任</option>
+            <option>村副主任</option>
+            <option>村委员</option>
+            <option>会计</option>
+            <option>出纳</option>
+            <option>妇女主任</option>
+            <option>治保主任</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>联系电话</label>
+          <input type="text" class="form-input" placeholder="请输入联系电话">
+        </div>
+        <div class="form-group">
+          <label>所属组</label>
+          <select class="form-select">
+            <option>第一组</option>
+            <option>第二组</option>
+            <option>第三组</option>
+            <option>第四组</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>分管工作</label>
+          <input type="text" class="form-input" placeholder="请输入分管工作">
+        </div>
+        <div class="form-group">
+          <label>任职日期</label>
+          <input type="date" class="form-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('addCadreModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('addCadreModal');showToast('保存成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 查看村干部详情弹窗 -->
+  <div class="modal-overlay" id="viewCadreModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>村干部详情</h3>
+        <span class="modal-close" onclick="closeModal('viewCadreModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">姓名</div>
+            <div class="detail-value">李书记</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">职务</div>
+            <div class="detail-value">村党支部书记, 村委会主任</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">联系电话</div>
+            <div class="detail-value">138****0001</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">负责网格</div>
+            <div class="detail-value">第一网格</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">分管工作</div>
+            <div class="detail-value">全面工作</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">状态</div>
+            <div class="detail-value"><span class="tag tag-success">在任</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('viewCadreModal')">关 闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑村干部弹窗 -->
+  <div class="modal-overlay" id="editCadreModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>编辑村干部</h3>
+        <span class="modal-close" onclick="closeModal('editCadreModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" value="李书记" required>
+        </div>
+        <div class="form-group">
+          <label>职务 <span class="required">*</span></label>
+          <select class="form-select">
+            <option selected>村书记</option>
+            <option>村主任</option>
+            <option>村副主任</option>
+            <option>村委员</option>
+            <option>会计</option>
+            <option>出纳</option>
+            <option>妇女主任</option>
+            <option>治保主任</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>联系电话</label>
+          <input type="text" class="form-input" value="13800000001">
+        </div>
+        <div class="form-group">
+          <label>所属组</label>
+          <select class="form-select">
+            <option selected>第一组</option>
+            <option>第二组</option>
+            <option>第三组</option>
+            <option>第四组</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>分管工作</label>
+          <input type="text" class="form-input" value="全面工作">
+        </div>
+        <div class="form-group">
+          <label>任职日期</label>
+          <input type="date" class="form-input" value="2020-01-01">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal('editCadreModal')">取 消</button>
+        <button class="btn btn-primary" onclick="closeModal('editCadreModal');showToast('保存成功','success')">保 存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+function fillCadreDetail(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('viewCadreModal');
+  if (!row || !modal) return;
+  var fields = {
+    '姓名': row.dataset.name,
+    '职务': row.dataset.position,
+    '联系电话': row.dataset.phone,
+    '负责网格': row.dataset.group,
+    '分管工作': row.dataset.work || '-',
+    '状态': row.dataset.status || '在任'
+  };
+  var items = modal.querySelectorAll('.detail-item');
+  items.forEach(function(item) {
+    var label = item.querySelector('.detail-label');
+    var value = item.querySelector('.detail-value');
+    if (label && value && fields[label.textContent]) {
+      var val = fields[label.textContent];
+      if (label.textContent === '状态') {
+        var tagClass = val === '在任' ? 'tag tag-success' : 'tag tag-info';
+        value.innerHTML = '<span class="' + tagClass + '">' + val + '</span>';
+      } else {
+        value.textContent = val;
+      }
+    }
+  });
+}
+function fillCadreEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editCadreModal');
+  if (!row || !modal) return;
+  var inputs = modal.querySelectorAll('.form-input, .form-textarea');
+  var selects = modal.querySelectorAll('.form-select');
+  // Name
+  if (inputs[0]) inputs[0].value = row.dataset.name || '';
+  // Phone (2nd input)
+  if (inputs[1]) inputs[1].value = row.dataset.phone || '';
+  // Work (3rd input)
+  if (inputs[2]) inputs[2].value = row.dataset.work || '';
+  // Date (4th input, type=date)
+  if (inputs[3]) inputs[3].value = row.dataset.date || '';
+  // Position select (first select)
+  if (selects[0]) {
+    var posVal = (row.dataset.position || '').split(',')[0].trim();
+    for (var i = 0; i < selects[0].options.length; i++) {
+      if (selects[0].options[i].text === posVal) {
+        selects[0].selectedIndex = i;
+        break;
+      }
+    }
+  }
+  // Group select (second select) - skip, no direct mapping from grid to group
+}
+</script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

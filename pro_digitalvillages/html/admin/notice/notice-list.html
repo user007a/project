@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>通知公告列表</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<div class="admin-page">
+  <!-- 面包屑 -->
+  <div class="breadcrumb">
+    <a href="#">首页</a> / <a href="#">通知公告</a> / <span>公告列表</span>
+  </div>
+
+  <!-- 操作按钮 -->
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="openModal('addNoticeModal')">+ 新增公告</button>
+  </div>
+
+  <!-- 搜索筛选 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>公告标题</label>
+      <input type="text" placeholder="请输入公告标题">
+    </div>
+    <div class="filter-item">
+      <label>推送状态</label>
+      <select>
+        <option value="">全部</option>
+        <option>草稿</option>
+        <option>已推送</option>
+        <option>已撤回</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>推送范围</label>
+      <select>
+        <option value="">全部</option>
+        <option>全村</option>
+        <option>指定组</option>
+        <option>指定人</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>推送时间</label>
+      <input type="date"> - <input type="date">
+    </div>
+    <div class="filter-item">
+      <label>发布人</label>
+      <select>
+        <option value="">全部</option>
+        <option>张书记</option>
+        <option>李主任</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary btn-sm">查询</button>
+      <button class="btn btn-sm">重置</button>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>标题</th>
+          <th>推送范围</th>
+          <th>推送人数</th>
+          <th>已读人数</th>
+          <th>已读率</th>
+          <th>推送时间</th>
+          <th>推送状态</th>
+          <th class="col-actions">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-title="关于缴纳2026年度城乡居民医保的通知" data-range="全村" data-count="892人" data-read="756人" data-rate="84.8%" data-time="2026-06-28" data-status="已推送" data-author="张书记" data-content="各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。">
+          <td>关于缴纳2026年度城乡居民医保的通知</td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>892人</td>
+          <td>756人</td>
+          <td>84.8%</td>
+          <td>2026-06-28</td>
+          <td><span class="tag tag-green">已推送</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-title="关于开展村庄清洁行动的通知" data-range="全村" data-count="892人" data-read="810人" data-rate="90.8%" data-time="2026-06-25" data-status="已推送" data-author="李主任" data-content="为改善村庄人居环境，提升村容村貌，决定在全村范围内开展村庄清洁行动。请各组组长组织本组村民积极参与，重点清理公共区域垃圾、疏通沟渠、整理房前屋后。">
+          <td>关于开展村庄清洁行动的通知</td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>892人</td>
+          <td>810人</td>
+          <td>90.8%</td>
+          <td>2026-06-25</td>
+          <td><span class="tag tag-green">已推送</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-title="第三组道路维修施工通知" data-range="指定组" data-count="156人" data-read="72人" data-rate="46.2%" data-time="2026-06-23" data-status="已推送" data-author="张书记" data-content="因第三组主干道路面损坏严重，经村委研究决定，将于近期对第三组主干道进行维修施工。施工期间部分路段将实行半封闭通行，请各位村民注意安全，绕行其他路线。施工预计持续两周。">
+          <td>第三组道路维修施工通知</td>
+          <td><span class="tag tag-green">指定组</span></td>
+          <td>156人</td>
+          <td>72人</td>
+          <td class="text-orange fw-bold">46.2%</td>
+          <td>2026-06-23</td>
+          <td><span class="tag tag-green">已推送</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-title="7月主题党日活动安排" data-range="指定人" data-count="35人" data-read="28人" data-rate="80.0%" data-time="2026-06-20" data-status="已推送" data-author="张书记" data-content="经党支部研究决定，7月份主题党日活动安排如下：时间：7月1日下午2:00；地点：村党员活动室；主题：不忘初心、牢记使命——庆祝建党105周年。请全体党员准时参加，如有特殊情况请提前请假。">
+          <td>7月主题党日活动安排</td>
+          <td><span class="tag tag-orange">指定人</span></td>
+          <td>35人</td>
+          <td>28人</td>
+          <td>80.0%</td>
+          <td>2026-06-20</td>
+          <td><span class="tag tag-green">已推送</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
+            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-title="关于规范宅基地审批流程的通知" data-range="全村" data-count="" data-read="" data-rate="" data-time="" data-status="草稿" data-author="李主任" data-content="为进一步规范宅基地审批流程，保障村民合法权益，现将有关事项通知如下：">
+          <td>关于规范宅基地审批流程的通知</td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="tag tag-gray">草稿</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('editNoticeModal');fillNoticeEdit(this)">编辑</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+        <tr data-title="2025年度村级财务审计结果公示" data-range="全村" data-count="892人" data-read="680人" data-rate="76.2%" data-time="2026-06-15" data-status="已撤回" data-author="张书记" data-content="根据上级审计部门要求，现将2025年度村级财务审计结果予以公示。公示期为7天，如对审计结果有异议，请于公示期内向村委会提出书面申诉。">
+          <td>2025年度村级财务审计结果公示</td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>892人</td>
+          <td>680人</td>
+          <td>76.2%</td>
+          <td>2026-06-15</td>
+          <td><span class="tag tag-red">已撤回</span></td>
+          <td class="col-actions">
+            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
+            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <div class="page-btns">
+        <a class="page-btn disabled">&laquo;</a>
+        <a class="page-btn active">1</a>
+        <a class="page-btn disabled">&raquo;</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 新增公告弹窗 -->
+<div class="modal-overlay" id="addNoticeModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>新增公告</h3>
+      <span class="modal-close" onclick="closeModal('addNoticeModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>标题 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="请输入公告标题">
+      </div>
+      <div class="form-group">
+        <label>推送范围</label>
+        <select class="form-select">
+          <option>全村</option>
+          <option>指定组</option>
+          <option>指定人</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <textarea class="form-textarea" style="min-height:160px;" placeholder="请输入公告内容"></textarea>
+      </div>
+      <div class="form-group">
+        <label>推送方式</label>
+        <div class="checkbox" style="display:flex;gap:16px;">
+          <label><input type="checkbox" checked> 站内通知</label>
+          <label><input type="checkbox"> 短信通知</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addNoticeModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('addNoticeModal');showToast('新增成功','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑公告弹窗 -->
+<div class="modal-overlay" id="editNoticeModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>编辑公告</h3>
+      <span class="modal-close" onclick="closeModal('editNoticeModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>标题 <span class="required">*</span></label>
+        <input type="text" class="form-input" value="关于规范宅基地审批流程的通知">
+      </div>
+      <div class="form-group">
+        <label>推送范围</label>
+        <select class="form-select">
+          <option selected>全村</option>
+          <option>指定组</option>
+          <option>指定人</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>内容</label>
+        <textarea class="form-textarea" style="min-height:160px;">为进一步规范宅基地审批流程，保障村民合法权益，现将有关事项通知如下：</textarea>
+      </div>
+      <div class="form-group">
+        <label>推送方式</label>
+        <div class="checkbox" style="display:flex;gap:16px;">
+          <label><input type="checkbox" checked> 站内通知</label>
+          <label><input type="checkbox"> 短信通知</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('editNoticeModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('editNoticeModal');showToast('保存成功','success')">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 查看公告详情弹窗 -->
+<div class="modal-overlay" id="viewNoticeModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>公告详情</h3>
+      <span class="modal-close" onclick="closeModal('viewNoticeModal')">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item detail-full">
+          <span class="detail-label">标题</span>
+          <span class="detail-value">关于缴纳2026年度城乡居民医保的通知</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">推送范围</span>
+          <span class="detail-value"><span class="tag tag-blue">全村</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">推送人数</span>
+          <span class="detail-value">892人</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">已读人数</span>
+          <span class="detail-value">756人</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">已读率</span>
+          <span class="detail-value fw-bold">84.8%</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">推送时间</span>
+          <span class="detail-value">2026-06-28</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">推送状态</span>
+          <span class="detail-value"><span class="tag tag-green">已推送</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">发布人</span>
+          <span class="detail-value">张书记</span>
+        </div>
+        <div class="detail-item detail-full">
+          <span class="detail-label">内容</span>
+          <div class="detail-value" style="background:#f7f8fa;border:1px solid var(--border-light);border-radius:var(--radius);padding:var(--sp-12);min-height:100px;line-height:1.8;">各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('viewNoticeModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillNoticeDetail(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('viewNoticeModal');
+  if (!row || !modal) return;
+  var d = row.dataset;
+  var values = modal.querySelectorAll('.detail-value');
+  if (values[0]) values[0].textContent = d.title || '';
+  var rangeClass = d.range === '全村' ? 'blue' : d.range === '指定组' ? 'green' : 'orange';
+  if (values[1]) values[1].innerHTML = '<span class="tag tag-' + rangeClass + '">' + (d.range || '') + '</span>';
+  if (values[2]) values[2].textContent = d.count || '—';
+  if (values[3]) values[3].textContent = d.read || '—';
+  if (values[4]) values[4].textContent = d.rate || '—';
+  if (values[5]) values[5].textContent = d.time || '—';
+  var statusClass = d.status === '已推送' ? 'green' : d.status === '已撤回' ? 'red' : 'gray';
+  if (values[6]) values[6].innerHTML = '<span class="tag tag-' + statusClass + '">' + (d.status || '') + '</span>';
+  if (values[7]) values[7].textContent = d.author || '';
+  if (values[8]) values[8].textContent = d.content || '';
+}
+function fillNoticeEdit(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('editNoticeModal');
+  if (!row || !modal) return;
+  var d = row.dataset;
+  var inputs = modal.querySelectorAll('.form-input');
+  var textareas = modal.querySelectorAll('.form-textarea');
+  var selects = modal.querySelectorAll('.form-select');
+  if (inputs[0]) inputs[0].value = d.title || '';
+  if (selects[0]) {
+    for (var i = 0; i < selects[0].options.length; i++) {
+      selects[0].options[i].selected = (selects[0].options[i].text === (d.range || '全村'));
+    }
+  }
+  if (textareas[0]) textareas[0].value = d.content || '';
+}
+</script>
+
+</body>
+</html>
