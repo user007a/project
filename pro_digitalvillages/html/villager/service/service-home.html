@@ -30,7 +30,7 @@
                             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
                     </span>
-                    <input type="text" placeholder="搜索办事事项..." aria-label="搜索办事事项">
+                    <input type="text" placeholder="搜索办事事项..." aria-label="搜索办事事项" oninput="filterEntries(this.value)">
                 </div>
             </div>
 
@@ -126,5 +126,17 @@
 
     </div>
     <script src="../js/villager.js"></script>
+<script>
+function filterEntries(keyword) {
+  var cards = document.querySelectorAll('.entry-card');
+  keyword = keyword.toLowerCase();
+  cards.forEach(function(card) {
+    var title = card.querySelector('.entry-title');
+    var desc = card.querySelector('.entry-desc');
+    var text = (title ? title.textContent : '') + (desc ? desc.textContent : '');
+    card.style.display = text.toLowerCase().indexOf(keyword) >= 0 ? '' : 'none';
+  });
+}
+</script>
 </body>
 </html>

@@ -1,23 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>产业信息列表</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 </head>
 <body>
 <div class="admin-page">
-  <!-- 面包屑 -->
-  <div class="breadcrumb">
-    <a href="#">首页</a> / <a href="#">产业管理</a> / <span>产业信息列表</span>
-  </div>
-
   <!-- 统计卡片 -->
   <div class="stat-cards cols-4">
     <div class="stat-card">
       <div class="stat-label">产业总数</div>
-      <div class="stat-value">12 <span class="text-sm text-gray">个</span></div>
+      <div class="stat-value">6 <span class="text-sm text-gray">个</span></div>
       <div class="stat-desc">覆盖全村主要产业</div>
     </div>
     <div class="stat-card">
@@ -27,20 +23,20 @@
     </div>
     <div class="stat-card">
       <div class="stat-label">总从业人数</div>
-      <div class="stat-value">356 <span class="text-sm text-gray">人</span></div>
+      <div class="stat-value">210 <span class="text-sm text-gray">人</span></div>
       <div class="stat-desc">带动本地就业</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">正常经营</div>
-      <div class="stat-value">10 <span class="text-sm text-gray">个</span></div>
-      <div class="stat-desc">占比 83.3%</div>
+      <div class="stat-value">4 <span class="text-sm text-gray">个</span></div>
+      <div class="stat-desc">占比 66.7%</div>
     </div>
   </div>
 
   <!-- 操作按钮 -->
   <div class="action-bar">
-    <button class="btn btn-primary" onclick="openModal('addIndustryModal')">+ 新增产业</button>
-    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+    <button class="btn btn-primary" onclick="openModal('addIndustryModal')"><span class="iconify" data-icon="ri:add-line"></span> 新增产业</button>
+    <button class="btn" onclick="showToast('导出成功','success')"><span class="iconify" data-icon="ri:download-2-line"></span> 导出列表</button>
   </div>
 
   <!-- 搜索筛选 -->
@@ -51,7 +47,7 @@
     </div>
     <div class="filter-item">
       <label>产业类型</label>
-      <select>
+      <select class="form-select">
         <option value="">全部类型</option>
         <option>种植业</option>
         <option>养殖业</option>
@@ -62,7 +58,7 @@
     </div>
     <div class="filter-item">
       <label>经营主体</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>合作社</option>
         <option>种养大户</option>
@@ -73,7 +69,7 @@
     </div>
     <div class="filter-item">
       <label>状态</label>
-      <select>
+      <select class="form-select">
         <option value="">全部状态</option>
         <option>正常经营</option>
         <option>暂停经营</option>
@@ -82,7 +78,7 @@
     </div>
     <div class="filter-actions">
       <button class="btn btn-primary btn-sm">查询</button>
-      <button class="btn btn-sm">重置</button>
+      <button class="btn btn-search-reset">重置</button>
     </div>
   </div>
 
@@ -99,7 +95,7 @@
           <th class="text-right">从业人数</th>
           <th>联系电话</th>
           <th>状态</th>
-          <th class="col-actions">操作</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -112,10 +108,8 @@
           <td class="text-right">45</td>
           <td>138****5678</td>
           <td><span class="tag tag-green">正常经营</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="兴旺养殖场" data-type="养殖业" data-person="李四" data-count="30" data-phone="139****1234" data-address="幸福村二组" data-value="280" data-growth="+5.2%" data-desc="兴旺养殖场专业从事生猪养殖，年出栏生猪约2000头，配套建设了现代化猪舍和粪污处理设施。">
@@ -127,10 +121,8 @@
           <td class="text-right">30</td>
           <td>139****1234</td>
           <td><span class="tag tag-green">正常经营</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="绿水农产品加工厂" data-type="加工业" data-person="王五" data-count="80" data-phone="136****9012" data-address="幸福村工业园" data-value="260" data-growth="+12.3%" data-desc="绿水农产品加工厂主要从事农产品精深加工，产品包括有机大米、蔬菜干制品等，销往周边城市超市和电商平台。">
@@ -142,10 +134,8 @@
           <td class="text-right">80</td>
           <td>136****9012</td>
           <td><span class="tag tag-green">正常经营</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="田园家庭农场" data-type="种植业" data-person="赵六" data-count="18" data-phone="137****3456" data-address="幸福村三组" data-value="150" data-growth="-3.1%" data-desc="田园家庭农场以有机蔬菜种植为主，采用生态循环农业模式，产品直供城市社区团购平台。">
@@ -157,10 +147,8 @@
           <td class="text-right">18</td>
           <td>137****3456</td>
           <td><span class="tag tag-yellow">暂停经营</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="幸福农家乐" data-type="服务业" data-person="孙七" data-count="12" data-phone="158****7890" data-address="幸福村四组" data-value="120" data-growth="+15.8%" data-desc="幸福农家乐提供乡村餐饮、民宿住宿、果蔬采摘等体验服务，是村内重点乡村旅游接待点。">
@@ -172,10 +160,8 @@
           <td class="text-right">12</td>
           <td>158****7890</td>
           <td><span class="tag tag-green">正常经营</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="乡村优选电商服务站" data-type="电商" data-person="周八" data-count="25" data-phone="135****2345" data-address="幸福村村委会旁" data-value="156" data-growth="+22.6%" data-desc="乡村优选电商服务站帮助村民将特色农产品上线销售，提供电商培训、包装设计和物流配送一站式服务。">
@@ -187,20 +173,18 @@
           <td class="text-right">25</td>
           <td>135****2345</td>
           <td><span class="tag tag-gray">已注销</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editIndustryModal');fillIndustryEdit(this)">编辑</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button type="button" class="btn-op" onclick="openModal('viewIndustryModal');fillIndustryDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editIndustryModal');fillIndustryEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该产业吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <span class="page-total">共 6 条记录</span>
       <div class="page-btns">
-        <a class="page-btn disabled">&laquo;</a>
-        <a class="page-btn active">1</a>
-        <a class="page-btn disabled">&raquo;</a>
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
       </div>
     </div>
   </div>
@@ -269,7 +253,7 @@ function getIndustryTagClass(text) {
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>新增产业</h3>
-      <button class="modal-close" onclick="closeModal('addIndustryModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('addIndustryModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -331,7 +315,7 @@ function getIndustryTagClass(text) {
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>产业详情</h3>
-      <button class="modal-close" onclick="closeModal('viewIndustryModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('viewIndustryModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -388,7 +372,7 @@ function getIndustryTagClass(text) {
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>编辑产业</h3>
-      <button class="modal-close" onclick="closeModal('editIndustryModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('editIndustryModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">

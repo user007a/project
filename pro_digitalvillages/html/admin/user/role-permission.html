@@ -5,18 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>角色权限 - 数字乡村管理系统</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 </head>
 <body style="background:#f0f2f5">
 
-  <!-- 面包屑 -->
-  <ul class="breadcrumb">
-    <li><a href="javascript:void(0)">用户与组织</a></li>
-    <li>角色权限</li>
-  </ul>
-
   <!-- 操作按钮 -->
-  <div class="toolbar">
-    <button class="btn btn-primary" onclick="openModal('addRoleModal')">+ 新增角色</button>
+  <div class="role-toolbar">
+    <button class="btn btn-primary" onclick="openModal('addRoleModal')"><span class="iconify" data-icon="ri:add-line"></span> 新增角色</button>
+    <div class="toolbar-search">
+      <span class="iconify search-icon" data-icon="ri:search-line"></span>
+      <input type="text" class="form-input" placeholder="搜索角色名称..." oninput="filterRoles(this.value)">
+    </div>
   </div>
 
   <!-- 表格 -->
@@ -42,9 +41,7 @@
           <td><span class="tag tag-success">启用</span></td>
           <td><span class="tag tag-warning">预置</span></td>
           <td class="op-cell">
-            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
-            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
-            <span style="color:#c0c4cc;font-size:12px">停用</span>
+            <button type="button" class="btn-op" onclick="openModal('permModal')"><span class="iconify" data-icon="ri:shield-keyhole-line"></span>编辑权限</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editRoleModal')"><span class="iconify" data-icon="ri:edit-line"></span>编辑信息</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})"><span class="iconify" data-icon="ri:forbid-line"></span>停用</button>
           </td>
         </tr>
         <tr>
@@ -55,9 +52,7 @@
           <td><span class="tag tag-success">启用</span></td>
           <td><span class="tag tag-warning">预置</span></td>
           <td class="op-cell">
-            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
-            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
-            <a href="javascript:void(0)" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})">停用</a>
+            <button type="button" class="btn-op" onclick="openModal('permModal')"><span class="iconify" data-icon="ri:shield-keyhole-line"></span>编辑权限</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editRoleModal')"><span class="iconify" data-icon="ri:edit-line"></span>编辑信息</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})"><span class="iconify" data-icon="ri:forbid-line"></span>停用</button>
           </td>
         </tr>
         <tr>
@@ -68,9 +63,7 @@
           <td><span class="tag tag-success">启用</span></td>
           <td><span class="tag tag-warning">预置</span></td>
           <td class="op-cell">
-            <a href="javascript:void(0)" onclick="openModal('permModal')">编辑权限</a>
-            <a href="javascript:void(0)" onclick="openModal('editRoleModal')">编辑信息</a>
-            <a href="javascript:void(0)" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})">停用</a>
+            <button type="button" class="btn-op" onclick="openModal('permModal')"><span class="iconify" data-icon="ri:shield-keyhole-line"></span>编辑权限</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-edit" onclick="openModal('editRoleModal')"><span class="iconify" data-icon="ri:edit-line"></span>编辑信息</button><span class="op-divider"></span><button type="button" class="btn-op btn-op-warning" onclick="showConfirm({title:'停用确认',message:'确定停用该角色吗？停用后关联人员将失去相应权限。',onConfirm:function(){showToast('操作成功','success')}})"><span class="iconify" data-icon="ri:forbid-line"></span>停用</button>
           </td>
         </tr>
       </tbody>
@@ -82,7 +75,7 @@
     <div class="modal modal-full">
       <div class="modal-header">
         <h3>权限配置 - 村委负责人</h3>
-        <span class="modal-close" onclick="closeModal('permModal')">&times;</span>
+        <button type="button" class="modal-close" onclick="closeModal('permModal')" aria-label="关闭">&times;</button>
       </div>
       <div class="modal-body">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
@@ -232,7 +225,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>新增角色</h3>
-        <span class="modal-close" onclick="closeModal('addRoleModal')">&times;</span>
+        <button type="button" class="modal-close" onclick="closeModal('addRoleModal')" aria-label="关闭">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -267,7 +260,7 @@
     <div class="modal">
       <div class="modal-header">
         <h3>编辑角色信息</h3>
-        <span class="modal-close" onclick="closeModal('editRoleModal')">&times;</span>
+        <button type="button" class="modal-close" onclick="closeModal('editRoleModal')" aria-label="关闭">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -297,6 +290,18 @@
     </div>
   </div>
 
+  <script>
+  function filterRoles(keyword) {
+    var lower = keyword.toLowerCase();
+    var rows = document.querySelectorAll('.data-table tbody tr');
+    rows.forEach(function(row) {
+      var name = row.querySelector('td strong');
+      if (!name) return;
+      var text = name.textContent.toLowerCase();
+      row.style.display = (!lower || text.indexOf(lower) > -1) ? '' : 'none';
+    });
+  }
+  </script>
   <script src="../js/admin.js"></script>
 </body>
 </html>

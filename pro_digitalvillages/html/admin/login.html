@@ -94,6 +94,13 @@
       background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
       background-size: 24px 24px;
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen overflow-hidden" style="background: linear-gradient(135deg, #0a1628 0%, #0f2027 20%, #1a3a3a 50%, #1a4a3a 80%, #0f2027 100%);">
@@ -167,9 +174,9 @@
                   <span class="iconify text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200"
                         data-icon="mdi:account-outline" data-width="20" data-height="20"></span>
                 </div>
-                <input type="text" value="admin" placeholder="请输入用户名"
+                <input id="usernameInput" type="text" value="admin" placeholder="请输入用户名"
                        class="input-glow w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50/80 text-gray-800 text-sm
-                              placeholder-gray-400 focus:outline-none focus:border-primary-500 focus:bg-white
+                              placeholder-gray-400 focus:border-primary-500 focus:bg-white
                               transition-all duration-300">
               </div>
             </div>
@@ -184,9 +191,9 @@
                 </div>
                 <input id="passwordInput" type="password" value="123456" placeholder="请输入密码"
                        class="input-glow w-full pl-10 pr-11 py-3 rounded-xl border border-gray-200 bg-gray-50/80 text-gray-800 text-sm
-                              placeholder-gray-400 focus:outline-none focus:border-primary-500 focus:bg-white
+                              placeholder-gray-400 focus:border-primary-500 focus:bg-white
                               transition-all duration-300">
-                <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center">
+                <button type="button" onclick="togglePassword()" aria-label="显示密码" class="absolute inset-y-0 right-0 pr-3.5 flex items-center">
                   <span id="eyeIcon" class="iconify text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                         data-icon="mdi:eye-off-outline" data-width="20" data-height="20"></span>
                 </button>
@@ -208,12 +215,11 @@
 
             <!-- Login button -->
             <div class="pt-2">
-              <button onclick="window.location.href='index.html'"
-                      class="relative w-full py-3.5 rounded-xl text-white font-semibold text-base
+              <button type="button" onclick="handleLogin()" class="relative w-full py-3.5 rounded-xl text-white font-semibold text-base
                              overflow-hidden transition-all duration-300
                              hover:shadow-lg hover:shadow-primary-500/25 hover:-translate-y-0.5
                              active:translate-y-0 active:shadow-md
-                             focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2"
+                             focus:ring-2 focus:ring-primary-500/40 focus:ring-offset-2"
                       style="background: linear-gradient(135deg, #1a8a3d 0%, #22a84a 50%, #28c060 100%);">
                 <span class="shimmer-btn absolute inset-0"></span>
                 <span class="relative z-10 flex items-center justify-center gap-2">
@@ -258,6 +264,21 @@
         input.type = 'password';
         icon.setAttribute('data-icon', 'mdi:eye-off-outline');
       }
+    }
+    function handleLogin() {
+      var username = document.getElementById('usernameInput');
+      var password = document.getElementById('passwordInput');
+      if (!username || !username.value.trim()) {
+        username.focus();
+        username.style.borderColor = '#f56c6c';
+        return;
+      }
+      if (!password || !password.value.trim()) {
+        password.focus();
+        password.style.borderColor = '#f56c6c';
+        return;
+      }
+      window.location.href = 'index.html';
     }
   </script>
 </body>

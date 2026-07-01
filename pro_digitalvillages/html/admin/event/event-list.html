@@ -1,33 +1,29 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>事件列表</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
 <div class="admin-page">
-  <!-- 面包屑 -->
-  <div class="breadcrumb">
-    <a href="#">首页</a> / <a href="#">事件管理</a> / <span>事件列表</span>
-  </div>
-
   <!-- 统计卡片 -->
   <div class="stat-cards cols-4">
     <div class="stat-card card-red">
       <div class="stat-label">待分派</div>
-      <div class="stat-value">3 <span class="text-sm">件</span></div>
+      <div class="stat-value">2 <span class="text-sm">件</span></div>
       <div class="stat-desc">需要尽快处理</div>
     </div>
     <div class="stat-card card-yellow">
       <div class="stat-label">处置中</div>
-      <div class="stat-value">8 <span class="text-sm">件</span></div>
+      <div class="stat-value">4 <span class="text-sm">件</span></div>
       <div class="stat-desc">正在跟进处理</div>
     </div>
     <div class="stat-card card-green">
       <div class="stat-label">本月已完成</div>
-      <div class="stat-value">25 <span class="text-sm">件</span></div>
+      <div class="stat-value">42 <span class="text-sm">件</span></div>
       <div class="stat-desc">环比 +12.5%</div>
     </div>
     <div class="stat-card card-blue">
@@ -39,20 +35,20 @@
 
   <!-- 操作按钮 -->
   <div class="action-bar">
-    <button class="btn btn-primary" onclick="openModal('addEventModal')">+ 新增事件</button>
-    <button class="btn btn-warning" onclick="showToast('请先选择需要分派的事件','info')">批量分派</button>
-    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+    <button class="btn btn-primary" onclick="openModal('addEventModal')"><span class="iconify" data-icon="ri:add-line"></span> 新增事件</button>
+    <button class="btn btn-warning" onclick="showToast('请先选择需要分派的事件','info')"><span class="iconify" data-icon="ri:share-forward-line"></span> 批量分派</button>
+    <button class="btn" onclick="showToast('导出成功','success')"><span class="iconify" data-icon="ri:download-line"></span> 导出列表</button>
   </div>
 
   <!-- 搜索筛选（两行） -->
   <div class="filter-bar">
     <div class="filter-item">
       <label>事件标题</label>
-      <input type="text" placeholder="请输入事件标题">
+      <input type="text" class="form-input" placeholder="请输入事件标题">
     </div>
     <div class="filter-item">
       <label>事件类型</label>
-      <select>
+      <select class="form-select">
         <option value="">全部类型</option>
         <option>环境卫生</option>
         <option>基础设施</option>
@@ -74,7 +70,7 @@
     </div>
     <div class="filter-item">
       <label>优先级</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>紧急</option>
         <option>高</option>
@@ -84,11 +80,11 @@
     </div>
     <div class="filter-item">
       <label>上报人</label>
-      <input type="text" placeholder="请输入上报人">
+      <input type="text" class="form-input" placeholder="请输入上报人">
     </div>
     <div class="filter-item">
       <label>处理人</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>张三</option>
         <option>李四</option>
@@ -97,11 +93,15 @@
     </div>
     <div class="filter-item">
       <label>上报时间</label>
-      <input type="date"> - <input type="date">
+      <div class="date-range-group">
+        <input type="date" class="form-input">
+        <span>至</span>
+        <input type="date" class="form-input">
+      </div>
     </div>
     <div class="filter-item">
       <label>所属网格</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>第一网格</option>
         <option>第二网格</option>
@@ -109,8 +109,8 @@
       </select>
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary btn-sm">查询</button>
-      <button class="btn btn-sm">重置</button>
+      <button class="btn btn-primary btn-sm"><span class="iconify" data-icon="ri:search-line"></span> 查询</button>
+      <button class="btn btn-search-reset btn-sm"><span class="iconify" data-icon="ri:refresh-line"></span> 重置</button>
     </div>
   </div>
 
@@ -127,7 +127,7 @@
           <th>上报人</th>
           <th>处理人</th>
           <th>上报时间</th>
-          <th class="col-actions">操作</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -140,8 +140,8 @@
           <td>李大华</td>
           <td>张三</td>
           <td>2026-06-30 08:30</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
         <tr data-id="EV-20260630-0002" data-title="三组道路路面塌陷" data-type="基础设施" data-priority="高" data-status="处置中" data-reporter="王小明" data-handler="李四" data-time="2026-06-29 16:20" data-grid="第二网格" data-desc="三组主干道路面出现大面积塌陷，塌陷区域约3平方米，存在较大安全隐患，影响车辆和行人通行。">
@@ -153,8 +153,8 @@
           <td>王小明</td>
           <td>李四</td>
           <td>2026-06-29 16:20</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
         <tr data-id="EV-20260628-0003" data-title="村民反映水渠堵塞" data-type="基础设施" data-priority="高" data-status="待分派" data-reporter="赵六" data-handler="—" data-time="2026-06-28 10:45" data-grid="第三网格" data-desc="村民反映第三网格水渠严重堵塞，导致灌溉用水无法正常流通，影响周边农田灌溉。">
@@ -166,9 +166,10 @@
           <td>赵六</td>
           <td>—</td>
           <td>2026-06-28 10:45</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('dispatchEventModal');fillEventDispatch(this)">分派</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-warning" onclick="openModal('dispatchEventModal');fillEventDispatch(this)"><span class="iconify" data-icon="ri:share-forward-line"></span>分派</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
         <tr data-id="EV-20260627-0004" data-title="二组邻里排水纠纷" data-type="邻里纠纷" data-priority="中" data-status="已完成" data-reporter="孙七" data-handler="王五" data-time="2026-06-27 14:00" data-grid="第二网格" data-desc="二组两户村民因排水沟走向问题发生纠纷，双方情绪激动，需要调解处理。">
@@ -180,9 +181,10 @@
           <td>孙七</td>
           <td>王五</td>
           <td>2026-06-27 14:00</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'关闭事件',message:'确定关闭该事件吗？',onConfirm:function(){showToast('事件已关闭','success')}})">关闭</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'关闭事件',message:'确定关闭该事件吗？',onConfirm:function(){showToast('事件已关闭','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>关闭</button>
           </td>
         </tr>
         <tr data-id="EV-20260626-0005" data-title="老电线杆倾斜隐患" data-type="安全隐患" data-priority="紧急" data-status="已分派" data-reporter="周八" data-handler="张三" data-time="2026-06-26 09:10" data-grid="第一网格" data-desc="村口老电线杆严重倾斜，电线低垂，随时可能倒伏，对过往行人和车辆构成严重安全隐患。">
@@ -194,8 +196,8 @@
           <td>周八</td>
           <td>张三</td>
           <td>2026-06-26 09:10</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
         <tr data-id="EV-20260625-0006" data-title="广场花坛破损" data-type="基础设施" data-priority="低" data-status="已完成" data-reporter="钱九" data-handler="李四" data-time="2026-06-25 11:30" data-grid="第一网格" data-desc="村广场花坛边沿出现多处破损，石材脱落，影响村容美观，需要修缮。">
@@ -207,9 +209,10 @@
           <td>钱九</td>
           <td>李四</td>
           <td>2026-06-25 11:30</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'关闭事件',message:'确定关闭该事件吗？',onConfirm:function(){showToast('事件已关闭','success')}})">关闭</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'关闭事件',message:'确定关闭该事件吗？',onConfirm:function(){showToast('事件已关闭','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>关闭</button>
           </td>
         </tr>
         <tr data-id="EV-20260624-0007" data-title="一组河水污染问题" data-type="环境卫生" data-priority="高" data-status="处置中" data-reporter="吴十" data-handler="王五" data-time="2026-06-24 08:50" data-grid="第一网格" data-desc="一组河水出现明显浑浊和异味，疑似附近养殖场排放污水所致，村民担心饮用水安全。">
@@ -221,8 +224,8 @@
           <td>吴十</td>
           <td>王五</td>
           <td>2026-06-24 08:50</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
         <tr data-id="EV-20260623-0008" data-title="路灯不亮反馈" data-type="基础设施" data-priority="中" data-status="待分派" data-reporter="郑十一" data-handler="—" data-time="2026-06-23 19:40" data-grid="第三网格" data-desc="第三网格路段连续多晚路灯不亮，夜间出行不便，村民多次反映希望尽快维修。">
@@ -234,19 +237,20 @@
           <td>郑十一</td>
           <td>—</td>
           <td>2026-06-23 19:40</td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('dispatchEventModal');fillEventDispatch(this)">分派</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('viewEventModal');fillEventDetail(this)">详情</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-warning" onclick="openModal('dispatchEventModal');fillEventDispatch(this)"><span class="iconify" data-icon="ri:share-forward-line"></span>分派</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('viewEventModal');fillEventDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <div class="page-info">共 8 条记录，每页 10 条</div>
+      <span class="page-total">共 8 条记录</span>
       <div class="page-btns">
-        <a class="page-btn disabled">&laquo;</a>
-        <a class="page-btn active">1</a>
-        <a class="page-btn disabled">&raquo;</a>
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
       </div>
     </div>
   </div>
@@ -307,7 +311,7 @@ function getTagClass(text) {
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>新增事件</h3>
-      <button class="modal-close" onclick="closeModal('addEventModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('addEventModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -375,7 +379,7 @@ function getTagClass(text) {
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>事件详情</h3>
-      <button class="modal-close" onclick="closeModal('viewEventModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('viewEventModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-layout">
@@ -463,7 +467,7 @@ function getTagClass(text) {
   <div class="modal">
     <div class="modal-header">
       <h3>分派事件</h3>
-      <button class="modal-close" onclick="closeModal('dispatchEventModal')">&times;</button>
+      <button type="button" class="modal-close" onclick="closeModal('dispatchEventModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">

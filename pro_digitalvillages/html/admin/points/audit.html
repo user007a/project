@@ -1,21 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>积分审核</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
 <div class="admin-page">
-  <!-- 面包屑 -->
-  <div class="breadcrumb">
-    <a href="#">首页</a> / <a href="#">积分管理</a> / <span>积分审核</span>
-  </div>
-
   <!-- 操作按钮 -->
   <div class="action-bar">
-    <button class="btn" onclick="showToast('导出成功','success')">导出列表</button>
+    <button class="btn" onclick="showToast('导出成功','success')"><span class="iconify" data-icon="ri:download-line"></span> 导出列表</button>
   </div>
 
   <!-- Tab筛选 -->
@@ -29,11 +25,11 @@
   <div class="filter-bar">
     <div class="filter-item">
       <label>村民姓名</label>
-      <input type="text" placeholder="请输入村民姓名">
+      <input type="text" class="form-input" placeholder="请输入村民姓名">
     </div>
     <div class="filter-item">
       <label>审核状态</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>待审核</option>
         <option>已通过</option>
@@ -42,7 +38,7 @@
     </div>
     <div class="filter-item">
       <label>积分类型</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>加分</option>
         <option>减分</option>
@@ -50,11 +46,15 @@
     </div>
     <div class="filter-item">
       <label>申请时间</label>
-      <input type="date"> - <input type="date">
+      <div class="date-range-group">
+        <input type="date" class="form-input">
+        <span>至</span>
+        <input type="date" class="form-input">
+      </div>
     </div>
     <div class="filter-item">
       <label>所属组</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>第一组</option>
         <option>第二组</option>
@@ -63,8 +63,8 @@
       </select>
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary btn-sm">查询</button>
-      <button class="btn btn-sm">重置</button>
+      <button class="btn btn-primary btn-sm"><span class="iconify" data-icon="ri:search-line"></span> 查询</button>
+      <button class="btn btn-search-reset btn-sm"><span class="iconify" data-icon="ri:refresh-line"></span> 重置</button>
     </div>
   </div>
 
@@ -81,7 +81,7 @@
           <th>实际分值</th>
           <th>申请时间</th>
           <th>审核状态</th>
-          <th class="col-actions">操作</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -94,10 +94,12 @@
           <td>—</td>
           <td>2026-06-30 09:15</td>
           <td><span class="tag tag-yellow">待审核</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
-            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>通过</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')"><span class="iconify" data-icon="ri:close-circle-line"></span>驳回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')"><span class="iconify" data-icon="ri:edit-line"></span>调整分值</button>
           </td>
         </tr>
         <tr data-name="王小明" data-group="第二组" data-rule="门前卫生达标" data-type="加分" data-score="+5" data-actual="—" data-time="2026-06-30 08:30" data-status="待审核" data-opinion="">
@@ -109,10 +111,12 @@
           <td>—</td>
           <td>2026-06-30 08:30</td>
           <td><span class="tag tag-yellow">待审核</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
-            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>通过</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')"><span class="iconify" data-icon="ri:close-circle-line"></span>驳回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')"><span class="iconify" data-icon="ri:edit-line"></span>调整分值</button>
           </td>
         </tr>
         <tr data-name="张美丽" data-group="第三组" data-rule="乱扔垃圾" data-type="减分" data-score="-10" data-actual="—" data-time="2026-06-29 16:42" data-status="待审核" data-opinion="">
@@ -124,10 +128,12 @@
           <td>—</td>
           <td>2026-06-29 16:42</td>
           <td><span class="tag tag-yellow">待审核</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
-            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>通过</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')"><span class="iconify" data-icon="ri:close-circle-line"></span>驳回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')"><span class="iconify" data-icon="ri:edit-line"></span>调整分值</button>
           </td>
         </tr>
         <tr data-name="赵国强" data-group="第一组" data-rule="参加文体活动" data-type="加分" data-score="+3" data-actual="—" data-time="2026-06-29 14:20" data-status="待审核" data-opinion="">
@@ -139,10 +145,12 @@
           <td>—</td>
           <td>2026-06-29 14:20</td>
           <td><span class="tag tag-yellow">待审核</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
-            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>通过</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')"><span class="iconify" data-icon="ri:close-circle-line"></span>驳回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')"><span class="iconify" data-icon="ri:edit-line"></span>调整分值</button>
           </td>
         </tr>
         <tr data-name="刘建国" data-group="第四组" data-rule="邻里纠纷调解成功" data-type="加分" data-score="+8" data-actual="—" data-time="2026-06-28 10:55" data-status="待审核" data-opinion="">
@@ -154,10 +162,12 @@
           <td>—</td>
           <td>2026-06-28 10:55</td>
           <td><span class="tag tag-yellow">待审核</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-success" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')">通过</button>
-            <button class="btn-text btn-text-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')">驳回</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')">调整分值</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('approvePointsModal');fillAuditDetail(this,'approve')"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>通过</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="openModal('rejectPointsModal');fillAuditDetail(this,'reject')"><span class="iconify" data-icon="ri:close-circle-line"></span>驳回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('adjustPointsModal');fillAuditDetail(this,'adjust')"><span class="iconify" data-icon="ri:edit-line"></span>调整分值</button>
           </td>
         </tr>
         <tr data-name="陈秀英" data-group="第二组" data-rule="参与志愿服务" data-type="加分" data-score="+10" data-actual="+10" data-time="2026-06-27 09:10" data-status="已通过" data-opinion="材料齐全，审核通过。">
@@ -169,18 +179,18 @@
           <td>+10</td>
           <td>2026-06-27 09:10</td>
           <td><span class="tag tag-green">已通过</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewAuditDetailModal');fillAuditDetail(this,'view')">详情</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewAuditDetailModal');fillAuditDetail(this,'view')"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <span class="page-total">共 6 条记录</span>
       <div class="page-btns">
-        <a class="page-btn disabled">&laquo;</a>
-        <a class="page-btn active">1</a>
-        <a class="page-btn disabled">&raquo;</a>
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
       </div>
     </div>
   </div>
@@ -192,7 +202,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>通过审核</h3>
-      <span class="modal-close" onclick="closeModal('approvePointsModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('approvePointsModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -230,7 +240,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>驳回审核</h3>
-      <span class="modal-close" onclick="closeModal('rejectPointsModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('rejectPointsModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -264,7 +274,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>调整分值</h3>
-      <span class="modal-close" onclick="closeModal('adjustPointsModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('adjustPointsModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -302,7 +312,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>审核详情</h3>
-      <span class="modal-close" onclick="closeModal('viewAuditDetailModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('viewAuditDetailModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">

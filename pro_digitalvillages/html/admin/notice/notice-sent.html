@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>已发列表</title>
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+</head>
+<body>
+<div class="admin-page">
+  <!-- 页面标题 -->
+  <div class="page-header">
+    <h2>已发列表</h2>
+    <span class="text-muted">已发布的通知公告</span>
+  </div>
+
+  <!-- 搜索筛选 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label>公告标题</label>
+      <input type="text" class="form-input" placeholder="请输入公告标题">
+    </div>
+    <div class="filter-item">
+      <label>公告类型</label>
+      <select class="form-select">
+        <option value="">全部</option>
+        <option>通知</option>
+        <option>公告</option>
+        <option>公示</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>发布时间</label>
+      <div class="date-range-group">
+        <input type="date" class="form-input">
+        <span>至</span>
+        <input type="date" class="form-input">
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-primary btn-sm"><span class="iconify" data-icon="ri:search-line"></span> 查询</button>
+      <button class="btn btn-search-reset btn-sm"><span class="iconify" data-icon="ri:refresh-line"></span> 重置</button>
+    </div>
+  </div>
+
+  <!-- 工具栏 -->
+  <div class="toolbar">
+    <button class="btn btn-warning-outline" onclick="showConfirm({title:'批量撤回确认',message:'确定撤回所选公告吗？撤回后公告将变为草稿状态。',onConfirm:function(){showToast('撤回成功','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span> 批量撤回</button>
+  </div>
+
+  <!-- 表格 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" class="select-all"></th>
+          <th>公告标题</th>
+          <th>公告类型</th>
+          <th>发布范围</th>
+          <th>发布人</th>
+          <th>发布时间</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-title="关于缴纳2026年度城乡居民医保的通知" data-type="通知" data-type-class="blue" data-scope="全村" data-scope-class="blue" data-author="张书记" data-time="2026-06-28" data-content="各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。">
+          <td><input type="checkbox"></td>
+          <td>关于缴纳2026年度城乡居民医保的通知</td>
+          <td><span class="tag tag-blue">通知</span></td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>张书记</td>
+          <td>2026-06-28</td>
+          <td><span class="tag tag-green">已发布</span></td>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewSentModal');fillSentDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？撤回后用户将无法查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span>撤回</button>
+          </td>
+        </tr>
+        <tr data-title="关于开展村庄清洁行动的通知" data-type="通知" data-type-class="blue" data-scope="全村" data-scope-class="blue" data-author="李主任" data-time="2026-06-25" data-content="为改善村庄人居环境，提升村容村貌，决定在全村范围内开展村庄清洁行动。请各组组长组织本组村民积极参与，重点清理公共区域垃圾、疏通沟渠、整理房前屋后。">
+          <td><input type="checkbox"></td>
+          <td>关于开展村庄清洁行动的通知</td>
+          <td><span class="tag tag-blue">通知</span></td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>李主任</td>
+          <td>2026-06-25</td>
+          <td><span class="tag tag-green">已发布</span></td>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewSentModal');fillSentDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？撤回后用户将无法查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span>撤回</button>
+          </td>
+        </tr>
+        <tr data-title="第三组道路维修施工公告" data-type="公告" data-type-class="orange" data-scope="指定组" data-scope-class="green" data-author="张书记" data-time="2026-06-23" data-content="因第三组主干道路面损坏严重，经村委研究决定，将于近期对第三组主干道进行维修施工。施工期间部分路段将实行半封闭通行，请各位村民注意安全，绕行其他路线。施工预计持续两周。">
+          <td><input type="checkbox"></td>
+          <td>第三组道路维修施工公告</td>
+          <td><span class="tag tag-orange">公告</span></td>
+          <td><span class="tag tag-green">指定组</span></td>
+          <td>张书记</td>
+          <td>2026-06-23</td>
+          <td><span class="tag tag-green">已发布</span></td>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewSentModal');fillSentDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？撤回后用户将无法查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span>撤回</button>
+          </td>
+        </tr>
+        <tr data-title="7月主题党日活动安排" data-type="通知" data-type-class="blue" data-scope="指定人" data-scope-class="orange" data-author="张书记" data-time="2026-06-20" data-content="经党支部研究决定，7月份主题党日活动安排如下：时间：7月1日下午2:00；地点：村党员活动室；主题：不忘初心、牢记使命——庆祝建党105周年。请全体党员准时参加，如有特殊情况请提前请假。">
+          <td><input type="checkbox"></td>
+          <td>7月主题党日活动安排</td>
+          <td><span class="tag tag-blue">通知</span></td>
+          <td><span class="tag tag-orange">指定人</span></td>
+          <td>张书记</td>
+          <td>2026-06-20</td>
+          <td><span class="tag tag-green">已发布</span></td>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewSentModal');fillSentDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？撤回后用户将无法查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span>撤回</button>
+          </td>
+        </tr>
+        <tr data-title="2025年度村级财务审计结果公示" data-type="公示" data-type-class="green" data-scope="全村" data-scope-class="blue" data-author="张书记" data-time="2026-06-15" data-content="根据上级审计部门要求，现将2025年度村级财务审计结果予以公示。公示期为7天，如对审计结果有异议，请于公示期内向村委会提出书面申诉。">
+          <td><input type="checkbox"></td>
+          <td>2025年度村级财务审计结果公示</td>
+          <td><span class="tag tag-green">公示</span></td>
+          <td><span class="tag tag-blue">全村</span></td>
+          <td>张书记</td>
+          <td>2026-06-15</td>
+          <td><span class="tag tag-green">已发布</span></td>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewSentModal');fillSentDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？撤回后用户将无法查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:arrow-go-back-line"></span>撤回</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="page-total">共 5 条记录</span>
+      <div class="page-btns">
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/admin.js"></script>
+
+<!-- 查看详情弹窗 -->
+<div class="modal-overlay" id="viewSentModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>公告详情</h3>
+      <button type="button" class="modal-close" onclick="closeModal('viewSentModal')" aria-label="关闭">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item detail-full">
+          <span class="detail-label">标题</span>
+          <span class="detail-value">关于缴纳2026年度城乡居民医保的通知</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">公告类型</span>
+          <span class="detail-value"><span class="tag tag-blue">通知</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">发布范围</span>
+          <span class="detail-value"><span class="tag tag-blue">全村</span></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">发布人</span>
+          <span class="detail-value">张书记</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">发布时间</span>
+          <span class="detail-value">2026-06-28</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">状态</span>
+          <span class="detail-value"><span class="tag tag-green">已发布</span></span>
+        </div>
+        <div class="detail-item detail-full">
+          <span class="detail-label">内容</span>
+          <div class="detail-value detail-content-box">各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('viewSentModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillSentDetail(btn) {
+  var row = btn.closest('tr');
+  var modal = document.getElementById('viewSentModal');
+  if (!row || !modal) return;
+  var d = row.dataset;
+  var values = modal.querySelectorAll('.detail-value');
+  if (values[0]) values[0].textContent = d.title || '';
+  if (values[1]) values[1].innerHTML = '<span class="tag tag-' + (d.typeClass || 'blue') + '">' + (d.type || '') + '</span>';
+  if (values[2]) values[2].innerHTML = '<span class="tag tag-' + (d.scopeClass || 'blue') + '">' + (d.scope || '') + '</span>';
+  if (values[3]) values[3].textContent = d.author || '';
+  if (values[4]) values[4].textContent = d.time || '';
+  if (values[5]) values[5].innerHTML = '<span class="tag tag-green">已发布</span>';
+  if (values[6]) values[6].textContent = d.content || '';
+}
+</script>
+
+</body>
+</html>

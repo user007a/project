@@ -5,25 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新增公开内容</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
 </head>
 <body>
+<div class="admin-page">
 <!-- 全屏遮罩 + 居中弹窗 -->
 <div class="modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <h3>新增公开内容</h3>
-      <button class="modal-close">&times;</button>
+      <button type="button" class="modal-close" onclick="window.parent.postMessage('closeModal','*')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <!-- 标题 -->
       <div class="form-group">
-        <label class="form-label"><span class="required">*</span> 标题</label>
+        <label><span class="required">*</span> 标题</label>
         <input type="text" class="form-input" placeholder="请输入公开内容标题">
       </div>
 
       <!-- 分类 -->
       <div class="form-group">
-        <label class="form-label"><span class="required">*</span> 分类</label>
+        <label><span class="required">*</span> 分类</label>
         <div class="radio-group">
           <label><input type="radio" name="category" value="party" checked> 党务公开</label>
           <label><input type="radio" name="category" value="village"> 村务公开</label>
@@ -33,22 +35,22 @@
 
       <!-- 正文 -->
       <div class="form-group">
-        <label class="form-label"><span class="required">*</span> 正文</label>
+        <label><span class="required">*</span> 正文</label>
         <div class="editor-toolbar">
-          <button class="toolbar-btn" title="加粗"><b>B</b></button>
-          <button class="toolbar-btn" title="斜体"><i>I</i></button>
-          <button class="toolbar-btn" title="下划线"><u>U</u></button>
-          <button class="toolbar-btn" title="删除线"><s>S</s></button>
+          <button class="toolbar-btn" data-cmd="bold" title="加粗"><b>B</b></button>
+          <button class="toolbar-btn" data-cmd="italic" title="斜体"><i>I</i></button>
+          <button class="toolbar-btn" data-cmd="underline" title="下划线"><u>U</u></button>
+          <button class="toolbar-btn" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
           <div class="toolbar-sep"></div>
-          <button class="toolbar-btn" title="左对齐">&#x2261;</button>
-          <button class="toolbar-btn" title="居中">&#x2261;</button>
-          <button class="toolbar-btn" title="右对齐">&#x2261;</button>
+          <button class="toolbar-btn" data-cmd="justifyLeft" title="左对齐">&#x2261;</button>
+          <button class="toolbar-btn" data-cmd="justifyCenter" title="居中">&#x2261;</button>
+          <button class="toolbar-btn" data-cmd="justifyRight" title="右对齐">&#x2261;</button>
           <div class="toolbar-sep"></div>
-          <button class="toolbar-btn" title="有序列表">1.</button>
-          <button class="toolbar-btn" title="无序列列表">*.</button>
+          <button class="toolbar-btn" data-cmd="insertOrderedList" title="有序列表">1.</button>
+          <button class="toolbar-btn" data-cmd="insertUnorderedList" title="无序列列表">*.</button>
           <div class="toolbar-sep"></div>
-          <button class="toolbar-btn" title="插入图片">&#x1F5BC;</button>
-          <button class="toolbar-btn" title="插入链接">&#x1F517;</button>
+          <button class="toolbar-btn" data-cmd="insertImage" title="插入图片">&#x1F5BC;</button>
+          <button class="toolbar-btn" data-cmd="createLink" title="插入链接">&#x1F517;</button>
           <button class="toolbar-btn" title="插入表格">&#x2637;</button>
         </div>
         <div class="editor-area" contenteditable="true" placeholder="请输入正文内容..."></div>
@@ -56,7 +58,7 @@
 
       <!-- 附件区 -->
       <div class="form-group">
-        <label class="form-label">附件</label>
+        <label>附件</label>
         <div class="upload-area">
           <div class="upload-icon">&#x1F4C1;</div>
           <div class="upload-text">点击或拖拽文件到此处上传</div>
@@ -66,26 +68,27 @@
 
       <!-- 摘要 -->
       <div class="form-group">
-        <label class="form-label">摘要</label>
+        <label>摘要</label>
         <textarea class="form-textarea" rows="3" placeholder="请输入内容摘要（选填，不超过200字）"></textarea>
       </div>
 
       <!-- 置顶开关 -->
       <div class="form-group">
-        <label class="form-label">是否置顶</label>
+        <label>是否置顶</label>
         <label class="switch">
           <input type="checkbox">
           <span class="switch-slider"></span>
         </label>
-        <span style="margin-left:8px;font-size:13px;color:#909399;">开启后内容将显示在列表顶部</span>
+        <span class="text-muted text-sm" style="margin-left:8px;">开启后内容将显示在列表顶部</span>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn">取消</button>
-      <button class="btn">保存草稿</button>
-      <button class="btn btn-primary">提交审核</button>
+      <button class="btn" onclick="window.parent.postMessage('closeModal','*')">取消</button>
+      <button class="btn" onclick="showToast('草稿已保存','success');window.parent.postMessage('closeModal','*')">保存草稿</button>
+      <button class="btn btn-primary" onclick="showToast('已提交审核','success');window.parent.postMessage('closeModal','*')">提交审核</button>
     </div>
   </div>
+</div>
 </div>
 <script src="../js/admin.js"></script>
 </body>

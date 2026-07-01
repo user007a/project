@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>幸福村 - 数字乡村大屏</title>
+  <meta name="theme-color" content="#f0f4f2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,62 +12,73 @@
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">跳转到主要内容</a>
   <div class="dashboard">
 
     <!-- ======== Header ======== -->
     <div class="header">
       <div class="header-left">
         <div class="header-logo">
-          <i class="fa-solid fa-seedling"></i>
+          <i class="fa-solid fa-seedling" aria-hidden="true"></i>
         </div>
         <div class="header-title">
-          <span class="platform-name">幸福村数字乡村</span>
-          <span class="platform-subtitle">数农智果智慧果园驾驶舱</span>
+          <h1 class="platform-name">幸福村数字乡村</h1>
+          <span class="platform-subtitle">乡村振兴数字化一张图</span>
         </div>
-        <a href="#" class="btn-platform-entry" title="进入管理后台">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i>
-          <span>管理后台</span>
-        </a>
       </div>
 
       <div class="header-center">
-        <ul class="tab-nav">
-          <li class="active"><i class="fa-solid fa-chart-pie"></i> 村情总览</li>
-          <li><i class="fa-solid fa-industry"></i> 产业兴旺</li>
-          <li><i class="fa-solid fa-leaf"></i> 生态宜居</li>
-          <li><i class="fa-solid fa-book-open"></i> 乡风文明</li>
-          <li><i class="fa-solid fa-shield-halved"></i> 治理有效</li>
-          <li><i class="fa-solid fa-coins"></i> 生活富裕</li>
-        </ul>
+        <div class="tab-nav" role="tablist" aria-label="数据面板切换">
+          <button class="tab-btn active" id="tab-overview" role="tab" aria-selected="true" aria-controls="sec-overview"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> 村情总览</button>
+          <button class="tab-btn" id="tab-industry" role="tab" aria-selected="false" aria-controls="sec-industry"><i class="fa-solid fa-industry" aria-hidden="true"></i> 产业兴旺</button>
+          <button class="tab-btn" id="tab-ecology" role="tab" aria-selected="false" aria-controls="sec-ecology"><i class="fa-solid fa-leaf" aria-hidden="true"></i> 生态宜居</button>
+          <button class="tab-btn" id="tab-culture" role="tab" aria-selected="false" aria-controls="sec-culture"><i class="fa-solid fa-book-open" aria-hidden="true"></i> 乡风文明</button>
+          <button class="tab-btn" id="tab-governance" role="tab" aria-selected="false" aria-controls="sec-governance"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> 治理有效</button>
+          <button class="tab-btn" id="tab-prosperity" role="tab" aria-selected="false" aria-controls="sec-prosperity"><i class="fa-solid fa-coins" aria-hidden="true"></i> 生活富裕</button>
+        </div>
+        <div class="header-actions">
+          <button class="btn-platform-entry" aria-label="进入管理后台" onclick="window.location.href='../admin/login.html'">
+            <i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i>
+            <span>管理后台</span>
+          </button>
+          <button class="btn-platform-entry" aria-label="进入村干部端" onclick="window.location.href='../cadre/index.html'">
+            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+            <span>村干部端</span>
+          </button>
+          <button class="btn-platform-entry" aria-label="进入村民端" onclick="window.location.href='../villager/login.html'">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            <span>村民端</span>
+          </button>
+        </div>
       </div>
 
       <div class="header-right">
-        <div class="date-badge">
-          <i class="fa-regular fa-calendar"></i>
+        <div class="date-badge" aria-live="polite" aria-atomic="true">
+          <i class="fa-regular fa-calendar" aria-hidden="true"></i>
           <span class="date-text">2026年06月30日</span>
           <span class="week-text">星期一</span>
         </div>
-        <div class="time-display">
-          <i class="fa-regular fa-clock"></i>
+        <div class="time-display" aria-live="polite" aria-atomic="true">
+          <i class="fa-regular fa-clock" aria-hidden="true"></i>
           <span class="time-text">00:00:00</span>
         </div>
-        <button class="btn-fullscreen" data-tip="全屏显示">
-          <i class="fa-solid fa-expand"></i>
+        <button class="btn-fullscreen" aria-label="切换全屏显示" data-tip="全屏显示">
+          <i class="fa-solid fa-expand" aria-hidden="true"></i>
         </button>
       </div>
     </div>
 
     <!-- ======== Main Content ======== -->
-    <div class="main-content">
+    <div class="main-content" id="main-content">
 
       <!-- ==========================================
            Section 1: 村情总览
            ========================================== -->
-      <div class="section active" id="sec-overview">
+      <div class="section active" id="sec-overview" role="tabpanel" aria-labelledby="tab-overview">
         <!-- KPI Grid -->
         <div class="kpi-grid">
           <div class="kpi-card" data-tip="全村常住人口数量">
-            <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="kpi-icon icon-teal"><i class="fa-solid fa-users"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">总人口</div>
               <div class="kpi-value">2,856</div>
@@ -84,7 +96,7 @@
             <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +1.1%</div>
           </div>
           <div class="kpi-card" data-tip="中共党员总数">
-            <div class="kpi-icon"><i class="fa-solid fa-flag"></i></div>
+            <div class="kpi-icon icon-red"><i class="fa-solid fa-flag"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">党员人数</div>
               <div class="kpi-value">67</div>
@@ -93,7 +105,7 @@
             <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +5.2%</div>
           </div>
           <div class="kpi-card" data-tip="耕地总面积">
-            <div class="kpi-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+            <div class="kpi-icon icon-lime"><i class="fa-solid fa-wheat-awn"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">耕地面积</div>
               <div class="kpi-value">4,560</div>
@@ -102,7 +114,7 @@
             <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> -0.5%</div>
           </div>
           <div class="kpi-card" data-tip="村集体经济年收入">
-            <div class="kpi-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="kpi-icon icon-gold"><i class="fa-solid fa-coins"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">村集体年收入</div>
               <div class="kpi-value">386</div>
@@ -111,7 +123,7 @@
             <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +8.6%</div>
           </div>
           <div class="kpi-card" data-tip="产业总产值">
-            <div class="kpi-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-chart-line"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">产业总产值</div>
               <div class="kpi-value">1,280</div>
@@ -120,7 +132,7 @@
             <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +12.5%</div>
           </div>
           <div class="kpi-card" data-tip="事件处置闭环率">
-            <div class="kpi-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-clipboard-check"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">事件处置率</div>
               <div class="kpi-value">91%</div>
@@ -129,7 +141,7 @@
             <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +3.4%</div>
           </div>
           <div class="kpi-card" data-tip="积分制参与率">
-            <div class="kpi-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="kpi-icon icon-teal"><i class="fa-solid fa-star"></i></div>
             <div class="kpi-content">
               <div class="kpi-label">积分参与率</div>
               <div class="kpi-value">72%</div>
@@ -139,141 +151,56 @@
           </div>
         </div>
 
-        <!-- 天气栏 -->
-        <div class="weather-bar">
-          <div class="weather-item" data-tip="今日天气：多云">
-            <i class="fa-solid fa-cloud-sun"></i>
-            <span class="w-val">多云 26°C</span>
-          </div>
-          <div class="weather-item" data-tip="今日湿度">
-            <i class="fa-solid fa-droplet"></i>
-            <span class="w-val">湿度 65%</span>
-          </div>
-          <div class="weather-item" data-tip="今日风力">
-            <i class="fa-solid fa-wind"></i>
-            <span class="w-val">东南风 3级</span>
-          </div>
-          <div class="weather-item" data-tip="今日降雨量">
-            <i class="fa-solid fa-cloud-rain"></i>
-            <span class="w-val">降雨量 0mm</span>
-          </div>
-          <div class="weather-item" data-tip="紫外线指数">
-            <i class="fa-solid fa-sun"></i>
-            <span class="w-val">紫外线 中等</span>
-          </div>
-          <div class="weather-item" data-tip="日出时间">
-            <i class="fa-solid fa-sun"></i>
-            <span class="w-val">日出 05:32</span>
-          </div>
-          <div class="weather-item" data-tip="日落时间">
-            <i class="fa-solid fa-moon"></i>
-            <span class="w-val">日落 19:45</span>
-          </div>
-        </div>
-
-        <div class="stat-row" style="margin-bottom:12px;">
-          <div class="stat-item">
-            <div class="si-num">892</div>
-            <div class="si-label">耕地(亩)</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">3,680</div>
-            <div class="si-label">林地(亩)</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">520</div>
-            <div class="si-label">园地(亩)</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">860</div>
-            <div class="si-label">住宅用地(亩)</div>
-          </div>
-        </div>
-        <div class="stat-row" style="margin-bottom:12px;">
-          <div class="stat-item">
-            <div class="si-num">3条</div>
-            <div class="si-label">河流水系</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">2座</div>
-            <div class="si-label">水库山塘</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">15km</div>
-            <div class="si-label">通村公路</div>
-          </div>
-          <div class="stat-item">
-            <div class="si-num">98%</div>
-            <div class="si-label">安全饮水覆盖</div>
-          </div>
-        </div>
-
         <div class="layout-three">
-          <!-- Left: Village Summary -->
+          <!-- Left: Village Summary + Land Data -->
           <div class="col-left">
-            <div class="panel" style="flex:1;">
-              <div class="panel-title"><span class="dot"></span>村庄概要</div>
-              <div class="summary-text">
-                幸福村位于XX省XX市XX县，交通便利，民风淳朴。全村总面积12平方公里，下辖6个村民小组。近年来，在党和政府的领导下，幸福村坚持以乡村振兴战略为引领，围绕"产业兴旺、生态宜居、乡风文明、治理有效、生活富裕"的总要求，全面推进数字乡村建设，取得了显著成效。村集体经济不断壮大，人居环境持续改善，村民生活水平稳步提升。
-              </div>
-              <div class="stat-row" style="margin-top:12px;">
-                <div class="stat-item">
-                  <div class="si-num">12</div>
-                  <div class="si-label">面积(km²)</div>
+            <div class="inner-col">
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>村庄概要</div>
+                <div class="summary-text">
+                  幸福村位于XX省XX市XX县，交通便利，民风淳朴。全村总面积12平方公里，下辖6个村民小组。近年来坚持乡村振兴战略，全面推进数字乡村建设，取得了显著成效。
                 </div>
-                <div class="stat-item">
-                  <div class="si-num">6</div>
-                  <div class="si-label">村民小组</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">18</div>
-                  <div class="si-label">自然村</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">2.8</div>
-                  <div class="si-label">户均人口</div>
+                <div class="mt-6 stat-row">
+                  <div class="stat-item"><div class="si-num">12</div><div class="si-label">面积(km²)</div></div>
+                  <div class="stat-item"><div class="si-num">6</div><div class="si-label">村民小组</div></div>
+                  <div class="stat-item"><div class="si-num">18</div><div class="si-label">自然村</div></div>
+                  <div class="stat-item"><div class="si-num">2.8</div><div class="si-label">户均人口</div></div>
                 </div>
               </div>
-              <div class="stat-row" style="margin-top:8px;">
-                <div class="stat-item">
-                  <div class="si-num">86%</div>
-                  <div class="si-label">道路硬化</div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>土地利用</div>
+                <div class="stat-row">
+                  <div class="stat-item"><div class="si-num">892</div><div class="si-label">耕地(亩)</div></div>
+                  <div class="stat-item"><div class="si-num">3,680</div><div class="si-label">林地(亩)</div></div>
+                  <div class="stat-item"><div class="si-num">520</div><div class="si-label">园地(亩)</div></div>
+                  <div class="stat-item"><div class="si-num">860</div><div class="si-label">住宅(亩)</div></div>
                 </div>
-                <div class="stat-item">
-                  <div class="si-num">100%</div>
-                  <div class="si-label">通电率</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">98%</div>
-                  <div class="si-label">自来水覆盖</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">95%</div>
-                  <div class="si-label">宽带覆盖</div>
+                <div class="mt-4 stat-row">
+                  <div class="stat-item"><div class="si-num">3条</div><div class="si-label">河流水系</div></div>
+                  <div class="stat-item"><div class="si-num">2座</div><div class="si-label">水库山塘</div></div>
+                  <div class="stat-item"><div class="si-num">15km</div><div class="si-label">通村公路</div></div>
+                  <div class="stat-item"><div class="si-num">98%</div><div class="si-label">安全饮水</div></div>
                 </div>
               </div>
-              <div class="stat-row" style="margin-top:8px;">
-                <div class="stat-item">
-                  <div class="si-num">8个</div>
-                  <div class="si-label">文化活动场所</div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>基础设施建设</div>
+                <div class="stat-row">
+                  <div class="stat-item"><div class="si-num">86%</div><div class="si-label">道路硬化</div></div>
+                  <div class="stat-item"><div class="si-num">100%</div><div class="si-label">通电率</div></div>
+                  <div class="stat-item"><div class="si-num">98%</div><div class="si-label">自来水</div></div>
+                  <div class="stat-item"><div class="si-num">95%</div><div class="si-label">宽带覆盖</div></div>
                 </div>
-                <div class="stat-item">
-                  <div class="si-num">5条</div>
-                  <div class="si-label">公交线路</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">2座</div>
-                  <div class="si-label">卫生室</div>
-                </div>
-                <div class="stat-item">
-                  <div class="si-num">1所</div>
-                  <div class="si-label">小学</div>
+                <div class="mt-4 stat-row">
+                  <div class="stat-item"><div class="si-num">8个</div><div class="si-label">文化活动场所</div></div>
+                  <div class="stat-item"><div class="si-num">5条</div><div class="si-label">公交线路</div></div>
+                  <div class="stat-item"><div class="si-num">2座</div><div class="si-label">卫生室</div></div>
+                  <div class="stat-item"><div class="si-num">1所</div><div class="si-label">小学</div></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Center: Industry Icons + Population Structure -->
+          <!-- Center: Industry + Population + Party Info -->
           <div class="col-center">
             <div class="inner-col">
               <div class="panel">
@@ -307,51 +234,49 @@
               </div>
               <div class="panel">
                 <div class="panel-title"><span class="dot"></span>人口结构</div>
-                <!-- 男女比例 -->
                 <div class="h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">男性</span>
-                    <div class="h-bar-fill" style="width:53%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:53%;">
                       <span class="h-bar-value">1,514人 (53%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">女性</span>
-                    <div class="h-bar-fill" style="width:47%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:47%;">
                       <span class="h-bar-value">1,342人 (47%)</span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
-                <!-- 年龄段分布 -->
-                <div class="h-bar-chart" style="margin-top:12px;">
+                <div class="mt-6 h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">0-17岁</span>
-                    <div class="h-bar-fill" style="width:18%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:18%;">
                       <span class="h-bar-value">514人</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">18-35岁</span>
-                    <div class="h-bar-fill" style="width:28%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:28%;">
                       <span class="h-bar-value">800人</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">36-59岁</span>
-                    <div class="h-bar-fill" style="width:35%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;">
                       <span class="h-bar-value">999人</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">60岁以上</span>
-                    <div class="h-bar-fill" style="width:19%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:19%;">
                       <span class="h-bar-value">543人</span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村两委信息</div>
+                <div class="panel-title"><span class="dot"></span>村两委与教育</div>
                 <div class="summary-stats">
                   <div class="summary-stat-item" data-tip="村党支部委员数量">
                     <div class="ss-val">5人</div>
@@ -370,10 +295,7 @@
                     <div class="ss-label">监委会成员</div>
                   </div>
                 </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>民族与教育</div>
-                <div class="mini-card-grid cols-2">
+                <div class="mt-6 mini-card-grid cols-2">
                   <div class="mini-card" data-tip="主要民族构成">
                     <div class="mc-icon"><i class="fa-solid fa-people-group" style="color:#2b6e3c;"></i></div>
                     <div class="mc-val">汉族98%</div>
@@ -385,37 +307,11 @@
                     <div class="mc-label">义务教育入学率</div>
                   </div>
                 </div>
-                <div class="h-bar-chart" style="margin-top:10px;">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">小学及以下</span>
-                    <div class="h-bar-fill" style="width:28%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
-                      <span class="h-bar-value">799人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">初中</span>
-                    <div class="h-bar-fill" style="width:35%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
-                      <span class="h-bar-value">999人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">高中/中专</span>
-                    <div class="h-bar-fill" style="width:22%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
-                      <span class="h-bar-value">628人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">大专及以上</span>
-                    <div class="h-bar-fill" style="width:15%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
-                      <span class="h-bar-value">430人</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
-          <!-- Right: Notices + Village Affairs Data -->
+          <!-- Right: Notices + Village Affairs -->
           <div class="col-right">
             <div class="inner-col">
               <div class="panel">
@@ -423,38 +319,23 @@
                 <div class="notice-list">
                   <div class="notice-item notice-warning" data-tip="点击查看详情">
                     <div class="notice-icon"><i class="fa-solid fa-bullhorn"></i></div>
-                    <div class="notice-title">关于开展2026年度防汛抗旱工作的紧急通知</div>
-                    <div class="notice-time">2026-06-28</div>
+                    <div class="notice-content"><div class="notice-title">关于开展2026年度防汛抗旱工作的紧急通知</div><div class="notice-time">2026-06-28</div></div>
                   </div>
                   <div class="notice-item notice-info" data-tip="点击查看详情">
                     <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
-                    <div class="notice-title">2026年第三季度村民代表大会日程安排</div>
-                    <div class="notice-time">2026-06-25</div>
+                    <div class="notice-content"><div class="notice-title">2026年第三季度村民代表大会日程安排</div><div class="notice-time">2026-06-25</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="点击查看详情">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">通村道路硬化工程竣工验收公告</div>
-                    <div class="notice-time">2026-06-20</div>
+                    <div class="notice-content"><div class="notice-title">通村道路硬化工程竣工验收公告</div><div class="notice-time">2026-06-20</div></div>
                   </div>
                   <div class="notice-item notice-danger" data-tip="点击查看详情">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">关于规范农村宅基地审批管理的通知</div>
-                    <div class="notice-time">2026-06-15</div>
+                    <div class="notice-content"><div class="notice-title">关于规范农村宅基地审批管理的通知</div><div class="notice-time">2026-06-15</div></div>
                   </div>
                   <div class="notice-item notice-info" data-tip="点击查看详情">
                     <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
-                    <div class="notice-title">村卫生室药品采购招标公示</div>
-                    <div class="notice-time">2026-06-10</div>
-                  </div>
-                  <div class="notice-item notice-warning" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-bullhorn"></i></div>
-                    <div class="notice-title">2026年度耕地地力保护补贴发放公示</div>
-                    <div class="notice-time">2026-06-05</div>
-                  </div>
-                  <div class="notice-item notice-success" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">乡村电商服务站正式运营公告</div>
-                    <div class="notice-time">2026-05-30</div>
+                    <div class="notice-content"><div class="notice-title">村卫生室药品采购招标公示</div><div class="notice-time">2026-06-10</div></div>
                   </div>
                 </div>
               </div>
@@ -488,7 +369,7 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村务重点工作进展</div>
+                <div class="panel-title"><span class="dot"></span>重点工作进展</div>
                 <div class="progress-group">
                   <div class="progress-item">
                     <div class="progress-header">
@@ -496,7 +377,7 @@
                       <span class="progress-val text-green">68%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:68%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));"></div>
+                      <div class="progress-fill fill-primary" style="width:68%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -505,7 +386,7 @@
                       <span class="progress-val text-green">92%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:92%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));"></div>
+                      <div class="progress-fill fill-success" style="width:92%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -514,37 +395,8 @@
                       <span class="progress-val text-green">45%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:45%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));"></div>
+                      <div class="progress-fill fill-info" style="width:45%;"></div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村务公开时间线</div>
-                <div class="timeline">
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-28</div>
-                    <div class="timeline-text">防汛抗旱物资储备情况公示</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-20</div>
-                    <div class="timeline-text">道路硬化工程验收报告公开</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-15</div>
-                    <div class="timeline-text">宅基地审批管理办法征求意见</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-10</div>
-                    <div class="timeline-text">卫生室药品采购中标公示</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-05</div>
-                    <div class="timeline-text">耕地地力保护补贴发放公示</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-05-30</div>
-                    <div class="timeline-text">村集体资产清查报告公开</div>
                   </div>
                 </div>
               </div>
@@ -556,19 +408,19 @@
       <!-- ==========================================
            Section 2: 产业兴旺
            ========================================== -->
-      <div class="section" id="sec-industry">
+      <div class="section" id="sec-industry" role="tabpanel" aria-labelledby="tab-industry">
         <div class="filter-bar">
           <div class="filter-group">
-            <label class="filter-label"><i class="fa-solid fa-calendar-days"></i> 时间</label>
-            <select class="filter-select">
+            <label class="filter-label" for="filter-time"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> 时间</label>
+            <select class="filter-select" id="filter-time" name="filter-time">
               <option>2026年</option>
               <option>2025年</option>
               <option>2024年</option>
             </select>
           </div>
           <div class="filter-group">
-            <label class="filter-label"><i class="fa-solid fa-tag"></i> 产业类型</label>
-            <select class="filter-select">
+            <label class="filter-label" for="filter-type"><i class="fa-solid fa-tag" aria-hidden="true"></i> 产业类型</label>
+            <select class="filter-select" id="filter-type" name="filter-type">
               <option>全部</option>
               <option>种植业</option>
               <option>养殖业</option>
@@ -587,7 +439,7 @@
           <span>近7日有3个产业项目存在进度预警，请关注：蔬菜大棚二期施工延误、养殖场环评待审批、电商仓储扩容超预算</span>
         </div>
 
-        <div class="summary-stats" style="margin-bottom:12px;">
+        <div class="summary-stats">
           <div class="summary-stat-item" data-tip="本年度产业总产值">
             <div class="ss-val">1,280万</div>
             <div class="ss-label">产业总产值</div>
@@ -661,7 +513,7 @@
               <div class="panel">
                 <div class="panel-title"><span class="dot"></span>产值月度趋势</div>
                 <div class="line-chart">
-                  <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                  <svg viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
                     <line class="grid-line" x1="40" y1="20" x2="390" y2="20"/>
                     <line class="grid-line" x1="40" y1="55" x2="390" y2="55"/>
                     <line class="grid-line" x1="40" y1="90" x2="390" y2="90"/>
@@ -696,7 +548,7 @@
             </div>
           </div>
 
-          <!-- Center: Bar Chart + Brand Products -->
+          <!-- Center: Bar Chart + Brand Products + Project Progress -->
           <div class="col-center">
             <div class="inner-col">
               <div class="panel">
@@ -708,37 +560,37 @@
                 <div class="bar-chart">
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:80%;background:linear-gradient(180deg,#2b6e3c,rgba(43,110,60,0.3));" data-value="380万" data-tip="种植业年产值380万元"></div>
+                      <div class="bar fill-primary" style="height:80%;" data-value="380万" data-tip="种植业年产值380万元"></div>
                     </div>
                     <span class="bar-label">种植业</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:55%;background:linear-gradient(180deg,#2b8a6e,rgba(43,138,110,0.3));" data-value="260万" data-tip="养殖业年产值260万元"></div>
+                      <div class="bar fill-info" style="height:55%;" data-value="260万" data-tip="养殖业年产值260万元"></div>
                     </div>
                     <span class="bar-label">养殖业</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:45%;background:linear-gradient(180deg,#22a84a,rgba(34,168,74,0.3));" data-value="210万" data-tip="加工业年产值210万元"></div>
+                      <div class="bar fill-success" style="height:45%;" data-value="210万" data-tip="加工业年产值210万元"></div>
                     </div>
                     <span class="bar-label">加工业</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:40%;background:linear-gradient(180deg,#8fb339,rgba(143,179,57,0.3));" data-value="190万" data-tip="乡村旅游年产值190万元"></div>
+                      <div class="bar fill-lime" style="height:40%;" data-value="190万" data-tip="乡村旅游年产值190万元"></div>
                     </div>
                     <span class="bar-label">乡村旅游</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:35%;background:linear-gradient(180deg,#146c31,rgba(20,108,49,0.3));" data-value="160万" data-tip="电商服务年产值160万元"></div>
+                      <div class="bar fill-primary" style="height:35%;" data-value="160万" data-tip="电商服务年产值160万元"></div>
                     </div>
                     <span class="bar-label">电商服务</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:22%;background:linear-gradient(180deg,#e8a317,rgba(232,163,23,0.3));" data-value="80万" data-tip="手工艺品年产值80万元"></div>
+                      <div class="bar fill-warning" style="height:22%;" data-value="80万" data-tip="手工艺品年产值80万元"></div>
                     </div>
                     <span class="bar-label">手工艺品</span>
                   </div>
@@ -765,68 +617,113 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>产业带动就业</div>
-                <div class="h-bar-chart">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">种植业</span>
-                    <div class="h-bar-fill" style="width:35%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
-                      <span class="h-bar-value">92人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">养殖业</span>
-                    <div class="h-bar-fill" style="width:22%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
-                      <span class="h-bar-value">58人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">加工业</span>
-                    <div class="h-bar-fill" style="width:15%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
-                      <span class="h-bar-value">40人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">乡村旅游</span>
-                    <div class="h-bar-fill" style="width:18%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
-                      <span class="h-bar-value">48人</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">电商/手工艺</span>
-                    <div class="h-bar-fill" style="width:10%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
-                      <span class="h-bar-value">28人</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
                 <div class="panel-title"><span class="dot"></span>产业项目进度</div>
                 <div class="notice-list">
                   <div class="notice-item notice-warning" data-tip="蔬菜大棚二期详情">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">蔬菜大棚二期 - 进度68% 施工延误7天</div>
-                    <div class="notice-time">预计8月完工</div>
+                    <div class="notice-content"><div class="notice-title">蔬菜大棚二期 - 进度68% 施工延误7天</div><div class="notice-time">预计8月完工</div></div>
                   </div>
                   <div class="notice-item notice-danger" data-tip="养殖场环评详情">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">养殖场扩建 - 环评审批中 待审批</div>
-                    <div class="notice-time">预计7月中旬</div>
+                    <div class="notice-content"><div class="notice-title">养殖场扩建 - 环评审批中 待审批</div><div class="notice-time">预计7月中旬</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="农产品冷链仓库详情">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">农产品冷链仓库 - 已完工验收</div>
-                    <div class="notice-time">2026-05-15</div>
+                    <div class="notice-content"><div class="notice-title">农产品冷链仓库 - 已完工验收</div><div class="notice-time">2026-05-15</div></div>
                   </div>
                   <div class="notice-item notice-warning" data-tip="电商仓储扩容详情">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">电商仓储扩容 - 进度85% 超预算5%</div>
-                    <div class="notice-time">预计7月完工</div>
+                    <div class="notice-content"><div class="notice-title">电商仓储扩容 - 进度85% 超预算5%</div><div class="notice-time">预计7月完工</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="有机认证详情">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">有机农产品认证 - 3个产品获证</div>
-                    <div class="notice-time">2026-04-20</div>
+                    <div class="notice-content"><div class="notice-title">有机农产品认证 - 3个产品获证</div><div class="notice-time">2026-04-20</div></div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Industry Detail + Employment + Investment -->
+          <div class="col-right">
+            <div class="inner-col">
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>产业详情</div>
+                <div class="data-list">
+                  <div class="data-list-header cols-4">
+                    <span>名称</span>
+                    <span class="col-sort" data-tip="点击排序">类型</span>
+                    <span class="col-sort" data-tip="点击排序">产值</span>
+                    <span class="col-sort" data-tip="点击排序">从业人数</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="幸福有机农场详情">
+                    <span class="col-name">幸福有机农场</span><span>种植业</span><span>150万</span><span>45人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="兴旺养殖合作社详情">
+                    <span class="col-name">兴旺养殖合作社</span><span>养殖业</span><span>130万</span><span>38人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="绿色蔬菜基地详情">
+                    <span class="col-name">绿色蔬菜基地</span><span>种植业</span><span>120万</span><span>32人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="田园居农家乐详情">
+                    <span class="col-name">田园居农家乐</span><span>乡村旅游</span><span>110万</span><span>28人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="豆香坊加工厂详情">
+                    <span class="col-name">豆香坊加工厂</span><span>加工业</span><span>105万</span><span>25人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="乡村优品电商详情">
+                    <span class="col-name">乡村优品电商</span><span>电商服务</span><span>95万</span><span>18人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="锦绣编织坊详情">
+                    <span class="col-name">锦绣编织坊</span><span>手工艺品</span><span>80万</span><span>22人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="丰收果园详情">
+                    <span class="col-name">丰收果园</span><span>种植业</span><span>65万</span><span>15人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="清水鱼塘养殖基地详情">
+                    <span class="col-name">清水鱼塘养殖基地</span><span>养殖业</span><span>55万</span><span>12人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="幸福花卉种植园详情">
+                    <span class="col-name">幸福花卉种植园</span><span>种植业</span><span>48万</span><span>10人</span>
+                  </div>
+                  <div class="data-list-row cols-4" data-tip="田园乐民宿详情">
+                    <span class="col-name">田园乐民宿</span><span>乡村旅游</span><span>42万</span><span>8人</span>
+                  </div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>产业带动就业</div>
+                <div class="h-bar-chart">
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">种植业</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;">
+                      <span class="h-bar-value">92人</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">养殖业</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:22%;">
+                      <span class="h-bar-value">58人</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">加工业</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:15%;">
+                      <span class="h-bar-value">40人</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">乡村旅游</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:18%;">
+                      <span class="h-bar-value">48人</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">电商/手工艺</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:10%;">
+                      <span class="h-bar-value">28人</span>
+                    </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
@@ -860,61 +757,13 @@
               </div>
             </div>
           </div>
-
-          <!-- Right: Industry Detail List -->
-          <div class="col-right">
-            <div class="panel" style="flex:1;">
-              <div class="panel-title"><span class="dot"></span>产业详情</div>
-              <div class="data-list">
-                <div class="data-list-header" style="grid-template-columns:2fr 1fr 1fr 1fr;">
-                  <span>名称</span>
-                  <span class="col-sort" data-tip="点击排序">类型</span>
-                  <span class="col-sort" data-tip="点击排序">产值</span>
-                  <span class="col-sort" data-tip="点击排序">从业人数</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="幸福有机农场详情">
-                  <span class="col-name">幸福有机农场</span><span>种植业</span><span>150万</span><span>45人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="兴旺养殖合作社详情">
-                  <span class="col-name">兴旺养殖合作社</span><span>养殖业</span><span>130万</span><span>38人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="绿色蔬菜基地详情">
-                  <span class="col-name">绿色蔬菜基地</span><span>种植业</span><span>120万</span><span>32人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="田园居农家乐详情">
-                  <span class="col-name">田园居农家乐</span><span>乡村旅游</span><span>110万</span><span>28人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="豆香坊加工厂详情">
-                  <span class="col-name">豆香坊加工厂</span><span>加工业</span><span>105万</span><span>25人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="乡村优品电商详情">
-                  <span class="col-name">乡村优品电商</span><span>电商服务</span><span>95万</span><span>18人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="锦绣编织坊详情">
-                  <span class="col-name">锦绣编织坊</span><span>手工艺品</span><span>80万</span><span>22人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="丰收果园详情">
-                  <span class="col-name">丰收果园</span><span>种植业</span><span>65万</span><span>15人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="清水鱼塘养殖基地详情">
-                  <span class="col-name">清水鱼塘养殖基地</span><span>养殖业</span><span>55万</span><span>12人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="幸福花卉种植园详情">
-                  <span class="col-name">幸福花卉种植园</span><span>种植业</span><span>48万</span><span>10人</span>
-                </div>
-                <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="田园乐民宿详情">
-                  <span class="col-name">田园乐民宿</span><span>乡村旅游</span><span>42万</span><span>8人</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- ==========================================
+            <!-- ==========================================
            Section 3: 生态宜居
            ========================================== -->
-      <div class="section" id="sec-ecology">
+      <div class="section" id="sec-ecology" role="tabpanel" aria-labelledby="tab-ecology">
         <!-- 天气栏 -->
         <div class="weather-bar">
           <div class="weather-item" data-tip="今日天气">
@@ -940,7 +789,7 @@
         </div>
 
         <div class="layout-three">
-          <!-- Left: Monitor Cards + Water Quality + Livability Progress -->
+          <!-- Left: Environment Monitor (merged water+air) + Livability + Facilities -->
           <div class="col-left">
             <div class="inner-col">
               <div class="panel">
@@ -967,10 +816,7 @@
                     <div class="monitor-unit">%RH</div>
                   </div>
                 </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>水质监测</div>
-                <div class="mini-card-grid cols-3">
+                <div class="mt-6 mini-card-grid cols-3">
                   <div class="mini-card" data-tip="村域水源pH值，正常范围6.5-8.5">
                     <div class="mc-icon"><i class="fa-solid fa-flask" style="color:#2b6e3c;"></i></div>
                     <div class="mc-val">7.2</div>
@@ -987,23 +833,20 @@
                     <div class="mc-label">浊度</div>
                   </div>
                 </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>大气监测</div>
-                <div class="mini-card-grid cols-3">
+                <div class="mt-6 mini-card-grid cols-3">
                   <div class="mini-card" data-tip="二氧化硫浓度">
                     <div class="mc-icon"><i class="fa-solid fa-smog" style="color:#8fb339;"></i></div>
-                    <div class="mc-val">12μg/m³</div>
+                    <div class="mc-val">12&mu;g/m&sup3;</div>
                     <div class="mc-label">SO2</div>
                   </div>
                   <div class="mini-card" data-tip="氮氧化物浓度">
                     <div class="mc-icon"><i class="fa-solid fa-cloud" style="color:#2b6e3c;"></i></div>
-                    <div class="mc-val">28μg/m³</div>
+                    <div class="mc-val">28&mu;g/m&sup3;</div>
                     <div class="mc-label">NO2</div>
                   </div>
                   <div class="mini-card" data-tip="一氧化碳浓度">
                     <div class="mc-icon"><i class="fa-solid fa-industry" style="color:#22a84a;"></i></div>
-                    <div class="mc-val">0.6mg/m³</div>
+                    <div class="mc-val">0.6mg/m&sup3;</div>
                     <div class="mc-label">CO</div>
                   </div>
                 </div>
@@ -1017,7 +860,7 @@
                       <span class="progress-val text-green">95%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:95%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));"></div>
+                      <div class="progress-fill fill-primary" style="width:95%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1026,7 +869,7 @@
                       <span class="progress-val text-green">82%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:82%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));"></div>
+                      <div class="progress-fill fill-info" style="width:82%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1035,15 +878,40 @@
                       <span class="progress-val text-green">96%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:96%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));"></div>
+                      <div class="progress-fill fill-success" style="width:96%;"></div>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>环保设施</div>
+                <div class="data-list">
+                  <div class="data-list-header cols-3">
+                    <span>设施名称</span>
+                    <span>状态</span>
+                    <span>日处理能力</span>
+                  </div>
+                  <div class="data-list-row cols-3" data-tip="污水处理站详情">
+                    <span class="col-name">污水处理站</span><span class="tag-green">运行中</span><span>50吨/日</span>
+                  </div>
+                  <div class="data-list-row cols-3" data-tip="垃圾中转站详情">
+                    <span class="col-name">垃圾中转站</span><span class="tag-green">运行中</span><span>5吨/日</span>
+                  </div>
+                  <div class="data-list-row cols-3" data-tip="有机堆肥点详情">
+                    <span class="col-name">有机堆肥点</span><span class="tag-green">运行中</span><span>2吨/日</span>
+                  </div>
+                  <div class="data-list-row cols-3" data-tip="雨水收集系统详情">
+                    <span class="col-name">雨水收集系统</span><span class="tag-green">运行中</span><span>30m&sup3;/日</span>
+                  </div>
+                  <div class="data-list-row cols-3" data-tip="太阳能路灯详情">
+                    <span class="col-name">太阳能路灯</span><span class="tag-green">正常运行</span><span>120盏</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Center: Ring Charts + Energy Stats -->
+          <!-- Center: Ring Charts + Energy Stats + Comprehensive Improvement -->
           <div class="col-center">
             <div class="inner-col">
               <div class="panel">
@@ -1145,7 +1013,7 @@
                       <span class="progress-val text-green">78%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:78%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));"></div>
+                      <div class="progress-fill fill-lime" style="width:78%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1154,7 +1022,7 @@
                       <span class="progress-val text-green">90%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:90%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));"></div>
+                      <div class="progress-fill fill-primary" style="width:90%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1163,7 +1031,7 @@
                       <span class="progress-val text-green">75%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:75%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));"></div>
+                      <div class="progress-fill fill-info" style="width:75%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1172,50 +1040,21 @@
                       <span class="progress-val text-green">88%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:88%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));"></div>
+                      <div class="progress-fill fill-success" style="width:88%;"></div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>生态治理投入</div>
-                <div class="summary-stats">
-                  <div class="summary-stat-item" data-tip="本年度生态环境治理投入资金">
-                    <div class="ss-val">86万</div>
-                    <div class="ss-label">环保投入</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="政府环保专项补助资金">
-                    <div class="ss-val">32万</div>
-                    <div class="ss-label">政府补助</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="村集体自筹环保资金">
-                    <div class="ss-val">54万</div>
-                    <div class="ss-label">村集体投入</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="污水处理设施建设投入">
-                    <div class="ss-val">38万</div>
-                    <div class="ss-label">污水处理</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="垃圾清运体系投入">
-                    <div class="ss-val">18万</div>
-                    <div class="ss-label">垃圾清运</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="村庄绿化美化投入">
-                    <div class="ss-val">30万</div>
-                    <div class="ss-label">绿化美化</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Right: Monthly Trend + Waste Classification -->
+          <!-- Right: Monthly Trend + Waste Classification + Hygiene -->
           <div class="col-right">
             <div class="inner-col">
               <div class="panel">
                 <div class="panel-title"><span class="dot"></span>环保事件月度趋势</div>
                 <div class="line-chart">
-                  <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                  <svg viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
                     <line class="grid-line" x1="40" y1="20" x2="390" y2="20"/>
                     <line class="grid-line" x1="40" y1="55" x2="390" y2="55"/>
                     <line class="grid-line" x1="40" y1="90" x2="390" y2="90"/>
@@ -1252,28 +1091,28 @@
                 <div class="h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">可回收</span>
-                    <div class="h-bar-fill" style="width:42%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:42%;">
                       <span class="h-bar-value">18.6吨/月 <span class="tag-green" style="font-size:10px;">达标</span></span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">厨余</span>
-                    <div class="h-bar-fill" style="width:38%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:38%;">
                       <span class="h-bar-value">16.8吨/月 <span class="tag-green" style="font-size:10px;">达标</span></span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">有害</span>
-                    <div class="h-bar-fill" style="width:8%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:8%;">
                       <span class="h-bar-value">0.5吨/月 <span class="tag-orange" style="font-size:10px;">管控中</span></span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">其他</span>
-                    <div class="h-bar-fill" style="width:12%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:12%;">
                       <span class="h-bar-value">5.3吨/月 <span class="tag-green" style="font-size:10px;">达标</span></span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
@@ -1296,31 +1135,6 @@
                   </div>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>环保设施</div>
-                <div class="data-list">
-                  <div class="data-list-header" style="grid-template-columns:2fr 1fr 1fr;">
-                    <span>设施名称</span>
-                    <span>状态</span>
-                    <span>日处理能力</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="污水处理站详情">
-                    <span class="col-name">污水处理站</span><span class="tag-green">运行中</span><span>50吨/日</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="垃圾中转站详情">
-                    <span class="col-name">垃圾中转站</span><span class="tag-green">运行中</span><span>5吨/日</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="有机堆肥点详情">
-                    <span class="col-name">有机堆肥点</span><span class="tag-green">运行中</span><span>2吨/日</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="雨水收集系统详情">
-                    <span class="col-name">雨水收集系统</span><span class="tag-green">运行中</span><span>30m³/日</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="太阳能路灯详情">
-                    <span class="col-name">太阳能路灯</span><span class="tag-green">正常运行</span><span>120盏</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1329,9 +1143,9 @@
       <!-- ==========================================
            Section 4: 乡风文明
            ========================================== -->
-      <div class="section" id="sec-culture">
+      <div class="section" id="sec-culture" role="tabpanel" aria-labelledby="tab-culture">
         <div class="layout-three">
-          <!-- Left: Progress Bars + Volunteer Stats -->
+          <!-- Left: Points + Volunteer Stats + Teams -->
           <div class="col-left">
             <div class="inner-col">
               <div class="panel">
@@ -1343,7 +1157,7 @@
                       <span class="progress-val text-green">72%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:72%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));"></div>
+                      <div class="progress-fill fill-primary" style="width:72%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1352,7 +1166,7 @@
                       <span class="progress-val text-cyan">65%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:65%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));"></div>
+                      <div class="progress-fill fill-info" style="width:65%;"></div>
                     </div>
                   </div>
                 </div>
@@ -1386,54 +1200,97 @@
                 <div class="notice-list">
                   <div class="notice-item notice-success" data-tip="志愿服务队详情">
                     <div class="notice-icon"><i class="fa-solid fa-people-group"></i></div>
-                    <div class="notice-title">幸福村巾帼志愿服务队 - 32人</div>
-                    <div class="notice-time">本月服务5次</div>
+                    <div class="notice-content"><div class="notice-title">幸福村巾帼志愿服务队 - 32人</div><div class="notice-time">本月服务5次</div></div>
                   </div>
                   <div class="notice-item notice-info" data-tip="志愿服务队详情">
                     <div class="notice-icon"><i class="fa-solid fa-people-group"></i></div>
-                    <div class="notice-title">青年突击队 - 28人</div>
-                    <div class="notice-time">本月服务4次</div>
+                    <div class="notice-content"><div class="notice-title">青年突击队 - 28人</div><div class="notice-time">本月服务4次</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="志愿服务队详情">
                     <div class="notice-icon"><i class="fa-solid fa-people-group"></i></div>
-                    <div class="notice-title">银发先锋志愿服务队 - 45人</div>
-                    <div class="notice-time">本月服务3次</div>
+                    <div class="notice-content"><div class="notice-title">银发先锋志愿服务队 - 45人</div><div class="notice-time">本月服务3次</div></div>
                   </div>
                   <div class="notice-item notice-info" data-tip="志愿服务队详情">
                     <div class="notice-icon"><i class="fa-solid fa-people-group"></i></div>
-                    <div class="notice-title">环保志愿服务队 - 51人</div>
-                    <div class="notice-time">本月服务6次</div>
+                    <div class="notice-content"><div class="notice-title">环保志愿服务队 - 51人</div><div class="notice-time">本月服务6次</div></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Center: Civilization Family Ranking -->
+          <!-- Center: Family Ranking + Recent Activities + Cultural Stats -->
           <div class="col-center">
-            <div class="panel" style="flex:1;">
-              <div class="panel-title"><span class="dot"></span>文明家庭榜单</div>
-              <ul class="rank-list">
-                <li class="rank-item"><span class="rank-num">1</span><span class="rank-name">张建国</span><span class="rank-score">2,860分</span></li>
-                <li class="rank-item"><span class="rank-num">2</span><span class="rank-name">李秀英</span><span class="rank-score">2,750分</span></li>
-                <li class="rank-item"><span class="rank-num">3</span><span class="rank-name">王德明</span><span class="rank-score">2,680分</span></li>
-                <li class="rank-item"><span class="rank-num">4</span><span class="rank-name">刘志强</span><span class="rank-score">2,520分</span></li>
-                <li class="rank-item"><span class="rank-num">5</span><span class="rank-name">陈美华</span><span class="rank-score">2,450分</span></li>
-                <li class="rank-item"><span class="rank-num">6</span><span class="rank-name">赵国栋</span><span class="rank-score">2,380分</span></li>
-                <li class="rank-item"><span class="rank-num">7</span><span class="rank-name">孙丽萍</span><span class="rank-score">2,310分</span></li>
-                <li class="rank-item"><span class="rank-num">8</span><span class="rank-name">周建华</span><span class="rank-score">2,250分</span></li>
-                <li class="rank-item"><span class="rank-num">9</span><span class="rank-name">吴明辉</span><span class="rank-score">2,180分</span></li>
-                <li class="rank-item"><span class="rank-num">10</span><span class="rank-name">郑秋菊</span><span class="rank-score">2,120分</span></li>
-                <li class="rank-item"><span class="rank-num">11</span><span class="rank-name">钱永发</span><span class="rank-score">2,060分</span></li>
-                <li class="rank-item"><span class="rank-num">12</span><span class="rank-name">孙丽华</span><span class="rank-score">2,020分</span></li>
-                <li class="rank-item"><span class="rank-num">13</span><span class="rank-name">吴德才</span><span class="rank-score">1,980分</span></li>
-                <li class="rank-item"><span class="rank-num">14</span><span class="rank-name">郑淑芬</span><span class="rank-score">1,950分</span></li>
-                <li class="rank-item"><span class="rank-num">15</span><span class="rank-name">马建平</span><span class="rank-score">1,920分</span></li>
-              </ul>
+            <div class="inner-col">
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>文明家庭榜单</div>
+                <ul class="rank-list">
+                  <li class="rank-item"><span class="rank-num">1</span><span class="rank-name">张建国</span><span class="rank-score">2,860分</span></li>
+                  <li class="rank-item"><span class="rank-num">2</span><span class="rank-name">李秀英</span><span class="rank-score">2,750分</span></li>
+                  <li class="rank-item"><span class="rank-num">3</span><span class="rank-name">王德明</span><span class="rank-score">2,680分</span></li>
+                  <li class="rank-item"><span class="rank-num">4</span><span class="rank-name">刘志强</span><span class="rank-score">2,520分</span></li>
+                  <li class="rank-item"><span class="rank-num">5</span><span class="rank-name">陈美华</span><span class="rank-score">2,450分</span></li>
+                  <li class="rank-item"><span class="rank-num">6</span><span class="rank-name">赵国栋</span><span class="rank-score">2,380分</span></li>
+                  <li class="rank-item"><span class="rank-num">7</span><span class="rank-name">孙丽萍</span><span class="rank-score">2,310分</span></li>
+                  <li class="rank-item"><span class="rank-num">8</span><span class="rank-name">周建华</span><span class="rank-score">2,250分</span></li>
+                  <li class="rank-item"><span class="rank-num">9</span><span class="rank-name">吴明辉</span><span class="rank-score">2,180分</span></li>
+                  <li class="rank-item"><span class="rank-num">10</span><span class="rank-name">郑秋菊</span><span class="rank-score">2,120分</span></li>
+                </ul>
+              </div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>近期活动</div>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-06-27</div>
+                    <div class="timeline-text">戏曲下乡演出 - 文化广场</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-06-20</div>
+                    <div class="timeline-text">广场舞比赛 - 全村参与</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-06-13</div>
+                    <div class="timeline-text">乡村读书日 - 农家书屋</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-06-06</div>
+                    <div class="timeline-text">端午节包粽子活动</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-05-28</div>
+                    <div class="timeline-text">文明家庭表彰大会</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">2026-05-15</div>
+                    <div class="timeline-text">母亲节慰问活动 - 关爱孤寡老人</div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-title"><span class="dot"></span>道德讲堂 / 文化活动统计</div>
+                <div class="summary-stats">
+                  <div class="summary-stat-item" data-tip="本年度道德讲堂举办场次">
+                    <div class="ss-val">24场</div>
+                    <div class="ss-label">道德讲堂场次</div>
+                  </div>
+                  <div class="summary-stat-item" data-tip="本年度各类文化活动累计参与人次">
+                    <div class="ss-val">1,860</div>
+                    <div class="ss-label">参与人次</div>
+                  </div>
+                  <div class="summary-stat-item" data-tip="列入保护名录的非遗项目数量">
+                    <div class="ss-val">5项</div>
+                    <div class="ss-label">非遗项目数</div>
+                  </div>
+                  <div class="summary-stat-item" data-tip="在册村级文化团体数量">
+                    <div class="ss-val">8个</div>
+                    <div class="ss-label">文化团体数</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Right: Calendar + Timeline + Cultural Stats -->
+          <!-- Right: Calendar + Civilization Building + Heritage + Point Ranking -->
           <div class="col-right">
             <div class="inner-col">
               <div class="panel">
@@ -1480,64 +1337,6 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>近期活动</div>
-                <div class="timeline">
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-27</div>
-                    <div class="timeline-text">戏曲下乡演出 - 文化广场</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-20</div>
-                    <div class="timeline-text">广场舞比赛 - 全村参与</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-13</div>
-                    <div class="timeline-text">乡村读书日 - 农家书屋</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-06-06</div>
-                    <div class="timeline-text">端午节包粽子活动</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-05-28</div>
-                    <div class="timeline-text">文明家庭表彰大会</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-05-15</div>
-                    <div class="timeline-text">母亲节慰问活动 - 关爱孤寡老人</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-05-01</div>
-                    <div class="timeline-text">劳动节义务劳动 - 村道清理</div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-date">2026-04-20</div>
-                    <div class="timeline-text">乡村阅读季启动仪式</div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>道德讲堂 / 文化活动统计</div>
-                <div class="summary-stats">
-                  <div class="summary-stat-item" data-tip="本年度道德讲堂举办场次">
-                    <div class="ss-val">24场</div>
-                    <div class="ss-label">道德讲堂场次</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="本年度各类文化活动累计参与人次">
-                    <div class="ss-val">1,860</div>
-                    <div class="ss-label">参与人次</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="列入保护名录的非遗项目数量">
-                    <div class="ss-val">5项</div>
-                    <div class="ss-label">非遗项目数</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="在册村级文化团体数量">
-                    <div class="ss-val">8个</div>
-                    <div class="ss-label">文化团体数</div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
                 <div class="panel-title"><span class="dot"></span>文明乡风建设</div>
                 <div class="progress-group">
                   <div class="progress-item">
@@ -1546,7 +1345,7 @@
                       <span class="progress-val text-green">100%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:100%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));"></div>
+                      <div class="progress-fill fill-primary" style="width:100%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1555,7 +1354,7 @@
                       <span class="progress-val text-green">88%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:88%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));"></div>
+                      <div class="progress-fill fill-success" style="width:88%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1564,7 +1363,7 @@
                       <span class="progress-val text-green">95%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:95%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));"></div>
+                      <div class="progress-fill fill-info" style="width:95%;"></div>
                     </div>
                   </div>
                   <div class="progress-item">
@@ -1573,42 +1372,7 @@
                       <span class="progress-val text-green">82%</span>
                     </div>
                     <div class="progress-bar">
-                      <div class="progress-fill" style="width:82%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>积分排名 TOP 10</div>
-                <div class="h-bar-chart">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">张建国</span>
-                    <div class="h-bar-fill" style="width:95%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
-                      <span class="h-bar-value">2,860分</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">李秀英</span>
-                    <div class="h-bar-fill" style="width:91%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
-                      <span class="h-bar-value">2,750分</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">王德明</span>
-                    <div class="h-bar-fill" style="width:88%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
-                      <span class="h-bar-value">2,680分</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">刘志强</span>
-                    <div class="h-bar-fill" style="width:82%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
-                      <span class="h-bar-value">2,520分</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">陈美华</span>
-                    <div class="h-bar-fill" style="width:80%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
-                      <span class="h-bar-value">2,450分</span>
+                      <div class="progress-fill fill-lime" style="width:82%;"></div>
                     </div>
                   </div>
                 </div>
@@ -1616,24 +1380,24 @@
               <div class="panel">
                 <div class="panel-title"><span class="dot"></span>非物质文化遗产</div>
                 <div class="data-list">
-                  <div class="data-list-header" style="grid-template-columns:2fr 1fr 1fr;">
+                  <div class="data-list-header cols-3">
                     <span>项目名称</span>
                     <span>级别</span>
                     <span>传承人</span>
                   </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="幸福花灯非遗项目">
+                  <div class="data-list-row cols-3" data-tip="幸福花灯非遗项目">
                     <span class="col-name">幸福花灯</span><span class="tag-orange">省级</span><span>张明华</span>
                   </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="传统编织非遗项目">
+                  <div class="data-list-row cols-3" data-tip="传统编织非遗项目">
                     <span class="col-name">竹编工艺</span><span class="tag-blue">市级</span><span>李秀兰</span>
                   </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="民间刺绣非遗项目">
+                  <div class="data-list-row cols-3" data-tip="民间刺绣非遗项目">
                     <span class="col-name">民间刺绣</span><span class="tag-blue">市级</span><span>王玉芬</span>
                   </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="传统酿酒非遗项目">
+                  <div class="data-list-row cols-3" data-tip="传统酿酒非遗项目">
                     <span class="col-name">古法酿酒</span><span class="tag-green">县级</span><span>刘德贵</span>
                   </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr;" data-tip="山歌非遗项目">
+                  <div class="data-list-row cols-3" data-tip="山歌非遗项目">
                     <span class="col-name">幸福山歌</span><span class="tag-green">县级</span><span>陈国强</span>
                   </div>
                 </div>
@@ -1646,9 +1410,9 @@
       <!-- ==========================================
            Section 5: 治理有效
            ========================================== -->
-      <div class="section" id="sec-governance">
+      <div class="section" id="sec-governance" role="tabpanel" aria-labelledby="tab-governance">
         <div class="layout-three">
-          <!-- Left: Funnel + Party Member Stats -->
+          <!-- Left: Funnel + Party Member (merged) + Dispute Stats -->
           <div class="col-left">
             <div class="inner-col">
               <div class="panel">
@@ -1656,25 +1420,25 @@
                 <div class="funnel-chart">
                   <div class="funnel-item">
                     <span class="funnel-label">上报</span>
-                    <div class="funnel-bar" style="width:100%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));" data-tip="事件上报总数45件">45件</div>
+                    <div class="funnel-bar fill-primary" style="width:100%;" data-tip="事件上报总数45件">45件</div>
                     <span class="funnel-value">45</span>
                   </div>
                   <div class="funnel-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                   <div class="funnel-item">
                     <span class="funnel-label">分派</span>
-                    <div class="funnel-bar" style="width:87%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));" data-tip="已分派42件">42件</div>
+                    <div class="funnel-bar fill-info" style="width:87%;" data-tip="已分派42件">42件</div>
                     <span class="funnel-value">42</span>
                   </div>
                   <div class="funnel-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                   <div class="funnel-item">
                     <span class="funnel-label">处置</span>
-                    <div class="funnel-bar" style="width:73%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));" data-tip="已处置38件">38件</div>
+                    <div class="funnel-bar fill-success" style="width:73%;" data-tip="已处置38件">38件</div>
                     <span class="funnel-value">38</span>
                   </div>
                   <div class="funnel-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                   <div class="funnel-item">
                     <span class="funnel-label">闭环</span>
-                    <div class="funnel-bar" style="width:60%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));" data-tip="已闭环35件">35件</div>
+                    <div class="funnel-bar fill-warning" style="width:60%;" data-tip="已闭环35件">35件</div>
                     <span class="funnel-value">35</span>
                   </div>
                 </div>
@@ -1698,34 +1462,31 @@
                     <div class="mc-label">积极分子</div>
                   </div>
                 </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>党员结构</div>
-                <div class="h-bar-chart">
+                <div class="mt-8 h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">35岁以下</span>
-                    <div class="h-bar-fill" style="width:15%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:15%;">
                       <span class="h-bar-value">10人 (15%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">36-50岁</span>
-                    <div class="h-bar-fill" style="width:35%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;">
                       <span class="h-bar-value">24人 (36%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">51-60岁</span>
-                    <div class="h-bar-fill" style="width:28%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:28%;">
                       <span class="h-bar-value">19人 (28%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">60岁以上</span>
-                    <div class="h-bar-fill" style="width:21%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:21%;">
                       <span class="h-bar-value">14人 (21%)</span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
@@ -1752,7 +1513,7 @@
             </div>
           </div>
 
-          <!-- Center: Grid Map + Safety Inspection -->
+          <!-- Center: Grid Map + Safety Inspection + Party Service -->
           <div class="col-center">
             <div class="inner-col">
               <div class="panel">
@@ -1793,33 +1554,27 @@
                 <div class="notice-list">
                   <div class="notice-item notice-success" data-tip="消防设施巡检已通过">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">消防设施巡检 - 全部合格</div>
-                    <div class="notice-time">2026-06-29</div>
+                    <div class="notice-content"><div class="notice-title">消防设施巡检 - 全部合格</div><div class="notice-time">2026-06-29</div></div>
                   </div>
                   <div class="notice-item notice-warning" data-tip="河道安全巡查发现问题">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">河道安全巡查 - 发现隐患1处已上报</div>
-                    <div class="notice-time">2026-06-28</div>
+                    <div class="notice-content"><div class="notice-title">河道安全巡查 - 发现隐患1处已上报</div><div class="notice-time">2026-06-28</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="道路交通巡检已通过">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">道路交通巡检 - 路况良好</div>
-                    <div class="notice-time">2026-06-26</div>
+                    <div class="notice-content"><div class="notice-title">道路交通巡检 - 路况良好</div><div class="notice-time">2026-06-26</div></div>
                   </div>
                   <div class="notice-item notice-danger" data-tip="地质灾害隐患点排查">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">地质灾害隐患点排查 - 待复查</div>
-                    <div class="notice-time">2026-06-24</div>
+                    <div class="notice-content"><div class="notice-title">地质灾害隐患点排查 - 待复查</div><div class="notice-time">2026-06-24</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="食品安全检查已通过">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">食品安全检查 - 小卖部/餐饮店合格</div>
-                    <div class="notice-time">2026-06-22</div>
+                    <div class="notice-content"><div class="notice-title">食品安全检查 - 小卖部/餐饮店合格</div><div class="notice-time">2026-06-22</div></div>
                   </div>
                   <div class="notice-item notice-warning" data-tip="消防通道检查发现问题">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">消防通道检查 - 2处堆放杂物已通知清理</div>
-                    <div class="notice-time">2026-06-20</div>
+                    <div class="notice-content"><div class="notice-title">消防通道检查 - 2处堆放杂物已通知清理</div><div class="notice-time">2026-06-20</div></div>
                   </div>
                 </div>
               </div>
@@ -1847,7 +1602,7 @@
             </div>
           </div>
 
-          <!-- Right: Gauge + Petition Line + Emergency Stats -->
+          <!-- Right: Dispute Resolution + Petition Trend + Emergency & Grid + Events -->
           <div class="col-right">
             <div class="inner-col">
               <div class="panel">
@@ -1891,7 +1646,7 @@
                   </div>
                 </div>
                 <div class="line-chart">
-                  <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                  <svg viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
                     <line class="grid-line" x1="40" y1="20" x2="390" y2="20"/>
                     <line class="grid-line" x1="40" y1="55" x2="390" y2="55"/>
                     <line class="grid-line" x1="40" y1="90" x2="390" y2="90"/>
@@ -1919,76 +1674,27 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>应急预案</div>
-                <div class="mini-card-grid cols-2">
-                  <div class="mini-card" data-tip="已制定的各类应急预案总数">
-                    <div class="mc-icon"><i class="fa-solid fa-file-shield" style="color:#2b6e3c;"></i></div>
-                    <div class="mc-val">8套</div>
-                    <div class="mc-label">预案总数</div>
-                  </div>
-                  <div class="mini-card" data-tip="本年度已完成的应急演练次数">
-                    <div class="mc-icon"><i class="fa-solid fa-person-running" style="color:#e8a317;"></i></div>
-                    <div class="mc-val">4次</div>
-                    <div class="mc-label">本年度演练</div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>网格员信息</div>
-                <div class="data-list">
-                  <div class="data-list-header" style="grid-template-columns:2fr 1fr 1fr 1fr;">
-                    <span>网格员</span>
-                    <span>负责区域</span>
-                    <span>本月巡查</span>
-                    <span>上报事件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">王大明</span><span>第一网格</span><span>12次</span><span>3件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">李小红</span><span>第二网格</span><span>10次</span><span>2件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">张志强</span><span>第三网格</span><span>14次</span><span>5件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">刘秀芳</span><span>第四网格</span><span>11次</span><span>2件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">陈国伟</span><span>第五网格</span><span>13次</span><span>4件</span>
-                  </div>
-                  <div class="data-list-row" style="grid-template-columns:2fr 1fr 1fr 1fr;" data-tip="网格员详情">
-                    <span class="col-name">赵美丽</span><span>第六网格</span><span>9次</span><span>1件</span>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
                 <div class="panel-title"><span class="dot"></span>近期事件记录</div>
                 <div class="notice-list">
                   <div class="notice-item notice-success" data-tip="事件已闭环">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">道路塌方修复 - 已完成</div>
-                    <div class="notice-time">2026-06-28</div>
+                    <div class="notice-content"><div class="notice-title">道路塌方修复 - 已完成</div><div class="notice-time">2026-06-28</div></div>
                   </div>
                   <div class="notice-item notice-warning" data-tip="事件处置中">
                     <div class="notice-icon"><i class="fa-solid fa-clock"></i></div>
-                    <div class="notice-title">村民饮水管道漏水 - 处置中</div>
-                    <div class="notice-time">2026-06-27</div>
+                    <div class="notice-content"><div class="notice-title">村民饮水管道漏水 - 处置中</div><div class="notice-time">2026-06-27</div></div>
                   </div>
                   <div class="notice-item notice-info" data-tip="事件已上报">
                     <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
-                    <div class="notice-title">农田灌溉渠道堵塞 - 已分派</div>
-                    <div class="notice-time">2026-06-26</div>
+                    <div class="notice-content"><div class="notice-title">农田灌溉渠道堵塞 - 已分派</div><div class="notice-time">2026-06-26</div></div>
                   </div>
                   <div class="notice-item notice-success" data-tip="事件已闭环">
                     <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-title">路灯损坏维修 - 已完成</div>
-                    <div class="notice-time">2026-06-24</div>
+                    <div class="notice-content"><div class="notice-title">路灯损坏维修 - 已完成</div><div class="notice-time">2026-06-24</div></div>
                   </div>
                   <div class="notice-item notice-danger" data-tip="事件待处置">
                     <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-title">村内乱搭乱建投诉 - 待处置</div>
-                    <div class="notice-time">2026-06-23</div>
+                    <div class="notice-content"><div class="notice-title">村内乱搭乱建投诉 - 待处置</div><div class="notice-time">2026-06-23</div></div>
                   </div>
                 </div>
               </div>
@@ -2000,9 +1706,9 @@
       <!-- ==========================================
            Section 6: 生活富裕
            ========================================== -->
-      <div class="section" id="sec-prosperity">
+      <div class="section" id="sec-prosperity" role="tabpanel" aria-labelledby="tab-prosperity">
         <div class="layout-three">
-          <!-- Left: Income Bar Chart + Source Structure -->
+          <!-- Left: Income Trend + Source Structure + Growth -->
           <div class="col-left">
             <div class="inner-col">
               <div class="panel">
@@ -2014,31 +1720,31 @@
                 <div class="bar-chart">
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:48%;background:linear-gradient(180deg,#2b8a6e,rgba(43,138,110,0.3));" data-value="2.18万" data-tip="2021年人均收入21,800元"></div>
+                      <div class="bar fill-info" style="height:48%;" data-value="2.18万" data-tip="2021年人均收入21,800元"></div>
                     </div>
                     <span class="bar-label">2021</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:58%;background:linear-gradient(180deg,#2b6e3c,rgba(43,110,60,0.3));" data-value="2.56万" data-tip="2022年人均收入25,600元"></div>
+                      <div class="bar fill-primary" style="height:58%;" data-value="2.56万" data-tip="2022年人均收入25,600元"></div>
                     </div>
                     <span class="bar-label">2022</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:68%;background:linear-gradient(180deg,#22a84a,rgba(34,168,74,0.3));" data-value="2.84万" data-tip="2023年人均收入28,400元"></div>
+                      <div class="bar fill-success" style="height:68%;" data-value="2.84万" data-tip="2023年人均收入28,400元"></div>
                     </div>
                     <span class="bar-label">2023</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:82%;background:linear-gradient(180deg,#8fb339,rgba(143,179,57,0.3));" data-value="3.05万" data-tip="2024年人均收入30,500元"></div>
+                      <div class="bar fill-lime" style="height:82%;" data-value="3.05万" data-tip="2024年人均收入30,500元"></div>
                     </div>
                     <span class="bar-label">2024</span>
                   </div>
                   <div class="bar-group">
                     <div class="bar-wrapper">
-                      <div class="bar" style="height:100%;background:linear-gradient(180deg,#146c31,rgba(20,108,49,0.3));" data-value="3.27万" data-tip="2025年人均收入32,680元"></div>
+                      <div class="bar fill-primary" style="height:100%;" data-value="3.27万" data-tip="2025年人均收入32,680元"></div>
                     </div>
                     <span class="bar-label">2025</span>
                   </div>
@@ -2049,34 +1755,34 @@
                 <div class="h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">种植业</span>
-                    <div class="h-bar-fill" style="width:35%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;">
                       <span class="h-bar-value">11,438元 (35%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">养殖业</span>
-                    <div class="h-bar-fill" style="width:20%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:20%;">
                       <span class="h-bar-value">6,536元 (20%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">务工</span>
-                    <div class="h-bar-fill" style="width:28%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:28%;">
                       <span class="h-bar-value">9,150元 (28%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">经营</span>
-                    <div class="h-bar-fill" style="width:12%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:12%;">
                       <span class="h-bar-value">3,922元 (12%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">转移性收入</span>
-                    <div class="h-bar-fill" style="width:5%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:5%;">
                       <span class="h-bar-value">1,634元 (5%)</span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
@@ -2103,7 +1809,7 @@
             </div>
           </div>
 
-          <!-- Center: Insurance + E-commerce + Consumption -->
+          <!-- Center: Insurance + E-commerce & Finance + Consumption -->
           <div class="col-center">
             <div class="inner-col">
               <div class="panel">
@@ -2174,7 +1880,7 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>电商数据</div>
+                <div class="panel-title"><span class="dot"></span>电商与金融服务</div>
                 <div class="summary-stats">
                   <div class="summary-stat-item" data-tip="从事电商行业人数">
                     <div class="ss-val">56</div>
@@ -2192,6 +1898,32 @@
                     <div class="ss-val">25%</div>
                     <div class="ss-label">外销比例</div>
                   </div>
+                </div>
+                <div class="mt-10 h-bar-chart">
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">种植业贷款</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:32%;">
+                      <span class="h-bar-value">185万</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">养殖贷款</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:22%;">
+                      <span class="h-bar-value">128万</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">个体经营贷</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:28%;">
+                      <span class="h-bar-value">162万</span>
+                    </div>
+                  </div></div>
+                  <div class="h-bar-item">
+                    <span class="h-bar-label">消费贷款</span>
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:18%;">
+                      <span class="h-bar-value">105万</span>
+                    </div>
+                  </div></div>
                 </div>
               </div>
               <div class="panel">
@@ -2214,51 +1946,10 @@
                   </div>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>农村金融服务</div>
-                <div class="mini-card-grid cols-2">
-                  <div class="mini-card" data-tip="本年度累计发放涉农贷款">
-                    <div class="mc-icon"><i class="fa-solid fa-building-columns" style="color:#2b6e3c;"></i></div>
-                    <div class="mc-val">580万</div>
-                    <div class="mc-label">涉农贷款发放</div>
-                  </div>
-                  <div class="mini-card" data-tip="获得贷款支持的农户数量">
-                    <div class="mc-icon"><i class="fa-solid fa-handshake" style="color:#22a84a;"></i></div>
-                    <div class="mc-val">128户</div>
-                    <div class="mc-label">受益农户</div>
-                  </div>
-                </div>
-                <div class="h-bar-chart" style="margin-top:10px;">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">种植业贷款</span>
-                    <div class="h-bar-fill" style="width:32%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
-                      <span class="h-bar-value">185万</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">养殖贷款</span>
-                    <div class="h-bar-fill" style="width:22%;background:linear-gradient(90deg,#2b8a6e,rgba(43,138,110,0.5));">
-                      <span class="h-bar-value">128万</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">个体经营贷</span>
-                    <div class="h-bar-fill" style="width:28%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
-                      <span class="h-bar-value">162万</span>
-                    </div>
-                  </div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">消费贷款</span>
-                    <div class="h-bar-fill" style="width:18%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
-                      <span class="h-bar-value">105万</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          <!-- Right: Facility + Training + Assistance -->
+          <!-- Right: Facilities + Assistance + Housing -->
           <div class="col-right">
             <div class="inner-col">
               <div class="panel">
@@ -2299,20 +1990,7 @@
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><span class="dot"></span>技能培训</div>
-                <div class="training-stats">
-                  <div class="training-stat" data-tip="本年度已开展技能培训场次">
-                    <div class="ts-val">12</div>
-                    <div class="ts-label">培训场次</div>
-                  </div>
-                  <div class="training-stat" data-tip="本年度累计参训人次">
-                    <div class="ts-val">360</div>
-                    <div class="ts-label">参训人次</div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>帮扶统计</div>
+                <div class="panel-title"><span class="dot"></span>帮扶与就业</div>
                 <div class="summary-stats">
                   <div class="summary-stat-item" data-tip="已脱贫巩固户数">
                     <div class="ss-val">45户</div>
@@ -2339,10 +2017,7 @@
                     <div class="ss-label">到户项目</div>
                   </div>
                 </div>
-              </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>就业帮扶</div>
-                <div class="mini-card-grid cols-3">
+                <div class="mt-8 mini-card-grid cols-3">
                   <div class="mini-card" data-tip="本年度新增就业转移人数">
                     <div class="mc-icon"><i class="fa-solid fa-briefcase" style="color:#2b6e3c;"></i></div>
                     <div class="mc-val">126人</div>
@@ -2365,32 +2040,32 @@
                 <div class="h-bar-chart">
                   <div class="h-bar-item">
                     <span class="h-bar-label">砖混结构</span>
-                    <div class="h-bar-fill" style="width:72%;background:linear-gradient(90deg,#2b6e3c,rgba(43,110,60,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:72%;">
                       <span class="h-bar-value">642户 (72%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">框架结构</span>
-                    <div class="h-bar-fill" style="width:18%;background:linear-gradient(90deg,#22a84a,rgba(34,168,74,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:18%;">
                       <span class="h-bar-value">161户 (18%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">砖木结构</span>
-                    <div class="h-bar-fill" style="width:8%;background:linear-gradient(90deg,#8fb339,rgba(143,179,57,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:8%;">
                       <span class="h-bar-value">71户 (8%)</span>
                     </div>
-                  </div>
+                  </div></div>
                   <div class="h-bar-item">
                     <span class="h-bar-label">其他结构</span>
-                    <div class="h-bar-fill" style="width:2%;background:linear-gradient(90deg,#e8a317,rgba(232,163,23,0.5));">
+                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:2%;">
                       <span class="h-bar-value">18户 (2%)</span>
                     </div>
-                  </div>
+                  </div></div>
                 </div>
-                <div class="summary-stats" style="margin-top:10px;">
+                <div class="mt-10 summary-stats">
                   <div class="summary-stat-item" data-tip="人均住房面积">
-                    <div class="ss-val">48m²</div>
+                    <div class="ss-val">48m&sup2;</div>
                     <div class="ss-label">人均住房面积</div>
                   </div>
                   <div class="summary-stat-item" data-tip="危房改造已完成户数">
@@ -2411,6 +2086,7 @@
           </div>
         </div>
       </div>
+
 
     </div><!-- /main-content -->
 

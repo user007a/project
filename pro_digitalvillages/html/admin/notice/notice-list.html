@@ -1,32 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>通知公告列表</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
 <div class="admin-page">
-  <!-- 面包屑 -->
-  <div class="breadcrumb">
-    <a href="#">首页</a> / <a href="#">通知公告</a> / <span>公告列表</span>
-  </div>
-
   <!-- 操作按钮 -->
   <div class="action-bar">
-    <button class="btn btn-primary" onclick="openModal('addNoticeModal')">+ 新增公告</button>
+    <button class="btn btn-primary" onclick="openModal('addNoticeModal')"><span class="iconify" data-icon="ri:add-circle-line"></span> 新增公告</button>
   </div>
 
   <!-- 搜索筛选 -->
   <div class="filter-bar">
     <div class="filter-item">
       <label>公告标题</label>
-      <input type="text" placeholder="请输入公告标题">
+      <input type="text" class="form-input" placeholder="请输入公告标题">
     </div>
     <div class="filter-item">
       <label>推送状态</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>草稿</option>
         <option>已推送</option>
@@ -35,7 +31,7 @@
     </div>
     <div class="filter-item">
       <label>推送范围</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>全村</option>
         <option>指定组</option>
@@ -44,19 +40,23 @@
     </div>
     <div class="filter-item">
       <label>推送时间</label>
-      <input type="date"> - <input type="date">
+      <div class="date-range-group">
+        <input type="date" class="form-input">
+        <span>至</span>
+        <input type="date" class="form-input">
+      </div>
     </div>
     <div class="filter-item">
       <label>发布人</label>
-      <select>
+      <select class="form-select">
         <option value="">全部</option>
         <option>张书记</option>
         <option>李主任</option>
       </select>
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary btn-sm">查询</button>
-      <button class="btn btn-sm">重置</button>
+      <button class="btn btn-primary btn-sm"><span class="iconify" data-icon="ri:search-line"></span> 查询</button>
+      <button class="btn btn-search-reset btn-sm"><span class="iconify" data-icon="ri:refresh-line"></span> 重置</button>
     </div>
   </div>
 
@@ -72,7 +72,7 @@
           <th>已读率</th>
           <th>推送时间</th>
           <th>推送状态</th>
-          <th class="col-actions">操作</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -84,10 +84,12 @@
           <td>84.8%</td>
           <td>2026-06-28</td>
           <td><span class="tag tag-green">已推送</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:send-plane-line"></span>撤回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-title="关于开展村庄清洁行动的通知" data-range="全村" data-count="892人" data-read="810人" data-rate="90.8%" data-time="2026-06-25" data-status="已推送" data-author="李主任" data-content="为改善村庄人居环境，提升村容村貌，决定在全村范围内开展村庄清洁行动。请各组组长组织本组村民积极参与，重点清理公共区域垃圾、疏通沟渠、整理房前屋后。">
@@ -98,10 +100,12 @@
           <td>90.8%</td>
           <td>2026-06-25</td>
           <td><span class="tag tag-green">已推送</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:send-plane-line"></span>撤回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-title="第三组道路维修施工通知" data-range="指定组" data-count="156人" data-read="72人" data-rate="46.2%" data-time="2026-06-23" data-status="已推送" data-author="张书记" data-content="因第三组主干道路面损坏严重，经村委研究决定，将于近期对第三组主干道进行维修施工。施工期间部分路段将实行半封闭通行，请各位村民注意安全，绕行其他路线。施工预计持续两周。">
@@ -112,10 +116,12 @@
           <td class="text-orange fw-bold">46.2%</td>
           <td>2026-06-23</td>
           <td><span class="tag tag-green">已推送</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:send-plane-line"></span>撤回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-title="7月主题党日活动安排" data-range="指定人" data-count="35人" data-read="28人" data-rate="80.0%" data-time="2026-06-20" data-status="已推送" data-author="张书记" data-content="经党支部研究决定，7月份主题党日活动安排如下：时间：7月1日下午2:00；地点：村党员活动室；主题：不忘初心、牢记使命——庆祝建党105周年。请全体党员准时参加，如有特殊情况请提前请假。">
@@ -126,10 +132,12 @@
           <td>80.0%</td>
           <td>2026-06-20</td>
           <td><span class="tag tag-green">已推送</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})">撤回</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'撤回确认',message:'确定撤回该公告吗？已读用户将无法再次查看。',onConfirm:function(){showToast('已撤回','success')}})"><span class="iconify" data-icon="ri:send-plane-line"></span>撤回</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-title="关于规范宅基地审批流程的通知" data-range="全村" data-count="" data-read="" data-rate="" data-time="" data-status="草稿" data-author="李主任" data-content="为进一步规范宅基地审批流程，保障村民合法权益，现将有关事项通知如下：">
@@ -140,9 +148,12 @@
           <td>—</td>
           <td>—</td>
           <td><span class="tag tag-gray">草稿</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editNoticeModal');fillNoticeEdit(this)">编辑</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-edit" onclick="openModal('editNoticeModal');fillNoticeEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-title="2025年度村级财务审计结果公示" data-range="全村" data-count="892人" data-read="680人" data-rate="76.2%" data-time="2026-06-15" data-status="已撤回" data-author="张书记" data-content="根据上级审计部门要求，现将2025年度村级财务审计结果予以公示。公示期为7天，如对审计结果有异议，请于公示期内向村委会提出书面申诉。">
@@ -153,19 +164,22 @@
           <td>76.2%</td>
           <td>2026-06-15</td>
           <td><span class="tag tag-red">已撤回</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)">详情</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op" onclick="openModal('viewNoticeModal');fillNoticeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-edit" onclick="openModal('editNoticeModal');fillNoticeEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该公告吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <span class="page-total">共 6 条记录</span>
       <div class="page-btns">
-        <a class="page-btn disabled">&laquo;</a>
-        <a class="page-btn active">1</a>
-        <a class="page-btn disabled">&raquo;</a>
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
       </div>
     </div>
   </div>
@@ -177,7 +191,7 @@
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>新增公告</h3>
-      <span class="modal-close" onclick="closeModal('addNoticeModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('addNoticeModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -216,7 +230,7 @@
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>编辑公告</h3>
-      <span class="modal-close" onclick="closeModal('editNoticeModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('editNoticeModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -255,7 +269,7 @@
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>公告详情</h3>
-      <span class="modal-close" onclick="closeModal('viewNoticeModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('viewNoticeModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -293,7 +307,7 @@
         </div>
         <div class="detail-item detail-full">
           <span class="detail-label">内容</span>
-          <div class="detail-value" style="background:#f7f8fa;border:1px solid var(--border-light);border-radius:var(--radius);padding:var(--sp-12);min-height:100px;line-height:1.8;">各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。</div>
+          <div class="detail-value detail-content-box">各位村民：根据上级文件精神，2026年度城乡居民基本医疗保险缴费工作现已开始。缴费标准为每人每年380元，缴费截止日期为2026年12月31日。请各位村民及时到村委会或通过线上渠道完成缴费。如有疑问，请咨询村委会。</div>
         </div>
       </div>
     </div>

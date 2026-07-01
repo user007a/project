@@ -6,6 +6,11 @@
 (function () {
   'use strict';
 
+  /* ---- Accessibility: batch add aria-hidden to decorative icons ---- */
+  document.querySelectorAll('.kpi-icon i, .industry-icon-item .icon-circle i, .panel-title i, .weather-item i, .alert-banner i, .notice-icon i, .funnel-arrow i, .facility-item i, .h-bar-fill i, .btn-platform-entry i').forEach(function(icon) {
+    icon.setAttribute('aria-hidden', 'true');
+  });
+
   /* ---- Real-time DateTime ---- */
   var dateTextEl = document.querySelector('.date-badge .date-text');
   var weekTextEl = document.querySelector('.date-badge .week-text');
@@ -13,18 +18,15 @@
 
   function updateDateTime() {
     var now = new Date();
-    var y = now.getFullYear();
-    var m = String(now.getMonth() + 1).padStart(2, '0');
-    var d = String(now.getDate()).padStart(2, '0');
-    var weekNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    var week = weekNames[now.getDay()];
+    var dateFormatted = new Intl.DateTimeFormat('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+    if (dateTextEl) dateTextEl.textContent = dateFormatted.replace('/', '年').replace('/', '月') + '日';
+    var weekDay = new Intl.DateTimeFormat('zh-CN', {weekday:'long'}).format(now);
+    if (weekTextEl) weekTextEl.textContent = weekDay;
 
     var hh = String(now.getHours()).padStart(2, '0');
     var mm = String(now.getMinutes()).padStart(2, '0');
     var ss = String(now.getSeconds()).padStart(2, '0');
 
-    if (dateTextEl) dateTextEl.textContent = y + '年' + m + '月' + d + '日';
-    if (weekTextEl) weekTextEl.textContent = week;
     if (timeTextEl) timeTextEl.textContent = hh + ':' + mm + ':' + ss;
   }
 
@@ -32,7 +34,7 @@
   setInterval(updateDateTime, 1000);
 
   /* ---- Tab Switching ---- */
-  var tabs = document.querySelectorAll('.tab-nav li');
+  var tabs = document.querySelectorAll('.tab-btn');
   var sections = document.querySelectorAll('.section');
   var currentTabIndex = 0;
 
@@ -42,6 +44,7 @@
 
     tabs.forEach(function (tab, i) {
       tab.classList.toggle('active', i === index);
+      tab.setAttribute('aria-selected', i === index ? 'true' : 'false');
     });
 
     sections.forEach(function (section, i) {
@@ -156,6 +159,12 @@
   document.querySelectorAll('.filter-select').forEach(function (select) {
     select.addEventListener('change', function () {
       this.closest('.filter-group').classList.add('filter-changed');
+      // Visual feedback: briefly flash the active section content
+      var sec = document.querySelector('.section.active');
+      if (sec) {
+        sec.style.opacity = '0.6';
+        setTimeout(function () { sec.style.opacity = '1'; }, 300);
+      }
     });
   });
 
@@ -165,8 +174,73 @@
       if (!bar) return;
       bar.querySelectorAll('.filter-select').forEach(function (s) { s.selectedIndex = 0; });
       bar.querySelectorAll('.filter-group').forEach(function (g) { g.classList.remove('filter-changed'); });
+      // Visual feedback: flash the section
+      var sec = document.querySelector('.section.active');
+      if (sec) {
+        sec.style.opacity = '0.6';
+        setTimeout(function () { sec.style.opacity = '1'; }, 300);
+      }
     });
   });
+
+  /* ---- Auto-Scaling for Fixed 1920x1080 Layout ---- */
+  var dashboard = document.querySelector('.dashboard');
+  function scaleDashboard() {
+    if (!dashboard) return;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    if (w < 1200) return; // let responsive CSS handle it
+    var scaleX = w / 1920;
+    var scaleY = h / 1080;
+    var scale = Math.min(scaleX, scaleY, 1); // never scale up beyond 1
+    dashboard.style.setProperty('--dash-scale', scale);
+    dashboard.style.transform = 'scale(' + scale + ')';
+    dashboard.style.transformOrigin = 'top left';
+    // Center if scaled down
+    if (scale < 1) {
+      var marginLeft = (w - 1920 * scale) / 2;
+      var marginTop = (h - 1080 * scale) / 2;
+      dashboard.style.marginLeft = marginLeft + 'px';
+      dashboard.style.marginTop = marginTop + 'px';
+    } else {
+      dashboard.style.marginLeft = '0px';
+      dashboard.style.marginTop = '0px';
+    }
+  }
+  scaleDashboard();
+  window.addEventListener('resize', scaleDashboard);
+
+  /* ---- Calendar: highlight today + dynamic month ---- */
+  (function () {
+    var calDays = document.querySelectorAll('.calendar-day');
+    if (calDays.length > 0) {
+      var now = new Date();
+      var todayDate = now.getDate();
+      // Check each calendar-day: if its text matches today's date, add .today class
+      calDays.forEach(function (dayEl) {
+        var dayNum = parseInt(dayEl.textContent.trim(), 10);
+        if (dayNum === todayDate) {
+          dayEl.classList.add('today');
+        }
+      });
+      // Update calendar panel-title month if it exists
+      var calPanel = calDays[0] ? calDays[0].closest('.panel') : null;
+      if (calPanel) {
+        var calTitle = calPanel.querySelector('.panel-title');
+        if (calTitle) {
+          var calMonthText = calTitle.textContent; // e.g., "文化活动日历（2026年6月）"
+          var monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+          var newMonth = monthNames[now.getMonth()];
+          var newYear = now.getFullYear() + '年';
+          // Replace the month/year part in parentheses
+          if (calMonthText) {
+            var updated = calMonthText.replace(/（[^）]+）/, '（' + newYear + newMonth + '）');
+            calTitle.innerHTML = calTitle.innerHTML.replace(calMonthText, updated);
+          }
+        }
+      }
+    }
+  })();
 
   /* ---- Keyboard Navigation ---- */
   document.addEventListener('keydown', function (e) {

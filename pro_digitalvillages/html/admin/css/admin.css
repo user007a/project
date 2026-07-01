@@ -354,7 +354,7 @@ img {
   padding: 0 var(--sp-20);
   color: #a8b8cc;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background var(--transition), color var(--transition);
   white-space: nowrap;
   overflow: hidden;
   font-size: 14px;
@@ -430,7 +430,7 @@ img {
   color: #a8b8cc;
   font-size: 13px;
   text-decoration: none;
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -555,7 +555,7 @@ img {
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
   white-space: nowrap;
 }
 
@@ -841,7 +841,7 @@ img {
   display: flex;
   align-items: center;
   gap: var(--sp-16);
-  transition: all var(--transition);
+  transition: box-shadow 0.3s, transform 0.3s;
   border-left: 3px solid transparent;
 }
 
@@ -938,7 +938,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: var(--sp-8);
-  transition: all var(--transition);
+  transition: box-shadow 0.3s, transform 0.3s;
   border-top: 3px solid var(--primary);
 }
 
@@ -1023,7 +1023,7 @@ img {
   padding: var(--sp-20);
   text-align: center;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
 .quick-action-item:hover {
@@ -1126,13 +1126,12 @@ img {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
   gap: var(--sp-4);
   background: var(--card-bg);
   color: var(--text-secondary);
   font-family: inherit;
-  outline: none;
 }
 
 .btn:hover {
@@ -1143,6 +1142,11 @@ img {
 
 .btn:active {
   transform: scale(0.97);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .btn-primary {
@@ -1592,7 +1596,7 @@ img {
   background: var(--card-bg);
   color: var(--text-secondary);
   font-size: 13px;
-  transition: all var(--transition-fast);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   font-family: inherit;
 }
 
@@ -1697,7 +1701,7 @@ img {
   color: var(--text-muted);
   font-size: 18px;
   border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
+  transition: background 0.2s, color 0.2s;
 }
 
 .modal-close:hover {
@@ -1957,7 +1961,7 @@ img {
   padding: var(--sp-8) var(--sp-12);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
+  transition: background 0.2s, color 0.2s;
   margin: 2px 0;
 }
 
@@ -2108,7 +2112,7 @@ img {
   background: var(--border);
   border: 2px solid var(--card-bg);
   box-shadow: 0 0 0 2px var(--border);
-  transition: all var(--transition);
+  transition: background var(--transition), box-shadow var(--transition);
 }
 
 .timeline-item.done::before {
@@ -2164,7 +2168,7 @@ img {
   overflow: hidden;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .thumb:hover {
@@ -2227,7 +2231,7 @@ img {
   align-items: center;
   padding: var(--sp-12) var(--sp-16);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background 0.2s, border-color 0.2s;
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -2492,7 +2496,7 @@ img {
   cursor: pointer;
   color: var(--text-secondary);
   font-size: 14px;
-  transition: all var(--transition-fast);
+  transition: background 0.2s, color 0.2s;
 }
 
 .toolbar-btn:hover {
@@ -2544,7 +2548,7 @@ img {
   border: 2px dashed var(--border);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: border-color 0.2s, background 0.2s;
   background: #fafafa;
 }
 
@@ -2809,4 +2813,774 @@ img {
     margin-left: 0;
     width: 100%;
   }
+}
+
+
+/* ============================================
+   43. Accessibility (无障碍)
+   ============================================ */
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible - keyboard accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+
+/* ============================================
+   44. UI Enhancement (界面增强)
+   ============================================ */
+
+/* --- Toolbar Enhancement --- */
+.toolbar {
+  padding: var(--sp-12) var(--sp-16);
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--sp-12);
+}
+
+.toolbar .btn i,
+.toolbar .btn .iconify {
+  font-size: 15px;
+}
+
+.toolbar .btn.btn-outline {
+  background: var(--card-bg);
+  border: 1px dashed var(--border);
+  color: var(--text-secondary);
+}
+.toolbar .btn.btn-outline:hover {
+  border-style: solid;
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* --- Search Filter Enhancement --- */
+.search-filter {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  gap: 12px 16px;
+  border: 1px solid var(--border-light);
+}
+
+.search-filter .filter-item {
+  min-width: unset;
+}
+
+.search-filter .filter-item .form-input,
+.search-filter .filter-item .form-select {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.search-filter .filter-actions .btn {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.search-filter .filter-actions .btn-search-reset {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.search-filter .filter-actions .btn-search-reset:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* --- Table Operation Buttons Enhancement --- */
+.op-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.op-cell .btn-op {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--primary);
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.op-cell .btn-op i,
+.op-cell .btn-op .iconify {
+  font-size: 14px;
+}
+.op-cell .btn-op:hover {
+  background: var(--primary-light);
+  color: var(--primary-hover);
+}
+
+.op-cell .btn-op.btn-op-edit {
+  color: #409eff;
+}
+.op-cell .btn-op.btn-op-edit:hover {
+  background: #ecf5ff;
+  color: #337ecc;
+}
+
+.op-cell .btn-op.btn-op-danger {
+  color: var(--danger);
+}
+.op-cell .btn-op.btn-op-danger:hover {
+  background: var(--danger-light);
+  color: #e25858;
+}
+
+.op-cell .btn-op.btn-op-warning {
+  color: var(--warning);
+}
+.op-cell .btn-op.btn-op-warning:hover {
+  background: var(--warning-light);
+  color: #d49230;
+}
+
+.op-cell .btn-op.btn-op-info {
+  color: #909399;
+}
+.op-cell .btn-op.btn-op-info:hover {
+  background: #f4f4f5;
+  color: #73767a;
+}
+
+.op-cell .op-divider {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* --- Pagination Enhancement --- */
+.pagination {
+  padding: 12px 20px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  margin-top: var(--sp-12);
+}
+
+.pagination .page-btn {
+  min-width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.pagination .page-btn:hover:not(.active):not(.disabled) {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.pagination .page-btn.active {
+  box-shadow: 0 2px 6px rgba(34, 168, 74, 0.3);
+}
+
+.pagination .page-size-select {
+  height: 34px;
+  border-radius: 6px;
+}
+
+.pagination .page-total {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-right: auto;
+}
+
+/* --- Tree Toolbar Enhancement --- */
+.tree-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+  padding: var(--sp-12) var(--sp-16);
+  background: var(--card-bg);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: var(--shadow-card);
+  flex-wrap: wrap;
+}
+
+.tree-search {
+  flex: 1;
+  min-width: 160px;
+  max-width: 280px;
+  position: relative;
+  margin-left: auto;
+}
+.tree-search .form-input {
+  width: 100%;
+  height: 32px;
+  padding-left: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+.tree-search .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* --- Role/Permission Page Toolbar Enhancement --- */
+.role-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+  padding: var(--sp-12) var(--sp-16);
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--sp-12);
+  flex-wrap: wrap;
+}
+.role-toolbar .toolbar-search {
+  margin-left: auto;
+  position: relative;
+}
+.role-toolbar .toolbar-search .form-input {
+  height: 34px;
+  width: 240px;
+  padding-left: 34px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.role-toolbar .toolbar-search .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* ============================================
+   45. Missing Styles Fix (缺失样式补全)
+   ============================================ */
+
+/* btn-op-divider alias (部分页面使用了 btn-op-divider 而非 op-divider) */
+.btn-op-divider {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* toolbar-search in generic toolbar (not just role-toolbar) */
+.toolbar .toolbar-search {
+  margin-left: auto;
+  position: relative;
+}
+.toolbar .toolbar-search .form-input {
+  height: 34px;
+  width: 240px;
+  padding-left: 34px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.toolbar .toolbar-search .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* form-label */
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.form-label .required {
+  color: var(--danger);
+  margin-right: 2px;
+}
+
+/* text-danger */
+.text-danger {
+  color: var(--danger) !important;
+}
+
+/* text-muted */
+.text-muted {
+  color: var(--text-muted);
+}
+.text-sm {
+  font-size: 13px;
+}
+
+/* result-empty for detail pages */
+.result-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* btn-warning (for event detail page) */
+.btn-warning {
+  background: var(--warning);
+  border-color: var(--warning);
+  color: #fff;
+}
+.btn-warning:hover {
+  background: var(--warning-hover, #d49230);
+}
+
+/* code tag styling (for dict page) */
+code {
+  font-family: Consolas, 'Courier New', monospace;
+  color: var(--text-secondary);
+  background: var(--bg-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+/* split-right header (for dict page) */
+.split-right-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* op-type tag colors (for log page) */
+.tag-op-login { background: #ecf5ff; color: #409eff; }
+.tag-op-add { background: #f0f9eb; color: #67c23a; }
+.tag-op-edit { background: #fdf6ec; color: #e6a23c; }
+.tag-op-delete { background: #fef0f0; color: #f56c6c; }
+.tag-op-audit { background: #f0f9eb; color: #67c23a; }
+.tag-op-export { background: #ecf5ff; color: #409eff; }
+
+/* tag for generic use */
+.tag-orange { background: #fdf6ec; color: #e6a23c; }
+.tag-gray { background: #f4f4f5; color: #909399; }
+.tag-blue { background: #ecf5ff; color: #409eff; }
+.tag-purple { background: #f3e8ff; color: #a855f7; }
+
+/* collapse-panel default first open */
+.collapse-panel:first-child .collapse-body {
+  max-height: 2000px;
+}
+.collapse-panel:first-child .collapse-icon {
+  transform: rotate(0deg);
+}
+
+/* split-left scrollable */
+.split-left {
+  overflow-y: auto;
+}
+
+/* btn-danger-outline for batch reject */
+.btn-danger-outline {
+  background: transparent;
+  border: 1px dashed var(--danger);
+  color: var(--danger);
+}
+.btn-danger-outline:hover {
+  background: var(--danger-light);
+  border-style: solid;
+}
+
+/* btn-warning-outline for batch revoke */
+.btn-warning-outline {
+  background: transparent;
+  border: 1px dashed var(--warning);
+  color: var(--warning);
+}
+.btn-warning-outline:hover {
+  background: var(--warning-light);
+  border-style: solid;
+}
+
+/* detail-content-box for notice detail content area */
+.detail-content-box {
+  background: #f7f8fa;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: var(--sp-12);
+  min-height: 100px;
+  line-height: 1.8;
+}
+
+/* form-input readonly state */
+.form-input[readonly] {
+  background: var(--bg-light, #f5f7fa);
+  cursor: not-allowed;
+}
+
+/* date-range-group for date picker pairs */
+.date-range-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* checkbox-group for inline checkbox list */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+
+/* ============================================
+   46. Modal Enhancement (弹窗增强)
+   ============================================ */
+
+/* --- Modal Header Enhancement (左侧装饰条) --- */
+.modal-header {
+  position: relative;
+}
+.modal-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 2px;
+  margin-left: -20px;
+}
+.modal-header h3 {
+  padding-left: 8px;
+}
+
+/* --- Modal Body Form Layout --- */
+.modal-body .form-group {
+  margin-bottom: 16px;
+}
+.modal-body .form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.modal-body .form-group label .required {
+  color: var(--danger);
+  margin-right: 2px;
+}
+.modal-body .form-group .form-input,
+.modal-body .form-group .form-select,
+.modal-body .form-group .form-textarea {
+  width: 100%;
+}
+
+/* --- Modal Body Two-Column Form --- */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+.form-row .form-group {
+  margin-bottom: 16px;
+}
+
+/* --- Modal Body Detail Grid Enhancement --- */
+.modal-body .detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  padding: 4px 0;
+}
+.modal-body .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.modal-body .detail-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.modal-body .detail-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* --- Modal Footer Enhancement --- */
+.modal-footer .btn {
+  min-width: 72px;
+  padding: 0 20px;
+}
+.modal-footer .btn-primary {
+  min-width: 88px;
+}
+
+/* --- Confirm Modal Enhancement --- */
+.confirm-modal .confirm-message {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* --- Modal Body Editor Area --- */
+.modal-body .editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 10px;
+  background: #f5f7fa;
+  border: 1px solid var(--border-light);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-body .editor-toolbar .toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.modal-body .editor-toolbar .toolbar-btn:hover {
+  background: #fff;
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.modal-body .editor-area {
+  min-height: 160px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  overflow-y: auto;
+}
+.modal-body .editor-area:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: -1px;
+}
+.editor-area-readonly {
+  background: var(--bg-light, #f5f7fa);
+  cursor: default;
+}
+
+/* --- Modal Body Content Box (for notice/affairs detail) --- */
+.modal-body .detail-content-box {
+  padding: 16px;
+  min-height: 80px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* --- Detail Section Title --- */
+.detail-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* --- Radio/Checkbox Group (modal scoped) --- */
+.modal-body .radio-group {
+  display: flex;
+  gap: 24px;
+  margin-top: 4px;
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* --- Modal Overlay Animation Enhancement --- */
+.modal-overlay {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.modal {
+  animation: modalSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --- Full-screen Modal Enhancement --- */
+.modal-full {
+  width: 92vw;
+  height: 88vh;
+}
+
+/* ============================================
+   47. Search Filter Unified Enhancement (搜索区统一增强)
+   ============================================ */
+
+/* --- Filter-bar 与 Search-filter 统一增强 --- */
+.filter-bar {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  gap: 12px 16px;
+  border: 1px solid var(--border-light);
+}
+
+.filter-bar .filter-item {
+  min-width: unset;
+}
+
+.filter-bar .filter-item .form-input,
+.filter-bar .filter-item .form-select {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.filter-bar .filter-item label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.filter-bar .filter-actions .btn,
+.filter-bar .filter-item.filter-bar-actions .btn {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+/* --- 搜索区整体美化 --- */
+.search-filter,
+.filter-bar {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+  padding: 16px 20px;
+  gap: 12px 16px;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s;
+}
+.search-filter:hover,
+.filter-bar:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* --- 搜索区内标签样式 --- */
+.search-filter .filter-item label,
+.filter-bar .filter-item label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* --- 搜索区操作按钮组 --- */
+.search-filter .filter-actions,
+.filter-bar .filter-actions,
+.filter-bar .filter-bar-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.search-filter .filter-actions .btn,
+.filter-bar .filter-actions .btn,
+.filter-bar .filter-bar-actions .btn {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* --- 搜索区表单控件统一 --- */
+.search-filter .filter-item .form-input,
+.search-filter .filter-item .form-select,
+.filter-bar .filter-item .form-input,
+.filter-bar .filter-item .form-select {
+  height: 34px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-filter .filter-item .form-input:focus,
+.search-filter .filter-item .form-select:focus,
+.filter-bar .filter-item .form-input:focus,
+.filter-bar .filter-item .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(34, 168, 74, 0.1);
+  outline: none;
+}
+
+/* --- 搜索区日期范围组 --- */
+.search-filter .date-range-group,
+.filter-bar .date-range-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.search-filter .date-range-group span,
+.filter-bar .date-range-group span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* --- 搜索区 checkbox 组 --- */
+.search-filter .checkbox-group,
+.filter-bar .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }

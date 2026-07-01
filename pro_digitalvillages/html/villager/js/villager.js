@@ -217,20 +217,24 @@ document.querySelectorAll('.nav-back').forEach(function(btn) {
 document.querySelectorAll('.btn-primary').forEach(function(btn) {
   if (btn.type === 'submit' || btn.tagName === 'BUTTON') {
     btn.addEventListener('click', function(e) {
-      // Allow link buttons to work normally
       if (this.tagName === 'A') return;
       e.preventDefault();
+      var redirect = this.getAttribute('data-redirect');
       var text = this.textContent.trim();
-      if (text === '提交认证' || text === '提交申请' || text === '提交上报' || text === '提交') {
-        showToast('提交成功');
-      } else if (text === '确认兑换') {
+      if (text === '确认兑换') {
         showModal('确认兑换', '确定使用积分兑换该商品吗？', function() {
           showToast('兑换成功');
+          if (redirect) setTimeout(function() { location.href = redirect; }, 600);
         });
+      } else if (text === '提交认证' || text === '提交申请' || text === '提交上报' || text === '提交') {
+        showToast('提交成功');
+        if (redirect) setTimeout(function() { location.href = redirect; }, 600);
       } else if (text === '发布') {
         showToast('发布成功');
+        if (redirect) setTimeout(function() { location.href = redirect; }, 600);
       } else if (text === '保存') {
         showToast('保存成功');
+        if (redirect) setTimeout(function() { location.href = redirect; }, 600);
       }
     });
   }
@@ -273,6 +277,39 @@ document.querySelectorAll('.upload-item').forEach(function(item) {
       return;
     }
     showToast('发送成功');
+    var commentList = document.querySelector('.comment-list');
+    if (commentList && input.value.trim()) {
+      var now = new Date();
+      var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      var newComment = document.createElement('div');
+      newComment.className = 'comment-item';
+      newComment.innerHTML = '<div class="comment-avatar">我</div><div class="comment-body"><div class="comment-name">我<span class="comment-time">' + timeStr + '</span></div><div class="comment-text">' + input.value.trim() + '</div></div>';
+      commentList.insertBefore(newComment, commentList.firstChild);
+    }
     input.value = '';
   });
 })();
+
+// Tab 筛选过滤
+document.addEventListener('DOMContentLoaded', function() {
+  var groups = document.querySelectorAll('.tab-group[data-filter-target], .tab-switch[data-filter-target], .tab-row[data-filter-target]');
+  groups.forEach(function(group) {
+    var btns = group.querySelectorAll('.tab-btn');
+    var target = group.getAttribute('data-filter-target');
+    var items = document.querySelectorAll(target);
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        btns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        var filter = this.getAttribute('data-filter') || '';
+        items.forEach(function(item) {
+          if (!filter || filter === 'all' || item.getAttribute('data-status') === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+});

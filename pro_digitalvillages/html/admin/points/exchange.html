@@ -1,32 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>积分兑换管理</title>
   <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
 <div class="admin-page">
-  <!-- 面包屑 -->
-  <div class="breadcrumb">
-    <a href="#">首页</a> / <a href="#">积分管理</a> / <span>积分兑换</span>
-  </div>
-
   <!-- 操作按钮 -->
   <div class="action-bar">
-    <button class="btn btn-primary" onclick="openModal('addProductModal')">+ 新增商品</button>
+    <button class="btn btn-primary" onclick="openModal('addProductModal')"><span class="iconify" data-icon="ri:add-line"></span> 新增商品</button>
   </div>
 
   <!-- 搜索筛选 -->
   <div class="filter-bar">
     <div class="filter-item">
       <label>商品名称</label>
-      <input type="text" placeholder="请输入商品名称">
+      <input type="text" class="form-input" placeholder="请输入商品名称">
     </div>
     <div class="filter-item">
       <label>商品分类</label>
-      <select>
+      <select class="form-select">
         <option value="">全部分类</option>
         <option>生活用品</option>
         <option>食品</option>
@@ -36,15 +32,15 @@
     </div>
     <div class="filter-item">
       <label>状态</label>
-      <select>
+      <select class="form-select">
         <option value="">全部状态</option>
         <option>上架</option>
         <option>下架</option>
       </select>
     </div>
     <div class="filter-actions">
-      <button class="btn btn-primary btn-sm">查询</button>
-      <button class="btn btn-sm">重置</button>
+      <button class="btn btn-primary btn-sm"><span class="iconify" data-icon="ri:search-line"></span> 查询</button>
+      <button class="btn btn-search-reset btn-sm"><span class="iconify" data-icon="ri:refresh-line"></span> 重置</button>
     </div>
   </div>
 
@@ -59,7 +55,7 @@
           <th>库存数量</th>
           <th>已兑换数量</th>
           <th>状态</th>
-          <th class="col-actions">操作</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -70,11 +66,14 @@
           <td>50</td>
           <td>23</td>
           <td><span class="tag tag-green">上架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})">下架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>下架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="食用油" data-category="食品" data-points="50" data-stock="0" data-desc="食用植物油，5L桶装。" data-status="上架">
@@ -84,11 +83,14 @@
           <td class="text-red fw-bold">0</td>
           <td>15</td>
           <td><span class="tag tag-green">上架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})">下架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>下架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="大米(5kg)" data-category="食品" data-points="40" data-stock="30" data-desc="东北大米，5kg装。" data-status="上架">
@@ -98,11 +100,14 @@
           <td>30</td>
           <td>45</td>
           <td><span class="tag tag-green">上架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})">下架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>下架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="作业本套装" data-category="文具" data-points="15" data-stock="100" data-desc="含语文、数学、英语作业本各5本。" data-status="上架">
@@ -112,11 +117,14 @@
           <td>100</td>
           <td>38</td>
           <td><span class="tag tag-green">上架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})">下架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>下架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="有机肥料" data-category="农资" data-points="60" data-stock="20" data-desc="有机复合肥，适用于各类农作物。" data-status="下架">
@@ -126,11 +134,14 @@
           <td>20</td>
           <td>8</td>
           <td><span class="tag tag-gray">下架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-success" onclick="showConfirm({title:'上架确认',message:'确定上架该商品吗？',onConfirm:function(){showToast('已上架','success')}})">上架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'上架确认',message:'确定上架该商品吗？',onConfirm:function(){showToast('已上架','success')}})"><span class="iconify" data-icon="ri:checkbox-circle-line"></span>上架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
         <tr data-name="毛巾套装" data-category="生活用品" data-points="20" data-stock="80" data-desc="纯棉毛巾2条装，柔软亲肤。" data-status="上架">
@@ -140,21 +151,24 @@
           <td>80</td>
           <td>52</td>
           <td><span class="tag tag-green">上架</span></td>
-          <td class="col-actions">
-            <button class="btn-text btn-text-primary" onclick="openModal('editProductModal');fillProductEdit(this)">编辑</button>
-            <button class="btn-text btn-text-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})">下架</button>
-            <button class="btn-text btn-text-primary" onclick="openModal('stockModal');fillStockInfo(this)">库存管理</button>
-            <button class="btn-text btn-text-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})">删除</button>
+          <td class="op-cell">
+            <button class="btn-op btn-op-edit" onclick="openModal('editProductModal');fillProductEdit(this)"><span class="iconify" data-icon="ri:edit-line"></span>编辑</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-warning" onclick="showConfirm({title:'下架确认',message:'确定下架该商品吗？',onConfirm:function(){showToast('已下架','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>下架</button>
+            <span class="op-divider"></span>
+            <button class="btn-op" onclick="openModal('stockModal');fillStockInfo(this)"><span class="iconify" data-icon="ri:archive-line"></span>库存管理</button>
+            <span class="op-divider"></span>
+            <button class="btn-op btn-op-danger" onclick="showConfirm({title:'删除确认',message:'确定删除该商品吗？删除后不可恢复。',onConfirm:function(){showToast('删除成功','success')}})"><span class="iconify" data-icon="ri:delete-bin-line"></span>删除</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <div class="page-info">共 6 条记录，每页 10 条</div>
+      <span class="page-total">共 6 条记录</span>
       <div class="page-btns">
-        <a class="page-btn disabled">&laquo;</a>
-        <a class="page-btn active">1</a>
-        <a class="page-btn disabled">&raquo;</a>
+        <button type="button" class="page-btn disabled">&laquo;</button>
+        <button type="button" class="page-btn active">1</button>
+        <button type="button" class="page-btn disabled">&raquo;</button>
       </div>
     </div>
   </div>
@@ -175,7 +189,7 @@
               <th>兑换积分</th>
               <th>申请时间</th>
               <th>处理状态</th>
-              <th class="col-actions">操作</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -185,9 +199,10 @@
               <td>30分</td>
               <td>2026-06-30 10:00</td>
               <td><span class="tag tag-yellow">待发货</span></td>
-              <td class="col-actions">
-                <button class="btn-text btn-text-primary" onclick="openModal('shipModal');fillShipInfo(this)">发货</button>
-                <button class="btn-text btn-text-danger" onclick="showConfirm({title:'取消兑换',message:'确定取消该兑换申请吗？积分将退回村民账户。',onConfirm:function(){showToast('已取消','success')}})">取消</button>
+              <td class="op-cell">
+                <button class="btn-op btn-op-edit" onclick="openModal('shipModal');fillShipInfo(this)"><span class="iconify" data-icon="ri:send-plane-line"></span>发货</button>
+                <span class="op-divider"></span>
+                <button class="btn-op btn-op-danger" onclick="showConfirm({title:'取消兑换',message:'确定取消该兑换申请吗？积分将退回村民账户。',onConfirm:function(){showToast('已取消','success')}})"><span class="iconify" data-icon="ri:close-circle-line"></span>取消</button>
               </td>
             </tr>
             <tr data-name="大米(5kg)" data-user="王小明" data-points="40" data-time="2026-06-29 15:30" data-status="已发货" data-address="幸福村第二组5号">
@@ -196,8 +211,8 @@
               <td>40分</td>
               <td>2026-06-29 15:30</td>
               <td><span class="tag tag-green">已发货</span></td>
-              <td class="col-actions">
-                <button class="btn-text btn-text-primary" onclick="openModal('viewExchangeDetailModal');fillExchangeDetail(this)">详情</button>
+              <td class="op-cell">
+                <button class="btn-op" onclick="openModal('viewExchangeDetailModal');fillExchangeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
               </td>
             </tr>
             <tr data-name="作业本套装" data-user="张美丽" data-points="15" data-time="2026-06-28 11:20" data-status="已取消" data-address="幸福村第三组8号">
@@ -206,8 +221,8 @@
               <td>15分</td>
               <td>2026-06-28 11:20</td>
               <td><span class="tag tag-gray">已取消</span></td>
-              <td class="col-actions">
-                <button class="btn-text btn-text-primary" onclick="openModal('viewExchangeDetailModal');fillExchangeDetail(this)">详情</button>
+              <td class="op-cell">
+                <button class="btn-op" onclick="openModal('viewExchangeDetailModal');fillExchangeDetail(this)"><span class="iconify" data-icon="ri:eye-line"></span>查看</button>
               </td>
             </tr>
           </tbody>
@@ -223,7 +238,7 @@
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>新增商品</h3>
-      <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('addProductModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -274,7 +289,7 @@
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>编辑商品</h3>
-      <span class="modal-close" onclick="closeModal('editProductModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('editProductModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -325,7 +340,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>库存管理</h3>
-      <span class="modal-close" onclick="closeModal('stockModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('stockModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">
@@ -363,7 +378,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>确认发货</h3>
-      <span class="modal-close" onclick="closeModal('shipModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('shipModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -387,7 +402,7 @@
   <div class="modal">
     <div class="modal-header">
       <h3>兑换详情</h3>
-      <span class="modal-close" onclick="closeModal('viewExchangeDetailModal')">&times;</span>
+      <button type="button" class="modal-close" onclick="closeModal('viewExchangeDetailModal')" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
       <div class="detail-grid">

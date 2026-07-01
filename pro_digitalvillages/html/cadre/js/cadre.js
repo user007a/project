@@ -98,4 +98,50 @@ document.addEventListener('DOMContentLoaded', function() {
   initTabBar();
   initTabSwitch();
   initTabRow();
+  initTabFilter();
+  initFormValidate();
 });
+
+// Tab 筛选过滤
+function initTabFilter() {
+  var groups = document.querySelectorAll('.tab-switch[data-filter-target], .tab-row[data-filter-target], .tab-group[data-filter-target]');
+  groups.forEach(function(group) {
+    var btns = group.querySelectorAll('.tab-btn');
+    var target = group.getAttribute('data-filter-target');
+    var items = document.querySelectorAll(target);
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        btns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        var filter = this.getAttribute('data-filter') || '';
+        items.forEach(function(item) {
+          if (!filter || filter === 'all' || item.getAttribute('data-status') === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+}
+
+// 表单验证
+function initFormValidate() {
+  document.querySelectorAll('form[data-validate]').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var valid = true;
+      form.querySelectorAll('[required]').forEach(function(field) {
+        if (!field.value.trim()) {
+          field.style.borderColor = '#EF4444';
+          valid = false;
+        } else {
+          field.style.borderColor = '';
+        }
+      });
+      if (valid) showToast('提交成功');
+      else showToast('请填写必填项');
+    });
+  });
+}
