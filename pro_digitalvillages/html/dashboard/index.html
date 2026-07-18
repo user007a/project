@@ -73,348 +73,384 @@
       <!-- ==========================================
            Section 1: 村情总览
            ========================================== -->
-      <div class="section active" id="sec-overview" role="tabpanel" aria-labelledby="tab-overview">
-        <!-- KPI Grid -->
+      <div class="section" id="sec-overview" role="tabpanel" aria-labelledby="tab-overview">
+        <!-- KPI Cards Row -->
         <div class="kpi-grid">
-          <div class="kpi-card" data-tip="全村常住人口数量">
+          <div class="kpi-card" onclick="openKpiModal('total-pop')" data-tip="点击查看详细人口数据">
             <div class="kpi-icon icon-teal"><i class="fa-solid fa-users"></i></div>
-            <div class="kpi-content">
+            <div class="kpi-info">
               <div class="kpi-label">总人口</div>
               <div class="kpi-value">2,856</div>
-              <div class="kpi-unit">人</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +12</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +2.3%</div>
           </div>
-          <div class="kpi-card" data-tip="全村登记户数">
-            <div class="kpi-icon"><i class="fa-solid fa-house-chimney"></i></div>
-            <div class="kpi-content">
+          <div class="kpi-card" onclick="openKpiModal('households')" data-tip="点击查看详细户数数据">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-house-chimney"></i></div>
+            <div class="kpi-info">
               <div class="kpi-label">总户数</div>
-              <div class="kpi-value">892</div>
-              <div class="kpi-unit">户</div>
+              <div class="kpi-value">986</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +8</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +1.1%</div>
           </div>
-          <div class="kpi-card" data-tip="中共党员总数">
-            <div class="kpi-icon icon-red"><i class="fa-solid fa-flag"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">党员人数</div>
-              <div class="kpi-value">67</div>
-              <div class="kpi-unit">人</div>
-            </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +5.2%</div>
-          </div>
-          <div class="kpi-card" data-tip="耕地总面积">
-            <div class="kpi-icon icon-lime"><i class="fa-solid fa-wheat-awn"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">耕地面积</div>
-              <div class="kpi-value">4,560</div>
-              <div class="kpi-unit">亩</div>
-            </div>
-            <div class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> -0.5%</div>
-          </div>
-          <div class="kpi-card" data-tip="村集体经济年收入">
+          <div class="kpi-card" onclick="openKpiModal('income')" data-tip="点击查看收入详情">
             <div class="kpi-icon icon-gold"><i class="fa-solid fa-coins"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">村集体年收入</div>
-              <div class="kpi-value">386</div>
-              <div class="kpi-unit">万元</div>
+            <div class="kpi-info">
+              <div class="kpi-label">村集体收入</div>
+              <div class="kpi-value">386万</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +15%</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +8.6%</div>
           </div>
-          <div class="kpi-card" data-tip="产业总产值">
-            <div class="kpi-icon icon-blue"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">产业总产值</div>
-              <div class="kpi-value">1,280</div>
-              <div class="kpi-unit">万元</div>
+          <div class="kpi-card" onclick="openKpiModal('per-income')" data-tip="点击查看人均收入详情">
+            <div class="kpi-icon icon-purple"><i class="fa-solid fa-wallet"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">人均收入</div>
+              <div class="kpi-value">3.2万</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +8.5%</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +12.5%</div>
           </div>
-          <div class="kpi-card" data-tip="事件处置闭环率">
-            <div class="kpi-icon icon-purple"><i class="fa-solid fa-clipboard-check"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">事件处置率</div>
-              <div class="kpi-value">91%</div>
-              <div class="kpi-unit">闭环率</div>
+          <div class="kpi-card" onclick="openKpiModal('party')" data-tip="点击查看党员数据">
+            <div class="kpi-icon icon-red"><i class="fa-solid fa-flag"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">党员数</div>
+              <div class="kpi-value">128</div>
+              <span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> -2</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +3.4%</div>
           </div>
-          <div class="kpi-card" data-tip="积分制参与率">
-            <div class="kpi-icon icon-teal"><i class="fa-solid fa-star"></i></div>
-            <div class="kpi-content">
-              <div class="kpi-label">积分参与率</div>
-              <div class="kpi-value">72%</div>
-              <div class="kpi-unit">参与率</div>
+          <div class="kpi-card" onclick="openKpiModal('industry')" data-tip="点击查看产业数据">
+            <div class="kpi-icon icon-lime"><i class="fa-solid fa-industry"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">特色产业</div>
+              <div class="kpi-value">6项</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +1</span>
             </div>
-            <div class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +6.8%</div>
+          </div>
+          <div class="kpi-card" onclick="openKpiModal('poverty')" data-tip="点击查看脱贫数据">
+            <div class="kpi-icon icon-teal"><i class="fa-solid fa-hand-holding-heart"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">已脱贫户</div>
+              <div class="kpi-value">42户</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 100%</span>
+            </div>
+          </div>
+          <div class="kpi-card" onclick="openKpiModal('projects')" data-tip="点击查看项目数据">
+            <div class="kpi-icon icon-gold"><i class="fa-solid fa-diagram-project"></i></div>
+            <div class="kpi-info">
+              <div class="kpi-label">在建项目</div>
+              <div class="kpi-value">5个</div>
+              <span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> +2</span>
+            </div>
           </div>
         </div>
 
-        <div class="layout-three">
-          <!-- Left: Village Summary + Land Data -->
-          <div class="col-left">
-            <div class="inner-col">
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村庄概要</div>
-                <div class="summary-stats" style="margin-bottom: 8px;">
-                  <div class="summary-stat-item" data-tip="行政区划归属">
-                    <div class="ss-val">XX省XX市</div>
-                    <div class="ss-label">行政区划</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="下辖村民小组数量">
-                    <div class="ss-val">6个</div>
-                    <div class="ss-label">村民小组</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="全村总面积">
-                    <div class="ss-val">12km²</div>
-                    <div class="ss-label">总面积</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="当前发展阶段">
-                    <div class="ss-val">振兴中</div>
-                    <div class="ss-label">发展阶段</div>
-                  </div>
+        <!-- Map-Center Layout: Left panels + Center map + Right panels -->
+        <div class="overview-map-layout">
+          <!-- Left Column -->
+          <div class="ov-left">
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>村庄概要</div>
+              <div class="summary-stats">
+                <div class="summary-stat-item" data-tip="行政区划归属">
+                  <div class="ss-val">XX省XX市</div>
+                  <div class="ss-label">行政区划</div>
                 </div>
-                <div class="mt-6 stat-row">
-                  <div class="stat-item"><div class="si-num">12</div><div class="si-label">面积(km²)</div></div>
-                  <div class="stat-item"><div class="si-num">6</div><div class="si-label">村民小组</div></div>
-                  <div class="stat-item"><div class="si-num">18</div><div class="si-label">自然村</div></div>
-                  <div class="stat-item"><div class="si-num">2.8</div><div class="si-label">户均人口</div></div>
+                <div class="summary-stat-item" data-tip="下辖村民小组数量">
+                  <div class="ss-val">6个</div>
+                  <div class="ss-label">村民小组</div>
+                </div>
+                <div class="summary-stat-item" data-tip="全村总面积">
+                  <div class="ss-val">12km²</div>
+                  <div class="ss-label">总面积</div>
+                </div>
+                <div class="summary-stat-item" data-tip="当前发展阶段">
+                  <div class="ss-val">振兴中</div>
+                  <div class="ss-label">发展阶段</div>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>土地利用</div>
-                <div class="stat-row">
-                  <div class="stat-item"><div class="si-num">892</div><div class="si-label">耕地(亩)</div></div>
-                  <div class="stat-item"><div class="si-num">3,680</div><div class="si-label">林地(亩)</div></div>
-                  <div class="stat-item"><div class="si-num">520</div><div class="si-label">园地(亩)</div></div>
-                  <div class="stat-item"><div class="si-num">860</div><div class="si-label">住宅(亩)</div></div>
-                </div>
-                <div class="mt-4 stat-row">
-                  <div class="stat-item"><div class="si-num">3条</div><div class="si-label">河流水系</div></div>
-                  <div class="stat-item"><div class="si-num">2座</div><div class="si-label">水库山塘</div></div>
-                  <div class="stat-item"><div class="si-num">15km</div><div class="si-label">通村公路</div></div>
-                  <div class="stat-item"><div class="si-num">98%</div><div class="si-label">安全饮水</div></div>
+              <div class="mt-4 stat-row">
+                <div class="stat-item"><div class="si-num">12</div><div class="si-label">面积(km²)</div></div>
+                <div class="stat-item"><div class="si-num">18</div><div class="si-label">自然村</div></div>
+                <div class="stat-item"><div class="si-num">2.8</div><div class="si-label">户均人口</div></div>
+                <div class="stat-item"><div class="si-num">6</div><div class="si-label">河流水系</div></div>
+              </div>
+            </div>
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>土地利用</div>
+              <div class="stat-row">
+                <div class="stat-item"><div class="si-num">892</div><div class="si-label">耕地(亩)</div></div>
+                <div class="stat-item"><div class="si-num">3,680</div><div class="si-label">林地(亩)</div></div>
+                <div class="stat-item"><div class="si-num">520</div><div class="si-label">园地(亩)</div></div>
+                <div class="stat-item"><div class="si-num">860</div><div class="si-label">住宅(亩)</div></div>
+              </div>
+              <div class="mt-4 stat-row">
+                <div class="stat-item"><div class="si-num">2座</div><div class="si-label">水库山塘</div></div>
+                <div class="stat-item"><div class="si-num">15km</div><div class="si-label">通村公路</div></div>
+                <div class="stat-item"><div class="si-num">98%</div><div class="si-label">安全饮水</div></div>
+                <div class="stat-item"><div class="si-num">85%</div><div class="si-label">绿化覆盖</div></div>
+              </div>
+            </div>
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>基础设施</div>
+              <div class="stat-row">
+                <div class="stat-item"><div class="si-num">86%</div><div class="si-label">道路硬化</div></div>
+                <div class="stat-item"><div class="si-num">100%</div><div class="si-label">通电率</div></div>
+                <div class="stat-item"><div class="si-num">98%</div><div class="si-label">自来水</div></div>
+                <div class="stat-item"><div class="si-num">95%</div><div class="si-label">宽带覆盖</div></div>
+              </div>
+              <div class="mt-4 stat-row">
+                <div class="stat-item"><div class="si-num">8个</div><div class="si-label">活动场所</div></div>
+                <div class="stat-item"><div class="si-num">5条</div><div class="si-label">公交线路</div></div>
+                <div class="stat-item"><div class="si-num">2座</div><div class="si-label">卫生室</div></div>
+                <div class="stat-item"><div class="si-num">1所</div><div class="si-label">小学</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Center: Village Map -->
+          <div class="ov-center">
+            <div class="village-map">
+              <img src="images/village-aerial.jpg" alt="幸福村实景图" class="map-img">
+              <!-- Map Markers -->
+              <div class="map-marker" style="top:28%;left:45%;" data-tip="村委会">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div class="map-marker" style="top:35%;left:62%;" data-tip="文化礼堂">
+                <i class="fa-solid fa-landmark"></i>
+              </div>
+              <div class="map-marker" style="top:22%;left:30%;" data-tip="卫生所">
+                <i class="fa-solid fa-hospital"></i>
+              </div>
+              <div class="map-marker" style="top:55%;left:50%;" data-tip="古树古物">
+                <i class="fa-solid fa-tree"></i>
+              </div>
+              <div class="map-marker marker-camera" style="top:18%;left:55%;" data-tip="监控点 A">
+                <i class="fa-solid fa-video"></i>
+              </div>
+              <div class="map-marker marker-camera" style="top:45%;left:35%;" data-tip="监控点 B">
+                <i class="fa-solid fa-video"></i>
+              </div>
+              <div class="map-marker marker-camera" style="top:60%;left:65%;" data-tip="监控点 C">
+                <i class="fa-solid fa-video"></i>
+              </div>
+              <div class="map-marker" style="top:40%;left:72%;" data-tip="小学">
+                <i class="fa-solid fa-school"></i>
+              </div>
+            </div>
+            <!-- Map Legend -->
+            <div class="map-legend">
+              <div class="legend-group">
+                <span class="legend-title">网格分组</span>
+                <div class="legend-items">
+                  <span class="legend-item"><span class="legend-dot" style="background:#2b6e3c;"></span>第一网格</span>
+                  <span class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>第二网格</span>
+                  <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>第三网格</span>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>基础设施建设</div>
-                <div class="stat-row">
-                  <div class="stat-item"><div class="si-num">86%</div><div class="si-label">道路硬化</div></div>
-                  <div class="stat-item"><div class="si-num">100%</div><div class="si-label">通电率</div></div>
-                  <div class="stat-item"><div class="si-num">98%</div><div class="si-label">自来水</div></div>
-                  <div class="stat-item"><div class="si-num">95%</div><div class="si-label">宽带覆盖</div></div>
+              <div class="legend-group">
+                <span class="legend-title">重点建筑</span>
+                <div class="legend-items">
+                  <span class="legend-item"><i class="fa-solid fa-building" style="color:#2b6e3c;"></i> 村委</span>
+                  <span class="legend-item"><i class="fa-solid fa-landmark" style="color:#8b5cf6;"></i> 文化礼堂</span>
+                  <span class="legend-item"><i class="fa-solid fa-hospital" style="color:#ef4444;"></i> 卫生所</span>
+                  <span class="legend-item"><i class="fa-solid fa-tree" style="color:#22a84a;"></i> 古树古物</span>
                 </div>
-                <div class="mt-4 stat-row">
-                  <div class="stat-item"><div class="si-num">8个</div><div class="si-label">文化活动场所</div></div>
-                  <div class="stat-item"><div class="si-num">5条</div><div class="si-label">公交线路</div></div>
-                  <div class="stat-item"><div class="si-num">2座</div><div class="si-label">卫生室</div></div>
-                  <div class="stat-item"><div class="si-num">1所</div><div class="si-label">小学</div></div>
+              </div>
+              <div class="legend-group">
+                <span class="legend-title">监控点</span>
+                <div class="legend-items">
+                  <span class="legend-item"><i class="fa-solid fa-video" style="color:#f59e0b;"></i> 监控 A</span>
+                  <span class="legend-item"><i class="fa-solid fa-video" style="color:#f59e0b;"></i> 监控 B</span>
+                  <span class="legend-item"><i class="fa-solid fa-video" style="color:#f59e0b;"></i> 监控 C</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Center: Industry + Population + Party Info -->
-          <div class="col-center">
-            <div class="inner-col">
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>特色产业</div>
-                <div class="industry-icons">
-                  <div class="industry-icon-item" data-tip="特色种植业：有机水稻、蔬菜大棚">
-                    <div class="icon-circle"><i class="fa-solid fa-wheat-awn"></i></div>
-                    <span class="icon-label">种植业</span>
-                  </div>
-                  <div class="industry-icon-item" data-tip="规模化养殖：生猪、家禽">
-                    <div class="icon-circle"><i class="fa-solid fa-cow"></i></div>
-                    <span class="icon-label">养殖业</span>
-                  </div>
-                  <div class="industry-icon-item" data-tip="农产品加工：豆制品、腌制菜">
-                    <div class="icon-circle"><i class="fa-solid fa-warehouse"></i></div>
-                    <span class="icon-label">加工业</span>
-                  </div>
-                  <div class="industry-icon-item" data-tip="田园观光、农家乐、民宿">
-                    <div class="icon-circle"><i class="fa-solid fa-mountain-sun"></i></div>
-                    <span class="icon-label">乡村旅游</span>
-                  </div>
-                  <div class="industry-icon-item" data-tip="农特产品线上销售平台">
-                    <div class="icon-circle"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <span class="icon-label">电商服务</span>
-                  </div>
-                  <div class="industry-icon-item" data-tip="传统编织、刺绣工艺">
-                    <div class="icon-circle"><i class="fa-solid fa-palette"></i></div>
-                    <span class="icon-label">手工艺品</span>
-                  </div>
+          <!-- Right Column -->
+          <div class="ov-right">
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>村务公告</div>
+              <div class="notice-list">
+                <div class="notice-item notice-warning" data-tip="点击查看详情">
+                  <div class="notice-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                  <div class="notice-content"><div class="notice-title">关于开展2026年度防汛抗旱工作的紧急通知</div><div class="notice-time">2026-06-28</div></div>
+                </div>
+                <div class="notice-item notice-info" data-tip="点击查看详情">
+                  <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
+                  <div class="notice-content"><div class="notice-title">2026年第三季度村民代表大会日程安排</div><div class="notice-time">2026-06-25</div></div>
+                </div>
+                <div class="notice-item notice-success" data-tip="点击查看详情">
+                  <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
+                  <div class="notice-content"><div class="notice-title">通村道路硬化工程竣工验收公告</div><div class="notice-time">2026-06-20</div></div>
+                </div>
+                <div class="notice-item notice-danger" data-tip="点击查看详情">
+                  <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                  <div class="notice-content"><div class="notice-title">关于规范农村宅基地审批管理的通知</div><div class="notice-time">2026-06-15</div></div>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>人口结构</div>
-                <div class="h-bar-chart">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">男性</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:53%;">
-                      <span class="h-bar-value">1,514人 (53%)</span>
-                    </div>
-                  </div></div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">女性</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:47%;">
-                      <span class="h-bar-value">1,342人 (47%)</span>
-                    </div>
-                  </div></div>
+            </div>
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>近期村务公开</div>
+              <div class="summary-stats">
+                <div class="summary-stat-item" data-tip="本年度村集体收入合计">
+                  <div class="ss-val">386万</div>
+                  <div class="ss-label">村集体收入</div>
                 </div>
-                <div class="mt-6 h-bar-chart">
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">0-17岁</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:18%;">
-                      <span class="h-bar-value">514人</span>
-                    </div>
-                  </div></div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">18-35岁</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:28%;">
-                      <span class="h-bar-value">800人</span>
-                    </div>
-                  </div></div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">36-59岁</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;">
-                      <span class="h-bar-value">999人</span>
-                    </div>
-                  </div></div>
-                  <div class="h-bar-item">
-                    <span class="h-bar-label">60岁以上</span>
-                    <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:19%;">
-                      <span class="h-bar-value">543人</span>
-                    </div>
-                  </div></div>
+                <div class="summary-stat-item" data-tip="本年度村集体支出合计">
+                  <div class="ss-val">312万</div>
+                  <div class="ss-label">村集体支出</div>
+                </div>
+                <div class="summary-stat-item" data-tip="在建项目数量">
+                  <div class="ss-val">5个</div>
+                  <div class="ss-label">在建项目</div>
                 </div>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村两委与教育</div>
-                <div class="summary-stats">
-                  <div class="summary-stat-item" data-tip="村党支部委员数量">
-                    <div class="ss-val">5人</div>
-                    <div class="ss-label">党支部委员</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="村委会委员数量">
-                    <div class="ss-val">7人</div>
-                    <div class="ss-label">村委会委员</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="村级后备干部数量">
-                    <div class="ss-val">8人</div>
-                    <div class="ss-label">后备干部</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="在册监督委员会成员">
-                    <div class="ss-val">3人</div>
-                    <div class="ss-label">监委会成员</div>
-                  </div>
+              <div class="mt-4 summary-stats">
+                <div class="summary-stat-item" data-tip="本年度惠农资金发放">
+                  <div class="ss-val">128万</div>
+                  <div class="ss-label">惠农资金</div>
                 </div>
-                <div class="mt-6 mini-card-grid cols-2">
-                  <div class="mini-card" data-tip="主要民族构成">
-                    <div class="mc-icon"><i class="fa-solid fa-people-group" style="color:#2b6e3c;"></i></div>
-                    <div class="mc-val">汉族98%</div>
-                    <div class="mc-label">民族构成</div>
+                <div class="summary-stat-item" data-tip="已完成项目数量">
+                  <div class="ss-val">8个</div>
+                  <div class="ss-label">已完成项目</div>
+                </div>
+                <div class="summary-stat-item" data-tip="公益岗位安置人数">
+                  <div class="ss-val">32人</div>
+                  <div class="ss-label">公益岗位</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel-compact">
+              <div class="panel-title"><span class="dot"></span>重点工作进展</div>
+              <div class="progress-group">
+                <div class="progress-item">
+                  <div class="progress-header">
+                    <span class="progress-label">蔬菜大棚二期建设</span>
+                    <span class="progress-val text-green">68%</span>
                   </div>
-                  <div class="mini-card" data-tip="义务教育阶段入学率">
-                    <div class="mc-icon"><i class="fa-solid fa-school" style="color:#22a84a;"></i></div>
-                    <div class="mc-val">100%</div>
-                    <div class="mc-label">义务教育入学率</div>
+                  <div class="progress-bar"><div class="progress-fill fill-primary" style="width:68%;"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-header">
+                    <span class="progress-label">村道路灯安装工程</span>
+                    <span class="progress-val text-green">92%</span>
                   </div>
+                  <div class="progress-bar"><div class="progress-fill fill-success" style="width:92%;"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-header">
+                    <span class="progress-label">智慧农业系统部署</span>
+                    <span class="progress-val text-green">45%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill fill-info" style="width:45%;"></div></div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Right: Notices + Village Affairs -->
-          <div class="col-right">
-            <div class="inner-col">
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>村务公告</div>
-                <div class="notice-list">
-                  <div class="notice-item notice-warning" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-bullhorn"></i></div>
-                    <div class="notice-content"><div class="notice-title">关于开展2026年度防汛抗旱工作的紧急通知</div><div class="notice-time">2026-06-28</div></div>
-                  </div>
-                  <div class="notice-item notice-info" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
-                    <div class="notice-content"><div class="notice-title">2026年第三季度村民代表大会日程安排</div><div class="notice-time">2026-06-25</div></div>
-                  </div>
-                  <div class="notice-item notice-success" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notice-content"><div class="notice-title">通村道路硬化工程竣工验收公告</div><div class="notice-time">2026-06-20</div></div>
-                  </div>
-                  <div class="notice-item notice-danger" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notice-content"><div class="notice-title">关于规范农村宅基地审批管理的通知</div><div class="notice-time">2026-06-15</div></div>
-                  </div>
-                  <div class="notice-item notice-info" data-tip="点击查看详情">
-                    <div class="notice-icon"><i class="fa-solid fa-circle-info"></i></div>
-                    <div class="notice-content"><div class="notice-title">村卫生室药品采购招标公示</div><div class="notice-time">2026-06-10</div></div>
-                  </div>
-                </div>
+        <!-- Bottom Row: Industry + Population + Party -->
+        <div class="overview-bottom">
+          <div class="panel panel-compact">
+            <div class="panel-title"><span class="dot"></span>特色产业</div>
+            <div class="industry-icons">
+              <div class="industry-icon-item" data-tip="特色种植业：有机水稻、蔬菜大棚">
+                <div class="icon-circle"><i class="fa-solid fa-wheat-awn"></i></div>
+                <span class="icon-label">种植业</span>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>近期村务公开</div>
-                <div class="summary-stats">
-                  <div class="summary-stat-item" data-tip="本年度村集体收入合计">
-                    <div class="ss-val">386万</div>
-                    <div class="ss-label">村集体收入</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="本年度村集体支出合计">
-                    <div class="ss-val">312万</div>
-                    <div class="ss-label">村集体支出</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="在建项目数量">
-                    <div class="ss-val">5个</div>
-                    <div class="ss-label">在建项目</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="本年度惠农资金发放">
-                    <div class="ss-val">128万</div>
-                    <div class="ss-label">惠农资金</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="已完成项目数量">
-                    <div class="ss-val">8个</div>
-                    <div class="ss-label">已完成项目</div>
-                  </div>
-                  <div class="summary-stat-item" data-tip="公益岗位安置人数">
-                    <div class="ss-val">32人</div>
-                    <div class="ss-label">公益岗位</div>
-                  </div>
-                </div>
+              <div class="industry-icon-item" data-tip="规模化养殖：生猪、家禽">
+                <div class="icon-circle"><i class="fa-solid fa-cow"></i></div>
+                <span class="icon-label">养殖业</span>
               </div>
-              <div class="panel">
-                <div class="panel-title"><span class="dot"></span>重点工作进展</div>
-                <div class="progress-group">
-                  <div class="progress-item">
-                    <div class="progress-header">
-                      <span class="progress-label">蔬菜大棚二期建设</span>
-                      <span class="progress-val text-green">68%</span>
-                    </div>
-                    <div class="progress-bar">
-                      <div class="progress-fill fill-primary" style="width:68%;"></div>
-                    </div>
-                  </div>
-                  <div class="progress-item">
-                    <div class="progress-header">
-                      <span class="progress-label">村道路灯安装工程</span>
-                      <span class="progress-val text-green">92%</span>
-                    </div>
-                    <div class="progress-bar">
-                      <div class="progress-fill fill-success" style="width:92%;"></div>
-                    </div>
-                  </div>
-                  <div class="progress-item">
-                    <div class="progress-header">
-                      <span class="progress-label">智慧农业系统部署</span>
-                      <span class="progress-val text-green">45%</span>
-                    </div>
-                    <div class="progress-bar">
-                      <div class="progress-fill fill-info" style="width:45%;"></div>
-                    </div>
-                  </div>
-                </div>
+              <div class="industry-icon-item" data-tip="农产品加工：豆制品、腌制菜">
+                <div class="icon-circle"><i class="fa-solid fa-warehouse"></i></div>
+                <span class="icon-label">加工业</span>
+              </div>
+              <div class="industry-icon-item" data-tip="田园观光、农家乐、民宿">
+                <div class="icon-circle"><i class="fa-solid fa-mountain-sun"></i></div>
+                <span class="icon-label">乡村旅游</span>
+              </div>
+              <div class="industry-icon-item" data-tip="农特产品线上销售平台">
+                <div class="icon-circle"><i class="fa-solid fa-cart-shopping"></i></div>
+                <span class="icon-label">电商服务</span>
+              </div>
+              <div class="industry-icon-item" data-tip="传统编织、刺绣工艺">
+                <div class="icon-circle"><i class="fa-solid fa-palette"></i></div>
+                <span class="icon-label">手工艺品</span>
               </div>
             </div>
+          </div>
+          <div class="panel panel-compact">
+            <div class="panel-title"><span class="dot"></span>人口结构</div>
+            <div class="h-bar-chart">
+              <div class="h-bar-item">
+                <span class="h-bar-label">男性</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:53%;"><span class="h-bar-value">1,514人 (53%)</span></div></div>
+              </div>
+              <div class="h-bar-item">
+                <span class="h-bar-label">女性</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-success" style="width:47%;"><span class="h-bar-value">1,342人 (47%)</span></div></div>
+              </div>
+            </div>
+            <div class="mt-4 h-bar-chart">
+              <div class="h-bar-item">
+                <span class="h-bar-label">0-17岁</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-lime" style="width:18%;"><span class="h-bar-value">514人</span></div></div>
+              </div>
+              <div class="h-bar-item">
+                <span class="h-bar-label">18-35岁</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-info" style="width:28%;"><span class="h-bar-value">800人</span></div></div>
+              </div>
+              <div class="h-bar-item">
+                <span class="h-bar-label">36-59岁</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-primary" style="width:35%;"><span class="h-bar-value">999人</span></div></div>
+              </div>
+              <div class="h-bar-item">
+                <span class="h-bar-label">60岁以上</span>
+                <div class="h-bar-track"><div class="h-bar-fill fill-warning" style="width:19%;"><span class="h-bar-value">543人</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-compact">
+            <div class="panel-title"><span class="dot"></span>村两委与教育</div>
+            <div class="summary-stats">
+              <div class="summary-stat-item" data-tip="村党支部委员数量">
+                <div class="ss-val">5人</div>
+                <div class="ss-label">党支部委员</div>
+              </div>
+              <div class="summary-stat-item" data-tip="村委会委员数量">
+                <div class="ss-val">7人</div>
+                <div class="ss-label">村委会委员</div>
+              </div>
+              <div class="summary-stat-item" data-tip="村级后备干部数量">
+                <div class="ss-val">8人</div>
+                <div class="ss-label">后备干部</div>
+              </div>
+              <div class="summary-stat-item" data-tip="在册监督委员会成员">
+                <div class="ss-val">3人</div>
+                <div class="ss-label">监委会成员</div>
+              </div>
+            </div>
+            <div class="mt-4 mini-card-grid cols-2">
+              <div class="mini-card" data-tip="主要民族构成">
+                <div class="mc-icon"><i class="fa-solid fa-people-group" style="color:#2b6e3c;"></i></div>
+                <div class="mc-val">汉族98%</div>
+                <div class="mc-label">民族构成</div>
+              </div>
+              <div class="mini-card" data-tip="义务教育阶段入学率">
+                <div class="mc-icon"><i class="fa-solid fa-school" style="color:#22a84a;"></i></div>
+                <div class="mc-val">100%</div>
+                <div class="mc-label">义务教育入学率</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Detail Modal -->
+        <div class="kpi-modal" id="kpiModal">
+          <div class="kpi-modal-overlay" onclick="closeKpiModal()"></div>
+          <div class="kpi-modal-content">
+            <button class="kpi-modal-close" onclick="closeKpiModal()" aria-label="关闭弹窗"><i class="fa-solid fa-xmark"></i></button>
+            <div id="kpiModalBody"></div>
           </div>
         </div>
       </div>
