@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色管理 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">角色管理</h1>
+                <p class="text-gray-500 mt-1">管理系统角色和权限配置</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索角色名称..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-64" oninput="filterRoles()">
+                <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-1"></iconify-icon>
+                    新增角色
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="role-grid">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" data-role="管理员">
+                <div class="p-4 border-b border-gray-100 bg-green-50">
+                    <h3 class="text-lg font-semibold text-green-800 flex items-center">
+                        <iconify-icon icon="material-symbols:admin-panel-settings" class="w-5 h-5 mr-2"></iconify-icon>
+                        管理员
+                    </h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-gray-500">用户数量</span>
+                        <span class="text-sm font-medium text-gray-800">5人</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">模型管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">数据管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">规则管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">预警管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">系统管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openPermissionModal('管理员')" class="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">
+                            编辑权限
+                        </button>
+                        <button onclick="openDeleteModal('管理员')" class="px-3 py-2 text-gray-500 text-sm rounded-lg hover:bg-gray-100 transition">
+                            <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" data-role="操作员">
+                <div class="p-4 border-b border-gray-100 bg-blue-50">
+                    <h3 class="text-lg font-semibold text-blue-800 flex items-center">
+                        <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2"></iconify-icon>
+                        操作员
+                    </h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-gray-500">用户数量</span>
+                        <span class="text-sm font-medium text-gray-800">86人</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">模型管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">数据管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">规则管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">预警管理</span>
+                            <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">系统管理</span>
+                            <iconify-icon icon="material-symbols:block" class="w-4 h-4 text-gray-400"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openPermissionModal('操作员')" class="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">
+                            编辑权限
+                        </button>
+                        <button onclick="openDeleteModal('操作员')" class="px-3 py-2 text-gray-500 text-sm rounded-lg hover:bg-gray-100 transition">
+                            <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" data-role="查看员">
+                <div class="p-4 border-b border-gray-100 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                        <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2"></iconify-icon>
+                        查看员
+                    </h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-sm text-gray-500">用户数量</span>
+                        <span class="text-sm font-medium text-gray-800">65人</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">模型管理</span>
+                            <iconify-icon icon="material-symbols:visibility" class="w-4 h-4 text-blue-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">数据管理</span>
+                            <iconify-icon icon="material-symbols:visibility" class="w-4 h-4 text-blue-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">规则管理</span>
+                            <iconify-icon icon="material-symbols:visibility" class="w-4 h-4 text-blue-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">预警管理</span>
+                            <iconify-icon icon="material-symbols:visibility" class="w-4 h-4 text-blue-600"></iconify-icon>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-600">系统管理</span>
+                            <iconify-icon icon="material-symbols:block" class="w-4 h-4 text-gray-400"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openPermissionModal('查看员')" class="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">
+                            编辑权限
+                        </button>
+                        <button onclick="openDeleteModal('查看员')" class="px-3 py-2 text-gray-500 text-sm rounded-lg hover:bg-gray-100 transition">
+                            <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    新增角色
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">角色名称</label>
+                    <input type="text" id="add-role-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入角色名称">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">角色描述</label>
+                    <textarea id="add-role-desc" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入角色描述"></textarea>
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">权限设置</label>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">模型管理</span>
+                        <select id="add-model-perm" class="px-3 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="full">完全权限</option>
+                            <option value="view">只读权限</option>
+                            <option value="none">无权限</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">数据管理</span>
+                        <select id="add-data-perm" class="px-3 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="full">完全权限</option>
+                            <option value="view">只读权限</option>
+                            <option value="none">无权限</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">规则管理</span>
+                        <select id="add-rule-perm" class="px-3 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="full">完全权限</option>
+                            <option value="view">只读权限</option>
+                            <option value="none">无权限</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">预警管理</span>
+                        <select id="add-alert-perm" class="px-3 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="full">完全权限</option>
+                            <option value="view">只读权限</option>
+                            <option value="none">无权限</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">系统管理</span>
+                        <select id="add-system-perm" class="px-3 py-1.5 border border-gray-300 rounded text-sm">
+                            <option value="full">完全权限</option>
+                            <option value="view">只读权限</option>
+                            <option value="none">无权限</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitAddRole()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="permission-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:settings" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    <span id="permission-title">编辑权限</span>
+                </h3>
+                <button onclick="closeModal('permission-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">模型管理</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="model-perm" value="full" class="w-4 h-4 text-green-600" checked>
+                                <span class="ml-2 text-sm text-gray-600">完全权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="model-perm" value="view" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">只读权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="model-perm" value="none" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">无权限</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">数据管理</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="data-perm" value="full" class="w-4 h-4 text-green-600" checked>
+                                <span class="ml-2 text-sm text-gray-600">完全权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="data-perm" value="view" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">只读权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="data-perm" value="none" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">无权限</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">规则管理</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="rule-perm" value="full" class="w-4 h-4 text-green-600" checked>
+                                <span class="ml-2 text-sm text-gray-600">完全权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="rule-perm" value="view" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">只读权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="rule-perm" value="none" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">无权限</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">预警管理</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="alert-perm" value="full" class="w-4 h-4 text-green-600" checked>
+                                <span class="ml-2 text-sm text-gray-600">完全权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="alert-perm" value="view" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">只读权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="alert-perm" value="none" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">无权限</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">系统管理</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="system-perm" value="full" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">完全权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="system-perm" value="view" class="w-4 h-4 text-green-600">
+                                <span class="ml-2 text-sm text-gray-600">只读权限</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="system-perm" value="none" class="w-4 h-4 text-green-600" checked>
+                                <span class="ml-2 text-sm text-gray-600">无权限</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('permission-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitPermission()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存权限</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:delete" class="w-5 h-5 mr-2 text-red-600"></iconify-icon>
+                    删除确认
+                </h3>
+                <button onclick="closeModal('delete-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                        <iconify-icon icon="material-symbols:warning" class="w-6 h-6 text-red-600"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">确认删除角色？</p>
+                        <p class="text-sm text-gray-500 mt-1">删除后将无法恢复，请谨慎操作。</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600">要删除的角色：<span id="delete-role" class="font-medium text-gray-800"></span></p>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('delete-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitDeleteRole()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteTarget = '';
+        let currentRole = '';
+
+        function openAddModal() {
+            document.getElementById('add-role-name').value = '';
+            document.getElementById('add-role-desc').value = '';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openPermissionModal(roleName) {
+            currentRole = roleName;
+            document.getElementById('permission-title').textContent = `${roleName} - 编辑权限`;
+            document.getElementById('permission-modal').classList.add('active');
+        }
+
+        function openDeleteModal(roleName) {
+            deleteTarget = roleName;
+            document.getElementById('delete-role').textContent = roleName;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function submitAddRole() {
+            const name = document.getElementById('add-role-name').value;
+            if (!name) {
+                alert('请填写角色名称');
+                return;
+            }
+            closeModal('add-modal');
+            alert('角色添加成功！');
+        }
+
+        function submitPermission() {
+            closeModal('permission-modal');
+            alert('权限设置保存成功！');
+        }
+
+        function submitDeleteRole() {
+            closeModal('delete-modal');
+            alert('角色删除成功！');
+        }
+
+        function filterRoles() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('#role-grid > div');
+            
+            cards.forEach(card => {
+                const roleName = card.getAttribute('data-role').toLowerCase();
+                card.style.display = roleName.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            ['add-modal', 'permission-modal', 'delete-modal'].forEach(id => {
+                const modal = document.getElementById(id);
+                const btn = e.target.closest(`[onclick^="open${id.replace('-', '')}"]`);
+                if (!modal.contains(e.target) && !btn) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

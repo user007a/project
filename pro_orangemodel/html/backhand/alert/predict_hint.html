@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预测提示 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">预测提示</h1>
+                <p class="text-gray-500 mt-1">管理生长预测提示信息</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索预测编号、地块名称..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-64" oninput="filterRecords()">
+                <select id="type-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterRecords()">
+                    <option value="">全部类型</option>
+                    <option value="品质预测">品质预测</option>
+                    <option value="生长预测">生长预测</option>
+                </select>
+                <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
+                    新增预测提示
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">总预测数</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1" id="stat-total">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:trending-up" class="w-6 h-6 text-purple-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">甜度预测</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1" id="stat-quality">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:star" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">长势预测</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1" id="stat-growth">0</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:scatter-plot" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                        <iconify-icon icon="material-symbols:star" class="w-5 h-5 mr-2 text-yellow-500"></iconify-icon>
+                        品质预测提示
+                    </h3>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div class="flex items-start p-4 bg-green-50 rounded-lg border border-green-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-001', '品质预测')">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:star" class="w-5 h-5 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-green-800">甜度提升预测</h4>
+                            <p class="text-sm text-green-700 mt-1">预测地块 NF-001 在当前管理条件下，成熟期糖度可达 13.8°Bx，较去年提升 0.6°Bx。当前果实膨大正常，建议保持水肥管理。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-green-600">预测糖度：13.8°Bx</span>
+                                <span class="text-xs text-green-600">预测时间：2026-11-20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-yellow-50 rounded-lg border border-yellow-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-004', '品质预测')">
+                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:warning-amber" class="w-5 h-5 text-yellow-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-yellow-800">品质预警提示</h4>
+                            <p class="text-sm text-yellow-700 mt-1">预测地块 NF-005 当前糖度增长缓慢，建议增加钾肥施用量，预计可提升 0.5°Bx。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-yellow-600">当前糖度：11.2°Bx</span>
+                                <span class="text-xs text-yellow-600">建议措施：增施钾肥</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-005', '品质预测')">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:info" class="w-5 h-5 text-blue-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-blue-800">果形预测提示</h4>
+                            <p class="text-sm text-blue-700 mt-1">预测地块 NF-008 果实形状指数良好，预计优品率可达 85% 以上。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-blue-600">预测优品率：85%</span>
+                                <span class="text-xs text-blue-600">目标值：≥80%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                        <iconify-icon icon="material-symbols:sprout" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                        生长预测提示
+                    </h3>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div class="flex items-start p-4 bg-green-50 rounded-lg border border-green-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-002', '生长预测')">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:check-circle" class="w-5 h-5 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-green-800">生长正常提示</h4>
+                            <p class="text-sm text-green-700 mt-1">地块 NF-003 新梢生长速率正常，当前物候期符合预期，继续保持现有管理措施。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-green-600">物候期：果实膨大期</span>
+                                <span class="text-xs text-green-600">健康度：优</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-orange-50 rounded-lg border border-orange-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-006', '生长预测')">
+                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:alert-circle" class="w-5 h-5 text-orange-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-orange-800">生长缓慢提示</h4>
+                            <p class="text-sm text-orange-700 mt-1">地块 NF-007 新梢生长速率低于正常水平，可能存在养分不足，建议及时追肥。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-orange-600">生长速率：0.3cm/周</span>
+                                <span class="text-xs text-orange-600">正常范围：0.5-1.0cm/周</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-purple-50 rounded-lg border border-purple-100 cursor-pointer hover:shadow-md transition" onclick="openDetailModal('PC-20260722-007', '生长预测')">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                            <iconify-icon icon="material-symbols:trending-up" class="w-5 h-5 text-purple-600"></iconify-icon>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-purple-800">成熟期预测</h4>
+                            <p class="text-sm text-purple-700 mt-1">预测地块 NF-002 将于 2026-11-15 左右进入成熟期，距离成熟约115天，建议提前做好采收准备。</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-purple-600">预测成熟期：2026-11-15</span>
+                                <span class="text-xs text-purple-600">当前阶段：果实膨大期</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:list-alt" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    预测记录列表
+                </h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预测编号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">地块名称</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预测类型</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预测内容</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">生成时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="record-table-body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500" id="record-count">共 0 条记录</p>
+                <div class="flex items-center space-x-2" id="pagination">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    预测详情
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">预测编号</label>
+                        <p id="detail-id" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">预测类型</label>
+                        <p id="detail-type" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">地块名称</label>
+                        <p id="detail-orchard" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">生成时间</label>
+                        <p id="detail-time" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预测内容</label>
+                    <p id="detail-content" class="text-sm text-gray-800 bg-gray-50 px-3 py-3 rounded"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">详细数据</label>
+                    <div class="grid grid-cols-2 gap-3 bg-gray-50 p-4 rounded-lg">
+                        <div>
+                            <span class="text-xs text-gray-500">当前阶段</span>
+                            <p class="text-sm font-medium text-gray-800" id="detail-stage">果实膨大期</p>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500">预测准确率</span>
+                            <p class="text-sm font-medium text-gray-800" id="detail-accuracy">92%</p>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500">预测时间</span>
+                            <p class="text-sm font-medium text-gray-800" id="detail-predict-time">2026-11-20</p>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500">建议措施</span>
+                            <p class="text-sm font-medium text-gray-800" id="detail-suggestion">保持水肥管理</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    新增预测提示
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预测类型</label>
+                    <select id="add-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>品质预测</option>
+                        <option>生长预测</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">地块名称</label>
+                    <input type="text" id="add-orchard" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入地块名称">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预测标题</label>
+                    <input type="text" id="add-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入预测标题">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预测内容</label>
+                    <textarea id="add-content" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入预测内容..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">建议措施</label>
+                    <input type="text" id="add-suggestion" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入建议措施">
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="submitAdd()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const pageSize = 5;
+
+        const typeClass = { '品质预测': 'bg-green-100 text-green-700', '生长预测': 'bg-blue-100 text-blue-700' };
+
+        let predictions = [
+            { id: 'PC-20260722-001', orchard: '南丰镇示范果园', type: '品质预测', title: '甜度提升预测', content: '甜度可达 13.8°Bx', fullContent: '预测地块 NF-001 在当前管理条件下，成熟期糖度可达 13.8°Bx，较去年提升 0.6°Bx。当前果实膨大正常，建议保持水肥管理。', time: '2026-07-22 10:00', stage: '果实膨大期', accuracy: '92%', predictTime: '2026-11-20', suggestion: '保持水肥管理' },
+            { id: 'PC-20260722-002', orchard: '白舍镇果园', type: '生长预测', title: '生长正常提示', content: '果实膨大正常', fullContent: '地块 NF-003 新梢生长速率正常，当前物候期符合预期，继续保持现有管理措施。', time: '2026-07-22 09:30', stage: '果实膨大期', accuracy: '95%', predictTime: '2026-11-15', suggestion: '继续保持现有管理措施' },
+            { id: 'PC-20260722-004', orchard: '太和镇果园', type: '品质预测', title: '品质预警提示', content: '当前糖度增长缓慢', fullContent: '预测地块 NF-005 当前糖度增长缓慢，建议增加钾肥施用量，预计可提升 0.5°Bx。', time: '2026-07-22 08:15', stage: '果实膨大期', accuracy: '88%', predictTime: '2026-11-20', suggestion: '增施钾肥' },
+            { id: 'PC-20260722-005', orchard: '桑田镇果园', type: '品质预测', title: '果形预测提示', content: '优品率可达85%', fullContent: '预测地块 NF-008 果实形状指数良好，预计优品率可达 85% 以上。', time: '2026-07-22 07:40', stage: '果实膨大期', accuracy: '90%', predictTime: '2026-11-20', suggestion: '保持当前管理' },
+            { id: 'PC-20260722-006', orchard: '白舍镇果园', type: '生长预测', title: '生长缓慢提示', content: '生长速率偏低', fullContent: '地块 NF-007 新梢生长速率低于正常水平，可能存在养分不足，建议及时追肥。', time: '2026-07-21 16:20', stage: '果实膨大期', accuracy: '85%', predictTime: '2026-11-15', suggestion: '及时追肥' },
+            { id: 'PC-20260722-007', orchard: '南丰镇示范果园', type: '生长预测', title: '成熟期预测', content: '预测成熟期2026-11-15', fullContent: '预测地块 NF-002 将于 2026-11-15 左右进入成熟期，距离成熟约115天，建议提前做好采收准备。', time: '2026-07-21 14:00', stage: '果实膨大期', accuracy: '91%', predictTime: '2026-11-15', suggestion: '提前做好采收准备' },
+            { id: 'PC-20260721-010', orchard: '桑田镇果园', type: '生长预测', title: '新梢生长正常', content: '新梢生长符合预期', fullContent: '地块 NF-010 新梢生长速率0.7cm/周，处于正常范围内，物候期符合预期。', time: '2026-07-21 10:30', stage: '果实膨大期', accuracy: '93%', predictTime: '2026-11-15', suggestion: '保持现有管理' },
+            { id: 'PC-20260720-008', orchard: '太和镇果园', type: '品质预测', title: '糖度增长良好', content: '糖度增长符合预期', fullContent: '地块 NF-012 当前糖度增长趋势良好，预计成熟期糖度可达 13.5°Bx。', time: '2026-07-20 15:00', stage: '果实膨大期', accuracy: '89%', predictTime: '2026-11-20', suggestion: '保持水肥管理' }
+        ];
+
+        function nowStr() {
+            const d = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        }
+
+        function openDetailModal(id, type) {
+            const p = predictions.find(x => x.id === id);
+            if (p) {
+                document.getElementById('detail-id').textContent = p.id;
+                document.getElementById('detail-type').textContent = p.type;
+                document.getElementById('detail-orchard').textContent = p.orchard;
+                document.getElementById('detail-time').textContent = p.time;
+                document.getElementById('detail-content').textContent = p.fullContent;
+                document.getElementById('detail-stage').textContent = p.stage;
+                document.getElementById('detail-accuracy').textContent = p.accuracy;
+                document.getElementById('detail-predict-time').textContent = p.predictTime;
+                document.getElementById('detail-suggestion').textContent = p.suggestion;
+            } else {
+                document.getElementById('detail-id').textContent = id;
+                document.getElementById('detail-type').textContent = type || '';
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function openAddModal() {
+            document.getElementById('add-type').value = '品质预测';
+            document.getElementById('add-orchard').value = '';
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-content').value = '';
+            document.getElementById('add-suggestion').value = '';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function deleteRecord(id) {
+            if (confirm(`确定删除预测记录 ${id} 吗？`)) {
+                predictions = predictions.filter(p => p.id !== id);
+                renderTable();
+                alert(`预测记录 ${id} 已删除`);
+            }
+        }
+
+        function submitAdd() {
+            const type = document.getElementById('add-type').value;
+            const orchard = document.getElementById('add-orchard').value.trim();
+            const title = document.getElementById('add-title').value.trim();
+            const content = document.getElementById('add-content').value.trim();
+            const suggestion = document.getElementById('add-suggestion').value.trim();
+
+            if (!title || !orchard) {
+                alert('请填写预测标题和地块名称');
+                return;
+            }
+
+            const d = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const dateStr = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+            const seq = String(predictions.length + 1).padStart(3, '0');
+            const newId = 'PC-' + dateStr + '-' + seq;
+
+            predictions.unshift({
+                id: newId,
+                orchard: orchard,
+                type: type,
+                title: title,
+                content: content || title,
+                fullContent: content || title,
+                time: nowStr(),
+                stage: '果实膨大期',
+                accuracy: '90%',
+                predictTime: '2026-11-20',
+                suggestion: suggestion || '保持水肥管理'
+            });
+
+            currentPage = 1;
+            closeModal('add-modal');
+            renderTable();
+            alert('预测提示添加成功！');
+        }
+
+        function getFiltered() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+            return predictions.filter(p => {
+                const matchesSearch = p.id.toLowerCase().includes(searchTerm) || p.orchard.toLowerCase().includes(searchTerm) || p.title.toLowerCase().includes(searchTerm);
+                const matchesType = !typeFilter || p.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+        }
+
+        function filterRecords() {
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const filtered = getFiltered();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * pageSize;
+            const pageItems = filtered.slice(start, start + pageSize);
+
+            const tbody = document.getElementById('record-table-body');
+            if (pageItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-gray-400">暂无预测记录</td></tr>`;
+            } else {
+                tbody.innerHTML = pageItems.map(p => `
+                    <tr class="hover:bg-gray-50" data-id="${p.id}" data-type="${p.type}">
+                        <td class="px-6 py-4 text-sm text-gray-500">${p.id}</td>
+                        <td class="px-6 py-4 text-sm text-gray-800">${p.orchard}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 ${typeClass[p.type] || 'bg-gray-100 text-gray-700'} text-xs rounded-full">${p.type}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">${p.content}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">${p.time}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center space-x-2">
+                                <button onclick="openDetailModal('${p.id}', '${p.type}')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="deleteRecord('${p.id}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                    <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`).join('');
+            }
+
+            document.getElementById('record-count').textContent = '共 ' + filtered.length + ' 条记录';
+            renderPagination(totalPages);
+            renderStats();
+        }
+
+        function renderPagination(totalPages) {
+            const container = document.getElementById('pagination');
+            let html = '';
+            const prevDisabled = currentPage === 1;
+            html += `<button onclick="prevPage()" ${prevDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${prevDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="px-3 py-1 bg-green-600 text-white rounded text-sm">${i}</button>`;
+                } else {
+                    html += `<button onclick="goToPage(${i})" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">${i}</button>`;
+                }
+            }
+            const nextDisabled = currentPage === totalPages;
+            html += `<button onclick="nextPage()" ${nextDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${nextDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">下一页</button>`;
+            container.innerHTML = html;
+        }
+
+        function renderStats() {
+            const total = predictions.length;
+            const quality = predictions.filter(p => p.type === '品质预测').length;
+            const growth = predictions.filter(p => p.type === '生长预测').length;
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-quality').textContent = quality;
+            document.getElementById('stat-growth').textContent = growth;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.max(1, Math.ceil(getFiltered().length / pageSize));
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+
+        document.addEventListener('click', (e) => {
+            const detailModal = document.getElementById('detail-modal');
+            if (!detailModal.contains(e.target) && !e.target.closest('[onclick^="openDetailModal"]')) {
+                detailModal.classList.remove('active');
+            }
+            const addModal = document.getElementById('add-modal');
+            if (!addModal.contains(e.target) && !e.target.closest('[onclick="openAddModal()"]')) {
+                addModal.classList.remove('active');
+            }
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>

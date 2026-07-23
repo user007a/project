@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>处置记录 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">处置记录</h1>
+                <p class="text-gray-500 mt-1">管理预警处置记录，跟踪处置进度</p>
+            </div>
+            <button onclick="exportRecords()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center">
+                <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-2"></iconify-icon>
+                导出记录
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">待处置</p>
+                        <h3 class="text-2xl font-bold text-orange-600 mt-1">12</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:hourglass-top" class="w-6 h-6 text-orange-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">处置中</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1">8</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:refresh" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">已完成</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">118</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check-circle" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">处置率</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">87%</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:percent" class="w-6 h-6 text-gray-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-4 flex-wrap">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="text" id="search-input" placeholder="搜索预警编号、处置人..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterRecords()">
+                        </div>
+                    </div>
+                    <select id="status-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterRecords()">
+                        <option value="">全部状态</option>
+                        <option value="待处置">待处置</option>
+                        <option value="处置中">处置中</option>
+                        <option value="已完成">已完成</option>
+                        <option value="已关闭">已关闭</option>
+                    </select>
+                    <select id="handler-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterRecords()">
+                        <option value="">全部处置人</option>
+                        <option value="李农技">李农技</option>
+                        <option value="王农技">王农技</option>
+                        <option value="赵农技">赵农技</option>
+                    </select>
+                    <button onclick="resetFilters()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">重置</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警编号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警标题</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警级别</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">处置人</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">处置状态</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">处置措施</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">开始时间</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">完成时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="record-table-body">
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260722-001" data-status="已完成" data-handler="李农技">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260722-001</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">高温热害预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">红色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">李农技</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已完成</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">喷水降温、遮阳网覆盖</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 11:00</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 16:30</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260722-001')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openEditModal('YJ-20260722-001')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260721-015" data-status="处置中" data-handler="王农技">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260721-015</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">炭疽病发生预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">黄色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">王农技</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">处置中</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">咪鲜胺喷雾防治</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 15:00</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">-</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260721-015')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="completeTask('YJ-20260721-015')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="完成">
+                                        <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260722-003" data-status="待处置" data-handler="赵农技">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260722-003</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">持续干旱预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">黄色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">赵农技</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">待处置</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">-</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260722-003')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="startTask('YJ-20260722-003')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="开始处置">
+                                        <iconify-icon icon="material-symbols:play-circle" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500">共 138 条记录</p>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                    <button class="px-3 py-1 bg-green-600 text-white rounded text-sm">1</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    处置详情
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">预警编号</label>
+                        <p id="detail-id" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">预警级别</label>
+                        <p id="detail-level" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">处置人</label>
+                        <p id="detail-handler" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">处置状态</label>
+                        <p id="detail-status" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">开始时间</label>
+                        <p id="detail-start" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">完成时间</label>
+                        <p id="detail-end" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预警标题</label>
+                    <p id="detail-title" class="text-sm text-gray-800 bg-gray-50 px-3 py-2 rounded"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">处置措施</label>
+                    <p id="detail-measure" class="text-sm text-gray-800 bg-gray-50 px-3 py-3 rounded"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">处置结果</label>
+                    <textarea id="detail-result" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请填写处置结果..."></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+                <button onclick="saveResult()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存结果</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    编辑处置记录
+                </h3>
+                <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">预警编号</label>
+                    <input type="text" id="edit-id" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">处置人</label>
+                    <select id="edit-handler" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>李农技</option>
+                        <option>王农技</option>
+                        <option>赵农技</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">处置措施</label>
+                    <textarea id="edit-measure" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('edit-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="saveEdit()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentId = '';
+
+        function openDetailModal(id) {
+            currentId = id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                const cells = row.querySelectorAll('td');
+                document.getElementById('detail-id').textContent = cells[0].textContent;
+                document.getElementById('detail-title').textContent = cells[1].textContent.trim();
+                document.getElementById('detail-level').textContent = cells[2].querySelector('span').textContent;
+                document.getElementById('detail-handler').textContent = cells[3].textContent;
+                document.getElementById('detail-status').textContent = cells[4].querySelector('span').textContent;
+                document.getElementById('detail-measure').textContent = cells[5].textContent;
+                document.getElementById('detail-start').textContent = cells[6].textContent;
+                document.getElementById('detail-end').textContent = cells[7].textContent;
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            currentId = id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                const cells = row.querySelectorAll('td');
+                document.getElementById('edit-id').value = cells[0].textContent;
+                document.getElementById('edit-handler').value = cells[3].textContent;
+                document.getElementById('edit-measure').value = cells[5].textContent;
+            }
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function startTask(id) {
+            if (confirm(`确定开始处置预警 ${id} 吗？`)) {
+                alert(`已开始处置预警 ${id}`);
+            }
+        }
+
+        function completeTask(id) {
+            if (confirm(`确定预警 ${id} 已处置完成吗？`)) {
+                alert(`预警 ${id} 已完成处置`);
+            }
+        }
+
+        function saveResult() {
+            closeModal('detail-modal');
+            alert('处置结果已保存！');
+        }
+
+        function saveEdit() {
+            closeModal('edit-modal');
+            alert('处置记录已更新！');
+        }
+
+        function exportRecords() {
+            alert('处置记录导出功能已触发，文件将下载。');
+        }
+
+        function filterRecords() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const handlerFilter = document.getElementById('handler-filter').value;
+            const rows = document.querySelectorAll('#record-table-body tr');
+            
+            rows.forEach(row => {
+                const id = row.getAttribute('data-id').toLowerCase();
+                const status = row.getAttribute('data-status');
+                const handler = row.getAttribute('data-handler');
+                
+                const matchesSearch = id.includes(searchTerm) || handler.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesHandler = !handlerFilter || handler === handlerFilter;
+                
+                row.style.display = matchesSearch && matchesStatus && matchesHandler ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('handler-filter').value = '';
+            filterRecords();
+        }
+
+        document.addEventListener('click', (e) => {
+            const detailModal = document.getElementById('detail-modal');
+            if (!detailModal.contains(e.target) && !e.target.closest('[onclick^="openDetailModal"]')) {
+                detailModal.classList.remove('active');
+            }
+            const editModal = document.getElementById('edit-modal');
+            if (!editModal.contains(e.target) && !e.target.closest('[onclick^="openEditModal"]')) {
+                editModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

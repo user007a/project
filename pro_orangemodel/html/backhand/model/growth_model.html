@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生长模型 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .status-running { background-color: #D1FAE5; color: #065F46; }
+        .status-stopped { background-color: #FEF2F2; color: #991B1B; }
+        .status-training { background-color: #FEF3C7; color: #92400E; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 500px; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">生长模型</h1>
+                <p class="text-gray-500 text-sm mt-1">管理南丰蜜桔生长模型的运行状态和参数配置</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="refreshStatus()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm flex items-center">
+                    <iconify-icon icon="material-symbols:refresh" class="w-4 h-4 mr-2"></iconify-icon>
+                    刷新状态
+                </button>
+                <button onclick="startModel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center">
+                    <iconify-icon icon="material-symbols:play_arrow" class="w-4 h-4 mr-2"></iconify-icon>
+                    启动模型
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">运行状态</p>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-running mt-2">
+                            <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>
+                            运行中
+                        </span>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:sprout" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">训练数据总量</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">1,258,600</h3>
+                        <p class="text-gray-400 text-xs mt-1">条记录</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:database" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">模型准确率</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">94.7%</h3>
+                        <p class="text-green-500 text-xs mt-1 flex items-center">
+                            <iconify-icon icon="material-symbols:trending-up" class="w-3 h-3 mr-1"></iconify-icon>
+                            较上次提升 1.2%
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:accuracy" class="w-6 h-6 text-purple-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <iconify-icon icon="material-symbols:pie-chart" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    训练数据占比
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1">
+                            <span class="text-gray-600">环境气象数据</span>
+                            <span class="text-gray-800 font-medium">35%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: 35%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1">
+                            <span class="text-gray-600">土壤监测数据</span>
+                            <span class="text-gray-800 font-medium">28%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 28%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1">
+                            <span class="text-gray-600">物候期记录</span>
+                            <span class="text-gray-800 font-medium">20%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-500 h-2 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1">
+                            <span class="text-gray-600">农事操作记录</span>
+                            <span class="text-gray-800 font-medium">12%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 12%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-1">
+                            <span class="text-gray-600">品质检测数据</span>
+                            <span class="text-gray-800 font-medium">5%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <iconify-icon icon="material-symbols:functions" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    模型算法配置
+                </h2>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800">有效积温物候识别算法</p>
+                            <p class="text-xs text-gray-500">依据各生育阶段有效积温阈值判定物候期</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800">LightGBM梯度提升回归模型</p>
+                            <p class="text-xs text-gray-500">拟合新梢生长、果径增长、糖分积累趋势</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800">时序异常检测算法</p>
+                            <p class="text-xs text-gray-500">构建正常生长区间基线，识别生长胁迫状态</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800">多约束农事优化推荐算法</p>
+                            <p class="text-xs text-gray-500">以品质目标为优化目标，搜索最优农事方案</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-800">FAO彭曼-蒙特斯作物水分平衡算法</p>
+                            <p class="text-xs text-gray-500">估算植株蒸腾量，确定最佳灌溉时机</p>
+                        </div>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待优化</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <iconify-icon icon="material-symbols:settings" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                模型参数配置
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <label class="block text-sm text-gray-600 mb-2">有效积温阈值 (°C·d)</label>
+                    <input type="number" id="param-temp" value="1200" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <p class="text-xs text-gray-400 mt-1">当前物候期判定阈值</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <label class="block text-sm text-gray-600 mb-2">土壤湿度适宜范围 (%)</label>
+                    <input type="text" id="param-moisture" value="60-80" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <p class="text-xs text-gray-400 mt-1">最佳土壤含水量区间</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <label class="block text-sm text-gray-600 mb-2">光照强度阈值 (klx)</label>
+                    <input type="number" id="param-light" value="30" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <p class="text-xs text-gray-400 mt-1">光合作用有效光照</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <label class="block text-sm text-gray-600 mb-2">预测周期 (天)</label>
+                    <input type="number" id="param-period" value="7" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <p class="text-xs text-gray-400 mt-1">品质预测时间窗口</p>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button onclick="openSaveModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+                    保存参数
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <iconify-icon icon="material-symbols:calendar-month" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                农事年历
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">物候期</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">时间范围</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">主要农事操作</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">模型关注点</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">当前状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-4">萌芽期</td>
+                            <td class="py-3 px-4">3月上旬 - 3月下旬</td>
+                            <td class="py-3 px-4">施肥、浇水、除草</td>
+                            <td class="py-3 px-4">芽体发育、新梢萌发</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-4">春梢生长期</td>
+                            <td class="py-3 px-4">4月上旬 - 5月中旬</td>
+                            <td class="py-3 px-4">修剪、施肥、病虫害防治</td>
+                            <td class="py-3 px-4">新梢生长、花芽分化</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-4">开花期</td>
+                            <td class="py-3 px-4">5月下旬 - 6月中旬</td>
+                            <td class="py-3 px-4">授粉、疏花、病虫害防治</td>
+                            <td class="py-3 px-4">花量监测、授粉效果</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="py-3 px-4">生理落果期</td>
+                            <td class="py-3 px-4">6月下旬 - 7月上旬</td>
+                            <td class="py-3 px-4">疏果、追肥、灌溉</td>
+                            <td class="py-3 px-4">坐果率、果实发育</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50 bg-green-50">
+                            <td class="py-3 px-4 font-medium text-green-700">果实膨大期</td>
+                            <td class="py-3 px-4">7月中旬 - 10月上旬</td>
+                            <td class="py-3 px-4">追肥、灌溉、病虫害防治</td>
+                            <td class="py-3 px-4">果径增长、糖分积累</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded font-medium">进行中</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4">成熟期</td>
+                            <td class="py-3 px-4">10月中旬 - 12月上旬</td>
+                            <td class="py-3 px-4">采收、分级、贮藏</td>
+                            <td class="py-3 px-4">品质检测、采收时机</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded">未开始</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="save-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:save" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    保存参数配置
+                </h3>
+                <button onclick="closeModal('save-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:info" class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <div>
+                            <p class="text-sm font-medium text-blue-800">参数修改确认</p>
+                            <p class="text-xs text-blue-600 mt-1">修改模型参数后需要重新训练模型才能生效，预计耗时约15分钟。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">有效积温阈值</span>
+                        <span class="text-sm font-medium text-gray-800" id="preview-temp">1200 °C·d</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">土壤湿度适宜范围</span>
+                        <span class="text-sm font-medium text-gray-800" id="preview-moisture">60-80 %</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">光照强度阈值</span>
+                        <span class="text-sm font-medium text-gray-800" id="preview-light">30 klx</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-sm text-gray-600">预测周期</span>
+                        <span class="text-sm font-medium text-gray-800" id="preview-period">7 天</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="restart-model" class="w-4 h-4 text-green-600">
+                        <span class="ml-2 text-sm text-gray-600">保存后自动重启模型</span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('save-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitSaveParams()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function refreshStatus() {
+            alert('正在刷新模型状态...\n当前状态：运行中');
+        }
+
+        function startModel() {
+            alert('模型启动中...\n预计需要30秒完成初始化');
+        }
+
+        function openSaveModal() {
+            document.getElementById('preview-temp').textContent = document.getElementById('param-temp').value + ' °C·d';
+            document.getElementById('preview-moisture').textContent = document.getElementById('param-moisture').value + ' %';
+            document.getElementById('preview-light').textContent = document.getElementById('param-light').value + ' klx';
+            document.getElementById('preview-period').textContent = document.getElementById('param-period').value + ' 天';
+            document.getElementById('save-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function submitSaveParams() {
+            closeModal('save-modal');
+            alert('参数保存成功！\n模型将自动重新训练以应用新参数。');
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('save-modal');
+            if (!modal.contains(e.target) && !e.target.closest('[onclick="openSaveModal()"]')) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

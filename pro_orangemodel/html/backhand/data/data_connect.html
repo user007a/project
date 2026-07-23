@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南丰蜜桔数据对接 - 数据管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .status-online { background-color: #D1FAE5; color: #065F46; }
+        .status-offline { background-color: #FEF2F2; color: #991B1B; }
+        .status-warning { background-color: #FEF3C7; color: #92400E; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">数据对接</h1>
+                <p class="text-gray-500 text-sm mt-1">管理与物联网设备、气象系统的数据对接</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                    <input type="text" id="search-input" placeholder="搜索设备编号/名称..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterData()">
+                </div>
+                <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
+                    添加对接设备
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">设备总数</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">156</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:devices" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">在线设备</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">142</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check_circle" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">离线设备</p>
+                        <h3 class="text-2xl font-bold text-red-600 mt-1">14</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:error" class="w-6 h-6 text-red-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600">设备类型:</span>
+                        <select id="type-filter" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm" onchange="filterData()">
+                            <option value="">全部类型</option>
+                            <option value="土壤传感器">土壤传感器</option>
+                            <option value="气象站">气象站</option>
+                            <option value="温湿度传感器">温湿度传感器</option>
+                            <option value="光照传感器">光照传感器</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600">设备状态:</span>
+                        <select id="status-filter" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm" onchange="filterData()">
+                            <option value="">全部状态</option>
+                            <option value="在线">在线</option>
+                            <option value="离线">离线</option>
+                            <option value="异常">异常</option>
+                        </select>
+                    </div>
+                    <button onclick="filterData()" class="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">
+                        查询
+                    </button>
+                    <button onclick="resetFilter()" class="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">
+                        重置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">设备编号</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">设备名称</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">设备类型</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">所属地块</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">数据采集周期</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">设备状态</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">最后在线</th>
+                            <th class="text-left py-3 px-4 font-semibold text-gray-600">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DEV-SOIL-001" data-type="土壤传感器" data-status="在线">
+                            <td class="py-3 px-4 text-gray-600">DEV-SOIL-001</td>
+                            <td class="py-3 px-4 font-medium text-gray-800">土壤温度传感器-A1</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤传感器</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-A地块</td>
+                            <td class="py-3 px-4">15分钟</td>
+                            <td class="py-3 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-online">
+                                <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>在线</span></td>
+                            <td class="py-3 px-4">2026-07-22 10:30</td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DEV-SOIL-001')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DEV-SOIL-001')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DEV-WEATHER-001" data-type="气象站" data-status="在线">
+                            <td class="py-3 px-4 text-gray-600">DEV-WEATHER-001</td>
+                            <td class="py-3 px-4 font-medium text-gray-800">气象站-南丰站</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">气象站</span></td>
+                            <td class="py-3 px-4">南丰县农业农村局</td>
+                            <td class="py-3 px-4">5分钟</td>
+                            <td class="py-3 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-online">
+                                <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>在线</span></td>
+                            <td class="py-3 px-4">2026-07-22 10:30</td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DEV-WEATHER-001')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DEV-WEATHER-001')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DEV-TEMP-005" data-type="温湿度传感器" data-status="离线">
+                            <td class="py-3 px-4 text-gray-600">DEV-TEMP-005</td>
+                            <td class="py-3 px-4 font-medium text-gray-800">温湿度传感器-B2</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度传感器</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-B地块</td>
+                            <td class="py-3 px-4">30分钟</td>
+                            <td class="py-3 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-offline">
+                                <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>离线</span></td>
+                            <td class="py-3 px-4">2026-07-21 18:00</td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DEV-TEMP-005')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="restartDevice('DEV-TEMP-005')" class="text-green-600 hover:text-green-700 mr-3">重启</button>
+                                <button onclick="openDeleteModal('DEV-TEMP-005')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DEV-LIGHT-002" data-type="光照传感器" data-status="异常">
+                            <td class="py-3 px-4 text-gray-600">DEV-LIGHT-002</td>
+                            <td class="py-3 px-4 font-medium text-gray-800">光照传感器-C1</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">光照传感器</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-1号园</td>
+                            <td class="py-3 px-4">30分钟</td>
+                            <td class="py-3 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-warning">
+                                <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>异常</span></td>
+                            <td class="py-3 px-4">2026-07-22 08:15</td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DEV-LIGHT-002')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="restartDevice('DEV-LIGHT-002')" class="text-green-600 hover:text-green-700 mr-3">重启</button>
+                                <button onclick="openDeleteModal('DEV-LIGHT-002')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="DEV-SOIL-012" data-type="土壤传感器" data-status="在线">
+                            <td class="py-3 px-4 text-gray-600">DEV-SOIL-012</td>
+                            <td class="py-3 px-4 font-medium text-gray-800">土壤湿度传感器-D1</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤传感器</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-西园</td>
+                            <td class="py-3 px-4">15分钟</td>
+                            <td class="py-3 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-online">
+                                <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>在线</span></td>
+                            <td class="py-3 px-4">2026-07-22 10:25</td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DEV-SOIL-012')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DEV-SOIL-012')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                <p class="text-sm text-gray-500">共 156 条记录</p>
+                <div class="flex items-center space-x-2">
+                    <button onclick="prevPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                        <iconify-icon icon="material-symbols:chevron-left" class="w-4 h-4"></iconify-icon>
+                    </button>
+                    <span class="px-3 py-1 bg-green-600 text-white rounded text-sm" id="current-page">1</span>
+                    <button onclick="goToPage(2)" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                    <button onclick="goToPage(3)" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                    <button onclick="nextPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                        <iconify-icon icon="material-symbols:chevron-right" class="w-4 h-4"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    添加对接设备
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">设备编号</label>
+                        <input type="text" id="add-code" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入设备编号，如 DEV-SOIL-013">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">设备名称</label>
+                        <input type="text" id="add-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入设备名称">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">设备类型</label>
+                        <select id="add-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="土壤传感器">土壤传感器</option>
+                            <option value="气象站">气象站</option>
+                            <option value="温湿度传感器">温湿度传感器</option>
+                            <option value="光照传感器">光照传感器</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">所属地块</label>
+                        <input type="text" id="add-location" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入所属地块">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">数据采集周期</label>
+                        <select id="add-cycle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="5分钟">5分钟</option>
+                            <option value="15分钟">15分钟</option>
+                            <option value="30分钟">30分钟</option>
+                            <option value="每小时">每小时</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">接入协议</label>
+                        <select id="add-protocol" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="MQTT">MQTT</option>
+                            <option value="HTTP">HTTP</option>
+                            <option value="Modbus">Modbus</option>
+                            <option value="CoAP">CoAP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="saveDevice()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    设备详情
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">设备编号</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-code">DEV-SOIL-001</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">设备名称</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-name">土壤温度传感器-A1</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">设备类型</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-type">土壤传感器</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">所属地块</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-location">南丰县XX果园-A地块</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">采集周期</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-cycle">15分钟</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">设备状态</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded" id="detail-status">在线</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">最后在线</span>
+                        <span class="text-sm font-medium text-gray-800" id="detail-time">2026-07-22 10:30</span>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">最近采集数据（膨大期监测）</span>
+                        <p class="text-sm text-gray-800 mt-1" id="detail-note">土壤温度 28.5℃、土壤湿度 62%、pH 6.2，处于蜜桔膨大期适宜范围。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <iconify-icon icon="material-symbols:delete" class="w-8 h-8 text-red-500"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
+                <p class="text-sm text-gray-500 mb-6">确定要删除这台设备吗？删除后将停止数据采集，此操作不可撤销。</p>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="closeModal('delete-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let deleteId = null;
+
+        function openAddModal() {
+            document.getElementById('add-code').value = '';
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-type').value = '土壤传感器';
+            document.getElementById('add-location').value = '';
+            document.getElementById('add-cycle').value = '15分钟';
+            document.getElementById('add-protocol').value = 'MQTT';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openDetailModal(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                document.getElementById('detail-code').textContent = id;
+                document.getElementById('detail-name').textContent = row.querySelector('td:nth-child(2)').textContent;
+                document.getElementById('detail-type').textContent = row.getAttribute('data-type');
+                document.getElementById('detail-location').textContent = row.querySelector('td:nth-child(4)').textContent;
+                document.getElementById('detail-cycle').textContent = row.querySelector('td:nth-child(5)').textContent;
+                document.getElementById('detail-time').textContent = row.querySelector('td:nth-child(7)').textContent;
+
+                const status = row.getAttribute('data-status');
+                const statusBadge = document.getElementById('detail-status');
+                statusBadge.textContent = status;
+                if (status === '在线') {
+                    statusBadge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded';
+                } else if (status === '离线') {
+                    statusBadge.className = 'px-2 py-1 bg-red-100 text-red-700 text-xs rounded';
+                } else {
+                    statusBadge.className = 'px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded';
+                }
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function openDeleteModal(id) {
+            deleteId = id;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function saveDevice() {
+            const code = document.getElementById('add-code').value;
+            const name = document.getElementById('add-name').value;
+            const location = document.getElementById('add-location').value;
+
+            if (!code || !name || !location) {
+                alert('请填写完整的设备信息');
+                return;
+            }
+
+            alert('设备添加成功！\n设备编号: ' + code + '\n设备名称: ' + name + '\n所属地块: ' + location);
+            closeModal('add-modal');
+        }
+
+        function restartDevice(id) {
+            alert('已发送重启指令！\n设备编号: ' + id);
+        }
+
+        function confirmDelete() {
+            alert('设备删除成功！\n删除设备: ' + deleteId);
+            closeModal('delete-modal');
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+
+            const rows = document.querySelectorAll('#data-table-body tr');
+
+            rows.forEach(row => {
+                const id = row.getAttribute('data-id').toLowerCase();
+                const type = row.getAttribute('data-type');
+                const status = row.getAttribute('data-status');
+                const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const location = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+                const matchesSearch = id.includes(searchTerm) || name.includes(searchTerm) || location.includes(searchTerm);
+                const matchesType = !typeFilter || type === typeFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+
+                row.style.display = matchesSearch && matchesType && matchesStatus ? '' : 'none';
+            });
+        }
+
+        function resetFilter() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            filterData();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                document.getElementById('current-page').textContent = currentPage;
+                alert('已切换到第 ' + currentPage + ' 页');
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            document.getElementById('current-page').textContent = currentPage;
+            alert('已切换到第 ' + currentPage + ' 页');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            document.getElementById('current-page').textContent = currentPage;
+            alert('已切换到第 ' + currentPage + ' 页');
+        }
+
+        document.addEventListener('click', (e) => {
+            ['add-modal', 'detail-modal', 'delete-modal'].forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                const btn = e.target.closest('[onclick*="' + modalId + '"]');
+                if (!modal.contains(e.target) && !btn) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

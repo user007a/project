@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长势研判 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">长势研判</h1>
+                <p class="text-gray-500 mt-1">监控蜜桔实时长势研判数据</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索地块编号/名称..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-52" oninput="filterData()">
+                <select id="area-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterData()">
+                    <option value="">全部区域</option>
+                    <option value="南丰镇">南丰镇</option>
+                    <option value="太和镇">太和镇</option>
+                    <option value="白舍镇">白舍镇</option>
+                    <option value="市山镇">市山镇</option>
+                    <option value="桑田镇">桑田镇</option>
+                </select>
+                <select id="phenology-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterData()">
+                    <option value="">全部物候期</option>
+                    <option value="幼苗期">幼苗期</option>
+                    <option value="生长期">生长期</option>
+                    <option value="开花期">开花期</option>
+                    <option value="膨大期">膨大期</option>
+                    <option value="成熟期">成熟期</option>
+                </select>
+                <button onclick="exportReport()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
+                    <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-1"></iconify-icon>
+                    导出报告
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">总监测地块</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">1,236</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:map" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">健康地块</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">1,086</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check-circle" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">异常地块</p>
+                        <h3 class="text-2xl font-bold text-orange-600 mt-1">150</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:alert-circle" class="w-6 h-6 text-orange-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">健康率</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">87.9%</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:percent" class="w-6 h-6 text-gray-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <iconify-icon icon="material-symbols:scatter-plot" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    长势健康度分布图
+                </h3>
+                <div class="h-80 bg-gray-50 rounded-lg flex items-center justify-center">
+                    <div class="text-center">
+                        <iconify-icon icon="material-symbols:chart-bar" class="w-16 h-16 text-gray-300 mx-auto mb-4"></iconify-icon>
+                        <p class="text-gray-500">图表区域 - 长势健康度分布</p>
+                        <p class="text-sm text-gray-400 mt-1">健康: 87.9% | 一般: 8.2% | 异常: 3.9%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:trending-up" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                        健康度趋势
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">本周</span>
+                                <span class="text-sm font-medium text-green-600">87.9%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[87.9%] h-full bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">上周</span>
+                                <span class="text-sm font-medium text-green-600">86.5%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[86.5%] h-full bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">上月</span>
+                                <span class="text-sm font-medium text-green-600">84.2%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[84.2%] h-full bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:alert-circle" class="w-5 h-5 mr-2 text-orange-600"></iconify-icon>
+                        异常地块排行
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-2 bg-orange-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">NF-005</p>
+                                <p class="text-xs text-gray-500">南丰镇</p>
+                            </div>
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">高温影响</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-orange-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">NF-007</p>
+                                <p class="text-xs text-gray-500">市山镇</p>
+                            </div>
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">干旱缺水</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-orange-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">NF-012</p>
+                                <p class="text-xs text-gray-500">白舍镇</p>
+                            </div>
+                            <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">缺素</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:list-alt" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    长势监测列表
+                </h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">地块编号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">地块名称</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">物候期</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">健康度</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">果实膨大</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">坐果率</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">监测时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="monitor-table-body">
+                        <tr class="hover:bg-gray-50" data-id="NF-001" data-area="南丰镇" data-phenology="膨大期" data-name="南丰镇示范果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-001</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">南丰镇示范果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-14 h-full bg-green-500 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">优</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">12mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">88%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 10:00</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-001')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-001')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-003" data-area="市山镇" data-phenology="膨大期" data-name="市山果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-003</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">市山果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-12 h-full bg-green-500 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">优</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">11mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">85%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:45</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-003')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-003')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-005" data-area="南丰镇" data-phenology="膨大期" data-name="南丰镇果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-005</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">南丰镇果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-6 h-full bg-orange-500 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-orange-600">异常</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">6mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">72%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:30</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-005')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-005')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-006" data-area="太和镇" data-phenology="膨大期" data-name="太和镇果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-006</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">太和镇果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-13 h-full bg-green-500 rounded-full" style="width: 82%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">良</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">10mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">80%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:15</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-006')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-006')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-007" data-area="市山镇" data-phenology="膨大期" data-name="市山镇果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-007</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">市山镇果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-orange-500 rounded-full" style="width: 55%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-orange-600">异常</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">5mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">68%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:50</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-007')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-007')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-008" data-area="白舍镇" data-phenology="膨大期" data-name="白舍镇果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-008</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">白舍镇果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">优</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">13mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">87%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:40</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-008')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-008')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-009" data-area="桑田镇" data-phenology="膨大期" data-name="桑田镇果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-009</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">桑田镇果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 78%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">良</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">9mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">78%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:30</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-009')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-009')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-012" data-area="白舍镇" data-phenology="膨大期" data-name="白舍镇二号果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-012</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">白舍镇二号果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-yellow-500 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-yellow-600">一般</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">7mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">75%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:15</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-012')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-012')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-015" data-area="南丰镇" data-phenology="膨大期" data-name="南丰镇三号果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-015</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">南丰镇三号果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">良</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">11mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">82%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:00</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-015')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-015')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="NF-018" data-area="太和镇" data-phenology="膨大期" data-name="太和镇二号果园">
+                            <td class="px-6 py-4 text-sm text-gray-500">NF-018</td>
+                            <td class="px-6 py-4 text-sm text-gray-800">太和镇二号果园</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">膨大期</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-green-600">良</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">10mm/周</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">79%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 17:30</td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('NF-018')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                                <button onclick="exportPlotReport('NF-018')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="导出报告">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500" id="pagination-info">显示 1-10 条，共 1,236 条</p>
+                <div class="flex items-center space-x-1" id="pagination-controls">
+                    <button onclick="changePage('prev')" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">上一页</button>
+                    <button onclick="changePage(1)" class="px-3 py-1 text-sm bg-green-600 text-white rounded">1</button>
+                    <button onclick="changePage(2)" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">2</button>
+                    <button onclick="changePage(3)" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">3</button>
+                    <button onclick="changePage(4)" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">4</button>
+                    <button onclick="changePage(5)" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">5</button>
+                    <button onclick="changePage('next')" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <span id="detail-title">地块详情</span>
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <span class="text-xl font-bold text-gray-800" id="detail-id">NF-001</span>
+                    <span class="ml-3 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full" id="detail-phenology">膨大期</span>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-800 mb-4" id="detail-name">南丰镇示范果园</h4>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">所属区域</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-area">南丰镇</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">监测时间</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-time">2026-07-22 10:00</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">健康度</p>
+                        <p class="text-sm font-medium text-green-600" id="detail-health">优 (87.9%)</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">坐果率</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-fruit-rate">88%</p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3">监测指标</h5>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-500">果实膨大速度</span>
+                                <span class="text-sm font-medium text-gray-800" id="detail-growth">12mm/周</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[80%] h-full bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-500">叶片健康度</span>
+                                <span class="text-sm font-medium text-gray-800" id="detail-leaf">92%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[92%] h-full bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-500">土壤湿度</span>
+                                <span class="text-sm font-medium text-gray-800" id="detail-moisture">68%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[68%] h-full bg-blue-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs text-gray-500">有效积温</span>
+                                <span class="text-sm font-medium text-gray-800" id="detail-temp">1250°C·d</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="w-[75%] h-full bg-orange-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700 mb-2">研判建议</h5>
+                    <div class="p-4 bg-green-50 rounded-lg text-sm text-green-800 leading-relaxed" id="detail-suggestion">
+                        当前地块长势良好，果实膨大速度正常。建议继续保持当前灌溉频率，注意监测病虫害情况。预计9月底可进入成熟期。
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="exportDetailReport()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center">
+                    <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-1"></iconify-icon>
+                    导出报告
+                </button>
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 当前分页状态
+        let currentPage = 1;
+        const totalPages = 5;
+        const totalCount = 1236;
+        const pageSize = 10;
+
+        // 各地块详细研判建议（符合南丰蜜桔7月膨大期情况）
+        const plotSuggestions = {
+            'NF-001': '当前地块长势良好，果实膨大速度正常（12mm/周），坐果率88%处于优良水平。7月膨大期建议继续保持当前灌溉频率，每7-10天追施一次钾肥促进果实膨大，注意监测红蜘蛛和潜叶蛾发生情况。预计9月底可进入成熟期，建议糖度达13°Bx后采摘。',
+            'NF-003': '当前地块长势良好，果实膨大速度11mm/周处于正常水平。7月高温期注意加强水分管理，建议早晚滴灌，保持土壤湿度65%-70%。坐果率85%表现稳定，建议补充钙肥预防裂果。预计10月初成熟，糖度可达13.2°Bx。',
+            'NF-005': '当前地块长势异常，果实膨大速度仅6mm/周，明显低于正常水平。检测到7月持续高温（>38°C）导致日灼伤害，坐果率72%偏低。建议立即增加灌溉频次，铺设遮阳网，喷施海藻酸类叶面肥缓解热害。需重点关注8月是否能够恢复膨大节奏。',
+            'NF-006': '当前地块长势良好，果实膨大速度10mm/周，坐果率80%处于正常范围。7月膨大期建议注意排水防涝，土壤湿度维持在65%左右。可适当补充磷钾肥促进糖分积累，预计9月底成熟。',
+            'NF-007': '当前地块长势异常，果实膨大速度仅5mm/周，坐果率68%偏低。检测到干旱缺水症状，土壤湿度仅28%。7月持续高温少雨，建议立即启动应急灌溉，每天早晚各滴灌一次，并增施有机肥改良土壤保水能力。',
+            'NF-008': '当前地块长势优良，果实膨大速度13mm/周表现突出，坐果率87%处于高水平。7月膨大期管理得当，建议继续保持，可适度控水促进糖分积累。预计10月初成熟，糖度可达13.0°Bx以上。',
+            'NF-009': '当前地块长势良好，果实膨大速度9mm/周，坐果率78%处于正常水平。7月高温期注意防治锈壁虱，建议使用阿维菌素类药剂。土壤肥力一般，建议追施复合肥促进后期膨大。',
+            'NF-012': '当前地块长势一般，果实膨大速度7mm/周偏低，检测到缺素症状（疑似缺镁、缺硼）。建议立即叶面喷施硼肥和镁肥，并改良土壤pH值。7月膨大期是关键期，需在两周内改善营养状况，否则影响后期产量。',
+            'NF-015': '当前地块长势良好，果实膨大速度11mm/周，坐果率82%处于稳定水平。7月膨大期建议加强病虫害监测，注意防治炭疽病。灌溉管理规范，土壤湿度适宜，预计9月底成熟。',
+            'NF-018': '当前地块长势良好，果实膨大速度10mm/周，坐果率79%处于正常范围。7月高温期建议早晚灌溉避免水分胁迫，可补充钾肥促进果实膨大和糖分积累。预计10月初成熟。'
+        };
+
+        function openDetailModal(id) {
+            document.getElementById('detail-id').textContent = id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                const name = row.querySelector('td:nth-child(2)').textContent;
+                const area = row.getAttribute('data-area');
+                const phenology = row.getAttribute('data-phenology');
+                const time = row.querySelector('td:nth-child(7)').textContent;
+                const health = row.querySelector('td:nth-child(4) span').textContent;
+                const growth = row.querySelector('td:nth-child(5)').textContent;
+                const fruitRate = row.querySelector('td:nth-child(6)').textContent;
+
+                document.getElementById('detail-name').textContent = name;
+                document.getElementById('detail-area').textContent = area;
+                document.getElementById('detail-phenology').textContent = phenology;
+                document.getElementById('detail-time').textContent = time;
+                document.getElementById('detail-health').textContent = health + ' (' + computeHealthPct(id) + '%)';
+                document.getElementById('detail-growth').textContent = growth;
+                document.getElementById('detail-fruit-rate').textContent = fruitRate;
+
+                // 根据地块填充研判建议
+                const suggestion = plotSuggestions[id] || '当前地块长势正常，建议继续保持常规管理，注意监测病虫害和水分状况。7月膨大期是关键管理期，需重点关注果实膨大速度和糖分积累。';
+                document.getElementById('detail-suggestion').textContent = suggestion;
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        // 根据地块编号生成健康度百分比（mock数据）
+        function computeHealthPct(id) {
+            const healthMap = {
+                'NF-001': 92, 'NF-003': 88, 'NF-005': 55, 'NF-006': 82,
+                'NF-007': 50, 'NF-008': 90, 'NF-009': 78, 'NF-012': 65,
+                'NF-015': 85, 'NF-018': 80
+            };
+            return healthMap[id] || 80;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const areaFilter = document.getElementById('area-filter').value;
+            const phenologyFilter = document.getElementById('phenology-filter').value;
+
+            const rows = document.querySelectorAll('#monitor-table-body tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const id = (row.getAttribute('data-id') || '').toLowerCase();
+                const name = (row.getAttribute('data-name') || '').toLowerCase();
+                const area = row.getAttribute('data-area');
+                const phenology = row.getAttribute('data-phenology');
+
+                const matchesSearch = !searchTerm || id.includes(searchTerm) || name.includes(searchTerm);
+                const matchesArea = !areaFilter || area === areaFilter;
+                const matchesPhenology = !phenologyFilter || phenology === phenologyFilter;
+
+                if (matchesSearch && matchesArea && matchesPhenology) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // 更新分页信息（mock：基于过滤结果简单展示）
+            updatePaginationInfo(visibleCount);
+        }
+
+        function updatePaginationInfo(visibleCount) {
+            const info = document.getElementById('pagination-info');
+            if (visibleCount === 0) {
+                info.textContent = '没有匹配的数据';
+            } else {
+                info.textContent = `显示 1-${visibleCount} 条，共 ${totalCount} 条`;
+            }
+        }
+
+        function changePage(page) {
+            if (page === 'prev') {
+                if (currentPage > 1) currentPage--;
+                else { alert('已经是第一页了'); return; }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) currentPage++;
+                else { alert('已经是最后一页了'); return; }
+            } else {
+                currentPage = page;
+            }
+
+            // 更新分页按钮高亮状态
+            const buttons = document.querySelectorAll('#pagination-controls button');
+            buttons.forEach(btn => {
+                const txt = btn.textContent.trim();
+                if (txt === '上一页' || txt === '下一页') {
+                    btn.className = 'px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200';
+                } else if (parseInt(txt) === currentPage) {
+                    btn.className = 'px-3 py-1 text-sm bg-green-600 text-white rounded';
+                } else {
+                    btn.className = 'px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200';
+                }
+            });
+
+            // 更新分页信息
+            const start = (currentPage - 1) * pageSize + 1;
+            const end = Math.min(currentPage * pageSize, totalCount);
+            document.getElementById('pagination-info').textContent = `显示 ${start}-${end} 条，共 ${totalCount} 条`;
+
+            // mock：滚动到列表顶部
+            document.getElementById('monitor-table-body').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 导出整体报告
+        function exportReport() {
+            const areaFilter = document.getElementById('area-filter').value || '全部区域';
+            const phenologyFilter = document.getElementById('phenology-filter').value || '全部物候期';
+            alert('长势研判报告已生成\n' +
+                '区域筛选：' + areaFilter + '\n' +
+                '物候期：' + phenologyFilter + '\n' +
+                '报告时间：2026-07-22\n' +
+                '文件将自动下载到本地，请稍候...');
+        }
+
+        // 导出单个地块报告
+        function exportPlotReport(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            const name = row ? row.getAttribute('data-name') : id;
+            alert('地块 ' + id + ' (' + name + ') 长势研判报告已生成\n' +
+                '报告时间：2026-07-22\n' +
+                '包含内容：长势数据、监测指标、研判建议\n' +
+                '文件将自动下载到本地。');
+        }
+
+        // 导出详情报告（弹窗内）
+        function exportDetailReport() {
+            const id = document.getElementById('detail-id').textContent;
+            const name = document.getElementById('detail-name').textContent;
+            alert('地块 ' + id + ' (' + name + ') 详细研判报告已生成\n' +
+                '报告时间：2026-07-22\n' +
+                '包含内容：基础信息、监测指标、研判建议、历史趋势\n' +
+                '文件将自动下载到本地。');
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('detail-modal');
+            const btn = e.target.closest('[onclick^="openDetailModal"]');
+            if (!modal.contains(e.target) && !btn) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

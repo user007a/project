@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+        .pagination-btn.active { background-color: #16A34A; color: white; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">用户管理</h1>
+                <p class="text-gray-500 mt-1">管理系统用户账号和权限</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索用户名/手机号..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-64" oninput="filterUsers()">
+                <select id="role-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterUsers()">
+                    <option value="">全部角色</option>
+                    <option value="管理员">管理员</option>
+                    <option value="操作员">操作员</option>
+                    <option value="查看员">查看员</option>
+                </select>
+                <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
+                    <iconify-icon icon="material-symbols:person-add" class="w-4 h-4 mr-1"></iconify-icon>
+                    新增用户
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">总用户数</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">156</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:people" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">管理员</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">5</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:admin-panel-settings" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">操作员</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1">86</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:edit" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">查看员</p>
+                        <h3 class="text-2xl font-bold text-gray-600 mt-1">65</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:visibility" class="w-6 h-6 text-gray-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:list-alt" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    用户列表
+                </h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full" id="user-table">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">用户名</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">姓名</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">手机号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">所属部门</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">角色</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">创建时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">状态</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="user-table-body">
+                        <tr class="hover:bg-gray-50" data-username="admin" data-role="管理员">
+                            <td class="px-6 py-4 text-sm text-gray-800">admin</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">管理员</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">138****0001</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">技术服务部</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">管理员</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-01-01 10:00</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center justify-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">启用</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openEditModal('admin')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openDeleteModal('admin', '管理员')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                        <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-username="user001" data-role="操作员">
+                            <td class="px-6 py-4 text-sm text-gray-800">user001</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">张三</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">139****0002</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">生产指导部</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">操作员</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-06-15 09:30</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center justify-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">启用</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openEditModal('user001')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openDeleteModal('user001', '张三')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                        <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-username="user002" data-role="查看员">
+                            <td class="px-6 py-4 text-sm text-gray-800">user002</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">李四</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">137****0003</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">质量监测部</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full">查看员</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-10 14:00</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center justify-center">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-red-600">禁用</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openEditModal('user002')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openDeleteModal('user002', '李四')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                        <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-username="user003" data-role="操作员">
+                            <td class="px-6 py-4 text-sm text-gray-800">user003</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">王五</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">136****0004</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">市场销售部</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">操作员</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-05 11:20</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center justify-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">启用</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openEditModal('user003')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openDeleteModal('user003', '王五')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                        <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-username="user004" data-role="查看员">
+                            <td class="px-6 py-4 text-sm text-gray-800">user004</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">赵六</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">135****0005</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">系统运维部</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full">查看员</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-18 09:00</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center justify-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">启用</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openEditModal('user004')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openDeleteModal('user004', '赵六')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
+                                        <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500">显示 <span id="page-info">1-5</span> 条，共 <span id="total-count">156</span> 条</p>
+                <div class="flex items-center space-x-1" id="pagination">
+                    <button onclick="changePage(1)" class="pagination-btn px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 active">1</button>
+                    <button onclick="changePage(2)" class="pagination-btn px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">2</button>
+                    <button onclick="changePage(3)" class="pagination-btn px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">3</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:person-add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    新增用户
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <input type="text" id="add-username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入用户名">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                    <input type="text" id="add-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入姓名">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">手机号</label>
+                    <input type="text" id="add-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入手机号">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
+                    <select id="add-department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>技术服务部</option>
+                        <option>生产指导部</option>
+                        <option>质量监测部</option>
+                        <option>市场销售部</option>
+                        <option>系统运维部</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">角色</label>
+                    <select id="add-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>管理员</option>
+                        <option>操作员</option>
+                        <option>查看员</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <input type="password" id="add-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitAddUser()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    编辑用户
+                </h3>
+                <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <input type="text" id="edit-username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" readonly>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                    <input type="text" id="edit-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">手机号</label>
+                    <input type="text" id="edit-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
+                    <select id="edit-department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>技术服务部</option>
+                        <option>生产指导部</option>
+                        <option>质量监测部</option>
+                        <option>市场销售部</option>
+                        <option>系统运维部</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">角色</label>
+                    <select id="edit-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>管理员</option>
+                        <option>操作员</option>
+                        <option>查看员</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                    <select id="edit-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>启用</option>
+                        <option>禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('edit-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitEditUser()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:delete" class="w-5 h-5 mr-2 text-red-600"></iconify-icon>
+                    删除确认
+                </h3>
+                <button onclick="closeModal('delete-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                        <iconify-icon icon="material-symbols:warning" class="w-6 h-6 text-red-600"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">确认删除用户？</p>
+                        <p class="text-sm text-gray-500 mt-1">删除后无法恢复，请谨慎操作。</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600">要删除的用户：<span id="delete-username" class="font-medium text-gray-800"></span></p>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('delete-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitDeleteUser()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 32;
+        let deleteTarget = '';
+
+        function openAddModal() {
+            document.getElementById('add-username').value = '';
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-phone').value = '';
+            document.getElementById('add-department').value = '技术服务部';
+            document.getElementById('add-role').value = '操作员';
+            document.getElementById('add-password').value = '';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openEditModal(username) {
+            document.getElementById('edit-username').value = username;
+            const row = document.querySelector(`tr[data-username="${username}"]`);
+            if (row) {
+                const cells = row.querySelectorAll('td');
+                document.getElementById('edit-name').value = cells[1].textContent;
+                document.getElementById('edit-phone').value = cells[2].textContent;
+                document.getElementById('edit-department').value = cells[3].textContent;
+                document.getElementById('edit-role').value = cells[4].querySelector('span').textContent;
+                const statusText = cells[6].querySelector('span:last-child').textContent;
+                document.getElementById('edit-status').value = statusText;
+            }
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function openDeleteModal(username, name) {
+            deleteTarget = username;
+            document.getElementById('delete-username').textContent = `${name} (${username})`;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function submitAddUser() {
+            const username = document.getElementById('add-username').value;
+            const name = document.getElementById('add-name').value;
+            if (!username || !name) {
+                alert('请填写用户名和姓名');
+                return;
+            }
+            closeModal('add-modal');
+            alert('用户添加成功！');
+        }
+
+        function submitEditUser() {
+            closeModal('edit-modal');
+            alert('用户信息修改成功！');
+        }
+
+        function submitDeleteUser() {
+            closeModal('delete-modal');
+            alert('用户删除成功！');
+        }
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const roleFilter = document.getElementById('role-filter').value;
+            const rows = document.querySelectorAll('#user-table-body tr');
+            
+            rows.forEach(row => {
+                const username = row.getAttribute('data-username').toLowerCase();
+                const role = row.getAttribute('data-role');
+                const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const phone = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                const matchesSearch = username.includes(searchTerm) || name.includes(searchTerm) || phone.includes(searchTerm);
+                const matchesRole = !roleFilter || role === roleFilter;
+                
+                row.style.display = matchesSearch && matchesRole ? '' : 'none';
+            });
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === page) btn.classList.add('active');
+            });
+            
+            const start = (page - 1) * 5 + 1;
+            const end = Math.min(page * 5, 156);
+            document.getElementById('page-info').textContent = `${start}-${end}`;
+            
+            const rows = document.querySelectorAll('#user-table-body tr');
+            rows.forEach((row, index) => {
+                row.style.display = index >= (page - 1) * 5 && index < page * 5 ? '' : 'none';
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            const addModal = document.getElementById('add-modal');
+            if (!addModal.contains(e.target) && !e.target.closest('[onclick="openAddModal()"]')) {
+                addModal.classList.remove('active');
+            }
+            const editModal = document.getElementById('edit-modal');
+            if (!editModal.contains(e.target) && !e.target.closest('[onclick^="openEditModal"]')) {
+                editModal.classList.remove('active');
+            }
+            const deleteModal = document.getElementById('delete-modal');
+            if (!deleteModal.contains(e.target) && !e.target.closest('[onclick^="openDeleteModal"]')) {
+                deleteModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

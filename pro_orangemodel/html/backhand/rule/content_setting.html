@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容设置 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">内容设置</h1>
+                <p class="text-gray-500 mt-1">设置预警消息的发送对象范围</p>
+            </div>
+            <button onclick="saveSettings()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
+                <iconify-icon icon="material-symbols:save" class="w-4 h-4 mr-2"></iconify-icon>
+                保存设置
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-6">
+                    <iconify-icon icon="material-symbols:group" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    按用户类型发送
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">农业农村局工作人员</h4>
+                            <p class="text-sm text-gray-500 mt-1">县、乡级农技人员，负责预警处置</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">涉农企业用户</h4>
+                            <p class="text-sm text-gray-500 mt-1">规模化种植企业，优先接收预警</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">种植合作社</h4>
+                            <p class="text-sm text-gray-500 mt-1">合作社成员，按区域推送</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">种植大户</h4>
+                            <p class="text-sm text-gray-500 mt-1">单户种植面积>50亩的农户</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">普通农户</h4>
+                            <p class="text-sm text-gray-500 mt-1">种植面积<50亩的散户</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-6">
+                    <iconify-icon icon="material-symbols:map" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    按区域发送
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">全县范围</h4>
+                            <p class="text-sm text-gray-500 mt-1">覆盖南丰县所有乡镇</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="radio" name="region" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">指定乡镇</h4>
+                            <p class="text-sm text-gray-500 mt-1">选择特定乡镇发送</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="radio" name="region" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">指定地块</h4>
+                            <p class="text-sm text-gray-500 mt-1">精确到具体果园地块</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="radio" name="region" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-medium text-gray-800">选择乡镇（当选择"指定乡镇"时生效）</h4>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="selectAllTownships()" class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700">全选</button>
+                            <button onclick="deselectAllTownships()" class="px-3 py-1 border border-gray-300 text-gray-600 text-xs rounded hover:bg-gray-50">取消全选</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">南丰镇</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">太和镇</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">白舍镇</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">市山镇</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">莱溪乡</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded hover:bg-gray-50 cursor-pointer">
+                            <input type="checkbox" class="township-checkbox text-green-600 rounded">
+                            <span class="text-sm text-gray-700">桑田镇</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-6">
+                    <iconify-icon icon="material-symbols:notification" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    按预警级别发送
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-100">
+                        <div>
+                            <h4 class="font-medium text-red-800">红色预警</h4>
+                            <p class="text-sm text-red-600 mt-1">最高级别，必须发送给所有用户</p>
+                        </div>
+                        <span class="text-green-600 flex items-center">
+                            <iconify-icon icon="material-symbols:check-circle" class="w-5 h-5"></iconify-icon>
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-100">
+                        <div>
+                            <h4 class="font-medium text-orange-800">橙色预警</h4>
+                            <p class="text-sm text-orange-600 mt-1">高级别，发送给工作人员和企业</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-100">
+                        <div>
+                            <h4 class="font-medium text-yellow-800">黄色预警</h4>
+                            <p class="text-sm text-yellow-600 mt-1">中级别，发送给工作人员</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-100">
+                        <div>
+                            <h4 class="font-medium text-blue-800">蓝色预警</h4>
+                            <p class="text-sm text-blue-600 mt-1">低级别，仅工作人员可见</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-6">
+                    <iconify-icon icon="material-symbols:mail" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    发送渠道设置
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">微信小程序推送</h4>
+                            <p class="text-sm text-gray-500 mt-1">通过小程序消息模板推送</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">短信通知</h4>
+                            <p class="text-sm text-gray-500 mt-1">通过运营商短信发送（仅红色/橙色预警）</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h4 class="font-medium text-gray-800">系统消息</h4>
+                            <p class="text-sm text-gray-500 mt-1">后台管理系统内部消息</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveSettings() {
+            alert('保存成功！内容设置已更新。');
+        }
+
+        function selectAllTownships() {
+            document.querySelectorAll('.township-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        }
+
+        function deselectAllTownships() {
+            document.querySelectorAll('.township-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+    </script>
+</body>
+</html>

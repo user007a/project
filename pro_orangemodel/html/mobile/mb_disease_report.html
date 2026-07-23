@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>南丰蜜桔智慧果园 - 预警上报</title>
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+</head>
+<body>
+  <div class="mb-app">
+    <div class="page-header mb-header-detail">
+      <div class="header-nav">
+        <div class="header-back" onclick="window.history.back()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="header-title">预警上报</div>
+      </div>
+      <div class="header-content">
+        <div class="header-sub">上报病虫害信息与处置记录</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <div class="card-title">预警信息</div>
+        
+        <div class="form-item">
+          <label class="form-label">病虫害类型 <span style="color: var(--danger);">*</span></label>
+          <div class="form-select" onclick="showTypeSelect()">
+            <span id="diseaseType">请选择病虫害类型</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">严重程度 <span style="color: var(--danger);">*</span></label>
+          <div class="mb-grid mb-grid-3">
+            <div onclick="selectLevel('light')" id="level-light" style="padding: 10px; text-align: center; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); cursor: pointer;">
+              <div style="font-size: 12px; color: var(--success); font-weight: bold;">轻度</div>
+            </div>
+            <div onclick="selectLevel('medium')" id="level-medium" style="padding: 10px; text-align: center; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); cursor: pointer;">
+              <div style="font-size: 12px; color: var(--warning); font-weight: bold;">中度</div>
+            </div>
+            <div onclick="selectLevel('heavy')" id="level-heavy" style="padding: 10px; text-align: center; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); cursor: pointer;">
+              <div style="font-size: 12px; color: var(--danger); font-weight: bold;">重度</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">发生位置 <span style="color: var(--danger);">*</span></label>
+          <div class="form-select" onclick="showLocationSelect()">
+            <span id="location">请选择地块</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">发生面积（亩）</label>
+          <input type="number" class="form-input" placeholder="请输入发生面积">
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">发现时间</label>
+          <input type="date" class="form-input" value="2026-07-22">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">现场照片</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+          <div onclick="uploadPhoto()" style="aspect-ratio: 1; background: var(--bg); border-radius: 8px; border: 2px dashed var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="color: var(--text-light);">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span style="font-size: 12px; color: var(--text-light); margin-top: 4px;">拍照</span>
+          </div>
+          <div onclick="selectPhoto()" style="aspect-ratio: 1; background: var(--bg); border-radius: 8px; border: 2px dashed var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="color: var(--text-light);">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span style="font-size: 12px; color: var(--text-light); margin-top: 4px;">相册</span>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">支持上传2-5张现场照片</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">处置记录</div>
+        
+        <div class="form-item">
+          <label class="form-label">是否已处置</label>
+          <div class="mb-grid mb-grid-2">
+            <div onclick="selectDisposed('yes')" id="disposed-yes" style="padding: 10px; text-align: center; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); cursor: pointer;">
+              <div style="font-size: 14px; font-weight: bold;">已处置</div>
+            </div>
+            <div onclick="selectDisposed('no')" id="disposed-no" style="padding: 10px; text-align: center; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); cursor: pointer;">
+              <div style="font-size: 14px; font-weight: bold;">未处置</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-item" id="disposalMethod" style="display: none;">
+          <label class="form-label">处置方式</label>
+          <div class="form-select" onclick="showMethodSelect()">
+            <span>请选择处置方式</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="form-item" id="disposalNote" style="display: none;">
+          <label class="form-label">处置备注</label>
+          <textarea class="form-textarea" placeholder="请描述具体的处置措施..."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">补充说明</div>
+        <textarea class="form-textarea" placeholder="请描述病虫害发生的具体情况、症状表现等信息..."></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-block" onclick="submitReport()">提交上报</button>
+    </div>
+
+    <nav class="tab-bar">
+      <a href="mb_home.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>首页</span>
+      </a>
+      <a href="mb_data.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>数据</span>
+      </a>
+      <a href="mb_disease.html" class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>病虫害</span>
+      </a>
+      <a href="mb_news.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>资讯</span>
+      </a>
+      <a href="mb_profile.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="modal-overlay" id="typeModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">选择病虫害类型</div>
+      </div>
+      <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+        <div style="font-weight: bold; margin-bottom: 8px;">病害</div>
+        <div onclick="selectType('黄龙病')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">黄龙病</div>
+        <div onclick="selectType('黑点病')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">黑点病</div>
+        <div onclick="selectType('疮痂病')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">疮痂病</div>
+        <div onclick="selectType('炭疽病')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">炭疽病</div>
+        <div style="font-weight: bold; margin-bottom: 8px; margin-top: 12px;">虫害</div>
+        <div onclick="selectType('红蜘蛛')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">红蜘蛛</div>
+        <div onclick="selectType('蚧壳虫')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">蚧壳虫</div>
+        <div onclick="selectType('木虱')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">木虱</div>
+        <div onclick="selectType('蚜虫')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">蚜虫</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('typeModal')">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="locationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">选择地块</div>
+      </div>
+      <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+        <div onclick="selectLocation('1号早熟蜜桔区')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">1号早熟蜜桔区</div>
+        <div onclick="selectLocation('2号中熟蜜桔区')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">2号中熟蜜桔区</div>
+        <div onclick="selectLocation('3号晚熟蜜桔区')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">3号晚熟蜜桔区</div>
+        <div onclick="selectLocation('4号试验田')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">4号试验田</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('locationModal')">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="methodModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">选择处置方式</div>
+      </div>
+      <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+        <div onclick="selectMethod('化学防治')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">化学防治</div>
+        <div onclick="selectMethod('生物防治')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">生物防治</div>
+        <div onclick="selectMethod('物理防治')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">物理防治</div>
+        <div onclick="selectMethod('农业防治')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">农业防治</div>
+        <div onclick="selectMethod('综合防治')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">综合防治</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('methodModal')">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="successModal">
+    <div class="modal modal-success">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div style="font-size: 18px; font-weight: bold; color: var(--text); margin-bottom: 8px;">上报成功</div>
+      <div style="font-size: 13px; color: var(--text-secondary);">预警信息已提交，农技人员将尽快处理</div>
+      <div class="modal-footer" style="border-top: none; margin-top: 16px;">
+        <button class="btn btn-primary btn-block" onclick="closeModal('successModal'); window.history.back();">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTypeSelect() {
+      document.getElementById('typeModal').classList.add('show');
+    }
+    function selectType(type) {
+      document.getElementById('diseaseType').textContent = type;
+      document.getElementById('diseaseType').style.color = 'var(--text)';
+      closeModal('typeModal');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+    function selectLevel(level) {
+      ['light', 'medium', 'heavy'].forEach(l => {
+        const el = document.getElementById('level-' + l);
+        el.style.borderColor = l === level ? 'var(--primary)' : 'var(--border)';
+        el.style.background = l === level ? 'var(--primary-light)' : 'var(--bg)';
+      });
+    }
+    function showLocationSelect() {
+      document.getElementById('locationModal').classList.add('show');
+    }
+    
+    function selectLocation(loc) {
+      document.getElementById('location').textContent = loc;
+      document.getElementById('location').style.color = 'var(--text)';
+      closeModal('locationModal');
+    }
+    
+    function uploadPhoto() {
+      var grid = document.querySelector('.card:nth-child(3)').querySelector('div[style*="grid-template-columns"]');
+      var photo = document.createElement('div');
+      photo.style.aspectRatio = '1';
+      photo.style.background = 'var(--bg)';
+      photo.style.borderRadius = '8px';
+      photo.style.backgroundImage = 'url(https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanfeng%20tangerine%20pest%20damage%20photo&image_size=square)';
+      photo.style.backgroundSize = 'cover';
+      photo.style.backgroundPosition = 'center';
+      grid.insertBefore(photo, grid.lastElementChild);
+    }
+    
+    function selectPhoto() {
+      var grid = document.querySelector('.card:nth-child(3)').querySelector('div[style*="grid-template-columns"]');
+      var photo = document.createElement('div');
+      photo.style.aspectRatio = '1';
+      photo.style.background = 'var(--bg)';
+      photo.style.borderRadius = '8px';
+      photo.style.backgroundImage = 'url(https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanfeng%20tangerine%20disease%20symptoms%20closeup&image_size=square)';
+      photo.style.backgroundSize = 'cover';
+      photo.style.backgroundPosition = 'center';
+      grid.insertBefore(photo, grid.lastElementChild);
+    }
+    
+    function selectDisposed(val) {
+      ['yes', 'no'].forEach(v => {
+        const el = document.getElementById('disposed-' + v);
+        el.style.borderColor = v === val ? 'var(--primary)' : 'var(--border)';
+        el.style.background = v === val ? 'var(--primary-light)' : 'var(--bg)';
+      });
+      const show = val === 'yes';
+      document.getElementById('disposalMethod').style.display = show ? 'block' : 'none';
+      document.getElementById('disposalNote').style.display = show ? 'block' : 'none';
+    }
+    
+    function showMethodSelect() {
+      document.getElementById('methodModal').classList.add('show');
+    }
+    
+    function selectMethod(method) {
+      document.querySelector('#disposalMethod .form-select span').textContent = method;
+      document.querySelector('#disposalMethod .form-select span').style.color = 'var(--text)';
+      closeModal('methodModal');
+    }
+    
+    function submitReport() {
+      var type = document.getElementById('diseaseType').textContent;
+      if (type === '请选择病虫害类型') {
+        alert('请选择病虫害类型');
+        return;
+      }
+      
+      document.getElementById('successModal').classList.add('show');
+    }
+  </script>
+</body>
+</html>

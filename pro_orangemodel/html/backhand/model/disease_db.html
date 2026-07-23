@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>病害数据库 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">病害数据库</h1>
+                <p class="text-gray-500 mt-1">管理南丰蜜桔病害知识数据</p>
+            </div>
+            <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
+                <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
+                添加病害
+            </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-4 flex-wrap">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="text" id="search-input" placeholder="搜索病害名称..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterDiseases()">
+                        </div>
+                    </div>
+                    <select id="type-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterDiseases()">
+                        <option value="">全部类型</option>
+                        <option value="真菌病害">真菌病害</option>
+                        <option value="细菌病害">细菌病害</option>
+                        <option value="病毒病害">病毒病害</option>
+                    </select>
+                    <button onclick="resetFilter()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">重置</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="disease-1" data-name="黄龙病" data-type="病毒病害" data-temperature="25-30°C" data-season="全年" data-risk="高风险" data-desc="由黄龙病病菌引起的毁灭性病害，主要通过木虱传播，严重影响蜜桔产量和品质。">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-red-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">黄龙病</h3>
+                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">病毒病害</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openEditModal('disease-1')" class="p-1 text-gray-400 hover:text-blue-600">
+                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                            </button>
+                            <button onclick="openDeleteModal('disease-1')" class="p-1 text-gray-400 hover:text-red-600">
+                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">由黄龙病病菌引起的毁灭性病害，主要通过木虱传播，严重影响蜜桔产量和品质。</p>
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>25-30°C</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>全年</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>高风险</span>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="disease-2" data-name="炭疽病" data-type="真菌病害" data-temperature="28-32°C" data-season="夏季" data-risk="中风险" data-desc="由炭疽菌引起，危害叶片、枝梢和果实，高温高湿条件下易爆发。">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-orange-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">炭疽病</h3>
+                                <span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded">真菌病害</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openEditModal('disease-2')" class="p-1 text-gray-400 hover:text-blue-600">
+                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                            </button>
+                            <button onclick="openDeleteModal('disease-2')" class="p-1 text-gray-400 hover:text-red-600">
+                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">由炭疽菌引起，危害叶片、枝梢和果实，高温高湿条件下易爆发。</p>
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>28-32°C</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>夏季</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>中风险</span>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="disease-3" data-name="黑点病" data-type="真菌病害" data-temperature="20-25°C" data-season="春季" data-risk="中风险" data-desc="又称沙皮病，在果实表面形成小黑点，影响外观品质和商品价值。">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-gray-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">黑点病</h3>
+                                <span class="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">真菌病害</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openEditModal('disease-3')" class="p-1 text-gray-400 hover:text-blue-600">
+                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                            </button>
+                            <button onclick="openDeleteModal('disease-3')" class="p-1 text-gray-400 hover:text-red-600">
+                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">又称沙皮病，在果实表面形成小黑点，影响外观品质和商品价值。</p>
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>20-25°C</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>春季</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>中风险</span>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="disease-4" data-name="溃疡病" data-type="细菌病害" data-temperature="25-30°C" data-season="夏梢期" data-risk="高风险" data-desc="由细菌引起，在叶片和果实上形成隆起的溃疡斑，影响光合作用和果实品质。">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-blue-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">溃疡病</h3>
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">细菌病害</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openEditModal('disease-4')" class="p-1 text-gray-400 hover:text-blue-600">
+                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                            </button>
+                            <button onclick="openDeleteModal('disease-4')" class="p-1 text-gray-400 hover:text-red-600">
+                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">由细菌引起，在叶片和果实上形成隆起的溃疡斑，影响光合作用和果实品质。</p>
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>25-30°C</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>夏梢期</span>
+                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>高风险</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500">共 7 条记录</p>
+                <div class="flex items-center space-x-2">
+                    <button onclick="prevPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                    <button class="px-3 py-1 bg-green-600 text-white rounded text-sm" id="current-page">1</button>
+                    <button onclick="nextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    添加病害
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害名称</label>
+                        <input type="text" id="add-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入病害名称">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害类型</label>
+                        <select id="add-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="真菌病害">真菌病害</option>
+                            <option value="细菌病害">细菌病害</option>
+                            <option value="病毒病害">病毒病害</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">发病温度</label>
+                        <input type="text" id="add-temperature" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="例如：25-30°C">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">发病季节</label>
+                        <input type="text" id="add-season" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="例如：夏季">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险等级</label>
+                        <select id="add-risk" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="高风险">高风险</option>
+                            <option value="中风险">中风险</option>
+                            <option value="低风险">低风险</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害描述</label>
+                        <textarea id="add-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请输入病害描述"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="saveDisease()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    编辑病害
+                </h3>
+                <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害名称</label>
+                        <input type="text" id="edit-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害类型</label>
+                        <select id="edit-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="真菌病害">真菌病害</option>
+                            <option value="细菌病害">细菌病害</option>
+                            <option value="病毒病害">病毒病害</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">发病温度</label>
+                        <input type="text" id="edit-temperature" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">发病季节</label>
+                        <input type="text" id="edit-season" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险等级</label>
+                        <select id="edit-risk" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="高风险">高风险</option>
+                            <option value="中风险">中风险</option>
+                            <option value="低风险">低风险</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">病害描述</label>
+                        <textarea id="edit-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('edit-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="updateDisease()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <iconify-icon icon="material-symbols:delete" class="w-8 h-8 text-red-500"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
+                <p class="text-sm text-gray-500 mb-6">确定要删除这条病害数据吗？此操作不可撤销。</p>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="closeModal('delete-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let currentId = null;
+
+        function openAddModal() {
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-type').value = '真菌病害';
+            document.getElementById('add-temperature').value = '';
+            document.getElementById('add-season').value = '';
+            document.getElementById('add-risk').value = '中风险';
+            document.getElementById('add-desc').value = '';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            currentId = id;
+            const card = document.querySelector(`div[data-id="${id}"]`);
+            if (card) {
+                document.getElementById('edit-name').value = card.getAttribute('data-name');
+                document.getElementById('edit-type').value = card.getAttribute('data-type');
+                document.getElementById('edit-temperature').value = card.getAttribute('data-temperature');
+                document.getElementById('edit-season').value = card.getAttribute('data-season');
+                document.getElementById('edit-risk').value = card.getAttribute('data-risk');
+                document.getElementById('edit-desc').value = card.getAttribute('data-desc');
+            }
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function openDeleteModal(id) {
+            currentId = id;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function saveDisease() {
+            const name = document.getElementById('add-name').value;
+            if (!name) {
+                alert('请填写病害名称');
+                return;
+            }
+            alert('病害数据添加成功！\n名称: ' + name);
+            closeModal('add-modal');
+        }
+
+        function updateDisease() {
+            alert('病害数据更新成功！');
+            closeModal('edit-modal');
+        }
+
+        function confirmDelete() {
+            alert('病害数据删除成功！');
+            closeModal('delete-modal');
+        }
+
+        function filterDiseases() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            const cards = document.querySelectorAll('.border[data-id]');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const type = card.getAttribute('data-type');
+                
+                const matchesSearch = name.includes(searchTerm);
+                const matchesType = !typeFilter || type === typeFilter;
+                
+                card.style.display = matchesSearch && matchesType ? '' : 'none';
+            });
+        }
+
+        function resetFilter() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('type-filter').value = '';
+            filterDiseases();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                document.getElementById('current-page').textContent = currentPage;
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            document.getElementById('current-page').textContent = currentPage;
+        }
+
+        document.addEventListener('click', (e) => {
+            ['add-modal', 'edit-modal', 'delete-modal'].forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                const btn = e.target.closest('[onclick*="' + modalId + '"]');
+                if (!modal.contains(e.target) && !btn) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

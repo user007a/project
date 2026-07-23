@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>风险提示 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">风险提示</h1>
+                <p class="text-gray-500 mt-1">管理气象灾害风险提示信息</p>
+            </div>
+            <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
+                <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
+                新增风险提示
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div class="flex items-center space-x-4 flex-wrap">
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="relative">
+                                <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                                <input type="text" id="search-input" placeholder="搜索风险标题、描述..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterRisks()">
+                            </div>
+                        </div>
+                        <select id="level-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterRisks()">
+                            <option value="">全部级别</option>
+                            <option value="红色">红色风险</option>
+                            <option value="橙色">橙色风险</option>
+                            <option value="黄色">黄色风险</option>
+                            <option value="蓝色">蓝色风险</option>
+                        </select>
+                        <button onclick="resetFilter()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">重置</button>
+                    </div>
+                </div>
+
+                <div id="risk-list" class="space-y-4"></div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-4 flex items-center justify-between">
+                    <p class="text-sm text-gray-500" id="record-count">共 0 条记录</p>
+                    <div class="flex items-center space-x-2" id="pagination"></div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:weather" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                        今日天气
+                    </h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">南丰县</p>
+                            <div class="flex items-center mt-1">
+                                <span class="text-4xl font-bold text-gray-800">35°C</span>
+                                <span class="ml-2 text-gray-600">晴</span>
+                            </div>
+                        </div>
+                        <iconify-icon icon="material-symbols:sunny" class="w-16 h-16 text-yellow-500"></iconify-icon>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
+                        <div>
+                            <p class="text-xs text-gray-500">湿度</p>
+                            <p class="text-lg font-medium text-gray-800">55%</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">风力</p>
+                            <p class="text-lg font-medium text-gray-800">3级</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">最高气温</p>
+                            <p class="text-lg font-medium text-gray-800">38°C</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">最低气温</p>
+                            <p class="text-lg font-medium text-gray-800">26°C</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:calendar" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                        未来7天预报
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">今天</span>
+                            <span class="text-sm text-gray-400">晴</span>
+                            <span class="text-sm text-gray-800">26° ~ 38°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">明天</span>
+                            <span class="text-sm text-gray-400">晴</span>
+                            <span class="text-sm text-gray-800">27° ~ 39°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">周三</span>
+                            <span class="text-sm text-red-500">高温</span>
+                            <span class="text-sm text-red-600">28° ~ 40°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">周四</span>
+                            <span class="text-sm text-red-500">高温</span>
+                            <span class="text-sm text-red-600">28° ~ 39°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">周五</span>
+                            <span class="text-sm text-gray-400">多云</span>
+                            <span class="text-sm text-gray-800">26° ~ 36°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">周六</span>
+                            <span class="text-sm text-gray-400">小雨</span>
+                            <span class="text-sm text-gray-800">25° ~ 32°C</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">周日</span>
+                            <span class="text-sm text-gray-400">晴</span>
+                            <span class="text-sm text-gray-800">24° ~ 35°C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:warning-amber" class="w-5 h-5 mr-2 text-orange-600"></iconify-icon>
+                        风险统计
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">高温热害</span>
+                                <span class="text-sm font-medium text-red-600" id="stat-high">0条</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="stat-high-bar" class="h-full bg-red-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">干旱风险</span>
+                                <span class="text-sm font-medium text-orange-600" id="stat-drought">0条</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="stat-drought-bar" class="h-full bg-orange-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">暴雨风险</span>
+                                <span class="text-sm font-medium text-blue-600" id="stat-rain">0条</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="stat-rain-bar" class="h-full bg-blue-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm text-gray-600">病虫害风险</span>
+                                <span class="text-sm font-medium text-green-600" id="stat-pest">0条</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="stat-pest-bar" class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    新增风险提示
+                </h3>
+                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险标题</label>
+                        <input type="text" id="add-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入风险标题">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险级别</label>
+                        <select id="add-level" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="红色">红色风险</option>
+                            <option value="橙色">橙色风险</option>
+                            <option value="黄色">黄色风险</option>
+                            <option value="蓝色">蓝色风险</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">影响范围</label>
+                        <input type="text" id="add-area" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入影响范围">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险描述</label>
+                        <textarea id="add-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="4" placeholder="请输入风险描述"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">防护建议</label>
+                        <textarea id="add-suggestion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="4" placeholder="请输入防护建议（每行一条）"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="saveRisk()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    编辑风险提示
+                </h3>
+                <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险标题</label>
+                        <input type="text" id="edit-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险级别</label>
+                        <select id="edit-level" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="红色">红色风险</option>
+                            <option value="橙色">橙色风险</option>
+                            <option value="黄色">黄色风险</option>
+                            <option value="蓝色">蓝色风险</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">影响范围</label>
+                        <input type="text" id="edit-area" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">风险描述</label>
+                        <textarea id="edit-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="4"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">防护建议</label>
+                        <textarea id="edit-suggestion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('edit-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="updateRisk()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <iconify-icon icon="material-symbols:delete" class="w-8 h-8 text-red-500"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
+                <p class="text-sm text-gray-500 mb-6">确定要删除这条风险提示吗？此操作不可撤销。</p>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="closeModal('delete-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRiskId = null;
+        let currentPage = 1;
+        const pageSize = 3;
+
+        const levelMap = {
+            '红色': 'bg-red-100 text-red-700',
+            '橙色': 'bg-orange-100 text-orange-700',
+            '黄色': 'bg-yellow-100 text-yellow-700',
+            '蓝色': 'bg-blue-100 text-blue-700'
+        };
+        const levelTextMap = { '红色': 'text-red-600', '橙色': 'text-orange-600', '黄色': 'text-yellow-600', '蓝色': 'text-blue-600' };
+
+        let risks = [
+            {
+                id: 'risk-1',
+                title: '高温热害风险提示',
+                time: '2026-07-22 09:00',
+                level: '红色',
+                area: '全县范围',
+                metrics: [
+                    { label: '预计最高气温', value: '38°C', valueClass: 'text-2xl font-bold text-red-600' },
+                    { label: '影响范围', value: '全县范围', valueClass: 'text-lg font-medium text-gray-800' },
+                    { label: '持续时间', value: '5天', valueClass: 'text-lg font-medium text-gray-800' }
+                ],
+                desc: '根据气象部门预报，未来5天我县将出现持续高温天气，最高气温将升至38°C以上，对蜜桔果实膨大期生长存在较大风险。',
+                suggestions: ['及时进行灌溉降温，保持土壤湿润', '树冠覆盖遮阳网，减少直射光照', '喷施叶面肥和抗高温剂，增强树体抗逆性', '加强果园通风，降低环境温度']
+            },
+            {
+                id: 'risk-2',
+                title: '持续干旱风险提示',
+                time: '2026-07-20 14:30',
+                level: '橙色',
+                area: '全县范围',
+                metrics: [
+                    { label: '无降雨天数', value: '22天', valueClass: 'text-2xl font-bold text-orange-600' },
+                    { label: '土壤墒情', value: '严重不足', valueClass: 'text-lg font-medium text-gray-800' },
+                    { label: '受影响果园', value: '512个', valueClass: 'text-lg font-medium text-gray-800' }
+                ],
+                desc: '我县已连续22天无有效降雨，土壤墒情严重不足，部分果园出现叶片卷曲、果实发育迟缓等干旱症状，需紧急采取灌溉措施。',
+                suggestions: ['紧急进行灌溉补水，优先保障结果树和幼树', '覆盖地膜或秸秆，减少土壤水分蒸发', '喷施抗蒸腾剂，降低叶片水分消耗', '疏除部分果实，减轻树体负担']
+            },
+            {
+                id: 'risk-3',
+                title: '暴雨洪涝风险提示',
+                time: '2026-07-19 08:00',
+                level: '黄色',
+                area: '太和镇、桑田镇',
+                metrics: [
+                    { label: '预计降雨量', value: '80mm', valueClass: 'text-2xl font-bold text-yellow-600' },
+                    { label: '影响范围', value: '2个乡镇', valueClass: 'text-lg font-medium text-gray-800' },
+                    { label: '持续时间', value: '2天', valueClass: 'text-lg font-medium text-gray-800' }
+                ],
+                desc: '根据气象预报，未来2天太和镇、桑田镇将出现大到暴雨，可能造成果园积水，影响蜜桔根系生长，需提前做好排水准备。',
+                suggestions: ['清理果园排水沟渠，确保排水畅通', '低洼地块提前准备抽水设备', '加固树体支撑，防止倒伏', '雨后及时中耕松土，改善土壤透气性']
+            },
+            {
+                id: 'risk-4',
+                title: '锈壁虱高发风险提示',
+                time: '2026-07-18 10:30',
+                level: '蓝色',
+                area: '白舍镇',
+                metrics: [
+                    { label: '虫口密度', value: '3.2头/叶', valueClass: 'text-2xl font-bold text-blue-600' },
+                    { label: '影响范围', value: '白舍镇', valueClass: 'text-lg font-medium text-gray-800' },
+                    { label: '受影响果园', value: '86个', valueClass: 'text-lg font-medium text-gray-800' }
+                ],
+                desc: '近期监测显示白舍镇部分果园锈壁虱虫口密度上升，7月正值果实膨大期，锈壁虱危害易造成果皮黑褐色，影响果实品质，建议及时防治。',
+                suggestions: ['使用阿维菌素或螺螨酯进行喷雾防治', '重点喷施果实和叶背', '间隔7-10天连续防治2次', '加强虫情监测，及时调整防治方案']
+            }
+        ];
+
+        function nowStr() {
+            const d = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+        }
+
+        function renderCard(risk) {
+            const levelClass = levelMap[risk.level] || 'bg-gray-100 text-gray-700';
+            const metricsHtml = risk.metrics.map(m => `
+                <div>
+                    <p class="text-sm text-gray-500">${m.label}</p>
+                    <p class="${m.valueClass}">${m.value}</p>
+                </div>`).join('');
+            const suggestionsHtml = risk.suggestions.map(s => `<li>• ${s}</li>`).join('');
+            return `
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6" data-id="${risk.id}" data-level="${risk.level}">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">${risk.title}</h3>
+                        <p class="text-sm text-gray-500 mt-1">发布时间：${risk.time}</p>
+                    </div>
+                    <span class="px-3 py-1 ${levelClass} text-sm rounded-full">${risk.level}风险</span>
+                </div>
+                <div class="flex items-center space-x-6 mb-4">
+                    ${metricsHtml}
+                </div>
+                <p class="text-sm text-gray-600 mb-4">${risk.desc}</p>
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <h4 class="font-medium text-blue-800 mb-2 flex items-center">
+                        <iconify-icon icon="material-symbols:shield-check" class="w-4 h-4 mr-2"></iconify-icon>
+                        防护建议
+                    </h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        ${suggestionsHtml}
+                    </ul>
+                </div>
+                <div class="flex items-center justify-end mt-4 space-x-3">
+                    <button onclick="openEditModal('${risk.id}')" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50">编辑</button>
+                    <button onclick="openDeleteModal('${risk.id}')" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-red-600 hover:bg-red-50">删除</button>
+                </div>
+            </div>`;
+        }
+
+        function getFilteredRisks() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const levelFilter = document.getElementById('level-filter').value;
+            return risks.filter(r => {
+                const matchesSearch = r.title.toLowerCase().includes(searchTerm) || r.desc.toLowerCase().includes(searchTerm);
+                const matchesLevel = !levelFilter || r.level === levelFilter;
+                return matchesSearch && matchesLevel;
+            });
+        }
+
+        function renderRisks() {
+            const filtered = getFilteredRisks();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * pageSize;
+            const pageRisks = filtered.slice(start, start + pageSize);
+
+            const container = document.getElementById('risk-list');
+            if (pageRisks.length === 0) {
+                container.innerHTML = `<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center text-gray-400">暂无风险提示数据</div>`;
+            } else {
+                container.innerHTML = pageRisks.map(renderCard).join('');
+            }
+
+            document.getElementById('record-count').textContent = '共 ' + filtered.length + ' 条记录';
+            renderPagination(totalPages);
+            renderStats();
+        }
+
+        function renderPagination(totalPages) {
+            const container = document.getElementById('pagination');
+            let html = '';
+            const prevDisabled = currentPage === 1;
+            html += `<button onclick="prevPage()" ${prevDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${prevDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="px-3 py-1 bg-green-600 text-white rounded text-sm">${i}</button>`;
+                } else {
+                    html += `<button onclick="goToPage(${i})" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">${i}</button>`;
+                }
+            }
+            const nextDisabled = currentPage === totalPages;
+            html += `<button onclick="nextPage()" ${nextDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${nextDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">下一页</button>`;
+            container.innerHTML = html;
+        }
+
+        function renderStats() {
+            let high = 0, drought = 0, rain = 0, pest = 0;
+            risks.forEach(r => {
+                const t = r.title + r.desc;
+                if (t.indexOf('高温') >= 0 || t.indexOf('热害') >= 0) high++;
+                else if (t.indexOf('干旱') >= 0) drought++;
+                else if (t.indexOf('暴雨') >= 0 || t.indexOf('洪涝') >= 0) rain++;
+                else pest++;
+            });
+            const total = Math.max(1, risks.length);
+            const set = (id, count, barId) => {
+                document.getElementById(id).textContent = count + '条';
+                document.getElementById(barId).style.width = (count / total * 100) + '%';
+            };
+            set('stat-high', high, 'stat-high-bar');
+            set('stat-drought', drought, 'stat-drought-bar');
+            set('stat-rain', rain, 'stat-rain-bar');
+            set('stat-pest', pest, 'stat-pest-bar');
+        }
+
+        function openAddModal() {
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-level').value = '红色';
+            document.getElementById('add-area').value = '';
+            document.getElementById('add-desc').value = '';
+            document.getElementById('add-suggestion').value = '';
+            document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            currentRiskId = id;
+            const risk = risks.find(r => r.id === id);
+            if (risk) {
+                document.getElementById('edit-title').value = risk.title;
+                document.getElementById('edit-level').value = risk.level;
+                document.getElementById('edit-area').value = risk.area;
+                document.getElementById('edit-desc').value = risk.desc;
+                document.getElementById('edit-suggestion').value = risk.suggestions.join('\n');
+            }
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function openDeleteModal(id) {
+            currentRiskId = id;
+            document.getElementById('delete-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function saveRisk() {
+            const title = document.getElementById('add-title').value.trim();
+            const level = document.getElementById('add-level').value;
+            const area = document.getElementById('add-area').value.trim() || '全县范围';
+            const desc = document.getElementById('add-desc').value.trim();
+            const suggestion = document.getElementById('add-suggestion').value;
+
+            if (!title) {
+                alert('请填写风险标题');
+                return;
+            }
+
+            const newId = 'risk-' + Date.now();
+            const suggestions = suggestion ? suggestion.split('\n').map(s => s.trim()).filter(s => s) : [];
+            const bigClass = 'text-2xl font-bold ' + (levelTextMap[level] || 'text-gray-800');
+
+            risks.unshift({
+                id: newId,
+                title: title,
+                time: nowStr(),
+                level: level,
+                area: area,
+                metrics: [
+                    { label: '影响范围', value: area, valueClass: bigClass },
+                    { label: '风险级别', value: level + '风险', valueClass: 'text-lg font-medium text-gray-800' }
+                ],
+                desc: desc,
+                suggestions: suggestions
+            });
+
+            currentPage = 1;
+            closeModal('add-modal');
+            renderRisks();
+            alert('风险提示创建成功！\n标题: ' + title + '\n级别: ' + level);
+        }
+
+        function updateRisk() {
+            const risk = risks.find(r => r.id === currentRiskId);
+            if (risk) {
+                risk.title = document.getElementById('edit-title').value.trim();
+                risk.level = document.getElementById('edit-level').value;
+                risk.area = document.getElementById('edit-area').value.trim() || '全县范围';
+                risk.desc = document.getElementById('edit-desc').value.trim();
+                risk.suggestions = document.getElementById('edit-suggestion').value.split('\n').map(s => s.trim()).filter(s => s);
+                const areaMetric = risk.metrics.find(m => m.label === '影响范围');
+                if (areaMetric) areaMetric.value = risk.area;
+            }
+            closeModal('edit-modal');
+            renderRisks();
+            alert('风险提示更新成功！');
+        }
+
+        function confirmDelete() {
+            risks = risks.filter(r => r.id !== currentRiskId);
+            closeModal('delete-modal');
+            renderRisks();
+            alert('风险提示删除成功！');
+        }
+
+        function filterRisks() {
+            currentPage = 1;
+            renderRisks();
+        }
+
+        function resetFilter() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('level-filter').value = '';
+            filterRisks();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderRisks();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.max(1, Math.ceil(getFilteredRisks().length / pageSize));
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderRisks();
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderRisks();
+        }
+
+        document.addEventListener('click', (e) => {
+            const mapping = {
+                'add-modal': '[onclick="openAddModal()"]',
+                'edit-modal': '[onclick^="openEditModal"]',
+                'delete-modal': '[onclick^="openDeleteModal"]'
+            };
+            Object.entries(mapping).forEach(([id, selector]) => {
+                const modal = document.getElementById(id);
+                if (!modal.contains(e.target) && !e.target.closest(selector)) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        renderRisks();
+    </script>
+</body>
+</html>

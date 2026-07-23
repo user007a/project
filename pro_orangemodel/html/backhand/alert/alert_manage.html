@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预警管理 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">预警管理</h1>
+                <p class="text-gray-500 mt-1">管理预警产生、审核、发布及用户阅读状态</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="batchImport()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center">
+                    <iconify-icon icon="material-symbols:upload" class="w-4 h-4 mr-2"></iconify-icon>
+                    批量导入
+                </button>
+                <button onclick="exportData()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center">
+                    <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-2"></iconify-icon>
+                    导出数据
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">总预警数</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">156</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:notification-important" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">待审核</p>
+                        <h3 class="text-2xl font-bold text-orange-600 mt-1">8</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:hourglass-top" class="w-6 h-6 text-orange-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">已发布</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">132</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check-circle" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">已处置</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">118</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:assignment-turned-in" class="w-6 h-6 text-gray-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-4 flex-wrap">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="text" id="search-input" placeholder="搜索预警标题、编号..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterAlerts()">
+                        </div>
+                    </div>
+                    <select id="level-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterAlerts()">
+                        <option value="">全部级别</option>
+                        <option value="红色预警">红色预警</option>
+                        <option value="橙色预警">橙色预警</option>
+                        <option value="黄色预警">黄色预警</option>
+                        <option value="蓝色预警">蓝色预警</option>
+                    </select>
+                    <select id="source-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterAlerts()">
+                        <option value="">全部来源</option>
+                        <option value="模型自动生成">模型自动生成</option>
+                        <option value="人工上报">人工上报</option>
+                        <option value="气象系统">气象系统</option>
+                    </select>
+                    <select id="status-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterAlerts()">
+                        <option value="">全部状态</option>
+                        <option value="待审核">待审核</option>
+                        <option value="审核通过">审核通过</option>
+                        <option value="已发布">已发布</option>
+                        <option value="已处置">已处置</option>
+                        <option value="已驳回">已驳回</option>
+                    </select>
+                    <button onclick="resetFilters()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">重置</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警编号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警标题</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警级别</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">预警来源</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">影响区域</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">审核状态</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">发布状态</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">创建时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="alert-table-body">
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260722-001" data-level="红色预警" data-source="气象系统" data-status="已发布">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260722-001</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">高温热害预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">红色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">气象系统</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">全县范围</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已通过</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已发布</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 10:30</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260722-001')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openEditModal('YJ-20260722-001')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260722-002" data-level="橙色预警" data-source="模型自动生成" data-status="待审核">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260722-002</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">潜叶蛾高发预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">橙色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">模型自动生成</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">太和镇、桑田镇</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">待审核</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">未发布</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:15</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260722-002')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openAuditModal('YJ-20260722-002')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="审核">
+                                        <iconify-icon icon="material-symbols:check-circle" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openRejectModal('YJ-20260722-002')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="驳回">
+                                        <iconify-icon icon="material-symbols:close" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="YJ-20260721-015" data-level="黄色预警" data-source="模型自动生成" data-status="已发布">
+                            <td class="px-6 py-4 text-sm text-gray-500">YJ-20260721-015</td>
+                            <td class="px-6 py-4">
+                                <span class="font-medium text-gray-900">炭疽病发生预警</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">黄色预警</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">模型自动生成</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">白舍镇</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已通过</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已发布</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 14:20</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('YJ-20260721-015')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                    <button onclick="openEditModal('YJ-20260721-015')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
+                                        <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500">共 156 条记录</p>
+                <div class="flex items-center space-x-2">
+                    <button onclick="prevAlertPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                    <button onclick="changeAlertPage(1)" class="px-3 py-1 bg-green-600 text-white rounded text-sm alert-page-btn">1</button>
+                    <button onclick="changeAlertPage(2)" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50 alert-page-btn">2</button>
+                    <button onclick="changeAlertPage(3)" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50 alert-page-btn">3</button>
+                    <button onclick="nextAlertPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <span id="detail-title">预警详情</span>
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <span id="detail-level" class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full mr-3">红色预警</span>
+                    <span class="text-sm text-gray-500" id="detail-id">预警编号：YJ-20260722-001</span>
+                </div>
+                <h4 class="text-xl font-semibold text-gray-800 mb-4" id="detail-header">高温热害预警</h4>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">预警来源</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-source">气象系统</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">影响区域</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-area">全县范围</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">创建时间</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-time">2026-07-22 10:30</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">审核状态</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-status">已通过</p>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700 mb-2">预警内容</h5>
+                    <div class="p-4 bg-gray-50 rounded-lg text-sm text-gray-600 leading-relaxed" id="detail-content">
+                        根据气象监测数据，未来7天我县将出现持续高温天气，最高气温预计达到38°C以上，极端最高气温可能突破40°C。持续高温将对蜜桔生长造成严重影响，尤其是果实膨大期的蜜桔树，容易出现日灼病、生理性落果等问题。请各种植户及时采取遮阳降温、加强灌溉等措施，减少高温热害带来的损失。
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-2">应对建议</h5>
+                    <ul class="p-4 bg-green-50 rounded-lg text-sm text-green-800 space-y-2" id="detail-suggestions">
+                        <li class="flex items-start">
+                            <iconify-icon icon="material-symbols:check" class="w-4 h-4 mr-2 mt-0.5"></iconify-icon>
+                            及时灌溉，保持土壤湿润
+                        </li>
+                        <li class="flex items-start">
+                            <iconify-icon icon="material-symbols:check" class="w-4 h-4 mr-2 mt-0.5"></iconify-icon>
+                            搭建遮阳网，避免果实直接暴晒
+                        </li>
+                        <li class="flex items-start">
+                            <iconify-icon icon="material-symbols:check" class="w-4 h-4 mr-2 mt-0.5"></iconify-icon>
+                            喷施叶面肥，增强树体抗热能力
+                        </li>
+                        <li class="flex items-start">
+                            <iconify-icon icon="material-symbols:check" class="w-4 h-4 mr-2 mt-0.5"></iconify-icon>
+                            加强病虫害监测，防止高温诱发病虫害
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="audit-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:check-circle" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    预警审核
+                </h3>
+                <button onclick="closeModal('audit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:warning" class="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <div>
+                            <p class="text-sm font-medium text-yellow-800">审核确认</p>
+                            <p class="text-xs text-yellow-600 mt-1">审核通过后预警将进入发布流程，请谨慎操作。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">审核意见</label>
+                    <textarea id="audit-comment" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入审核意见（选填）"></textarea>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="auto-publish" class="w-4 h-4 text-green-600">
+                        <span class="ml-2 text-sm text-gray-600">审核通过后自动发布</span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('audit-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitAudit()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">审核通过</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reject-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 mr-2 text-red-600"></iconify-icon>
+                    驳回预警
+                </h3>
+                <button onclick="closeModal('reject-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:error" class="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <div>
+                            <p class="text-sm font-medium text-red-800">确认驳回</p>
+                            <p class="text-xs text-red-600 mt-1">驳回后预警将被标记为已驳回状态，需要重新提交审核。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">驳回原因 <span class="text-red-500">*</span></label>
+                    <textarea id="reject-reason" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入驳回原因"></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('reject-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitReject()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认驳回</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    编辑预警
+                </h3>
+                <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">预警标题</label>
+                    <input type="text" id="edit-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">预警级别</label>
+                    <select id="edit-level" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option>红色预警</option>
+                        <option>橙色预警</option>
+                        <option>黄色预警</option>
+                        <option>蓝色预警</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">影响区域</label>
+                    <input type="text" id="edit-area" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">预警内容</label>
+                    <textarea id="edit-content" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('edit-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitEdit()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAlertId = '';
+
+        function openDetailModal(id) {
+            currentAlertId = id;
+            document.getElementById('detail-id').textContent = '预警编号：' + id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                const title = row.querySelector('td:nth-child(2) span').textContent;
+                const level = row.querySelector('td:nth-child(3) span').textContent;
+                const source = row.querySelector('td:nth-child(4)').textContent;
+                const area = row.querySelector('td:nth-child(5)').textContent;
+                const time = row.querySelector('td:nth-child(8)').textContent;
+                const status = row.querySelector('td:nth-child(6) span').textContent;
+                
+                document.getElementById('detail-header').textContent = title;
+                document.getElementById('detail-level').textContent = level;
+                document.getElementById('detail-source').textContent = source;
+                document.getElementById('detail-area').textContent = area;
+                document.getElementById('detail-time').textContent = time;
+                document.getElementById('detail-status').textContent = status;
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function openAuditModal(id) {
+            currentAlertId = id;
+            document.getElementById('audit-comment').value = '';
+            document.getElementById('auto-publish').checked = false;
+            document.getElementById('audit-modal').classList.add('active');
+        }
+
+        function openRejectModal(id) {
+            currentAlertId = id;
+            document.getElementById('reject-reason').value = '';
+            document.getElementById('reject-modal').classList.add('active');
+        }
+
+        function openEditModal(id) {
+            currentAlertId = id;
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                document.getElementById('edit-title').value = row.querySelector('td:nth-child(2) span').textContent;
+                document.getElementById('edit-level').value = row.querySelector('td:nth-child(3) span').textContent;
+                document.getElementById('edit-area').value = row.querySelector('td:nth-child(5)').textContent;
+            }
+            document.getElementById('edit-content').value = '';
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function submitAudit() {
+            closeModal('audit-modal');
+            alert(`预警 ${currentAlertId} 审核通过！`);
+        }
+
+        function submitReject() {
+            const reason = document.getElementById('reject-reason').value;
+            if (!reason) {
+                alert('请填写驳回原因');
+                return;
+            }
+            closeModal('reject-modal');
+            alert(`预警 ${currentAlertId} 已驳回！`);
+        }
+
+        function submitEdit() {
+            closeModal('edit-modal');
+            alert(`预警 ${currentAlertId} 修改成功！`);
+        }
+
+        function filterAlerts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const levelFilter = document.getElementById('level-filter').value;
+            const sourceFilter = document.getElementById('source-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            const rows = document.querySelectorAll('#alert-table-body tr');
+            
+            rows.forEach(row => {
+                const id = row.getAttribute('data-id').toLowerCase();
+                const title = row.querySelector('td:nth-child(2) span').textContent.toLowerCase();
+                const level = row.getAttribute('data-level');
+                const source = row.getAttribute('data-source');
+                const status = row.getAttribute('data-status');
+                
+                const matchesSearch = id.includes(searchTerm) || title.includes(searchTerm);
+                const matchesLevel = !levelFilter || level === levelFilter;
+                const matchesSource = !sourceFilter || source === sourceFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                
+                row.style.display = matchesSearch && matchesLevel && matchesSource && matchesStatus ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('level-filter').value = '';
+            document.getElementById('source-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            filterAlerts();
+        }
+
+        function batchImport() {
+            alert('批量导入功能开发中...');
+        }
+
+        function exportData() {
+            alert('数据导出成功！');
+        }
+
+        let currentAlertPage = 1;
+
+        function changeAlertPage(page) {
+            currentAlertPage = page;
+            document.querySelectorAll('.alert-page-btn').forEach(btn => {
+                btn.classList.remove('bg-green-600', 'text-white');
+                btn.classList.add('border', 'border-gray-300', 'text-gray-600', 'hover:bg-gray-50');
+                if (parseInt(btn.textContent) === page) {
+                    btn.classList.add('bg-green-600', 'text-white');
+                    btn.classList.remove('border', 'border-gray-300', 'text-gray-600', 'hover:bg-gray-50');
+                }
+            });
+            const start = (page - 1) * 5 + 1;
+            const end = Math.min(page * 5, 156);
+            document.querySelector('.text-gray-500').textContent = `共 156 条记录（第${start}-${end}条）`;
+        }
+
+        function prevAlertPage() {
+            if (currentAlertPage > 1) changeAlertPage(currentAlertPage - 1);
+        }
+
+        function nextAlertPage() {
+            if (currentAlertPage < 3) changeAlertPage(currentAlertPage + 1);
+        }
+
+        document.addEventListener('click', (e) => {
+            ['detail-modal', 'audit-modal', 'reject-modal', 'edit-modal'].forEach(id => {
+                const modal = document.getElementById(id);
+                const btn = e.target.closest(`[onclick^="open${id.replace('-', '')}"]`);
+                if (!modal.contains(e.target) && !btn) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

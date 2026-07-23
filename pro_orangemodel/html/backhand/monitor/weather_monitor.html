@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>气象监控 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">气象监控</h1>
+                <p class="text-gray-500 mt-1">实时监控气象传感器数据</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索站点名称..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-48" oninput="filterStations()">
+                <select id="status-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterStations()">
+                    <option value="">全部状态</option>
+                    <option value="在线">在线</option>
+                    <option value="离线">离线</option>
+                </select>
+                <button onclick="refreshData()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
+                    <iconify-icon icon="material-symbols:refresh" class="w-4 h-4 mr-1"></iconify-icon>
+                    刷新数据
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">当前温度</p>
+                        <h3 class="text-2xl font-bold text-red-600 mt-1">35.2°C</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:thermostat" class="w-6 h-6 text-red-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">空气湿度</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1">55%</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:water" class="w-6 h-6 text-blue-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">光照强度</p>
+                        <h3 class="text-2xl font-bold text-yellow-600 mt-1">12500 lux</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:sunny" class="w-6 h-6 text-yellow-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">土壤湿度</p>
+                        <h3 class="text-2xl font-bold text-orange-600 mt-1">32%</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:leaf" class="w-6 h-6 text-orange-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">风速</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">2.8 m/s</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:air" class="w-6 h-6 text-gray-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">降雨量</p>
+                        <h3 class="text-2xl font-bold text-gray-400 mt-1">0 mm</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:cloud-rain" class="w-6 h-6 text-gray-400"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <iconify-icon icon="material-symbols:line-chart" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    温度变化趋势
+                </h3>
+                <div class="h-80 bg-gray-50 rounded-lg flex items-center justify-center">
+                    <div class="text-center">
+                        <iconify-icon icon="material-symbols:line-chart" class="w-16 h-16 text-gray-300 mx-auto mb-4"></iconify-icon>
+                        <p class="text-gray-500">图表区域 - 温度变化曲线</p>
+                        <p class="text-sm text-gray-400 mt-1">近24小时温度变化 (最高: 38°C)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:cloud" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                        天气状况
+                    </h3>
+                    <div class="flex items-center justify-center">
+                        <div class="text-center">
+                            <iconify-icon icon="material-symbols:sunny" class="w-16 h-16 text-yellow-500"></iconify-icon>
+                            <p class="text-xl font-bold text-gray-800 mt-2">晴</p>
+                            <p class="text-sm text-gray-500 mt-1">能见度: 8km</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <iconify-icon icon="material-symbols:calendar" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                        未来3天预报
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">今天</span>
+                            <div class="flex items-center space-x-3">
+                                <iconify-icon icon="material-symbols:sunny" class="w-5 h-5 text-yellow-500"></iconify-icon>
+                                <span class="text-sm text-gray-800">38°C / 26°C</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">明天</span>
+                            <div class="flex items-center space-x-3">
+                                <iconify-icon icon="material-symbols:sunny" class="w-5 h-5 text-yellow-500"></iconify-icon>
+                                <span class="text-sm text-gray-800">39°C / 27°C</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">后天</span>
+                            <div class="flex items-center space-x-3">
+                                <iconify-icon icon="material-symbols:sunny" class="w-5 h-5 text-yellow-500"></iconify-icon>
+                                <span class="text-sm text-red-600">40°C / 28°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:sensors" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    气象站点列表
+                </h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">站点名称</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">位置</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">温度</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">湿度</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">光照</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">土壤湿度</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">更新时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">状态</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="station-table-body">
+                        <tr class="hover:bg-gray-50" data-id="南丰镇气象站" data-status="在线">
+                            <td class="px-6 py-4 text-sm text-gray-800 font-medium">南丰镇气象站</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">南丰镇中心</td>
+                            <td class="px-6 py-4 text-sm text-red-600">35.2°C</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">55%</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">12500 lux</td>
+                            <td class="px-6 py-4 text-sm text-orange-600">32%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 10:00</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">在线</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('南丰镇气象站')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="市山镇气象站" data-status="在线">
+                            <td class="px-6 py-4 text-sm text-gray-800 font-medium">市山镇气象站</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">市山镇果园</td>
+                            <td class="px-6 py-4 text-sm text-red-600">36.1°C</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">52%</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">13200 lux</td>
+                            <td class="px-6 py-4 text-sm text-orange-600">28%</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:58</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-green-600">在线</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('市山镇气象站')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="太和镇气象站" data-status="离线">
+                            <td class="px-6 py-4 text-sm text-gray-800 font-medium">太和镇气象站</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">太和镇基地</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 08:30</td>
+                            <td class="px-6 py-4">
+                                <span class="flex items-center">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                                    <span class="text-xs text-red-600">离线</span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button onclick="openDetailModal('太和镇气象站')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看详情">
+                                    <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <span id="detail-title">站点详情</span>
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <h4 class="text-xl font-bold text-gray-800" id="detail-name">南丰镇气象站</h4>
+                    <span id="detail-status-badge" class="ml-3 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">在线</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">站点位置</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-location">南丰镇中心</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">最后更新</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-update-time">2026-07-22 10:00</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">设备编号</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-device-id">WX-001</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">安装时间</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-install-time">2025-03-15</p>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3">实时监测数据</h5>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-red-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-red-500">温度</span>
+                                <iconify-icon icon="material-symbols:thermostat" class="w-4 h-4 text-red-500"></iconify-icon>
+                            </div>
+                            <p class="text-2xl font-bold text-red-600" id="detail-temp">35.2°C</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-blue-500">空气湿度</span>
+                                <iconify-icon icon="material-symbols:water" class="w-4 h-4 text-blue-500"></iconify-icon>
+                            </div>
+                            <p class="text-2xl font-bold text-blue-600" id="detail-humidity">55%</p>
+                        </div>
+                        <div class="p-4 bg-yellow-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-yellow-500">光照强度</span>
+                                <iconify-icon icon="material-symbols:sunny" class="w-4 h-4 text-yellow-500"></iconify-icon>
+                            </div>
+                            <p class="text-2xl font-bold text-yellow-600" id="detail-light">12500 lux</p>
+                        </div>
+                        <div class="p-4 bg-orange-50 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-orange-500">土壤湿度</span>
+                                <iconify-icon icon="material-symbols:leaf" class="w-4 h-4 text-orange-500"></iconify-icon>
+                            </div>
+                            <p class="text-2xl font-bold text-orange-600" id="detail-soil-moisture">32%</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3">站点状态</h5>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">传感器状态</span>
+                            <div class="flex items-center">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-sm text-green-600">正常</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">信号强度</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="w-[85%] h-full bg-green-500 rounded-full"></div>
+                                </div>
+                                <span class="text-sm text-gray-800">85%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">电池电量</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="w-[92%] h-full bg-green-500 rounded-full"></div>
+                                </div>
+                                <span class="text-sm text-gray-800">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="restartStation()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">重启设备</button>
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDetailModal(name) {
+            document.getElementById('detail-name').textContent = name;
+            const row = document.querySelector(`tr[data-id="${name}"]`);
+            if (row) {
+                const location = row.querySelector('td:nth-child(2)').textContent;
+                const temp = row.querySelector('td:nth-child(3)').textContent;
+                const humidity = row.querySelector('td:nth-child(4)').textContent;
+                const light = row.querySelector('td:nth-child(5)').textContent;
+                const soilMoisture = row.querySelector('td:nth-child(6)').textContent;
+                const updateTime = row.querySelector('td:nth-child(7)').textContent;
+                const status = row.getAttribute('data-status');
+                
+                document.getElementById('detail-location').textContent = location;
+                document.getElementById('detail-temp').textContent = temp;
+                document.getElementById('detail-humidity').textContent = humidity;
+                document.getElementById('detail-light').textContent = light;
+                document.getElementById('detail-soil-moisture').textContent = soilMoisture;
+                document.getElementById('detail-update-time').textContent = updateTime;
+                
+                const badge = document.getElementById('detail-status-badge');
+                if (status === '在线') {
+                    badge.textContent = '在线';
+                    badge.className = 'ml-3 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full';
+                } else {
+                    badge.textContent = '离线';
+                    badge.className = 'ml-3 px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full';
+                }
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function refreshData() {
+            alert('正在刷新气象数据...\n数据已更新');
+        }
+
+        function restartStation() {
+            alert('正在重启设备...\n请等待设备重新连接');
+        }
+
+        function filterStations() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            const rows = document.querySelectorAll('#station-table-body tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                if (row.id === 'empty-row') return;
+                const name = row.getAttribute('data-id').toLowerCase();
+                const status = row.getAttribute('data-status');
+                const location = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                
+                const matchesSearch = name.includes(searchTerm) || location.includes(searchTerm);
+                const matchesStatus = !statusFilter || status === statusFilter;
+                
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            let emptyRow = document.getElementById('empty-row');
+            if (visibleCount === 0) {
+                if (!emptyRow) {
+                    emptyRow = document.createElement('tr');
+                    emptyRow.id = 'empty-row';
+                    emptyRow.innerHTML = '<td colspan="9" class="px-6 py-8 text-center text-gray-400">暂无匹配的气象站数据</td>';
+                    document.getElementById('station-table-body').appendChild(emptyRow);
+                }
+                emptyRow.style.display = '';
+            } else if (emptyRow) {
+                emptyRow.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('detail-modal');
+            const btn = e.target.closest('[onclick="openDetailModal"]');
+            if (!modal.contains(e.target) && !btn) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

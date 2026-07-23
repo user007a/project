@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; overflow: hidden; background-color: #F0F2F5; }
+        .iframe-container { position: relative; width: 100%; height: 100%; }
+        .iframe-container iframe { width: 100%; height: 100%; border: none; }
+        .sidebar-collapsed .sidebar-text { display: none; }
+        .sidebar-collapsed { width: 64px !important; }
+        .sidebar-collapsed + .main-content { margin-left: 64px !important; }
+        .tab-active { background-color: #E8F5E9; color: #15803D; border-bottom: 2px solid #16A34A; }
+        .menu-active { background-color: rgba(22, 163, 74, 0.15); color: #16A34A; }
+        .menu-active svg { color: #16A34A; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+        .dropdown-menu { display: none; }
+        .dropdown-menu.active { display: block; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+        .notification-item { transition: background-color 0.2s; }
+        .notification-item:hover { background-color: #F3F4F6; }
+    </style>
+</head>
+<body>
+    <div class="flex h-screen">
+        <aside id="sidebar" class="w-64 bg-[#1E293B] flex flex-col flex-shrink-0 h-screen transition-all duration-300">
+            <div class="h-16 flex items-center justify-center border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl">🍊</span>
+                    </div>
+                    <span class="sidebar-text text-white font-bold text-lg">南丰蜜桔模型管理</span>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <button onclick="openTab('home', '系统首页', 'home.html')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors menu-active" id="menu-home">
+                            <iconify-icon icon="material-symbols:home" class="w-5 h-5"></iconify-icon>
+                            <span class="sidebar-text">系统首页</span>
+                        </button>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:model-training" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">模型管理</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('growth_model', '生长模型', 'model/growth_model.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-growth_model">
+                                    <iconify-icon icon="material-symbols:sprout" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">生长模型</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('pest_model', '病虫害防控模型', 'model/pest_model.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-pest_model">
+                                    <iconify-icon icon="material-symbols:bug-report" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">病虫害防控模型</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('disease_db', '病害数据库', 'model/disease_db.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-disease_db">
+                                    <iconify-icon icon="material-symbols:cloud-disease" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">病害数据库</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('insect_db', '虫害数据库', 'model/insect_db.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-insect_db">
+                                    <iconify-icon icon="material-symbols:bug" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">虫害数据库</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('disaster_db', '灾害数据库', 'model/disaster_db.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-disaster_db">
+                                    <iconify-icon icon="material-symbols:warning" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">灾害数据库</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:database" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">数据管理</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('manual_collect', '人工采集', 'data/manual_collect.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-manual_collect">
+                                    <iconify-icon icon="material-symbols:edit-note" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">人工采集</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('data_connect', '数据对接', 'data/data_connect.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-data_connect">
+                                    <iconify-icon icon="material-symbols:network-check" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">数据对接</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('external_fetch', '外部抓取', 'data/external_fetch.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-external_fetch">
+                                    <iconify-icon icon="material-symbols:download" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">外部抓取</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('shared_data', '共享数据', 'data/shared_data.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-shared_data">
+                                    <iconify-icon icon="material-symbols:share" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">共享数据</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('table_manage', '数据表管理', 'data/table_manage.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-table_manage">
+                                    <iconify-icon icon="material-symbols:table" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">数据表管理</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:rule" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">规则管理</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('alert_rule', '预警规则', 'rule/alert_rule.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-alert_rule">
+                                    <iconify-icon icon="material-symbols:alert-triangle" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">预警规则</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('content_setting', '内容设置', 'rule/content_setting.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-content_setting">
+                                    <iconify-icon icon="material-symbols:message-square" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">内容设置</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('flow_setting', '流程设置', 'rule/flow_setting.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-flow_setting">
+                                    <iconify-icon icon="material-symbols:workflow" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">流程设置</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('send_template', '发送模板', 'rule/send_template.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-send_template">
+                                    <iconify-icon icon="material-symbols:mail" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">发送模板</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:notification-important" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">预警管理</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('alert_manage', '预警管理', 'alert/alert_manage.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-alert_manage">
+                                    <iconify-icon icon="material-symbols:bell" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">预警管理</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('dispose_record', '处置记录', 'alert/dispose_record.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-dispose_record">
+                                    <iconify-icon icon="material-symbols:assignment-turned-in" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">处置记录</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('recognize_log', '识别日志', 'alert/recognize_log.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-recognize_log">
+                                    <iconify-icon icon="material-symbols:image-search" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">识别日志</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('risk_hint', '风险提示', 'alert/risk_hint.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-risk_hint">
+                                    <iconify-icon icon="material-symbols:warning-amber" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">风险提示</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('predict_hint', '预测提示', 'alert/predict_hint.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-predict_hint">
+                                    <iconify-icon icon="material-symbols:trending-up" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">预测提示</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:monitoring" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">运行监控</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('growth_judge', '长势研判', 'monitor/growth_judge.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-growth_judge">
+                                    <iconify-icon icon="material-symbols:scatter-plot" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">长势研判</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('quality_predict', '品质预测', 'monitor/quality_predict.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-quality_predict">
+                                    <iconify-icon icon="material-symbols:star" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">品质预测</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('yield_predict', '产量预测', 'monitor/yield_predict.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-yield_predict">
+                                    <iconify-icon icon="material-symbols:package" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">产量预测</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('weather_monitor', '气象监控', 'monitor/weather_monitor.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-weather_monitor">
+                                    <iconify-icon icon="material-symbols:cloud" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">气象监控</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('system_log', '系统日志', 'monitor/system_log.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-system_log">
+                                    <iconify-icon icon="material-symbols:file-text" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">系统日志</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mt-4">
+                        <div class="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <iconify-icon icon="material-symbols:settings" class="w-4 h-4"></iconify-icon>
+                            <span class="sidebar-text">系统管理</span>
+                        </div>
+                        <ul class="mt-1 space-y-1">
+                            <li>
+                                <button onclick="openTab('user_manage', '用户管理', 'system/user_manage.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-user_manage">
+                                    <iconify-icon icon="material-symbols:people" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">用户管理</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('role_manage', '角色管理', 'system/role_manage.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-role_manage">
+                                    <iconify-icon icon="material-symbols:admin-panel-settings" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">角色管理</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('department_manage', '部门管理', 'system/department_manage.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-department_manage">
+                                    <iconify-icon icon="material-symbols:account-tree" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">部门管理</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button onclick="openTab('system_config', '系统配置', 'system/system_config.html')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors" id="menu-system_config">
+                                    <iconify-icon icon="material-symbols:settings" class="w-4 h-4"></iconify-icon>
+                                    <span class="sidebar-text">系统配置</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="border-t border-gray-700 p-3">
+                <button id="toggle-sidebar" onclick="toggleSidebar()" class="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
+                    <iconify-icon icon="material-symbols:chevron-left" class="w-5 h-5"></iconify-icon>
+                    <span class="sidebar-text text-sm">收起</span>
+                </button>
+            </div>
+        </aside>
+        
+        <div class="main-content flex-1 flex flex-col min-w-0 h-screen ml-64 transition-all duration-300">
+            <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                            <iconify-icon icon="material-symbols:menu" class="w-5 h-5 text-gray-600"></iconify-icon>
+                        </button>
+                        <h1 class="text-lg font-semibold text-gray-800">南丰蜜桔模型管理系统</h1>
+                    </div>
+                    
+                    <div class="flex-1 max-w-2xl">
+                        <div class="relative">
+                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="text" placeholder="搜索..." class="w-full pl-10 pr-4 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleNotifications()" class="p-2 hover:bg-gray-100 rounded-lg relative">
+                            <iconify-icon icon="material-symbols:notifications" class="w-5 h-5 text-gray-600"></iconify-icon>
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                        <button onclick="toggleMessages()" class="p-2 hover:bg-gray-100 rounded-lg relative">
+                            <iconify-icon icon="material-symbols:message" class="w-5 h-5 text-gray-600"></iconify-icon>
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:person" class="w-4 h-4 text-green-600"></iconify-icon>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-medium text-gray-800">管理员</div>
+                            <div class="text-gray-500">农业农村局</div>
+                        </div>
+                        <button onclick="toggleUserMenu()" class="p-1 hover:bg-gray-100 rounded-lg">
+                            <iconify-icon icon="material-symbols:keyboard-arrow-down" class="w-4 h-4 text-gray-500"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="h-10 bg-gray-50 border-b border-gray-200 flex items-center px-2 overflow-x-auto">
+                <div id="tab-bar" class="flex space-x-1">
+                    <button onclick="switchTab('home')" id="tab-home" class="flex items-center space-x-2 px-4 py-2 rounded-t-lg text-sm font-medium tab-active min-w-max">
+                        <iconify-icon icon="material-symbols:home" class="w-4 h-4"></iconify-icon>
+                        <span>系统首页</span>
+                        <button onclick="closeTab('home', event)" class="p-0.5 hover:bg-gray-300 rounded">
+                            <iconify-icon icon="material-symbols:close" class="w-3 h-3"></iconify-icon>
+                        </button>
+                    </button>
+                </div>
+            </div>
+            
+            <main class="flex-1 overflow-hidden bg-[#F0F2F5]">
+                <div class="iframe-container">
+                    <iframe name="mainFrame" id="mainFrame" src="home.html"></iframe>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="user-menu" class="dropdown-menu absolute right-4 top-16 bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-48 z-50">
+        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+            <iconify-icon icon="material-symbols:person" class="w-4 h-4 mr-2"></iconify-icon>
+            个人信息
+        </button>
+        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+            <iconify-icon icon="material-symbols:settings" class="w-4 h-4 mr-2"></iconify-icon>
+            账户设置
+        </button>
+        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+            <iconify-icon icon="material-symbols:help" class="w-4 h-4 mr-2"></iconify-icon>
+            帮助中心
+        </button>
+        <div class="border-t border-gray-200 my-1"></div>
+        <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 flex items-center">
+            <iconify-icon icon="material-symbols:logout" class="w-4 h-4 mr-2"></iconify-icon>
+            退出登录
+        </button>
+    </div>
+
+    <div id="notification-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:notifications" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    消息通知
+                </h3>
+                <button onclick="closeModal('notification-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-4 space-y-3">
+                <div class="notification-item p-3 bg-red-50 rounded-lg border border-red-100">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:warning" class="w-5 h-5 text-red-500 mr-2 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <p class="font-medium text-gray-800">高温热害预警</p>
+                            <p class="text-sm text-gray-500 mt-1">未来3天最高气温将达35°C以上，请做好防暑降温措施</p>
+                            <p class="text-xs text-gray-400 mt-2">2026-07-22 10:30</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-item p-3 bg-orange-50 rounded-lg border border-orange-100">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:alert-circle" class="w-5 h-5 text-orange-500 mr-2 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <p class="font-medium text-gray-800">3条预警待审核处理</p>
+                            <p class="text-sm text-gray-500 mt-1">请及时处理待审核的预警信息</p>
+                            <p class="text-xs text-gray-400 mt-2">2026-07-22 09:15</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-item p-3 bg-blue-50 rounded-lg border border-blue-100">
+                    <div class="flex items-start">
+                        <iconify-icon icon="material-symbols:update" class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <p class="font-medium text-gray-800">气象数据同步完成</p>
+                            <p class="text-sm text-gray-500 mt-1">今日气象数据已完成同步更新</p>
+                            <p class="text-xs text-gray-400 mt-2">2026-07-21 18:30</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:message" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
+                    站内消息
+                </h3>
+                <button onclick="closeModal('message-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-4 space-y-3">
+                <div class="notification-item p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                <iconify-icon icon="material-symbols:person" class="w-4 h-4 text-green-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">张农技</p>
+                                <p class="text-sm text-gray-500">已提交土壤养分数据，请审核</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-400">1小时前</span>
+                    </div>
+                </div>
+                <div class="notification-item p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <iconify-icon icon="material-symbols:person" class="w-4 h-4 text-blue-600"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">系统通知</p>
+                                <p class="text-sm text-gray-500">长势研判报告已生成</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-400">昨天</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const tabs = {};
+        let activeTab = 'home';
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggle-sidebar');
+            const icon = toggleBtn.querySelector('svg');
+            const text = toggleBtn.querySelector('.sidebar-text');
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                sidebar.classList.remove('sidebar-collapsed');
+                icon.setAttribute('icon', 'material-symbols:chevron-left');
+                text.textContent = '收起';
+            } else {
+                sidebar.classList.add('sidebar-collapsed');
+                icon.setAttribute('icon', 'material-symbols:chevron-right');
+                text.textContent = '展开';
+            }
+        }
+        
+        function openTab(id, name, url) {
+            if (tabs[id]) {
+                switchTab(id);
+                return;
+            }
+            tabs[id] = { name, url };
+            const tabBar = document.getElementById('tab-bar');
+            const tab = document.createElement('button');
+            tab.id = `tab-${id}`;
+            tab.className = 'flex items-center space-x-2 px-4 py-2 rounded-t-lg text-sm font-medium text-gray-600 hover:bg-gray-200 min-w-max';
+            tab.innerHTML = `
+                <iconify-icon icon="material-symbols:file" class="w-4 h-4"></iconify-icon>
+                <span>${name}</span>
+                <button onclick="closeTab('${id}', event)" class="p-0.5 hover:bg-gray-300 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-3 h-3"></iconify-icon>
+                </button>
+            `;
+            tab.onclick = () => switchTab(id);
+            tabBar.appendChild(tab);
+            switchTab(id);
+        }
+        
+        function switchTab(id) {
+            activeTab = id;
+            document.querySelectorAll('#tab-bar button').forEach(btn => btn.classList.remove('tab-active'));
+            const tabBtn = document.getElementById(`tab-${id}`);
+            if (tabBtn) tabBtn.classList.add('tab-active');
+            document.getElementById('mainFrame').src = tabs[id]?.url || 'home.html';
+            updateMenuHighlight(id);
+        }
+        
+        function updateMenuHighlight(id) {
+            document.querySelectorAll('#sidebar button').forEach(btn => btn.classList.remove('menu-active'));
+            const menuBtn = document.getElementById(`menu-${id}`);
+            if (menuBtn) menuBtn.classList.add('menu-active');
+        }
+        
+        function closeTab(id, event) {
+            event.stopPropagation();
+            if (id === 'home') return;
+            delete tabs[id];
+            const tabBtn = document.getElementById(`tab-${id}`);
+            if (tabBtn) tabBtn.remove();
+            if (activeTab === id) {
+                const remainingTabs = Object.keys(tabs);
+                switchTab(remainingTabs[remainingTabs.length - 1] || 'home');
+            }
+        }
+        
+        function toggleUserMenu() {
+            const menu = document.getElementById('user-menu');
+            menu.classList.toggle('active');
+        }
+        
+        function toggleNotifications() {
+            const modal = document.getElementById('notification-modal');
+            modal.classList.toggle('active');
+        }
+        
+        function toggleMessages() {
+            const modal = document.getElementById('message-modal');
+            modal.classList.toggle('active');
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        document.addEventListener('click', (e) => {
+            const userMenu = document.getElementById('user-menu');
+            const userBtn = e.target.closest('.border-l');
+            if (!userBtn && !userMenu.contains(e.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+        
+        document.addEventListener('click', (e) => {
+            const notificationModal = document.getElementById('notification-modal');
+            const notificationBtn = e.target.closest('[onclick="toggleNotifications()"]');
+            if (!notificationBtn && !notificationModal.contains(e.target)) {
+                notificationModal.classList.remove('active');
+            }
+        });
+        
+        document.addEventListener('click', (e) => {
+            const messageModal = document.getElementById('message-modal');
+            const messageBtn = e.target.closest('[onclick="toggleMessages()"]');
+            if (!messageBtn && !messageModal.contains(e.target)) {
+                messageModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

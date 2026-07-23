@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>识别日志 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
+        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">识别日志</h1>
+                <p class="text-gray-500 mt-1">管理病虫害AI识别日志</p>
+            </div>
+            <button onclick="exportLogs()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center">
+                <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-2"></iconify-icon>
+                导出日志
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">总识别数</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">2,456</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:image-search" class="w-6 h-6 text-blue-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">识别成功</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">2,310</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check-circle" class="w-6 h-6 text-green-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">识别失败</p>
+                        <h3 class="text-2xl font-bold text-red-600 mt-1">146</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:close-circle" class="w-6 h-6 text-red-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">平均置信度</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">89.2%</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:percent" class="w-6 h-6 text-gray-600"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <div class="flex items-center space-x-4 flex-wrap">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="text" id="search-input" placeholder="搜索任务编号、识别结果..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterLogs()">
+                        </div>
+                    </div>
+                    <select id="type-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterLogs()">
+                        <option value="">全部类型</option>
+                        <option value="病害识别">病害识别</option>
+                        <option value="虫害识别">虫害识别</option>
+                    </select>
+                    <select id="status-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterLogs()">
+                        <option value="">全部状态</option>
+                        <option value="成功">成功</option>
+                        <option value="失败">失败</option>
+                    </select>
+                    <button onclick="resetFilter()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200">重置</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">任务编号</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">识别类型</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">识别结果</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">置信度</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">上传用户</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">上传时间</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">状态</th>
+                            <th class="text-center px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100" id="log-table-body">
+                        <tr class="hover:bg-gray-50" data-id="R-20260722-001" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260722-001</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">红蜘蛛</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-20 h-full bg-green-600 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">92%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户A</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 10:30</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260722-001')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260722-002" data-type="病害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260722-002</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">炭疽病</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-16 h-full bg-yellow-500 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">71%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户B</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 09:15</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260722-002')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260721-025" data-type="病害识别" data-status="失败">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260721-025</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">无法识别</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="w-6 h-full bg-red-500 rounded-full"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">28%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户C</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 16:45</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">失败</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260721-025')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260722-003" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260722-003</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">潜叶蛾</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">88%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户D</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 11:45</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260722-003')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260722-004" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260722-004</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">介壳虫</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">85%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户A</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-22 13:20</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260722-004')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260721-026" data-type="病害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260721-026</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">日灼病</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-yellow-500 rounded-full" style="width: 76%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">76%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户B</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 15:10</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260721-026')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260721-024" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260721-024</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">锈壁虱</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 94%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">94%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户C</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-21 10:05</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260721-024')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260720-018" data-type="病害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260720-018</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">溃疡病</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 81%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">81%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户D</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-20 14:30</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260720-018')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260720-017" data-type="病害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260720-017</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">煤烟病</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-yellow-500 rounded-full" style="width: 67%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">67%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户A</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-20 09:40</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260720-017')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260719-012" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260719-012</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">红蜘蛛</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">90%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户B</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-19 16:20</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260719-012')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260719-011" data-type="病害识别" data-status="失败">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260719-011</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">无法识别</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-red-500 rounded-full" style="width: 35%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">35%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户C</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-19 11:15</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">失败</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260719-011')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="R-20260718-009" data-type="虫害识别" data-status="成功">
+                            <td class="px-6 py-4 text-sm text-gray-500">R-20260718-009</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害识别</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">潜叶蛾</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: 87%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">87%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">种植户D</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2026-07-18 10:50</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <button onclick="openDetailModal('R-20260718-009')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded">
+                                        <iconify-icon icon="material-symbols:visibility" class="w-4 h-4"></iconify-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <p class="text-sm text-gray-500" id="record-count">共 12 条记录</p>
+                <div class="flex items-center space-x-2" id="pagination">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    识别详情
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:image" class="w-10 h-10 text-gray-400"></iconify-icon>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-800" id="detail-id">R-20260722-001</h4>
+                        <p class="text-sm text-gray-500" id="detail-type">虫害识别</p>
+                    </div>
+                    <span id="detail-status" class="ml-auto px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">成功</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">识别结果</p>
+                        <p class="text-lg font-bold text-gray-800" id="detail-result">红蜘蛛</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">置信度</p>
+                        <div class="flex items-center mt-1">
+                            <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="detail-confidence-bar" class="h-full bg-green-500 rounded-full" style="width: 92%"></div>
+                            </div>
+                            <span class="ml-2 text-lg font-bold text-green-600" id="detail-confidence">92%</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">上传用户</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-user">种植户A</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">上传时间</p>
+                        <p class="text-sm font-medium text-gray-800" id="detail-time">2026-07-22 10:30</p>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-sm font-semibold text-gray-700 mb-2">识别图片</h5>
+                    <div class="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <p class="text-gray-400">图片预览区域</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const pageSize = 5;
+        let filteredCount = 0;
+
+        function openDetailModal(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                document.getElementById('detail-id').textContent = id;
+                document.getElementById('detail-type').textContent = row.getAttribute('data-type');
+                document.getElementById('detail-result').textContent = row.querySelector('td:nth-child(3)').textContent;
+                document.getElementById('detail-user').textContent = row.querySelector('td:nth-child(5)').textContent;
+                document.getElementById('detail-time').textContent = row.querySelector('td:nth-child(6)').textContent;
+
+                const confidenceText = row.querySelector('td:nth-child(4) span').textContent;
+                document.getElementById('detail-confidence').textContent = confidenceText;
+                const pct = parseInt(confidenceText, 10) || 0;
+                const bar = document.getElementById('detail-confidence-bar');
+                bar.style.width = pct + '%';
+                if (pct >= 80) {
+                    bar.className = 'h-full bg-green-500 rounded-full';
+                } else if (pct >= 50) {
+                    bar.className = 'h-full bg-yellow-500 rounded-full';
+                } else {
+                    bar.className = 'h-full bg-red-500 rounded-full';
+                }
+
+                const status = row.getAttribute('data-status');
+                const statusBadge = document.getElementById('detail-status');
+                if (status === '成功') {
+                    statusBadge.textContent = '识别成功';
+                    statusBadge.className = 'ml-auto px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full';
+                } else {
+                    statusBadge.textContent = '识别失败';
+                    statusBadge.className = 'ml-auto px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full';
+                }
+            }
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function exportLogs() {
+            alert('正在导出识别日志...\n导出成功！');
+        }
+
+        function getFilteredRows() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const rows = Array.from(document.querySelectorAll('#log-table-body tr'));
+            return rows.filter(row => {
+                const id = row.getAttribute('data-id').toLowerCase();
+                const type = row.getAttribute('data-type');
+                const status = row.getAttribute('data-status');
+                const result = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const matchesSearch = id.includes(searchTerm) || result.includes(searchTerm);
+                const matchesType = !typeFilter || type === typeFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                return matchesSearch && matchesType && matchesStatus;
+            });
+        }
+
+        function renderTable() {
+            const filtered = getFilteredRows();
+            filteredCount = filtered.length;
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * pageSize;
+            const pageRows = filtered.slice(start, start + pageSize);
+
+            const allRows = document.querySelectorAll('#log-table-body tr');
+            allRows.forEach(row => row.style.display = 'none');
+            pageRows.forEach(row => row.style.display = '');
+
+            document.getElementById('record-count').textContent = '共 ' + filteredCount + ' 条记录';
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            const container = document.getElementById('pagination');
+            let html = '';
+            const prevDisabled = currentPage === 1;
+            html += `<button onclick="prevPage()" ${prevDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${prevDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="px-3 py-1 bg-green-600 text-white rounded text-sm">${i}</button>`;
+                } else {
+                    html += `<button onclick="goToPage(${i})" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">${i}</button>`;
+                }
+            }
+            const nextDisabled = currentPage === totalPages;
+            html += `<button onclick="nextPage()" ${nextDisabled ? 'disabled' : ''} class="px-3 py-1 border border-gray-300 rounded text-sm ${nextDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}">下一页</button>`;
+            container.innerHTML = html;
+        }
+
+        function filterLogs() {
+            currentPage = 1;
+            renderTable();
+        }
+
+        function resetFilter() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            filterLogs();
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.max(1, Math.ceil(filteredCount / pageSize));
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('detail-modal');
+            const btn = e.target.closest('[onclick^="openDetailModal"]');
+            if (!modal.contains(e.target) && !btn) {
+                modal.classList.remove('active');
+            }
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>

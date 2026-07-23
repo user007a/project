@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>南丰蜜桔智慧果园 - 智能建议</title>
+  <link rel="stylesheet" href="css/mobile-design-system.css">
+</head>
+<body>
+  <div class="mb-app">
+    <div class="page-header mb-header-detail">
+      <div class="header-nav">
+        <div class="header-back" onclick="window.history.back()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="header-title">智能建议</div>
+      </div>
+      <div class="header-content">
+        <div class="header-sub">南丰蜜桔专属农事智能建议</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <div class="card-title">今日农事建议</div>
+        <div style="background: var(--primary-light); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+          <div style="font-size: 16px; font-weight: bold; color: var(--primary); margin-bottom: 8px;">🌿 夏季叶面施肥建议</div>
+          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+            当前南丰蜜桔处于果实膨大期，根据土壤养分检测数据（氮1.2g/kg、磷0.8g/kg、钾1.5g/kg），建议喷施0.3%磷酸二氢钾溶液，每亩用量约30-40公斤，间隔7-10天喷施一次，连续喷施2-3次。
+          </div>
+        </div>
+        <div style="background: var(--warning-bg); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+          <div style="font-size: 16px; font-weight: bold; color: var(--warning); margin-bottom: 8px;">💧 抗旱灌溉建议</div>
+          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+            当前土壤湿度为52%，未来3天无降雨预报，气温持续在35°C以上。建议今晚进行滴灌，灌水量约为每亩30-40立方米，重点灌溉根系集中区域。
+          </div>
+        </div>
+        <div style="background: var(--danger-bg); padding: 16px; border-radius: 12px;">
+          <div style="font-size: 16px; font-weight: bold; color: var(--danger); margin-bottom: 8px;">⚠️ 病虫害防控提醒</div>
+          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+            当前高温高湿环境有利于红蜘蛛和潜叶蛾发生。建议加强果园巡查，发现病虫害及时防治。可使用阿维菌素+哒螨灵进行红蜘蛛防治，使用氯氟氰菊酯进行潜叶蛾防治。
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">生成新建议</div>
+        <div class="form-item">
+          <label class="form-label">选择地块</label>
+          <div class="form-select" onclick="showPicker(this)">
+            <span class="form-select-value">请选择地块</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label">土壤湿度(%)</label>
+          <input type="number" class="form-input" placeholder="请输入土壤湿度">
+        </div>
+        <div class="form-item">
+          <label class="form-label">近期施肥情况</label>
+          <textarea class="form-textarea" placeholder="请描述近期施肥情况..."></textarea>
+        </div>
+        <div class="form-item">
+          <label class="form-label">病虫害情况</label>
+          <textarea class="form-textarea" placeholder="请描述病虫害发生情况..."></textarea>
+        </div>
+        <button class="btn btn-primary btn-block">生成智能建议</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">历史建议记录</div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">夏季叶面施肥建议 · 已采纳</div>
+            <div class="timeline-date">2026-07-20</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">抗旱灌溉建议 · 已采纳</div>
+            <div class="timeline-date">2026-07-18</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">红蜘蛛防治建议 · 已采纳</div>
+            <div class="timeline-date">2026-07-15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="tab-bar">
+      <a href="mb_home.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>首页</span>
+      </a>
+      <a href="mb_data.html" class="tab-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>数据</span>
+      </a>
+      <a href="mb_disease.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>病虫害</span>
+      </a>
+      <a href="mb_news.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>资讯</span>
+      </a>
+      <a href="mb_profile.html" class="tab-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="modal-overlay" id="pickerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="pickerTitle">请选择</div>
+      </div>
+      <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
+        <div id="pickerContent"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closePicker()">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="loadingModal">
+    <div class="modal modal-success">
+      <div style="width: 64px; height: 64px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
+        <div style="width: 40px; height: 40px; border: 4px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      </div>
+      <div style="font-size: 16px; font-weight: bold; color: var(--text); margin-bottom: 8px;">AI正在分析...</div>
+      <div style="font-size: 13px; color: var(--text-secondary);">请稍候，正在生成智能建议</div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    var currentPickerTarget;
+    
+    var pickerData = {
+      orchard: ['1号早熟蜜桔区', '2号中熟蜜桔区', '3号晚熟蜜桔区', '4号试验田']
+    };
+    
+    function showPicker(target) {
+      currentPickerTarget = target;
+      document.getElementById('pickerTitle').textContent = '请选择地块';
+      var content = '';
+      pickerData.orchard.forEach(function(item) {
+        content += '<div onclick="selectPickerValue(\'' + item + '\')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">' + item + '</div>';
+      });
+      document.getElementById('pickerContent').innerHTML = content;
+      document.getElementById('pickerModal').classList.add('show');
+    }
+    
+    function selectPickerValue(value) {
+      currentPickerTarget.querySelector('.form-select-value').textContent = value;
+      currentPickerTarget.querySelector('.form-select-value').style.color = 'var(--text)';
+      closePicker();
+    }
+    
+    function closePicker() {
+      document.getElementById('pickerModal').classList.remove('show');
+    }
+    
+    function generateSuggestion() {
+      var moisture = document.querySelector('input[placeholder="请输入土壤湿度"]').value;
+      if (!moisture) {
+        alert('请输入土壤湿度');
+        return;
+      }
+      
+      document.getElementById('loadingModal').classList.add('show');
+      
+      setTimeout(function() {
+        document.getElementById('loadingModal').classList.remove('show');
+        
+        var moistureValue = parseFloat(moisture);
+        var suggestion = '';
+        
+        if (moistureValue < 40) {
+          suggestion = '根据您输入的土壤湿度（' + moistureValue + '%），当前土壤处于干旱状态，建议立即进行滴灌灌溉，灌水量约为每亩30-40立方米。同时建议叶面喷施0.2%磷酸二氢钾溶液，缓解干旱对果树的影响。';
+        } else if (moistureValue < 60) {
+          suggestion = '根据您输入的土壤湿度（' + moistureValue + '%），当前土壤湿度适中，建议保持正常灌溉管理。近期可进行叶面喷肥，补充微量元素，促进果实膨大。';
+        } else {
+          suggestion = '根据您输入的土壤湿度（' + moistureValue + '%），当前土壤湿度充足，建议适当减少灌水量，注意果园排水，防止根系积水。可进行适度修剪，增加通风透光。';
+        }
+        
+        showSuggestionResult(suggestion);
+      }, 2000);
+    }
+    
+    function showSuggestionResult(suggestion) {
+      var modal = document.createElement('div');
+      modal.className = 'modal-overlay show';
+      modal.innerHTML = `
+        <div class="modal" style="width: 90%; max-width: 360px;">
+          <div class="modal-header">
+            <div class="modal-title">智能建议结果</div>
+          </div>
+          <div class="modal-body">
+            <div style="background: var(--primary-light); padding: 16px; border-radius: 12px;">
+              <div style="font-size: 14px; font-weight: bold; color: var(--primary); margin-bottom: 8px;">🌿 智能分析建议</div>
+              <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">${suggestion}</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+            <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">已了解</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    document.querySelector('.btn-primary.btn-block').onclick = generateSuggestion;
+  </script>
+</body>
+</html>
