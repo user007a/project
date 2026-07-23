@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>虫害数据库 - 南丰蜜桔模型管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
     <style>
         body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
-        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
@@ -21,10 +21,20 @@
                 <h1 class="text-2xl font-bold text-gray-800">虫害数据库</h1>
                 <p class="text-gray-500 mt-1">管理南丰蜜桔虫害知识数据</p>
             </div>
-            <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
-                <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
-                添加虫害
-            </button>
+            <div class="flex items-center space-x-3">
+                <button onclick="openImportModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    导入虫害
+                </button>
+                <button onclick="exportInsects()" class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    导出虫害
+                </button>
+                <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    添加虫害
+                </button>
+            </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -32,7 +42,7 @@
                 <div class="flex items-center space-x-4 flex-wrap">
                     <div class="flex-1 max-w-md">
                         <div class="relative">
-                            <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             <input type="text" id="search-input" placeholder="搜索虫害名称..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterInsects()">
                         </div>
                     </div>
@@ -47,126 +57,20 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="insect-1" data-name="红蜘蛛" data-type="螨类" data-temperature="28-35°C" data-season="夏季" data-risk="高风险" data-desc="吸食叶片汁液，导致叶片失绿变白，严重影响光合作用，是夏季主要害虫。">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-green-600"></iconify-icon>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800">红蜘蛛</h3>
-                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">螨类</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="openEditModal('insect-1')" class="p-1 text-gray-400 hover:text-blue-600">
-                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
-                            </button>
-                            <button onclick="openDeleteModal('insect-1')" class="p-1 text-gray-400 hover:text-red-600">
-                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">吸食叶片汁液，导致叶片失绿变白，严重影响光合作用，是夏季主要害虫。</p>
-                    <div class="flex items-center space-x-4 text-xs text-gray-500">
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>28-35°C</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>夏季</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>高风险</span>
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="insect-2" data-name="潜叶蛾" data-type="蛾类" data-temperature="25-30°C" data-season="夏梢期" data-risk="高风险" data-desc="幼虫潜入嫩叶表皮下取食，形成弯曲虫道，影响叶片正常生长和光合作用。">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-purple-600"></iconify-icon>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800">潜叶蛾</h3>
-                                <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded">蛾类</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="openEditModal('insect-2')" class="p-1 text-gray-400 hover:text-blue-600">
-                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
-                            </button>
-                            <button onclick="openDeleteModal('insect-2')" class="p-1 text-gray-400 hover:text-red-600">
-                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">幼虫潜入嫩叶表皮下取食，形成弯曲虫道，影响叶片正常生长和光合作用。</p>
-                    <div class="flex items-center space-x-4 text-xs text-gray-500">
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>25-30°C</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>夏梢期</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon">高风险</span>
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="insect-3" data-name="蚜虫" data-type="其他" data-temperature="20-28°C" data-season="春梢期" data-risk="中风险" data-desc="群集于嫩梢、嫩叶上吸食汁液，分泌蜜露引发煤烟病，影响树势和果实品质。">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-orange-600"></iconify-icon>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800">蚜虫</h3>
-                                <span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded">其他</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="openEditModal('insect-3')" class="p-1 text-gray-400 hover:text-blue-600">
-                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
-                            </button>
-                            <button onclick="openDeleteModal('insect-3')" class="p-1 text-gray-400 hover:text-red-600">
-                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">群集于嫩梢、嫩叶上吸食汁液，分泌蜜露引发煤烟病，影响树势和果实品质。</p>
-                    <div class="flex items-center space-x-4 text-xs text-gray-500">
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>20-28°C</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>春梢期</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon>中风险</span>
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="insect-4" data-name="介壳虫" data-type="其他" data-temperature="22-28°C" data-season="全年" data-risk="中风险" data-desc="附着于枝干和叶片上吸食汁液，严重时导致枝叶枯萎，分泌蜜露引发煤烟病。">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <iconify-icon icon="material-symbols:bug-report" class="w-6 h-6 text-blue-600"></iconify-icon>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-gray-800">介壳虫</h3>
-                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">其他</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="openEditModal('insect-4')" class="p-1 text-gray-400 hover:text-blue-600">
-                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
-                            </button>
-                            <button onclick="openDeleteModal('insect-4')" class="p-1 text-gray-400 hover:text-red-600">
-                                <iconify-icon icon="material-symbols:delete" class="w-4 h-4"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">附着于枝干和叶片上吸食汁液，严重时导致枝叶枯萎，分泌蜜露引发煤烟病。</p>
-                    <div class="flex items-center space-x-4 text-xs text-gray-500">
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:thermometer" class="w-3 h-3 mr-1"></iconify-icon>22-28°C</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:calendar" class="w-3 h-3 mr-1"></iconify-icon>全年</span>
-                        <span class="flex items-center"><iconify-icon icon="material-symbols:alert-circle" class="w-3 h-3 mr-1"></iconify-icon">中风险</span>
-                    </div>
-                </div>
+            <div id="insect-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             </div>
 
             <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                <p class="text-sm text-gray-500">共 6 条记录</p>
+                <p class="text-sm text-gray-500">共 <span id="total-count">20</span> 条记录</p>
                 <div class="flex items-center space-x-2">
                     <button onclick="prevPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
-                    <button class="px-3 py-1 bg-green-600 text-white rounded text-sm" id="current-page">1</button>
+                    <span class="text-sm text-gray-600"><span id="current-page">1</span> / <span id="total-pages">4</span></span>
                     <button onclick="nextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                    <select id="page-size" class="px-3 py-1 border border-gray-300 rounded text-sm" onchange="changePageSize()">
+                        <option value="6">6条/页</option>
+                        <option value="10">10条/页</option>
+                        <option value="20">20条/页</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -176,11 +80,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     添加虫害
                 </h3>
                 <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -231,11 +135,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     编辑虫害
                 </h3>
                 <button onclick="closeModal('edit-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -286,7 +190,7 @@
         <div class="modal-content">
             <div class="p-6 text-center">
                 <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <iconify-icon icon="material-symbols:delete" class="w-8 h-8 text-red-500"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
                 <p class="text-sm text-gray-500 mb-6">确定要删除这条虫害数据吗？此操作不可撤销。</p>
@@ -298,9 +202,193 @@
         </div>
     </div>
 
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    虫害详情
+                </h3>
+                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm text-gray-500 mb-1">虫害名称</label>
+                        <p class="text-sm font-medium text-gray-800" id="detail-name"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-500 mb-1">虫害类型</label>
+                        <p class="text-sm font-medium text-gray-800" id="detail-type"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-500 mb-1">适宜温度</label>
+                        <p class="text-sm font-medium text-gray-800" id="detail-temperature"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-500 mb-1">高发季节</label>
+                        <p class="text-sm font-medium text-gray-800" id="detail-season"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-500 mb-1">风险等级</label>
+                        <p class="text-sm font-medium text-gray-800" id="detail-risk"></p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-500 mb-1">虫害描述</label>
+                    <p class="text-sm text-gray-800" id="detail-desc"></p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end">
+                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="import-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    导入虫害数据
+                </h3>
+                <button onclick="closeModal('import-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition cursor-pointer" onclick="document.getElementById('import-file').click()">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <p class="text-gray-600 mb-2">点击或拖拽文件到此处上传</p>
+                    <p class="text-sm text-gray-400">支持 Excel (.xlsx)、CSV 文件</p>
+                    <input type="file" id="import-file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportFile(this)">
+                </div>
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-700 flex items-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        导入模板说明：虫害名称为必填字段
+                    </p>
+                </div>
+                <div class="mt-4 flex justify-between items-center">
+                    <button onclick="downloadTemplate()" class="text-blue-600 hover:text-blue-700 text-sm flex items-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        下载导入模板
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('import-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
+                <button onclick="submitImport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">开始导入</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const insects = [
+            { id: 'insect-1', name: '红蜘蛛', type: '螨类', temperature: '28-35°C', season: '夏季', risk: '高风险', desc: '吸食叶片汁液，导致叶片失绿变白，严重影响光合作用，是夏季主要害虫。' },
+            { id: 'insect-2', name: '潜叶蛾', type: '蛾类', temperature: '25-30°C', season: '夏梢期', risk: '高风险', desc: '幼虫潜入嫩叶表皮下取食，形成弯曲虫道，影响叶片正常生长和光合作用。' },
+            { id: 'insect-3', name: '蚜虫', type: '其他', temperature: '20-28°C', season: '春梢期', risk: '中风险', desc: '群集于嫩梢、嫩叶上吸食汁液，分泌蜜露引发煤烟病，影响树势和果实品质。' },
+            { id: 'insect-4', name: '介壳虫', type: '其他', temperature: '22-28°C', season: '全年', risk: '中风险', desc: '附着于枝干和叶片上吸食汁液，严重时导致枝叶枯萎，分泌蜜露引发煤烟病。' },
+            { id: 'insect-5', name: '木虱', type: '虱类', temperature: '20-28°C', season: '春秋季', risk: '高风险', desc: '传播黄龙病的主要媒介，吸食汁液同时传播病菌，对蜜桔产业危害极大。' },
+            { id: 'insect-6', name: '粉虱', type: '虱类', temperature: '25-30°C', season: '夏季', risk: '中风险', desc: '群集叶片背面吸食汁液，分泌蜜露引发煤烟病，影响光合作用和果实品质。' },
+            { id: 'insect-7', name: '锈壁虱', type: '螨类', temperature: '25-30°C', season: '夏季', risk: '中风险', desc: '危害叶片和果实，导致叶片发黄和果实变黑，影响外观品质。' },
+            { id: 'insect-8', name: '卷叶蛾', type: '蛾类', temperature: '20-25°C', season: '春季', risk: '低风险', desc: '幼虫卷叶取食，影响叶片光合作用，严重时导致叶片残缺。' },
+            { id: 'insect-9', name: '食心虫', type: '蛾类', temperature: '22-28°C', season: '果实膨大期', risk: '中风险', desc: '幼虫蛀入果实内部取食，导致果实腐烂脱落，严重影响产量。' },
+            { id: 'insect-10', name: '天牛', type: '其他', temperature: '20-25°C', season: '夏季', risk: '中风险', desc: '幼虫蛀食枝干木质部，破坏输导组织，导致树势衰弱甚至死亡。' },
+            { id: 'insect-11', name: '金龟子', type: '其他', temperature: '25-30°C', season: '夏季', risk: '低风险', desc: '成虫取食叶片和花朵，幼虫啃食根部，影响树体生长。' },
+            { id: 'insect-12', name: '凤蝶', type: '蛾类', temperature: '25-30°C', season: '春夏季', risk: '低风险', desc: '幼虫取食叶片，严重时可将叶片吃光，影响树势和产量。' },
+            { id: 'insect-13', name: '叶甲', type: '其他', temperature: '22-28°C', season: '春季', risk: '低风险', desc: '成虫和幼虫均取食叶片，导致叶片残缺，影响光合作用。' },
+            { id: 'insect-14', name: '蓟马', type: '其他', temperature: '20-25°C', season: '春季', risk: '中风险', desc: '取食嫩叶和幼果，导致叶片畸形和果实表皮粗糙，影响商品价值。' },
+            { id: 'insect-15', name: '象鼻虫', type: '其他', temperature: '18-25°C', season: '春季', risk: '低风险', desc: '成虫取食叶片和嫩梢，幼虫蛀食根部，影响树体生长。' },
+            { id: 'insect-16', name: '草履蚧', type: '其他', temperature: '15-20°C', season: '春季', risk: '中风险', desc: '早春活动的介壳虫，吸食汁液导致树势衰弱，分泌蜜露引发煤烟病。' },
+            { id: 'insect-17', name: '黑刺粉虱', type: '虱类', temperature: '25-30°C', season: '夏季', risk: '中风险', desc: '群集叶片背面吸食汁液，分泌蜜露引发煤烟病，影响光合作用。' },
+            { id: 'insect-18', name: '蚜虫', type: '虱类', temperature: '20-25°C', season: '全年', risk: '中风险', desc: '多种蚜虫危害蜜桔，吸食汁液传播病毒病，影响树势和产量。' },
+            { id: 'insect-19', name: '柑橘小实蝇', type: '其他', temperature: '25-30°C', season: '夏季', risk: '高风险', desc: '成虫产卵于果实内，幼虫蛀食果肉，导致果实腐烂脱落。' },
+            { id: 'insect-20', name: '跳甲', type: '其他', temperature: '22-28°C', season: '春季', risk: '低风险', desc: '成虫跳跃取食叶片，幼虫蛀食根部，影响树体生长。' }
+        ];
+
         let currentPage = 1;
+        let pageSize = 6;
         let currentId = null;
+        let filteredInsects = [...insects];
+
+        function getTypeColor(type) {
+            switch(type) {
+                case '螨类': return 'bg-green-100 text-green-700';
+                case '蛾类': return 'bg-purple-100 text-purple-700';
+                case '虱类': return 'bg-blue-100 text-blue-700';
+                default: return 'bg-orange-100 text-orange-700';
+            }
+        }
+
+        function getTypeBgColor(type) {
+            switch(type) {
+                case '螨类': return 'bg-green-100';
+                case '蛾类': return 'bg-purple-100';
+                case '虱类': return 'bg-blue-100';
+                default: return 'bg-orange-100';
+            }
+        }
+
+        function getRiskColor(risk) {
+            switch(risk) {
+                case '高风险': return 'text-red-600';
+                case '中风险': return 'text-yellow-600';
+                case '低风险': return 'text-green-600';
+                default: return 'text-gray-600';
+            }
+        }
+
+        function renderInsects() {
+            const container = document.getElementById('insect-list');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filteredInsects.slice(start, end);
+
+            container.innerHTML = pageData.map(insect => `
+                <div class="border border-gray-200 rounded-xl p-4 hover:border-green-300 hover:shadow-md transition" data-id="${insect.id}" data-name="${insect.name}" data-type="${insect.type}" data-temperature="${insect.temperature}" data-season="${insect.season}" data-risk="${insect.risk}" data-desc="${insect.desc}">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 ${getTypeBgColor(insect.type)} rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7h-9m0 0V5a3 3 0 016 0v2m-6 0a3 3 0 00-6 0v10a3 3 0 006 0m10-3a2 2 0 11-4 0 2 2 0 014 0zM17 10H7m0 0l3-3m-3 3l3 3"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">${insect.name}</h3>
+                                <span class="px-2 py-0.5 ${getTypeColor(insect.type)} text-xs rounded">${insect.type}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openDetailModal('${insect.id}')" class="p-1 text-gray-400 hover:text-blue-600" title="查看详情">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                            <button onclick="openEditModal('${insect.id}')" class="p-1 text-gray-400 hover:text-blue-600" title="编辑">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button onclick="openDeleteModal('${insect.id}')" class="p-1 text-gray-400 hover:text-red-600" title="删除">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">${insect.desc}</p>
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span class="flex items-center"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>${insect.temperature}</span>
+                        <span class="flex items-center"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${insect.season}</span>
+                        <span class="flex items-center ${getRiskColor(insect.risk)}"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.66 1.732-3L13.732 4c-.77-1.34-2.694-1.34-3.464 0L3.34 16c-.77 1.34.192 3 1.732 3z"/></svg>${insect.risk}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredInsects.length / pageSize);
+            document.getElementById('total-count').textContent = filteredInsects.length;
+            document.getElementById('current-page').textContent = currentPage;
+            document.getElementById('total-pages').textContent = totalPages;
+        }
 
         function openAddModal() {
             document.getElementById('add-name').value = '';
@@ -310,6 +398,46 @@
             document.getElementById('add-risk').value = '中风险';
             document.getElementById('add-desc').value = '';
             document.getElementById('add-modal').classList.add('active');
+        }
+
+        function openImportModal() {
+            document.getElementById('import-file').value = '';
+            document.getElementById('import-modal').classList.add('active');
+        }
+
+        function handleImportFile(input) {
+            const file = input.files[0];
+            if (file) {
+                alert('已选择文件: ' + file.name);
+            }
+        }
+
+        function downloadTemplate() {
+            const content = '虫害名称,虫害类型,适宜温度,高发季节,风险等级,虫害描述\n红蜘蛛,螨类,25-30°C,夏季,高风险,危害叶片导致落叶';
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '虫害导入模板.csv';
+            link.click();
+        }
+
+        function submitImport() {
+            const file = document.getElementById('import-file').files[0];
+            if (!file) {
+                alert('请先选择要导入的文件');
+                return;
+            }
+            alert('虫害数据导入成功！\n文件: ' + file.name + '\n导入数量: 5 条');
+            closeModal('import-modal');
+        }
+
+        function exportInsects() {
+            const content = insects.map(i => `${i.name},${i.type},${i.temperature},${i.season},${i.risk},${i.desc}`).join('\n');
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '虫害列表_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
         }
 
         function openEditModal(id) {
@@ -324,6 +452,19 @@
                 document.getElementById('edit-desc').value = card.getAttribute('data-desc');
             }
             document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function openDetailModal(id) {
+            const card = document.querySelector(`div[data-id="${id}"]`);
+            if (card) {
+                document.getElementById('detail-name').textContent = card.getAttribute('data-name');
+                document.getElementById('detail-type').textContent = card.getAttribute('data-type');
+                document.getElementById('detail-temperature').textContent = card.getAttribute('data-temperature');
+                document.getElementById('detail-season').textContent = card.getAttribute('data-season');
+                document.getElementById('detail-risk').textContent = card.getAttribute('data-risk');
+                document.getElementById('detail-desc').textContent = card.getAttribute('data-desc');
+            }
+            document.getElementById('detail-modal').classList.add('active');
         }
 
         function openDeleteModal(id) {
@@ -359,39 +500,48 @@
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const typeFilter = document.getElementById('type-filter').value;
             
-            const cards = document.querySelectorAll('.border[data-id]');
-            
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                const type = card.getAttribute('data-type');
-                
-                const matchesSearch = name.includes(searchTerm);
-                const matchesType = !typeFilter || type === typeFilter;
-                
-                card.style.display = matchesSearch && matchesType ? '' : 'none';
+            filteredInsects = insects.filter(i => {
+                const matchesSearch = i.name.toLowerCase().includes(searchTerm) || i.desc.toLowerCase().includes(searchTerm);
+                const matchesType = !typeFilter || i.type === typeFilter;
+                return matchesSearch && matchesType;
             });
+            
+            currentPage = 1;
+            renderInsects();
         }
 
         function resetFilter() {
             document.getElementById('search-input').value = '';
             document.getElementById('type-filter').value = '';
-            filterInsects();
+            filteredInsects = [...insects];
+            currentPage = 1;
+            renderInsects();
         }
 
         function prevPage() {
+            const totalPages = Math.ceil(filteredInsects.length / pageSize);
             if (currentPage > 1) {
                 currentPage--;
-                document.getElementById('current-page').textContent = currentPage;
+                renderInsects();
             }
         }
 
         function nextPage() {
-            currentPage++;
-            document.getElementById('current-page').textContent = currentPage;
+            const totalPages = Math.ceil(filteredInsects.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderInsects();
+            }
+        }
+
+        function changePageSize() {
+            pageSize = parseInt(document.getElementById('page-size').value);
+            currentPage = 1;
+            renderInsects();
         }
 
         document.addEventListener('click', (e) => {
-            ['add-modal', 'edit-modal', 'delete-modal'].forEach(modalId => {
+            ['add-modal', 'edit-modal', 'delete-modal', 'detail-modal', 'import-modal'].forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 const btn = e.target.closest('[onclick*="' + modalId + '"]');
                 if (!modal.contains(e.target) && !btn) {
@@ -399,6 +549,8 @@
                 }
             });
         });
+
+        renderInsects();
     </script>
 </body>
 </html>

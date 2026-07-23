@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>南丰蜜桔生长模型监测</title>
+    <title>南丰蜜桔生长模型</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/dashboard-design-system.css">
@@ -226,10 +226,10 @@
         .kpi-card.danger:hover {
             box-shadow: 0 12px 32px rgba(239,68,68,0.15);
         }
-        .kpi-info h4 { font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 500; letter-spacing: 0.5px; }
+        .kpi-info h4 { font-size: 13px; color: #64748b; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px; }
         .kpi-number { 
             font-size: 1.7rem; 
-            font-weight: 800; 
+            font-weight: 400; 
             background: linear-gradient(135deg, #166534, #22c55e);
             -webkit-background-clip: text;
             background-clip: text;
@@ -420,54 +420,86 @@
             display: flex;
             flex-direction: column;
             min-height: 260px;
-            height: fit-content;
+            height: 420px;
+        }
+        .compact-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 260px;
+            height: 280px;
         }
         .center-map-card {
             display: flex;
             flex-direction: column;
             padding: 1rem;
             position: relative;
-            height: 600px;
+            height: 1160px;
         }
         #orchardMap {
             width: 100%;
-            height: 380px;
+            height: 650px;
             border-radius: 20px;
-            background: linear-gradient(135deg, #1e4d30 0%, #2b6e3c 50%, #1a4a28 100%);
+            background: 
+                radial-gradient(circle at 25% 30%, rgba(34,197,94,0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 65%, rgba(34,197,94,0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #f0fdf4 100%);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e2e8f0;
+        }
+        #orchardMap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 1;
         }
         .nanfeng-map {
             width: 100%;
             height: 100%;
+            position: relative;
+            z-index: 3;
         }
         .map-bubble {
             cursor: pointer;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
             transition: all 0.3s ease;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
         }
         .map-bubble:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
         }
-        .bubble-service { fill: #3b82f6; }
-        .bubble-enterprise { fill: #ef4444; }
-        .bubble-cooperative { fill: #f59e0b; }
-        .bubble-demonstration { fill: #22c55e; }
-        .bubble-largegrower { fill: #8b5cf6; }
-        .bubble-iot { fill: #06b6d4; }
+        .bubble-service { fill: #3b82f6; animation: bubblePulse 3s ease-in-out infinite; }
+        .bubble-enterprise { fill: #ef4444; animation: bubblePulse 2.5s ease-in-out infinite 0.2s; }
+        .bubble-cooperative { fill: #f59e0b; animation: bubblePulse 3.5s ease-in-out infinite 0.4s; }
+        .bubble-demonstration { fill: #22c55e; animation: bubblePulse 2.8s ease-in-out infinite 0.6s; }
+        .bubble-largegrower { fill: #8b5cf6; animation: bubblePulse 3.2s ease-in-out infinite 0.8s; }
+        .bubble-iot { fill: #06b6d4; animation: bubblePulse 2s ease-in-out infinite 1s; }
+        @keyframes bubblePulse {
+            0%, 100% { opacity: 0.8; transform-origin: center; }
+            50% { opacity: 1; }
+        }
         .map-legend {
             position: absolute;
             bottom: 16px;
             left: 16px;
-            background: rgba(255,255,255,0.95);
-            padding: 12px 16px;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 18px;
             border-radius: 12px;
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            font-size: 12px;
+            gap: 14px;
+            font-size: 11px;
+            color: #475569;
             z-index: 10;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
         .legend-item {
             display: flex;
@@ -475,20 +507,24 @@
             gap: 6px;
         }
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
+            box-shadow: 0 0 4px currentColor;
         }
         .map-popup {
             display: none;
             position: absolute;
-            background: white;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.12);
             z-index: 100;
             min-width: 260px;
             max-width: 320px;
+            border: 1px solid rgba(0,0,0,0.06);
         }
         .map-popup.active { display: block; }
         .popup-header {
@@ -499,10 +535,10 @@
             padding-bottom: 8px;
             border-bottom: 1px solid #e2e8f0;
         }
-        .popup-title { font-weight: 600; color: #1e293b; }
+        .popup-title { font-weight: 600; color: #166534; font-size: 13px; }
         .popup-close { cursor: pointer; color: #94a3b8; }
         .popup-close:hover { color: #64748b; }
-        .popup-content { font-size: 13px; }
+        .popup-content { font-size: 12px; }
         .popup-row {
             display: flex;
             justify-content: space-between;
@@ -514,45 +550,56 @@
         .scrolling-cards {
             margin-top: 16px;
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 0;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            height: 172px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            min-height: 0;
+        }
+        .scrolling-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 2px solid #f1f5f9;
+            background: #fafafa;
+        }
+        .scrolling-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
         }
         .scrolling-tabs {
             display: flex;
-            gap: 8px;
-            padding: 12px 16px;
-            border-bottom: 1px solid #f1f5f9;
+            gap: 6px;
         }
         .scrolling-tab {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
             color: #64748b;
-            background: #f8fafc;
+            background: white;
+            border: 1px solid #e2e8f0;
         }
         .scrolling-tab.active {
             background: #2b6e3c;
             color: white;
             font-weight: 500;
+            border-color: #2b6e3c;
         }
-        .scrolling-tab:hover { background: #e2e8f0; }
+        .scrolling-tab:hover { background: #f1f5f9; }
         .scrolling-tab.active:hover { background: #22c55e; }
         .scrolling-container {
-            height: calc(100% - 48px);
+            height: calc(100% - 52px);
             overflow-y: hidden;
             position: relative;
         }
         .scrolling-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
             animation: scrollUp 30s linear infinite;
         }
         .scrolling-wrapper:hover {
@@ -562,6 +609,20 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-50%); }
         }
+        .scrolling-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrolling-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        .scrolling-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #cbd5e1, #94a3b8);
+            border-radius: 3px;
+        }
+        .scrolling-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #94a3b8, #64748b);
+        }
         .scrolling-table {
             width: 100%;
             border-collapse: collapse;
@@ -569,7 +630,7 @@
         }
         .scrolling-table th {
             background: #f8fafc;
-            padding: 10px 12px;
+            padding: 10px 14px;
             text-align: left;
             font-weight: 600;
             color: #475569;
@@ -577,12 +638,15 @@
             top: 0;
             z-index: 1;
             white-space: nowrap;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 12px;
         }
         .scrolling-table td {
-            padding: 10px 12px;
+            padding: 10px 14px;
             border-bottom: 1px solid #f1f5f9;
             color: #334155;
             white-space: nowrap;
+            font-size: 12px;
         }
         .scrolling-table tr:hover td { background: #f8fafc; }
         .scrolling-table .warning-cell { color: #ef4444; font-weight: 500; }
@@ -622,15 +686,15 @@
         .env-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 8px;
         }
         .env-card {
             background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 10px;
+            padding: 10px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             border: 1px solid #e2e8f0;
             transition: all 0.2s ease;
         }
@@ -639,33 +703,33 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .env-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             background: linear-gradient(135deg, #eef6ef 0%, #d1fae5 100%);
             color: #2b6e3c;
             box-shadow: 0 2px 8px rgba(43,110,60,0.1);
         }
         .env-info { flex: 1; }
-        .env-value { font-size: 1.2rem; font-weight: 700; color: #1e293b; background: linear-gradient(135deg, #1e293b, #475569); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .env-label { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+        .env-value { font-size: 1rem; font-weight: 700; color: #1e293b; background: linear-gradient(135deg, #1e293b, #475569); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .env-label { font-size: 0.65rem; color: #64748b; margin-top: 1px; }
         .health-index-container {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 12px;
+            padding: 16px;
             background: linear-gradient(135deg, #f0fdf4, #dcfce7);
             border-radius: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
-        .health-ring { width: 80px; height: 80px; position: relative; }
+        .health-ring { width: 90px; height: 90px; position: relative; }
         .health-info { flex: 1; }
-        .health-score { font-size: 1.6rem; font-weight: 700; color: #2b6e3c; }
-        .health-status { font-size: 0.85rem; color: #16a34a; font-weight: 500; }
+        .health-score { font-size: 1.8rem; font-weight: 700; color: #2b6e3c; }
+        .health-status { font-size: 0.9rem; color: #16a34a; font-weight: 500; }
         .health-breakdown {
             display: flex;
             gap: 12px;
@@ -674,7 +738,7 @@
         }
         .health-item { display: flex; align-items: center; gap: 4px; }
         .health-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .warning-list { overflow-y: auto; max-height: 180px; }
+        .warning-list { flex: 1; overflow-y: hidden; }
         .warning-item {
             background: #fff5f5;
             border-left: 3px solid #ef4444;
@@ -687,8 +751,13 @@
             border-left-color: #f59e0b;
             background: #fffbeb;
         }
+        .warning-item.warning-info {
+            border-left-color: #22c55e;
+            background: #f0fdf4;
+        }
         .warning-title { font-weight: 600; color: #dc2626; margin-bottom: 4px; }
         .warning-warning .warning-title { color: #d97706; }
+        .warning-info .warning-title { color: #166534; }
         .warning-time { font-size: 0.75rem; color: #64748b; }
         .phenology-stage-list {
             display: flex;
@@ -739,12 +808,12 @@
 <div class="dashboard-container">
     <div class="header">
         <div class="title-section">
-            <h1><i class="fas fa-leaf" style="color:#2b6e3c;"></i> 南丰蜜桔生长模型监测</h1>
-            <p>全域纳入 | 智能预测 | 精准管控</p>
+            <h1><i class="fas fa-leaf" style="color:#2b6e3c;"></i> 南丰蜜桔生长模型</h1>
+            <p>演算生长规律，铸就蜜桔优品</p>
         </div>
         <div class="platform-entries">
             <a href="pest_dashboard.html" class="platform-entry" title="病虫害与气象灾害预警">
-                <i class="fas fa-bug"></i> 病虫害监测
+                <i class="fas fa-bug"></i> 病虫害模型
             </a>
             <a href="../backhand/index.html" class="platform-entry" title="进入电脑端系统">
                 <i class="fas fa-desktop"></i> 电脑端
@@ -825,8 +894,8 @@
 
     <div class="map-core-grid">
         <div class="side-col">
-            <div class="card side-card">
-                <div class="card-header"><span><i class="fas fa-sensors"></i> 环境监测实时数据</span><span class="header-extra">实时更新</span></div>
+            <div class="card compact-card">
+                <div class="card-header"><span><i class="fas fa-sensors"></i> 环境监测数据</span><span class="header-extra">实时更新</span></div>
                 <div class="env-grid">
                     <div class="env-card">
                         <div class="env-icon"><i class="fas fa-temperature-three-quarters"></i></div>
@@ -905,7 +974,7 @@
                         <div class="warning-title">长势缓慢提醒</div>
                         <div class="warning-time">市山镇 · 1小时前</div>
                     </div>
-                    <div class="warning-item">
+                    <div class="warning-item warning-info">
                         <div class="warning-title">养分缺乏预警</div>
                         <div class="warning-time">白舍镇 · 2小时前</div>
                     </div>
@@ -920,62 +989,151 @@
         <div class="card center-map-card">
             <div class="card-header"><span><i class="fas fa-map-pin"></i> 全县果园分布总览</span><span style="font-size:0.8rem;color:#64748b;">实时监控</span></div>
             <div id="orchardMap">
+                <div class="map-title-overlay" style="position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;pointer-events:none;">
+                    <div style="font-size:18px;font-weight:700;color:#166534;letter-spacing:2px;">南丰县果园分布总览</div>
+                    <div style="font-size:11px;color:#94a3b8;margin-top:2px;letter-spacing:1px;">NANFENG · ORCHARD DISTRIBUTION</div>
+                </div>
                 <svg class="nanfeng-map" viewBox="0 0 500 320">
                     <defs>
                         <pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse">
-                            <path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+                            <path d="M 15 0 L 0 0 0 15" fill="none" stroke="rgba(148,163,184,0.06)" stroke-width="0.5"/>
                         </pattern>
+                        <linearGradient id="mapAreaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#e8f5e9" stop-opacity="0.9"/>
+                            <stop offset="50%" stop-color="#d4ead4" stop-opacity="0.7"/>
+                            <stop offset="100%" stop-color="#e0f2e0" stop-opacity="0.9"/>
+                        </linearGradient>
+                        <linearGradient id="townGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#c8e6c9" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#a5d6a7" stop-opacity="0.3"/>
+                        </linearGradient>
+                        <filter id="mapGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <filter id="bubbleGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#grid)"/>
-                    <path d="M50,100 Q80,70 130,65 L180,55 Q230,45 280,55 L330,60 Q380,65 420,95 L450,130 Q460,170 450,210 L410,245 Q360,270 300,265 L240,270 Q180,275 130,250 L80,220 Q50,180 50,100 Z" fill="#166534" stroke="#22c55e" stroke-width="1.5"/>
-                    <path d="M50,100 Q80,70 130,65 L180,55 Q230,45 280,55 L330,60 Q380,65 420,95 L450,130 L450,165 L400,145 L350,130 L300,135 L250,125 L200,130 L150,120 L100,130 L50,140 L50,100 Z" fill="#15803d" stroke="#4ade80" stroke-width="1" opacity="0.5"/>
-                    <path d="M100,85 L150,80 L170,110 L120,120 L100,100 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M180,75 L240,70 L260,100 L210,110 L180,95 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M270,75 L330,70 L350,105 L300,115 L270,100 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M360,85 L420,95 L440,140 L380,135 L360,110 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M100,160 L150,155 L170,190 L120,200 L100,180 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M180,165 L240,160 L260,195 L210,205 L180,185 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M270,170 L330,165 L350,200 L300,210 L270,190 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M360,180 L420,190 L440,230 L380,235 L360,210 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M100,220 L150,230 L170,255 L120,260 L100,245 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M180,235 L240,240 L260,265 L210,270 L180,255 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <path d="M270,240 L330,245 L350,270 L300,275 L270,260 Z" fill="#166534" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
-                    <text x="125" y="95" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">太和镇</text>
-                    <text x="210" y="85" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">桑田镇</text>
-                    <text x="300" y="85" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">白舍镇</text>
-                    <text x="390" y="110" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">市山镇</text>
-                    <text x="390" y="245" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">洽湾镇</text>
-                    <text x="120" y="250" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="500">东坪乡</text>
-                    <text x="250" y="160" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="36" font-weight="bold">南丰县</text>
-                    <circle cx="115" cy="110" r="14" class="map-bubble bubble-service" data-type="service" data-index="0"/>
-                    <circle cx="200" cy="95" r="18" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="0"/>
-                    <circle cx="275" cy="105" r="12" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="0"/>
-                    <circle cx="355" cy="100" r="16" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="0"/>
-                    <circle cx="420" cy="125" r="10" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="0"/>
-                    <circle cx="145" cy="165" r="8" class="map-bubble bubble-iot" data-type="iot" data-index="0"/>
-                    <circle cx="220" cy="155" r="10" class="map-bubble bubble-iot" data-type="iot" data-index="1"/>
-                    <circle cx="300" cy="160" r="7" class="map-bubble bubble-iot" data-type="iot" data-index="2"/>
-                    <circle cx="380" cy="150" r="9" class="map-bubble bubble-iot" data-type="iot" data-index="3"/>
-                    <circle cx="245" cy="90" r="11" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="1"/>
-                    <circle cx="370" cy="85" r="13" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="1"/>
-                    <circle cx="410" cy="180" r="10" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="1"/>
-                    <circle cx="170" cy="145" r="12" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="1"/>
-                    <circle cx="290" cy="195" r="10" class="map-bubble bubble-service" data-type="service" data-index="1"/>
-                    <circle cx="210" cy="200" r="8" class="map-bubble bubble-iot" data-type="iot" data-index="4"/>
-                    <circle cx="330" cy="185" r="6" class="map-bubble bubble-iot" data-type="iot" data-index="5"/>
-                    <circle cx="430" cy="145" r="11" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="2"/>
-                    <circle cx="130" cy="185" r="9" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="2"/>
-                    <circle cx="350" cy="200" r="8" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="2"/>
-                    <circle cx="270" cy="215" r="7" class="map-bubble bubble-iot" data-type="iot" data-index="6"/>
-                    <circle cx="390" cy="210" r="8" class="map-bubble bubble-iot" data-type="iot" data-index="7"/>
+                    <g filter="url(#mapGlow)">
+                        <path d="M35,120 Q60,70 100,55 Q150,40 200,45 Q250,50 300,45 Q350,40 400,55 Q440,70 465,110 Q480,160 470,200 Q455,240 420,260 Q370,280 310,275 Q250,270 190,275 Q130,280 80,260 Q45,240 30,200 Q20,160 35,120 Z" fill="url(#mapAreaGrad)" stroke="#86b89a" stroke-width="1.5"/>
+                    </g>
+                    <path d="M110,70 L160,60 L185,90 L135,100 L110,80 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M190,65 L250,55 L275,85 L225,95 L190,75 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M280,60 L340,50 L365,80 L315,90 L280,70 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M370,70 L420,85 L440,120 L390,115 L370,90 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M90,160 L140,150 L165,185 L125,195 L100,175 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M175,155 L235,145 L260,180 L220,190 L185,165 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M260,150 L320,140 L345,175 L305,185 L270,155 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M355,160 L415,175 L435,210 L395,205 L365,180 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M80,220 L130,230 L155,260 L115,265 L90,245 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M165,225 L225,235 L250,265 L210,270 L180,250 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <path d="M250,230 L310,240 L335,270 L295,275 L265,250 Z" fill="url(#townGrad)" stroke="rgba(134,184,154,0.5)" stroke-width="1" opacity="0.8"/>
+                    <text x="135" y="78" fill="#475569" font-size="11" font-weight="500">太和镇</text>
+                    <text x="220" y="72" fill="#475569" font-size="11" font-weight="500">桑田镇</text>
+                    <text x="310" y="67" fill="#475569" font-size="11" font-weight="500">白舍镇</text>
+                    <text x="400" y="95" fill="#475569" font-size="11" font-weight="500">市山镇</text>
+                    <text x="405" y="230" fill="#475569" font-size="11" font-weight="500">洽湾镇</text>
+                    <text x="110" y="245" fill="#475569" font-size="11" font-weight="500">东坪乡</text>
+                    <text x="250" y="170" text-anchor="middle" fill="rgba(22,101,52,0.08)" font-size="40" font-weight="bold">南丰县</text>
+                    <g filter="url(#bubbleGlow)">
+                        <!-- 原有21个气泡（半径减半） -->
+                        <circle cx="130" cy="90" r="8" class="map-bubble bubble-service" data-type="service" data-index="0"/>
+                        <circle cx="215" cy="75" r="10" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="0"/>
+                        <circle cx="295" cy="70" r="7" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="0"/>
+                        <circle cx="380" cy="85" r="9" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="0"/>
+                        <circle cx="440" cy="120" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="0"/>
+                        <circle cx="155" cy="175" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="0"/>
+                        <circle cx="235" cy="165" r="6" class="map-bubble bubble-iot" data-type="iot" data-index="1"/>
+                        <circle cx="315" cy="160" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="2"/>
+                        <circle cx="395" cy="180" r="6" class="map-bubble bubble-iot" data-type="iot" data-index="3"/>
+                        <circle cx="255" cy="70" r="7" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="1"/>
+                        <circle cx="390" cy="75" r="8" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="1"/>
+                        <circle cx="425" cy="190" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="1"/>
+                        <circle cx="190" cy="155" r="7" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="1"/>
+                        <circle cx="310" cy="200" r="6" class="map-bubble bubble-service" data-type="service" data-index="1"/>
+                        <circle cx="230" cy="210" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="4"/>
+                        <circle cx="350" cy="195" r="4" class="map-bubble bubble-iot" data-type="iot" data-index="5"/>
+                        <circle cx="445" cy="160" r="7" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="2"/>
+                        <circle cx="145" cy="200" r="6" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="2"/>
+                        <circle cx="370" cy="215" r="5" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="2"/>
+                        <circle cx="290" cy="230" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="6"/>
+                        <circle cx="410" cy="220" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="7"/>
+                        <!-- 新增 service 4个 -->
+                        <circle cx="170" cy="80" r="8" class="map-bubble bubble-service" data-type="service" data-index="2"/>
+                        <circle cx="335" cy="70" r="7" class="map-bubble bubble-service" data-type="service" data-index="3"/>
+                        <circle cx="295" cy="245" r="6" class="map-bubble bubble-service" data-type="service" data-index="4"/>
+                        <circle cx="115" cy="165" r="7" class="map-bubble bubble-service" data-type="service" data-index="5"/>
+                        <!-- 新增 enterprise 4个 -->
+                        <circle cx="165" cy="70" r="9" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="2"/>
+                        <circle cx="415" cy="95" r="10" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="3"/>
+                        <circle cx="275" cy="245" r="8" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="4"/>
+                        <circle cx="235" cy="65" r="9" class="map-bubble bubble-enterprise" data-type="enterprise" data-index="5"/>
+                        <!-- 新增 cooperative 6个 -->
+                        <circle cx="325" cy="80" r="7" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="3"/>
+                        <circle cx="430" cy="105" r="7" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="4"/>
+                        <circle cx="110" cy="185" r="6" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="5"/>
+                        <circle cx="250" cy="90" r="7" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="6"/>
+                        <circle cx="150" cy="90" r="6" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="7"/>
+                        <circle cx="265" cy="250" r="6" class="map-bubble bubble-cooperative" data-type="cooperative" data-index="8"/>
+                        <!-- 新增 demonstration 6个 -->
+                        <circle cx="160" cy="85" r="8" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="3"/>
+                        <circle cx="320" cy="250" r="7" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="4"/>
+                        <circle cx="135" cy="175" r="7" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="5"/>
+                        <circle cx="220" cy="90" r="8" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="6"/>
+                        <circle cx="365" cy="75" r="8" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="7"/>
+                        <circle cx="435" cy="130" r="8" class="map-bubble bubble-demonstration" data-type="demonstration" data-index="8"/>
+                        <!-- 新增 largegrower 6个 -->
+                        <circle cx="345" cy="70" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="3"/>
+                        <circle cx="200" cy="85" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="4"/>
+                        <circle cx="120" cy="225" r="5" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="5"/>
+                        <circle cx="175" cy="170" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="6"/>
+                        <circle cx="335" cy="240" r="5" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="7"/>
+                        <circle cx="430" cy="150" r="6" class="map-bubble bubble-largegrower" data-type="largegrower" data-index="8"/>
+                        <!-- 新增 iot 16个 -->
+                        <circle cx="125" cy="95" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="8"/>
+                        <circle cx="240" cy="60" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="9"/>
+                        <circle cx="305" cy="90" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="10"/>
+                        <circle cx="420" cy="80" r="6" class="map-bubble bubble-iot" data-type="iot" data-index="11"/>
+                        <circle cx="270" cy="245" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="12"/>
+                        <circle cx="100" cy="195" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="13"/>
+                        <circle cx="175" cy="180" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="14"/>
+                        <circle cx="265" cy="160" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="15"/>
+                        <circle cx="345" cy="175" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="16"/>
+                        <circle cx="430" cy="175" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="17"/>
+                        <circle cx="255" cy="235" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="18"/>
+                        <circle cx="120" cy="250" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="19"/>
+                        <circle cx="195" cy="240" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="20"/>
+                        <circle cx="380" cy="230" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="21"/>
+                        <circle cx="135" cy="215" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="22"/>
+                        <circle cx="400" cy="200" r="5" class="map-bubble bubble-iot" data-type="iot" data-index="23"/>
+                    </g>
                 </svg>
                 <div class="map-legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>农事服务中心</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>企业</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>合作社</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>示范果园</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div>种植大户</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div>物联网设备</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;color:#3b82f6;"></div>农事服务中心</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#ef4444;color:#ef4444;"></div>企业</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;color:#f59e0b;"></div>合作社</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#22c55e;color:#22c55e;"></div>示范果园</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;color:#8b5cf6;"></div>种植大户</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;color:#06b6d4;"></div>物联网设备</div>
+                </div>
+                <div style="position:absolute;top:14px;right:14px;z-index:10;display:flex;gap:10px;pointer-events:none;">
+                    <div style="background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:8px 14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                        <div style="font-size:20px;font-weight:700;color:#166534;">2,847</div>
+                        <div style="font-size:10px;color:#94a3b8;margin-top:1px;">果园总数</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:8px 14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                        <div style="font-size:20px;font-weight:700;color:#22c55e;">19.8<span style="font-size:12px;">万亩</span></div>
+                        <div style="font-size:10px;color:#94a3b8;margin-top:1px;">种植总面积</div>
+                    </div>
                 </div>
                 <div class="map-popup" id="mapPopup">
                     <div class="popup-header">
@@ -986,18 +1144,21 @@
                 </div>
             </div>
             <div class="scrolling-cards">
-                <div class="scrolling-tabs">
-                    <div class="scrolling-tab active" onclick="switchTab('all', this)">全部</div>
-                    <div class="scrolling-tab" onclick="switchTab('enterprise', this)">企业</div>
-                    <div class="scrolling-tab" onclick="switchTab('cooperative', this)">合作社</div>
-                    <div class="scrolling-tab" onclick="switchTab('demonstration', this)">示范果园</div>
+                <div class="scrolling-header">
+                    <div class="scrolling-title">涉农主体数据</div>
+                    <div class="scrolling-tabs">
+                        <div class="scrolling-tab active" onclick="switchTab('all', this)">全部</div>
+                        <div class="scrolling-tab" onclick="switchTab('enterprise', this)">企业</div>
+                        <div class="scrolling-tab" onclick="switchTab('cooperative', this)">合作社</div>
+                        <div class="scrolling-tab" onclick="switchTab('demonstration', this)">示范果园</div>
+                    </div>
                 </div>
                 <div class="scrolling-container" id="scrollingContainer"></div>
             </div>
         </div>
 
         <div class="side-col">
-            <div class="card side-card">
+            <div class="card compact-card">
                 <div class="card-header"><span><i class="fas fa-chart-line"></i> 品质预测趋势</span><span class="header-extra">未来30天</span></div>
                 <div id="qualityTrendChart" class="chart-box"></div>
             </div>
@@ -1064,16 +1225,7 @@
         </div>
     </div>
 
-    <div class="row-grid">
-        <div class="card">
-            <div class="card-header"><span><i class="fas fa-chart-bar"></i> 果园基础概况</span></div>
-            <div id="orchardProfileChart" class="chart-box"></div>
-        </div>
-        <div class="card">
-            <div class="card-header"><span><i class="fas fa-chart-area"></i> 健康度趋势分析</span><span class="header-extra">近7天</span></div>
-            <div id="healthTrendWeekChart" class="chart-box"></div>
-        </div>
-    </div>
+    
 </div>
 
 <script>
@@ -1120,7 +1272,7 @@
             type: 'bar',
             data: [45, 38, 17],
             itemStyle: {
-                color: ['#22c55e', '#f59e0b', '#ef4444'],
+                color: ['#166534', '#22c55e', '#4ade80'],
                 borderRadius: [6, 6, 0, 0]
             }
         }]
@@ -1180,61 +1332,57 @@
         }]
     });
 
-    var orchardProfileChart = echarts.init(document.getElementById('orchardProfileChart'));
-    orchardProfileChart.setOption({
-        tooltip: { trigger: 'axis' },
-        legend: { data: ['种植面积(亩)', '果园数量'], bottom: 0 },
-        grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
-        xAxis: { type: 'category', data: ['太和镇', '桑田镇', '白舍镇', '市山镇', '洽湾镇', '东坪乡'] },
-        yAxis: [{ type: 'value', name: '面积(亩)' }, { type: 'value', name: '数量(个)', position: 'right' }],
-        series: [
-            { name: '种植面积(亩)', type: 'bar', data: [28500, 24300, 21800, 19600, 17200, 14600], itemStyle: { color: '#2b6e3c', borderRadius: [4, 4, 0, 0] } },
-            { name: '果园数量', type: 'line', yAxisIndex: 1, data: [586, 498, 445, 398, 352, 298], smooth: true, itemStyle: { color: '#f59e0b' } }
-        ]
-    });
-
-    var healthTrendWeekChart = echarts.init(document.getElementById('healthTrendWeekChart'));
-    healthTrendWeekChart.setOption({
-        tooltip: { trigger: 'axis' },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        xAxis: { type: 'category', data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] },
-        yAxis: { type: 'value', min: 80, max: 90, axisLabel: { formatter: '{value}分' } },
-        series: [{
-            type: 'line',
-            data: [83.2, 84.5, 85.1, 84.8, 85.6, 86.2, 86.5],
-            smooth: true,
-            areaStyle: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                    { offset: 0, color: 'rgba(43,110,60,0.3)' }, { offset: 1, color: 'rgba(43,110,60,0.05)' }
-                ])
-            },
-            itemStyle: { color: '#2b6e3c' }
-        }]
-    });
+    
 
     var entityData = {
         service: [
             { name: '南丰县农业技术推广中心', address: '太和镇', area: 0, person: '李建国', yield: 0, stage: '-', health: '-', warning: '无' },
-            { name: '南丰县植保站服务中心', address: '市山镇', area: 0, person: '王志强', yield: 0, stage: '-', health: '-', warning: '无' }
+            { name: '南丰县植保站服务中心', address: '市山镇', area: 0, person: '王志强', yield: 0, stage: '-', health: '-', warning: '无' },
+            { name: '南丰县桑田农技服务站', address: '桑田镇', area: 0, person: '陈国强', yield: 0, stage: '-', health: '-', warning: '无' },
+            { name: '南丰县白舍农技推广站', address: '白舍镇', area: 0, person: '刘建军', yield: 0, stage: '-', health: '-', warning: '无' },
+            { name: '南丰县洽湾农业服务中心', address: '洽湾镇', area: 0, person: '黄国平', yield: 0, stage: '-', health: '-', warning: '无' },
+            { name: '南丰县东坪农事服务站', address: '东坪乡', area: 0, person: '吴建华', yield: 0, stage: '-', health: '-', warning: '无' }
         ],
         enterprise: [
             { name: '江西南丰蜜桔产业集团', address: '桑田镇', area: 2800, person: '张明华', yield: '4200吨', stage: '果实膨大期', health: '88.5%', warning: '无' },
-            { name: '南丰县绿源果业有限公司', address: '白舍镇', area: 1560, person: '刘芳', yield: '2340吨', stage: '果实膨大期', health: '85.2%', warning: '灌溉不足预警' }
+            { name: '南丰县绿源果业有限公司', address: '白舍镇', area: 1560, person: '刘芳', yield: '2340吨', stage: '果实膨大期', health: '85.2%', warning: '灌溉不足预警' },
+            { name: '南丰县金果农业开发有限公司', address: '太和镇', area: 1850, person: '张志远', yield: '2775吨', stage: '果实膨大期', health: '87.3%', warning: '无' },
+            { name: '南丰县昌隆果业公司', address: '市山镇', area: 1320, person: '陈伟明', yield: '1980吨', stage: '果实膨大期', health: '86.1%', warning: '无' },
+            { name: '江西桔都果业有限责任公司', address: '洽湾镇', area: 2100, person: '李大海', yield: '3150吨', stage: '果实膨大期', health: '84.7%', warning: '高温预警' },
+            { name: '南丰县丰源果业集团', address: '桑田镇', area: 1750, person: '周明辉', yield: '2625吨', stage: '果实膨大期', health: '88.9%', warning: '无' }
         ],
         cooperative: [
             { name: '南丰县丰收合作社', address: '太和镇', area: 890, person: '陈大山', yield: '1335吨', stage: '果实膨大期', health: '87.8%', warning: '无' },
             { name: '南丰县富民农业合作社', address: '桑田镇', area: 650, person: '赵晓峰', yield: '975吨', stage: '果实膨大期', health: '84.1%', warning: '无' },
-            { name: '南丰县兴旺种植合作社', address: '洽湾镇', area: 420, person: '孙伟', yield: '630吨', stage: '落果期', health: '82.3%', warning: '无' }
+            { name: '南丰县兴旺种植合作社', address: '洽湾镇', area: 420, person: '孙伟', yield: '630吨', stage: '落果期', health: '82.3%', warning: '无' },
+            { name: '南丰县金橙合作社', address: '白舍镇', area: 720, person: '吴大勇', yield: '1080吨', stage: '果实膨大期', health: '85.6%', warning: '无' },
+            { name: '南丰县利民果业合作社', address: '市山镇', area: 560, person: '李德发', yield: '840吨', stage: '果实膨大期', health: '83.4%', warning: '无' },
+            { name: '南丰县宏图种植合作社', address: '东坪乡', area: 380, person: '赵永强', yield: '570吨', stage: '落果期', health: '81.2%', warning: '无' },
+            { name: '南丰县振兴合作社', address: '桑田镇', area: 590, person: '钱国华', yield: '885吨', stage: '果实膨大期', health: '84.8%', warning: '无' },
+            { name: '南丰县联合种植合作社', address: '太和镇', area: 450, person: '孙建明', yield: '675吨', stage: '果实膨大期', health: '82.7%', warning: '无' },
+            { name: '南丰县共赢农业合作社', address: '洽湾镇', area: 480, person: '周大海', yield: '720吨', stage: '落果期', health: '83.1%', warning: '无' }
         ],
         demonstration: [
             { name: '南丰县示范果园基地', address: '白舍镇', area: 1200, person: '周建国', yield: '1800吨', stage: '果实膨大期', health: '92.1%', warning: '无' },
             { name: '南丰县优质蜜桔示范区', address: '桑田镇', area: 950, person: '吴丽华', yield: '1425吨', stage: '果实膨大期', health: '89.6%', warning: '无' },
-            { name: '南丰县绿色种植示范园', address: '市山镇', area: 780, person: '郑伟', yield: '1170吨', stage: '果实膨大期', health: '90.3%', warning: '无' }
+            { name: '南丰县绿色种植示范园', address: '市山镇', area: 780, person: '郑伟', yield: '1170吨', stage: '果实膨大期', health: '90.3%', warning: '无' },
+            { name: '南丰县精品蜜桔示范区', address: '太和镇', area: 860, person: '马建国', yield: '1290吨', stage: '果实膨大期', health: '91.5%', warning: '无' },
+            { name: '南丰县高标准示范果园', address: '洽湾镇', area: 680, person: '胡志远', yield: '1020吨', stage: '果实膨大期', health: '89.8%', warning: '无' },
+            { name: '南丰县有机种植示范园', address: '东坪乡', area: 520, person: '徐明德', yield: '780吨', stage: '果实膨大期', health: '90.6%', warning: '无' },
+            { name: '南丰县生态示范果园', address: '桑田镇', area: 730, person: '杨春华', yield: '1095吨', stage: '果实膨大期', health: '91.2%', warning: '无' },
+            { name: '南丰县智慧农业示范区', address: '白舍镇', area: 850, person: '朱国强', yield: '1275吨', stage: '果实膨大期', health: '92.5%', warning: '无' },
+            { name: '南丰县标准化种植示范园', address: '市山镇', area: 640, person: '秦伟明', yield: '960吨', stage: '果实膨大期', health: '89.3%', warning: '无' }
         ],
         largegrower: [
             { name: '种植大户-黄小明', address: '太和镇', area: 280, person: '黄小明', yield: '420吨', stage: '果实膨大期', health: '86.7%', warning: '无' },
             { name: '种植大户-林秀英', address: '市山镇', area: 220, person: '林秀英', yield: '330吨', stage: '果实膨大期', health: '83.9%', warning: '养分不足提醒' },
-            { name: '种植大户-许志强', address: '洽湾镇', area: 190, person: '许志强', yield: '285吨', stage: '落果期', health: '81.5%', warning: '无' }
+            { name: '种植大户-许志强', address: '洽湾镇', area: 190, person: '许志强', yield: '285吨', stage: '落果期', health: '81.5%', warning: '无' },
+            { name: '种植大户-陈大伟', address: '白舍镇', area: 260, person: '陈大伟', yield: '390吨', stage: '果实膨大期', health: '85.4%', warning: '无' },
+            { name: '种植大户-刘美兰', address: '桑田镇', area: 210, person: '刘美兰', yield: '315吨', stage: '果实膨大期', health: '84.2%', warning: '无' },
+            { name: '种植大户-张国庆', address: '东坪乡', area: 175, person: '张国庆', yield: '263吨', stage: '落果期', health: '80.8%', warning: '无' },
+            { name: '种植大户-李冬梅', address: '太和镇', area: 230, person: '李冬梅', yield: '345吨', stage: '果实膨大期', health: '86.1%', warning: '无' },
+            { name: '种植大户-王建军', address: '洽湾镇', area: 195, person: '王建军', yield: '293吨', stage: '落果期', health: '82.4%', warning: '无' },
+            { name: '种植大户-赵秀芬', address: '市山镇', area: 250, person: '赵秀芬', yield: '375吨', stage: '果实膨大期', health: '85.7%', warning: '水分不足提醒' }
         ],
         iot: [
             { name: '土壤监测站-A001', address: '太和镇', person: '张技术员', humidity: '68.5%', temperature: '26.8°C', nutrient: '中等', light: '856 W/m²' },
@@ -1244,7 +1392,23 @@
             { name: '灌溉控制站-C001', address: '太和镇', person: '孙技术员', humidity: '65.2%', temperature: '27.1°C', nutrient: '-', light: '-' },
             { name: '土壤监测站-A005', address: '桑田镇', person: '周技术员', humidity: '70.1%', temperature: '26.2°C', nutrient: '中等', light: '820 W/m²' },
             { name: '环境监测站-D001', address: '白舍镇', person: '吴技术员', humidity: '62.4%', temperature: '28.9°C', nutrient: '-', light: '910 W/m²' },
-            { name: '气象监测站-B006', address: '洽湾镇', person: '郑技术员', humidity: '58.6%', temperature: '30.2°C', nutrient: '-', light: '750 W/m²' }
+            { name: '气象监测站-B006', address: '洽湾镇', person: '郑技术员', humidity: '58.6%', temperature: '30.2°C', nutrient: '-', light: '750 W/m²' },
+            { name: '土壤监测站-A007', address: '太和镇', person: '黄技术员', humidity: '64.3%', temperature: '27.5°C', nutrient: '中等', light: '835 W/m²' },
+            { name: '气象监测站-B008', address: '桑田镇', person: '陈技术员', humidity: '57.1%', temperature: '31.8°C', nutrient: '-', light: '735 W/m²' },
+            { name: '土壤监测站-A009', address: '白舍镇', person: '刘技术员', humidity: '71.8%', temperature: '25.9°C', nutrient: '充足', light: '875 W/m²' },
+            { name: '灌溉控制站-C002', address: '市山镇', person: '马技术员', humidity: '63.7%', temperature: '28.2°C', nutrient: '-', light: '-' },
+            { name: '环境监测站-D002', address: '洽湾镇', person: '杨技术员', humidity: '60.5%', temperature: '29.3°C', nutrient: '-', light: '845 W/m²' },
+            { name: '土壤监测站-A010', address: '东坪乡', person: '徐技术员', humidity: '69.2%', temperature: '26.5°C', nutrient: '中等', light: '860 W/m²' },
+            { name: '气象监测站-B011', address: '太和镇', person: '胡技术员', humidity: '55.8%', temperature: '32.5°C', nutrient: '-', light: '710 W/m²' },
+            { name: '灌溉控制站-C003', address: '桑田镇', person: '朱技术员', humidity: '66.3%', temperature: '27.8°C', nutrient: '-', light: '-' },
+            { name: '环境监测站-D003', address: '白舍镇', person: '秦技术员', humidity: '61.7%', temperature: '28.6°C', nutrient: '-', light: '895 W/m²' },
+            { name: '土壤监测站-A012', address: '市山镇', person: '何技术员', humidity: '67.9%', temperature: '26.9°C', nutrient: '中等', light: '830 W/m²' },
+            { name: '气象监测站-B013', address: '洽湾镇', person: '罗技术员', humidity: '59.3%', temperature: '30.8°C', nutrient: '-', light: '765 W/m²' },
+            { name: '虫情监测站-E001', address: '太和镇', person: '高技术员', humidity: '63.1%', temperature: '27.6°C', nutrient: '-', light: '820 W/m²' },
+            { name: '虫情监测站-E002', address: '桑田镇', person: '林技术员', humidity: '56.4%', temperature: '31.9°C', nutrient: '-', light: '740 W/m²' },
+            { name: '水质监测站-F001', address: '白舍镇', person: '谢技术员', humidity: '68.7%', temperature: '26.3°C', nutrient: '-', light: '870 W/m²' },
+            { name: '土壤监测站-A014', address: '东坪乡', person: '宋技术员', humidity: '70.5%', temperature: '25.8°C', nutrient: '充足', light: '880 W/m²' },
+            { name: '气象监测站-B015', address: '市山镇', person: '唐技术员', humidity: '58.2%', temperature: '30.5°C', nutrient: '-', light: '755 W/m²' }
         ]
     };
 
@@ -1390,8 +1554,6 @@
         qualityTrendChart.resize();
         farmingSuggestionChart.resize();
         growthStageChart.resize();
-        orchardProfileChart.resize();
-        healthTrendWeekChart.resize();
     });
 
     function animateNumbers() {

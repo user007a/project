@@ -3,319 +3,440 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>南丰蜜桔智慧果园 - 首页</title>
+  <title>南丰蜜桔 - 首页</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
+  <style>
+    .mb-header-home {
+      background: var(--gradient-header);
+      position: relative;
+    }
+    
+    .mb-header-home::before {
+      display: none;
+    }
+    
+    .mb-header-home::after {
+      display: none;
+    }
+    
+    .header-weather {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--font-sm);
+      background: rgba(255,255,255,0.16);
+      padding: 6px 10px;
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .header-weather svg { width: 18px; height: 18px; opacity: 0.9; }
+    .weather-temp { font-weight: 700; font-size: var(--font-md); text-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .weather-desc { font-size: var(--font-2xs); opacity: 0.85; margin-left: 2px; }
+
+    .header-status-bar {
+      display: flex;
+      gap: 6px;
+      background: rgba(255,255,255,0.16);
+      border-radius: var(--radius-lg);
+      padding: 6px 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .header-status-item {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: var(--font-2xs);
+    }
+    .header-status-item svg { width: 14px; height: 14px; opacity: 0.85; }
+    .header-status-num {
+      font-size: var(--font-sm);
+      font-weight: 700;
+    }
+    .header-status-item.warning .header-status-num { color: #ff9a9e; }
+    .header-status-item.risk .header-status-num { color: #ffe082; }
+
+    .header-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .marquee-tag {
+      font-size: 10px;
+      padding: 1px 7px;
+      border-radius: var(--radius-sm);
+      margin-right: 5px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .marquee-tag.model { background: linear-gradient(135deg, var(--primary), var(--primary-500)); color: #fff; }
+    .marquee-tag.alert { background: var(--error); color: #fff; }
+    .marquee-tag.news { background: var(--primary-100); color: var(--primary-700); }
+    .marquee-tag.farming { background: var(--success-bg); color: var(--success); }
+    .marquee-tag.device { background: var(--info-bg); color: var(--info); }
+    .mb-marquee-content span { margin-right: 60px; cursor: pointer; }
+
+    .env-value-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .mb-task-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .mb-task-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+    }
+    .mb-task-card.pending::before { background: var(--warning); }
+    .mb-task-card.doing::before { background: var(--primary); }
+
+    .news-tag {
+      font-size: var(--font-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .news-tag.important { background: var(--error-light); color: var(--error-dark); }
+    .news-tag.training { background: var(--primary-50); color: var(--primary-700); }
+    .news-tag.technology { background: var(--info-light); color: var(--info-dark); }
+
+    .news-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-bottom: 4px;
+    }
+
+    .env-value-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 1px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    .env-value-wrap .mb-env-trend {
+      display: inline;
+      margin-top: 0;
+      margin-left: 3px;
+      font-size: var(--font-xs);
+    }
+  </style>
 </head>
 <body>
   <div class="mb-app">
-    <div class="page-header mb-header-home">
+    <div class="mb-header-home">
       <div class="header-brand">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
-          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
-          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-        </svg>
-        <span class="header-title">南丰蜜桔智慧果园</span>
-      </div>
-      <div class="header-subtitle">中国蜜桔之乡 · 科学种植引领者</div>
-    </div>
-
-    <div class="content">
-      <div class="mb-marquee">
-        <div class="mb-marquee-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/>
-          </svg>
-        </div>
-        <div class="mb-marquee-wrapper" id="marqueeWrapper">
-          <div class="mb-marquee-content" id="marqueeContent">
-            <div onclick="showMessageDetail(0)" class="marquee-item">【高温预警】今日气温预计达38°C，请做好果园降温防暑工作</div>
-            <div onclick="showMessageDetail(1)" class="marquee-item">【提醒】南丰蜜桔正处于果实膨大期，建议加强水肥管理</div>
-            <div onclick="showMessageDetail(2)" class="marquee-item">【病虫害预警】近期红蜘蛛发生趋势上升，请及时防治</div>
-            <div onclick="showMessageDetail(3)" class="marquee-item">【建议】根据土壤监测数据，本周适宜进行叶面喷肥</div>
-            <div onclick="showMessageDetail(4)" class="marquee-item">【通知】南丰县农业技术推广中心将于7月25日举办夏季管理培训班</div>
-          </div>
-        </div>
+        <div class="header-title">南丰蜜桔</div>
       </div>
 
-      <div class="card">
-        <div class="card-title">今日农事推荐</div>
-        <div class="list-item" onclick="navigateTo('mb_data_suggestion.html')">
-          <div class="list-icon green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-            </svg>
+      <div class="header-bottom">
+        <div class="header-weather">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+          <div>
+            <span class="weather-temp">35°C</span>
+            <span class="weather-desc">晴</span>
           </div>
-          <div class="list-content">
-            <div class="list-title">夏季叶面施肥</div>
-            <div class="list-subtitle">当前果实膨大期，建议喷施磷酸二氢钾</div>
-          </div>
-          <span class="tag tag-primary">推荐</span>
         </div>
-        <div class="list-item" onclick="navigateTo('mb_data_monitor.html')">
-          <div class="list-icon blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">抗旱灌溉</div>
-            <div class="list-subtitle">土壤湿度52%，建议今晚进行滴灌</div>
-          </div>
-          <span class="tag tag-warning">紧急</span>
-        </div>
-        <div class="list-item" onclick="navigateTo('mb_disease_ai.html')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">病虫害防控</div>
-            <div class="list-subtitle">红蜘蛛风险等级较高，建议立即喷药</div>
-          </div>
-          <span class="tag tag-danger">高风险</span>
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-title">农事日历</div>
-        <div class="mb-grid mb-grid-2">
-          <div class="mb-grid-item">
-            <div style="font-size: 28px; font-weight: bold; color: var(--secondary);">7月22日</div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">星期二 · 果实膨大期</div>
-            <div class="progress-bar" style="margin-top: 8px;">
-              <div class="progress-fill" style="width: 45%; background: var(--gradient-secondary);"></div>
-            </div>
-            <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">距采摘约60天</div>
+        <div class="header-status-bar">
+          <div class="header-status-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            <span class="header-status-num">3</span>
+            <span>待办</span>
           </div>
-          <div class="mb-grid-item">
-            <div style="font-size: 14px; color: var(--text-secondary);">今日农事重点</div>
-            <div style="font-size: 12px; color: var(--text); margin-top: 4px; line-height: 1.6;">• 叶面喷施磷酸二氢钾<br>• 傍晚滴灌抗旱<br>• 巡查红蜘蛛发生情况</div>
+          <div class="header-status-item warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 9 3 3"/><path d="M12 17h.01"/></svg>
+            <span class="header-status-num">2</span>
+            <span>预警</span>
           </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">快捷服务</div>
-        <div class="service-grid">
-          <div class="service-item" onclick="navigateTo('mb_data_orchard.html')">
-            <div class="service-icon green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div class="service-name">我的果园</div>
+          <div class="header-status-item risk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="header-status-num">3</span>
+            <span>高风险</span>
           </div>
-          <div class="service-item" onclick="navigateTo('mb_data_input.html')">
-            <div class="service-icon blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <line x1="12" y1="1" x2="12" y2="23"/>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-              </svg>
-            </div>
-            <div class="service-name">数据录入</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_disease_ai.html')">
-            <div class="service-icon orange">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                <circle cx="12" cy="13" r="4"/>
-              </svg>
-            </div>
-            <div class="service-name">AI识别</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_data_monitor.html')">
-            <div class="service-icon purple">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                <line x1="8" y1="21" x2="16" y2="21"/>
-                <line x1="12" y1="17" x2="12" y2="21"/>
-              </svg>
-            </div>
-            <div class="service-name">设备监测</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_disease_knowledge.html')">
-            <div class="service-icon green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10 9 9 9 8 9"/>
-              </svg>
-            </div>
-            <div class="service-name">知识库</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_news_list.html')">
-            <div class="service-icon blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10 9 9 9 8 9"/>
-              </svg>
-            </div>
-            <div class="service-name">农技资讯</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_data_suggestion.html')">
-            <div class="service-icon orange">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-              </svg>
-            </div>
-            <div class="service-name">智能建议</div>
-          </div>
-          <div class="service-item" onclick="navigateTo('mb_disease_report.html')">
-            <div class="service-icon red">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11l2 2m-2-2v10a1 1 0 0 1-1 1h-3m-6 0a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1m-6 0h6"/>
-              </svg>
-            </div>
-            <div class="service-name">预警上报</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">农技资讯</div>
-        <div class="news-card" onclick="navigateTo('mb_news_detail.html')">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanfeng%20tangerine%20summer%20management%20orange%20orchard%20comprehensive%20care&image_size=landscape_4_3" class="news-image" alt="夏季管理">
-          <div class="news-title">南丰蜜桔夏季高温期综合管理技术规程</div>
-          <div class="news-meta">发布时间：2026-07-20 | 阅读量：2341</div>
-        </div>
-        <div class="news-card" onclick="navigateTo('mb_news_detail.html')">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanfeng%20tangerine%20fruit%20growth%20stage%20fertilization%20orange%20trees&image_size=landscape_4_3" class="news-image" alt="科学施肥">
-          <div class="news-title">南丰蜜桔果实膨大期科学施肥方案</div>
-          <div class="news-meta">发布时间：2026-07-18 | 阅读量：1892</div>
-        </div>
-        <div class="news-card" onclick="navigateTo('mb_news_detail.html')">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Nanfeng%20tangerine%20red%20spider%20mite%20pest%20control%20orange%20tree%20leaves&image_size=landscape_4_3" class="news-image" alt="红蜘蛛防治">
-          <div class="news-title">2026年南丰蜜桔红蜘蛛防治技术要点</div>
-          <div class="news-meta">发布时间：2026-07-15 | 阅读量：3105</div>
         </div>
       </div>
     </div>
 
-    <nav class="tab-bar">
-      <a href="mb_home.html" class="tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <div class="mb-marquee">
+      <svg class="mb-marquee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="mb-marquee-wrap">
+        <div class="mb-marquee-content">
+          <span><span class="marquee-tag model">AI</span>当前果实膨大期，建议加强水肥管理</span>
+          <span><span class="marquee-tag alert">预警</span>A2区土壤湿度偏低，建议立即灌溉</span>
+          <span><span class="marquee-tag farming">农事</span>今日已完成病虫害防治作业</span>
+          <span><span class="marquee-tag device">设备</span>气象站数据更新正常</span>
+          <span><span class="marquee-tag model">AI</span>明日红蜘蛛风险中等，建议喷施药剂</span>
+          <span><span class="marquee-tag news">资讯</span>夏季高温管理技术培训已发布</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-section">
+      <div class="mb-section-title"><span class="mb-section-dot"></span>快捷服务</div>
+      <div class="mb-quick-grid">
+	    <div class="mb-quick-item" onclick="navigateTo('mb_disease_ai.html')">
+          <div class="mb-quick-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+          <div class="mb-quick-name">AI识别</div>
+        </div>
+        <div class="mb-quick-item" onclick="navigateTo('mb_data_suggestion.html')">
+          <div class="mb-quick-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+          <div class="mb-quick-name">智能建议</div>
+        </div>
+        <div class="mb-quick-item" onclick="navigateTo('mb_disease_knowledge.html')">
+          <div class="mb-quick-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <div class="mb-quick-name">病虫害库</div>
+        </div>
+		
+        <div class="mb-quick-item" onclick="navigateTo('mb_data_orchard.html')">
+          <div class="mb-quick-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="mb-quick-name">我的果园</div>
+        </div>
+        <div class="mb-quick-item" onclick="navigateTo('mb_data_monitor.html')">
+          <div class="mb-quick-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="mb-quick-name">设备监测</div>
+        </div>
+        <div class="mb-quick-item" onclick="navigateTo('mb_data_input.html')">
+          <div class="mb-quick-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="mb-quick-name">数据录入</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-section">
+      <div class="flex justify-between items-center mb-3">
+        <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>环境监测</div>
+        <span class="text-xs text-secondary" onclick="navigateTo('mb_data.html')">查看全部 ›</span>
+      </div>
+      <div class="mb-env-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="mb-env-card">
+          <div class="mb-env-name">温度</div>
+          <div class="env-value-wrap">
+            <span class="mb-env-value">35</span><span class="mb-env-unit">°C</span><span class="mb-env-trend up">↑2</span>
+          </div>
+        </div>
+        <div class="mb-env-card">
+          <div class="mb-env-name">湿度</div>
+          <div class="env-value-wrap">
+            <span class="mb-env-value">45</span><span class="mb-env-unit">%</span><span class="mb-env-trend down">↓3</span>
+          </div>
+        </div>
+        <div class="mb-env-card">
+          <div class="mb-env-name">光照</div>
+          <div class="env-value-wrap">
+            <span class="mb-env-value">1250</span><span class="mb-env-unit">lux</span><span class="mb-env-trend">正常</span>
+          </div>
+        </div>
+        <div class="mb-env-card">
+          <div class="mb-env-name">土壤</div>
+          <div class="env-value-wrap">
+            <span class="mb-env-value">52</span><span class="mb-env-unit">%</span><span class="mb-env-trend down">↓5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-section">
+      <div class="flex justify-between items-center mb-3">
+        <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>农事推荐</div>
+        <span class="text-xs text-secondary">查看全部 ›</span>
+      </div>
+      <div class="mb-task-card pending">
+        <div class="mb-task-header">
+          <div class="mb-task-title"><span class="mb-task-dot pending"></span>叶面喷施磷酸二氢钾</div>
+          <div class="mb-task-time">推荐时段：07:00-09:00</div>
+        </div>
+        <div class="mb-task-desc">果实膨大期需补充磷钾，促进果实发育和糖分积累</div>
+      </div>
+      <div class="mb-task-card doing">
+        <div class="mb-task-header">
+          <div class="mb-task-title"><span class="mb-task-dot doing"></span>红蜘蛛防治</div>
+          <div class="mb-task-time">推荐时段：16:00-18:00</div>
+        </div>
+        <div class="mb-task-desc">近期气温升高，红蜘蛛进入高发期，建议及时喷施阿维菌素</div>
+      </div>
+    </div>
+
+    <div class="mb-section">
+      <div class="flex justify-between items-center mb-3">
+        <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>农技资讯</div>
+        <span class="text-xs text-secondary" onclick="navigateTo('mb_news.html')">查看全部 ›</span>
+      </div>
+      <div class="mb-news-card">
+        <div class="news-card-header">
+          <div class="mb-news-title">南丰蜜桔夏季病虫害综合防治技术要点</div>
+          <span class="news-tag important">重要</span>
+        </div>
+        <div class="mb-news-footer">
+          <span>2026-07-22</span>
+          <span>3258人已读</span>
+        </div>
+      </div>
+      <div class="mb-news-card">
+        <div class="news-card-header">
+          <div class="mb-news-title">高温天气下南丰蜜桔灌溉管理技巧</div>
+          <span class="news-tag technology">技术</span>
+        </div>
+        <div class="mb-news-footer">
+          <span>2026-07-21</span>
+          <span>2186人已读</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item active" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>首页</span>
-      </a>
-      <a href="mb_data.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_data.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         <span>数据</span>
-      </a>
-      <a href="mb_disease.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span>病虫害</span>
-      </a>
-      <a href="mb_news.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         <span>资讯</span>
-      </a>
-      <a href="mb_profile.html" class="tab-item">
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>我的</span>
-      </a>
-    </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton screen -->
+  <div class="skeleton-state show" id="skeletonState">
+    <div style="background: var(--gradient-header); padding: 12px 16px 20px; border-radius: 0 0 18px 18px; min-height: 180px;">
+      <div class="mb-skeleton" style="width: 200px; height: 24px; margin-bottom: 12px;"></div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;">
+        <div class="mb-skeleton" style="height: 40px; border-radius: var(--radius-md);"></div>
+        <div class="mb-skeleton" style="height: 40px; border-radius: var(--radius-md);"></div>
+        <div class="mb-skeleton" style="height: 40px; border-radius: var(--radius-md);"></div>
+        <div class="mb-skeleton" style="height: 40px; border-radius: var(--radius-md);"></div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <div class="mb-skeleton" style="flex: 1; height: 40px; border-radius: var(--radius-lg);"></div>
+        <div class="mb-skeleton" style="flex: 1.5; height: 40px; border-radius: var(--radius-lg);"></div>
+      </div>
+    </div>
+    <div style="background: #fff; padding: 12px 16px; border-bottom: 1px solid var(--border);">
+      <div class="mb-skeleton" style="width: 60%; height: 14px;"></div>
+    </div>
+    <div class="mb-section">
+      <div class="mb-skeleton" style="width: 80px; height: 16px; margin-bottom: 12px;"></div>
+      <div class="mb-quick-grid">
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+        <div style="text-align:center;"><div class="mb-skeleton-quick"></div><div class="mb-skeleton" style="width:32px;height:12px;margin:8px auto 0;"></div></div>
+      </div>
+    </div>
+    <div class="mb-section">
+      <div class="mb-skeleton" style="width: 80px; height: 16px; margin-bottom: 12px;"></div>
+      <div class="mb-env-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="mb-skeleton-card" style="padding: 12px; text-align: center;"><div class="mb-skeleton" style="width:40px;height:10px;margin:0 auto 8px;"></div><div class="mb-skeleton" style="width:50px;height:20px;margin:0 auto;"></div></div>
+        <div class="mb-skeleton-card" style="padding: 12px; text-align: center;"><div class="mb-skeleton" style="width:40px;height:10px;margin:0 auto 8px;"></div><div class="mb-skeleton" style="width:50px;height:20px;margin:0 auto;"></div></div>
+        <div class="mb-skeleton-card" style="padding: 12px; text-align: center;"><div class="mb-skeleton" style="width:40px;height:10px;margin:0 auto 8px;"></div><div class="mb-skeleton" style="width:50px;height:20px;margin:0 auto;"></div></div>
+        <div class="mb-skeleton-card" style="padding: 12px; text-align: center;"><div class="mb-skeleton" style="width:40px;height:10px;margin:0 auto 8px;"></div><div class="mb-skeleton" style="width:50px;height:20px;margin:0 auto;"></div></div>
+      </div>
+    </div>
+    <div class="mb-section">
+      <div class="mb-skeleton" style="width: 80px; height: 16px; margin-bottom: 12px;"></div>
+      <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line medium"></div></div>
+      <div style="height:16px;"></div>
+      <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line short"></div></div>
+    </div>
+    <div class="mb-section">
+      <div class="mb-skeleton" style="width: 80px; height: 16px; margin-bottom: 12px;"></div>
+      <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line short"></div></div>
+      <div style="height:16px;"></div>
+      <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line short"></div></div>
+    </div>
+  </div>
+
+  <!-- Message detail pop-up -->
+  <div class="msg-detail-overlay" id="msgDetailOverlay">
+    <div class="msg-detail-modal">
+      <div class="msg-detail-header">
+        <span class="msg-detail-tag" id="msgDetailTag">AI</span>
+        <span class="msg-detail-time" id="msgDetailTime">今天 09:30</span>
+      </div>
+      <div class="msg-detail-title" id="msgDetailTitle">消息标题</div>
+      <div class="msg-detail-content" id="msgDetailContent">消息内容</div>
+      <div class="msg-detail-source">
+        <div class="msg-detail-source-title">来源依据</div>
+        <div class="msg-detail-source-text" id="msgDetailSource">来源信息</div>
+      </div>
+      <button class="msg-detail-btn" onclick="closeMsgDetail()">我知道了</button>
+    </div>
   </div>
 
   <script>
     function navigateTo(page) {
       window.location.href = page;
     }
-    
-    var marqueeIndex = 0;
-    var marqueeTimer;
-    var isPaused = false;
-    
+
     var messages = [
-      { title: '高温预警', content: '今日气温预计达38°C，请做好果园降温防暑工作。建议：1. 上午10点前完成果园浇水；2. 对幼树进行遮阴处理；3. 及时补充叶面水分；4. 注意防暑降温，避免中午高温时段作业。', time: '2026-07-22 08:30' },
-      { title: '农事提醒', content: '南丰蜜桔正处于果实膨大期，建议加强水肥管理。推荐施肥方案：磷酸二氢钾0.3%溶液叶面喷施，每7-10天一次，连续2-3次。同时注意保持土壤湿润，避免干旱影响果实发育。', time: '2026-07-22 09:00' },
-      { title: '病虫害预警', content: '近期红蜘蛛发生趋势上升，请及时防治。监测数据显示，我县部分果园红蜘蛛虫口密度已接近防治指标。建议选用螺螨酯或乙螨唑等药剂进行喷雾防治，注意药剂轮换使用。', time: '2026-07-22 10:00' },
-      { title: '农技建议', content: '根据土壤监测数据，本周适宜进行叶面喷肥。当前土壤养分状况：有机质含量2.1%，pH值5.8，氮磷钾比例协调。建议结合叶面喷肥补充微量元素，提高果实品质。', time: '2026-07-22 11:00' },
-      { title: '培训通知', content: '南丰县农业技术推广中心将于7月25日举办夏季管理培训班。培训内容包括：高温天气果园管理、病虫害综合防治、果实膨大期施肥技术。请广大种植户积极参加。', time: '2026-07-22 14:00' }
+      { tag: 'AI', title: '果实膨大期管理建议', content: '当前处于果实膨大期，建议加强水肥管理，适当增加钾肥施用量，促进果实糖分积累。同时注意保持土壤湿度，避免干旱影响果实发育。', source: '基于气象数据和生长模型分析', time: '今天 08:00' },
+      { tag: '预警', title: '土壤湿度偏低预警', content: 'A2区土壤湿度已降至45%以下，低于适宜生长阈值。建议立即进行灌溉作业，避免因干旱导致果实生长缓慢。', source: '土壤传感器实时监测数据', time: '今天 09:30' },
+      { tag: '农事', title: '病虫害防治完成', content: '今日病虫害防治作业已完成，共喷施药剂3.2亩。药剂类型为阿维菌素，浓度符合标准要求。', source: '作业记录系统', time: '今天 11:30' },
+      { tag: '设备', title: '气象站数据更新', content: '园区气象站数据更新正常，当前温度35°C，湿度45%，光照强度1250lux。', source: '物联网设备监控平台', time: '今天 14:00' },
+      { tag: 'AI', title: '红蜘蛛风险提示', content: '根据AI预测模型，明日红蜘蛛风险等级为中等，建议提前喷施药剂进行预防性防治。', source: '病虫害预测模型', time: '今天 15:00' },
+      { tag: '资讯', title: '夏季高温管理培训', content: '夏季高温管理技术培训已发布，请及时查看学习相关内容。', source: '农技推广平台', time: '今天 16:00' }
     ];
-    
-    function initMarquee() {
-      var wrapper = document.getElementById('marqueeWrapper');
-      if (wrapper) {
-        wrapper.addEventListener('mouseenter', pauseMarquee);
-        wrapper.addEventListener('mouseleave', resumeMarquee);
-        
-        startMarquee();
-      }
-    }
-    
-    function startMarquee() {
-      marqueeTimer = setInterval(function() {
-        if (!isPaused) {
-          marqueeIndex++;
-          if (marqueeIndex >= messages.length) {
-            marqueeIndex = 0;
-          }
-          scrollToItem(marqueeIndex);
-        }
-      }, 4000);
-    }
-    
-    function pauseMarquee() {
-      isPaused = true;
-    }
-    
-    function resumeMarquee() {
-      isPaused = false;
-    }
-    
-    function scrollToItem(index) {
-      var content = document.getElementById('marqueeContent');
-      if (content) {
-        var items = content.querySelectorAll('.marquee-item');
-        if (items[index]) {
-          items.forEach(function(item) {
-            item.style.opacity = '0.5';
-            item.style.fontWeight = 'normal';
-          });
-          items[index].style.opacity = '1';
-          items[index].style.fontWeight = '600';
-          items[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-    }
-    
-    function showMessageDetail(index) {
+
+    function openMsgDetail(index) {
       var msg = messages[index];
-      var modal = document.createElement('div');
-      modal.className = 'modal-overlay show';
-      modal.innerHTML = `
-        <div class="modal">
-          <div class="modal-header">
-            <div class="modal-title">${msg.title}</div>
-          </div>
-          <div class="modal-body">
-            <div style="font-size: 13px; color: var(--text-light); margin-bottom: 12px;">${msg.time}</div>
-            <div style="font-size: 14px; color: var(--text); line-height: 1.6;">${msg.content}</div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">关闭</button>
-            <button class="btn btn-primary" onclick="viewDetail()">查看详情</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
+      document.getElementById('msgDetailTag').textContent = msg.tag;
+      document.getElementById('msgDetailTime').textContent = msg.time;
+      document.getElementById('msgDetailTitle').textContent = msg.title;
+      document.getElementById('msgDetailContent').textContent = msg.content;
+      document.getElementById('msgDetailSource').textContent = msg.source;
+      document.getElementById('msgDetailOverlay').classList.add('show');
     }
-    
-    function viewDetail() {
-      document.querySelector('.modal-overlay').remove();
-      navigateTo('mb_news_detail.html');
+
+    function closeMsgDetail() {
+      document.getElementById('msgDetailOverlay').classList.remove('show');
     }
-    
-    window.addEventListener('load', initMarquee);
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var spans = document.querySelectorAll('.mb-marquee-content span');
+      spans.forEach(function(span, index) {
+        span.onclick = function() {
+          openMsgDetail(index);
+        };
+      });
+
+      setTimeout(function() {
+        document.getElementById('skeletonState').classList.remove('show');
+      }, 800);
+    });
   </script>
 </body>
 </html>

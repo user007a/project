@@ -3,180 +3,388 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>南丰蜜桔智慧果园 - 数据管理</title>
+  <title>南丰蜜桔智慧果园 - 数据</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
+  <style>
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-content { padding-left: 44px; }
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
+    .stats-bar {
+      display: flex; gap: 8px;
+      padding: 0 16px; margin-top: 12px;
+      position: relative; z-index: 10;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .stat-num {
+      font-size: var(--font-lg); font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .chart-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: var(--space-4);
+      padding: 4px;
+      background: var(--gray-100);
+      border-radius: var(--radius-lg);
+    }
+    .chart-tab {
+      flex: 1;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: var(--font-sm);
+      font-weight: var(--font-medium);
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .chart-tab.active {
+      background: var(--bg-white);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .mb-chart-placeholder {
+      padding: var(--space-2) 0;
+    }
+    .mb-chart-title {
+      font-size: var(--font-sm);
+      font-weight: var(--font-semibold);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+    .mb-chart-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 140px;
+      padding: 0 4px;
+    }
+    .mb-bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      gap: 4px;
+    }
+    .mb-bar-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+    .mb-bar-fill {
+      width: 22px;
+      border-radius: 4px 4px 0 0;
+      transition: height var(--transition-slow);
+      min-height: 4px;
+      position: relative;
+    }
+    .mb-bar-fill.temp { background: linear-gradient(180deg, #f87171, #ef4444); }
+    .mb-bar-fill.humi { background: linear-gradient(180deg, #60a5fa, #3b82f6); }
+    .mb-bar-fill.soil { background: linear-gradient(180deg, #a78bfa, #7c3aed); }
+    .mb-bar-item span {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    .mb-env-card-sm .mb-env-icon {
+      width: 28px; height: 28px;
+    }
+    .mb-env-card-sm .mb-env-icon svg {
+      width: 14px; height: 14px;
+    }
+    .mb-env-card-sm .mb-env-name {
+      font-size: 10px;
+    }
+    .mb-env-card-sm .mb-env-value {
+      font-size: var(--font-base);
+    }
+    .mb-env-card-sm .mb-env-unit {
+      font-size: 10px;
+    }
+    .mb-env-card-sm .mb-env-trend {
+      font-size: 10px;
+      margin-top: 0;
+      display: inline;
+    }
+    .mb-env-card-sm .env-value-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      white-space: nowrap;
+      gap: 1px;
+    }
+    .mb-env-card-sm .env-value-wrap .mb-env-trend {
+      margin-left: 3px;
+    }
+
+    .quick-actions {
+      display: flex; gap: 12px;
+      padding: 0 16px 16px;
+    }
+    
+    .quick-action {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .quick-action:active { transform: scale(0.96); }
+    
+    .quick-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .quick-icon svg { width: 22px; height: 22px; }
+    .quick-icon.green { background: var(--primary-light); color: var(--primary); }
+    .quick-icon.blue { background: var(--info-bg); color: var(--info); }
+    .quick-icon.purple { background: var(--purple-bg); color: var(--purple); }
+    
+    .quick-name {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
   <div class="mb-app">
-    <div class="page-header mb-header-detail">
-      <div class="header-nav">
-        <div class="header-back" onclick="window.history.back()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </div>
-        <div class="header-title">数据管理</div>
+    <div class="page-header">
+      <div class="header-back" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       </div>
       <div class="header-content">
-        <div class="header-sub">管理南丰蜜桔果园数据，获取智能分析</div>
+        <div class="header-title">数据管理</div>
+        <div class="header-sub">实时监控果园环境数据</div>
       </div>
     </div>
 
-    <div class="content">
-      <div class="card">
-        <div class="card-title">果园环境实时监测</div>
-        <div class="mb-env-grid">
-          <div class="env-item">
-            <div class="env-icon">🌡️</div>
-            <div class="env-value" style="color: var(--danger);">35.8°C</div>
-            <div class="env-label">空气温度</div>
-          </div>
-          <div class="env-item">
-            <div class="env-icon">💧</div>
-            <div class="env-value">45%</div>
-            <div class="env-label">空气湿度</div>
-          </div>
-          <div class="env-item">
-            <div class="env-icon">🌍</div>
-            <div class="env-value" style="color: var(--warning);">32.1°C</div>
-            <div class="env-label">土壤温度</div>
-          </div>
-          <div class="env-item">
-            <div class="env-icon">🌱</div>
-            <div class="env-value" style="color: var(--warning);">52%</div>
-            <div class="env-label">土壤湿度</div>
-          </div>
-          <div class="env-item">
-            <div class="env-icon">☀️</div>
-            <div class="env-value">1250 lux</div>
-            <div class="env-label">光照强度</div>
-          </div>
-          <div class="env-item">
-            <div class="env-icon">⚡</div>
-            <div class="env-value">1.2 mS/cm</div>
-            <div class="env-label">土壤EC值</div>
-          </div>
-        </div>
-        <div style="margin-top: 12px; font-size: 12px; color: var(--text-light); text-align: center;">
-          数据更新时间：2026-07-22 14:30
-        </div>
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num">6</div>
+        <div class="stat-label">监测指标</div>
       </div>
-
-      <div class="card">
-        <div class="card-title">功能菜单</div>
-        <div class="list-item" onclick="navigateTo('mb_data_orchard.html')">
-          <div class="list-icon green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">我的果园</div>
-            <div class="list-subtitle">管理南丰蜜桔果园基础信息和地块</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="list-item" onclick="navigateTo('mb_data_input.html')">
-          <div class="list-icon blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="1" x2="12" y2="23"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">数据录入</div>
-            <div class="list-subtitle">土壤养分、墒情、农事操作等</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="list-item" onclick="navigateTo('mb_data_monitor.html')">
-          <div class="list-icon purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-              <line x1="8" y1="21" x2="16" y2="21"/>
-              <line x1="12" y1="17" x2="12" y2="21"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">设备监测</div>
-            <div class="list-subtitle">实时数据查看与历史趋势</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="list-item" onclick="navigateTo('mb_data_suggestion.html')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">智能建议</div>
-            <div class="list-subtitle">录入数据生成蜜桔专属农事建议</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-num">8</div>
+        <div class="stat-label">在线设备</div>
       </div>
-
-      <div class="card">
-        <div class="card-title">今日数据概览</div>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value">5</div>
-            <div class="stat-label">录入记录</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">6</div>
-            <div class="stat-label">在线设备</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">15</div>
-            <div class="stat-label">监测点位</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">3</div>
-            <div class="stat-label">农事建议</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">预警提醒</div>
       </div>
     </div>
 
-    <nav class="tab-bar">
-      <a href="mb_home.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>首页</span>
-      </a>
-      <a href="mb_data.html" class="tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span>数据</span>
-      </a>
-      <a href="mb_disease.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <span>病虫害</span>
-      </a>
-      <a href="mb_news.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span>资讯</span>
-      </a>
-      <a href="mb_profile.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>我的</span>
-      </a>
-    </nav>
+    <div class="mb-body">
+      <div class="mb-section">
+        <div class="mb-section-title"><span class="mb-section-dot"></span>环境数据</div>
+        <div class="mb-card">
+          <div class="mb-card-body">
+            <div class="mb-env-grid mb-env-card-sm" style="grid-template-columns: repeat(3, 1fr); gap: 6px;">
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--danger-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+                </div>
+                <div class="mb-env-name">空气温度</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value" style="color: var(--danger);">35.8</div>
+                  <div class="mb-env-unit">°C</div>
+                  <div class="mb-env-trend up">↑2.3</div>
+                </div>
+              </div>
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--info-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                </div>
+                <div class="mb-env-name">空气湿度</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value">45</div>
+                  <div class="mb-env-unit">%</div>
+                  <div class="mb-env-trend down">↓3.2</div>
+                </div>
+              </div>
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--warning-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <div class="mb-env-name">土壤温度</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value" style="color: var(--warning);">32.1</div>
+                  <div class="mb-env-unit">°C</div>
+                  <div class="mb-env-trend up">↑1.8</div>
+                </div>
+              </div>
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--success-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="mb-env-name">土壤湿度</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value" style="color: var(--success);">52</div>
+                  <div class="mb-env-unit">%</div>
+                  <div class="mb-env-trend down">↓5.1</div>
+                </div>
+              </div>
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--primary-50);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+                </div>
+                <div class="mb-env-name">光照强度</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value" style="color: var(--primary);">1250</div>
+                  <div class="mb-env-unit">lux</div>
+                  <div class="mb-env-trend">正常</div>
+                </div>
+              </div>
+              <div class="mb-env-card">
+                <div class="mb-env-icon" style="background: var(--primary-50);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <div class="mb-env-name">土壤EC值</div>
+                <div class="env-value-wrap">
+                  <div class="mb-env-value" style="color: var(--primary);">1.2</div>
+                  <div class="mb-env-unit">mS/cm</div>
+                  <div class="mb-env-trend">正常</div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center text-xs text-secondary mt-3">数据更新时间：2026-07-23 14:30</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-section">
+        <div class="mb-section-title"><span class="mb-section-dot"></span>数据趋势</div>
+        <div class="mb-card">
+          <div class="mb-card-body">
+            <div class="chart-tabs">
+              <div class="chart-tab active" onclick="switchChart('temp', this)">温度</div>
+              <div class="chart-tab" onclick="switchChart('humi', this)">湿度</div>
+              <div class="chart-tab" onclick="switchChart('soil', this)">土壤</div>
+            </div>
+            <div class="mb-chart-placeholder" id="chart-temp">
+              <div class="mb-chart-title">近7日温度变化 (°C)</div>
+              <div class="mb-chart-bar">
+                <div class="mb-bar-item"><div class="mb-bar-label">35</div><div class="mb-bar-fill temp" style="height:65%"></div><span>16日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">37</div><div class="mb-bar-fill temp" style="height:72%"></div><span>17日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">36</div><div class="mb-bar-fill temp" style="height:68%"></div><span>18日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">39</div><div class="mb-bar-fill temp" style="height:85%"></div><span>19日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">41</div><div class="mb-bar-fill temp" style="height:92%"></div><span>20日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">40</div><div class="mb-bar-fill temp" style="height:88%"></div><span>21日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">42</div><div class="mb-bar-fill temp" style="height:100%"></div><span>22日</span></div>
+              </div>
+            </div>
+            <div class="mb-chart-placeholder" id="chart-humi" style="display:none;">
+              <div class="mb-chart-title">近7日湿度变化 (%)</div>
+              <div class="mb-chart-bar">
+                <div class="mb-bar-item"><div class="mb-bar-label">52</div><div class="mb-bar-fill humi" style="height:75%"></div><span>16日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">48</div><div class="mb-bar-fill humi" style="height:65%"></div><span>17日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">45</div><div class="mb-bar-fill humi" style="height:58%"></div><span>18日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">55</div><div class="mb-bar-fill humi" style="height:82%"></div><span>19日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">60</div><div class="mb-bar-fill humi" style="height:95%"></div><span>20日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">42</div><div class="mb-bar-fill humi" style="height:52%"></div><span>21日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">38</div><div class="mb-bar-fill humi" style="height:45%"></div><span>22日</span></div>
+              </div>
+            </div>
+            <div class="mb-chart-placeholder" id="chart-soil" style="display:none;">
+              <div class="mb-chart-title">近7日土壤温湿度变化</div>
+              <div class="mb-chart-bar">
+                <div class="mb-bar-item"><div class="mb-bar-label">30°</div><div class="mb-bar-fill soil" style="height:100%; width:12px;"></div><span>16日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">31°</div><div class="mb-bar-fill soil" style="height:65%; width:12px;"></div><span>17日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">32°</div><div class="mb-bar-fill soil" style="height:75%; width:12px;"></div><span>18日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">33°</div><div class="mb-bar-fill soil" style="height:85%; width:12px;"></div><span>19日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">34°</div><div class="mb-bar-fill soil" style="height:92%; width:12px;"></div><span>20日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">33°</div><div class="mb-bar-fill soil" style="height:88%; width:12px;"></div><span>21日</span></div>
+                <div class="mb-bar-item"><div class="mb-bar-label">34°</div><div class="mb-bar-fill soil" style="height:95%; width:12px;"></div><span>22日</span></div>
+              </div>
+              <div style="margin-top:16px; padding-top:12px; border-top:1px dashed var(--border);">
+                <div class="mb-chart-title" style="font-size:11px;">土壤湿度(%)</div>
+                <div class="mb-chart-bar" style="height:100px;">
+                  <div class="mb-bar-item"><div class="mb-bar-label">48</div><div class="mb-bar-fill humi" style="height:75%"></div><span>16日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">45</div><div class="mb-bar-fill humi" style="height:65%"></div><span>17日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">42</div><div class="mb-bar-fill humi" style="height:55%"></div><span>18日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">50</div><div class="mb-bar-fill humi" style="height:80%"></div><span>19日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">55</div><div class="mb-bar-fill humi" style="height:95%"></div><span>20日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">52</div><div class="mb-bar-fill humi" style="height:85%"></div><span>21日</span></div>
+                  <div class="mb-bar-item"><div class="mb-bar-label">50</div><div class="mb-bar-fill humi" style="height:78%"></div><span>22日</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></div>
+      <div class="mb-tab-item active" onclick="navigateTo('mb_data.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>数据</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>病虫害</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>资讯</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>我的</span></div>
+    </div>
   </div>
 
   <script>
-    function navigateTo(page) {
-      window.location.href = page;
+    function navigateTo(page) { window.location.href = page; }
+    function switchChart(type, el) {
+      document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('chart-temp').style.display = type === 'temp' ? 'block' : 'none';
+      document.getElementById('chart-humi').style.display = type === 'humi' ? 'block' : 'none';
+      document.getElementById('chart-soil').style.display = type === 'soil' ? 'block' : 'none';
     }
   </script>
 </body>

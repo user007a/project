@@ -5,252 +5,502 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>南丰蜜桔智慧果园 - 数据录入</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
+  <style>
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-title {
+      font-size: var(--font-xl);
+      font-weight: 700;
+      padding-left: 44px;
+    }
+    
+    .header-sub {
+      font-size: var(--font-sm);
+      opacity: 0.7;
+      padding-left: 44px;
+      margin-top: 4px;
+    }
+
+    .tab-bar {
+      display: flex;
+      background: var(--bg-white);
+      padding: 4px;
+      margin: 16px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .tab-item {
+      flex: 1;
+      padding: 10px 0;
+      text-align: center;
+      font-size: var(--font-sm);
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .tab-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      margin: 0 16px 16px;
+      box-shadow: var(--shadow-card);
+    }
+    
+    .card-title {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card-title svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+    }
+
+    .form-item {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      font-size: var(--font-sm);
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .form-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-base);
+      color: var(--text);
+      background: var(--bg-white);
+      transition: all var(--transition-fast);
+      box-sizing: border-box;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .form-input::placeholder { color: var(--text-light); }
+    
+    .form-select {
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-base);
+      color: var(--text);
+      background: var(--bg-white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .form-select:focus, .form-select:active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .form-select svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-light);
+    }
+    
+    .form-select-value {
+      color: var(--text-secondary);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .radio-item {
+      flex: 1;
+      padding: 12px;
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+    
+    .radio-item.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+    
+    .radio-item .radio-label {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .btn {
+      height: 48px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition-fast);
+    }
+    
+    .btn:active { transform: scale(0.98); }
+    
+    .btn-block { width: 100%; }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: var(--bg-white);
+      box-shadow: 0 4px 14px rgba(34, 168, 74, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary svg { width: 18px; height: 18px; }
+    
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--text-secondary);
+    }
+    
+    .submit-wrap {
+      padding: 0 16px 16px;
+    }
+
+    .modal-box {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      width: 85%;
+      max-width: 320px;
+      text-align: center;
+    }
+    
+    .modal-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-icon.success { background: var(--success-bg); }
+    .modal-icon.success svg { width: 40px; height: 40px; color: var(--success); }
+    
+    .modal-title {
+      font-size: var(--font-lg);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    
+    .modal-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .modal-btn {
+      width: 100%;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+      color: var(--bg-white);
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: var(--font-base);
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .picker-option {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: var(--font-base);
+      color: var(--text);
+      transition: all var(--transition-fast);
+    }
+    
+    .picker-option:hover {
+      background: var(--primary-light);
+    }
+  </style>
 </head>
 <body>
   <div class="mb-app">
-    <div class="page-header mb-header-detail">
-      <div class="header-nav">
-        <div class="header-back" onclick="window.history.back()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </div>
-        <div class="header-title">数据录入</div>
+    <div class="page-header">
+      <div class="header-back" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
       </div>
-      <div class="header-content">
-        <div class="header-sub">手动录入果园数据</div>
-      </div>
+      <div class="header-title">数据录入</div>
+      <div class="header-sub">记录果园各项数据信息</div>
     </div>
 
-    <div class="content">
-      <div class="card">
-        <div class="card-title">选择录入类型</div>
-        <div class="service-grid">
-          <div class="service-item" onclick="showForm('soil')">
-            <div class="service-icon green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div class="service-name">土壤养分</div>
-          </div>
-          <div class="service-item" onclick="showForm('moisture')">
-            <div class="service-icon blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <div class="service-name">墒情</div>
-          </div>
-          <div class="service-item" onclick="showForm('weather')">
-            <div class="service-icon orange">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M12 2a5.5 5.5 0 0 0-5.5 5.5v1l-1.8 3.4a1.5 1.5 0 0 0 1.3 2.1h11.2a1.5 1.5 0 0 0 1.3-2.1L17.5 8.5V7.5A5.5 5.5 0 0 0 12 2z"/>
-                <path d="M4 16.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                <path d="M12 16.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                <path d="M20 16.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-              </svg>
-            </div>
-            <div class="service-name">温湿度</div>
-          </div>
-          <div class="service-item" onclick="showForm('farming')">
-            <div class="service-icon purple">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                <path d="M2 17l10 5 10-5"/>
-                <path d="M2 12l10 5 10-5"/>
-              </svg>
-            </div>
-            <div class="service-name">农事操作</div>
-          </div>
-        </div>
-      </div>
+    <div class="tab-bar">
+      <div class="tab-item active" onclick="switchTab('soil')">土壤数据</div>
+      <div class="tab-item" onclick="switchTab('moisture')">墒情数据</div>
+      <div class="tab-item" onclick="switchTab('weather')">气象数据</div>
+      <div class="tab-item" onclick="switchTab('farming')">农事记录</div>
+    </div>
 
-      <div class="card" id="soilForm" style="display: none;">
-        <div class="card-title">土壤养分录入</div>
+    <div id="soilForm" class="content">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="9" y1="9" x2="15" y2="9"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          地块信息
+        </div>
         <div class="form-item">
-          <label class="form-label">地块选择</label>
-          <div class="form-select" onclick="showPicker(this)">
+          <label class="form-label">选择地块</label>
+          <div class="form-select" onclick="showPicker('orchard', this)">
             <span class="form-select-value">请选择地块</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
         </div>
         <div class="form-item">
           <label class="form-label">采样日期</label>
-          <input type="text" class="form-input" placeholder="请选择日期">
+          <input type="date" class="form-input" value="2026-07-23">
         </div>
-        <div class="mb-grid mb-grid-2">
-          <div class="form-item">
-            <label class="form-label">有机质(%)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">pH值</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">氮含量(g/kg)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">磷含量(g/kg)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">钾含量(g/kg)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">有效钙(mg/kg)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block">提交数据</button>
       </div>
-
-      <div class="card" id="moistureForm" style="display: none;">
-        <div class="card-title">墒情录入</div>
-        <div class="form-item">
-          <label class="form-label">地块选择</label>
-          <div class="form-select" onclick="showPicker(this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          土壤指标
         </div>
         <div class="form-item">
-          <label class="form-label">记录日期</label>
-          <input type="text" class="form-input" placeholder="请选择日期">
+          <label class="form-label">pH值</label>
+          <input type="number" class="form-input" placeholder="请输入pH值" step="0.1">
         </div>
         <div class="form-item">
-          <label class="form-label">土壤湿度(%)</label>
-          <input type="number" class="form-input" placeholder="请输入">
+          <label class="form-label">有机质(%)</label>
+          <input type="number" class="form-input" placeholder="请输入有机质含量" step="0.01">
         </div>
         <div class="form-item">
-          <label class="form-label">墒情等级</label>
-          <div class="mb-grid mb-grid-3">
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--danger-bg); color: var(--danger); font-size: 12px;">干旱</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--warning-bg); color: var(--warning); font-size: 12px;">适中</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--success-bg); color: var(--success); font-size: 12px;">充足</div>
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block">提交数据</button>
-      </div>
-
-      <div class="card" id="weatherForm" style="display: none;">
-        <div class="card-title">温湿度录入</div>
-        <div class="form-item">
-          <label class="form-label">地块选择</label>
-          <div class="form-select" onclick="showPicker(this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
+          <label class="form-label">氮含量(mg/kg)</label>
+          <input type="number" class="form-input" placeholder="请输入氮含量">
         </div>
         <div class="form-item">
-          <label class="form-label">记录时间</label>
-          <input type="text" class="form-input" placeholder="请选择时间">
-        </div>
-        <div class="mb-grid mb-grid-2">
-          <div class="form-item">
-            <label class="form-label">空气温度(°C)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">空气湿度(%)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">土壤温度(°C)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-          <div class="form-item">
-            <label class="form-label">土壤湿度(%)</label>
-            <input type="number" class="form-input" placeholder="请输入">
-          </div>
-        </div>
-        <button class="btn btn-primary btn-block">提交数据</button>
-      </div>
-
-      <div class="card" id="farmingForm" style="display: none;">
-        <div class="card-title">农事操作填报</div>
-        <div class="form-item">
-          <label class="form-label">地块选择</label>
-          <div class="form-select" onclick="showPicker(this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
+          <label class="form-label">磷含量(mg/kg)</label>
+          <input type="number" class="form-input" placeholder="请输入磷含量">
         </div>
         <div class="form-item">
-          <label class="form-label">操作日期</label>
-          <input type="text" class="form-input" placeholder="请选择日期">
+          <label class="form-label">钾含量(mg/kg)</label>
+          <input type="number" class="form-input" placeholder="请输入钾含量">
         </div>
-        <div class="form-item">
-          <label class="form-label">农事类型</label>
-          <div class="mb-grid mb-grid-3">
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">施肥</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">灌溉</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">剪枝</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">疏果</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">喷药</div>
-            <div style="padding: 8px; text-align: center; border-radius: 8px; background: var(--bg); font-size: 12px;">其他</div>
-          </div>
-        </div>
-        <div class="form-item">
-          <label class="form-label">操作详情</label>
-          <textarea class="form-textarea" placeholder="请输入操作详情..."></textarea>
-        </div>
-        <button class="btn btn-primary btn-block">提交数据</button>
       </div>
     </div>
 
-    <nav class="tab-bar">
-      <a href="mb_home.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <div id="moistureForm" class="content" style="display: none;">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l-5.5 9 1.8 0 0 5.5 7.4 0 0-5.5 1.8 0z"/>
+            <circle cx="12" cy="7" r="2"/>
+          </svg>
+          墒情数据
+        </div>
+        <div class="form-item">
+          <label class="form-label">选择地块</label>
+          <div class="form-select" onclick="showPicker('orchard', this)">
+            <span class="form-select-value">请选择地块</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label">采集时间</label>
+          <input type="datetime-local" class="form-input">
+        </div>
+        <div class="form-item">
+          <label class="form-label">土壤湿度(%)</label>
+          <input type="number" class="form-input" placeholder="请输入土壤湿度">
+        </div>
+        <div class="form-item">
+          <label class="form-label">墒情等级</label>
+          <div class="radio-group">
+            <div class="radio-item" onclick="selectMoistureLevel('dry')"><div class="radio-label">干旱</div></div>
+            <div class="radio-item" onclick="selectMoistureLevel('normal')"><div class="radio-label">适中</div></div>
+            <div class="radio-item" onclick="selectMoistureLevel('wet')"><div class="radio-label">充足</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="weatherForm" class="content" style="display: none;">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h2"/><path d="M20 12h2"/>
+          </svg>
+          气象数据
+        </div>
+        <div class="form-item">
+          <label class="form-label">记录日期</label>
+          <input type="date" class="form-input" value="2026-07-23">
+        </div>
+        <div class="form-item">
+          <label class="form-label">最高温度(°C)</label>
+          <input type="number" class="form-input" placeholder="请输入最高温度">
+        </div>
+        <div class="form-item">
+          <label class="form-label">最低温度(°C)</label>
+          <input type="number" class="form-input" placeholder="请输入最低温度">
+        </div>
+        <div class="form-item">
+          <label class="form-label">降雨量(mm)</label>
+          <input type="number" class="form-input" placeholder="请输入降雨量">
+        </div>
+        <div class="form-item">
+          <label class="form-label">天气状况</label>
+          <div class="form-select" onclick="showPicker('weather', this)">
+            <span class="form-select-value">请选择天气状况</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="farmingForm" class="content" style="display: none;">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>
+          农事记录
+        </div>
+        <div class="form-item">
+          <label class="form-label">选择地块</label>
+          <div class="form-select" onclick="showPicker('orchard', this)">
+            <span class="form-select-value">请选择地块</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label">农事类型</label>
+          <div class="form-select" onclick="showPicker('farming', this)">
+            <span class="form-select-value">请选择农事类型</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label">执行日期</label>
+          <input type="date" class="form-input" value="2026-07-23">
+        </div>
+        <div class="form-item">
+          <label class="form-label">备注说明</label>
+          <textarea class="form-input" rows="3" placeholder="请输入备注说明..." style="height: auto;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button class="btn btn-primary btn-block" onclick="submitData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg>
+        提交数据
+      </button>
+    </div>
+
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span>首页</span>
-      </a>
-      <a href="mb_data.html" class="tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="mb-tab-item active" onclick="navigateTo('mb_data.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         <span>数据</span>
-      </a>
-      <a href="mb_disease.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span>病虫害</span>
-      </a>
-      <a href="mb_news.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         <span>资讯</span>
-      </a>
-      <a href="mb_profile.html" class="tab-item">
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>我的</span>
-      </a>
-    </nav>
+      </div>
+    </div>
   </div>
 
   <div class="modal-overlay" id="pickerModal">
     <div class="modal">
       <div class="modal-header">
         <div class="modal-title" id="pickerTitle">请选择</div>
+        <div class="modal-close" onclick="closePicker()"></div>
       </div>
       <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
         <div id="pickerContent"></div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closePicker()">取消</button>
-      </div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="successModal">
-    <div class="modal modal-success">
-      <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div style="font-size: 18px; font-weight: bold; color: var(--text); margin-bottom: 8px;">提交成功</div>
-      <div style="font-size: 13px; color: var(--text-secondary);">数据已成功录入系统</div>
-      <div class="modal-footer" style="border-top: none; margin-top: 16px;">
-        <button class="btn btn-primary btn-block" onclick="closeSuccess()">确定</button>
-      </div>
-    </div>
-  </div>
+
 
   <script>
     var currentPickerTarget;
@@ -258,10 +508,16 @@
     var pickerData = {
       orchard: ['1号早熟蜜桔区', '2号中熟蜜桔区', '3号晚熟蜜桔区', '4号试验田'],
       moistureLevel: ['干旱', '适中', '充足'],
-      farmingType: ['施肥', '灌溉', '剪枝', '疏果', '喷药', '其他']
+      weather: ['晴', '多云', '阴', '小雨', '中雨', '大雨', '暴雨'],
+      farming: ['施肥', '灌溉', '剪枝', '疏果', '喷药', '其他']
     };
     
-    function showForm(type) {
+    function goBack() { window.history.back(); }
+    
+    function switchTab(type) {
+      document.querySelectorAll('.tab-item').forEach(item => item.classList.remove('active'));
+      event.target.classList.add('active');
+      
       document.getElementById('soilForm').style.display = 'none';
       document.getElementById('moistureForm').style.display = 'none';
       document.getElementById('weatherForm').style.display = 'none';
@@ -269,20 +525,20 @@
       document.getElementById(type + 'Form').style.display = 'block';
     }
     
-    function showPicker(target) {
+    function showPicker(type, target) {
       currentPickerTarget = target;
-      var title = '请选择地块';
-      var data = pickerData.orchard;
+      var title = '请选择';
+      var data = pickerData[type];
       
-      if (target.closest('.form-item').querySelector('.form-label').textContent.includes('墒情')) {
-        title = '请选择墒情等级';
-        data = pickerData.moistureLevel;
-      }
+      if (type === 'orchard') title = '请选择地块';
+      else if (type === 'moistureLevel') title = '请选择墒情等级';
+      else if (type === 'weather') title = '请选择天气状况';
+      else if (type === 'farming') title = '请选择农事类型';
       
       document.getElementById('pickerTitle').textContent = title;
       var content = '';
       data.forEach(function(item) {
-        content += '<div onclick="selectPickerValue(\'' + item + '\')" style="padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; cursor: pointer;">' + item + '</div>';
+        content += '<div class="picker-option" onclick="selectPickerValue(\'' + item + '\')">' + item + '</div>';
       });
       document.getElementById('pickerContent').innerHTML = content;
       document.getElementById('pickerModal').classList.add('show');
@@ -294,11 +550,17 @@
       closePicker();
     }
     
+    function selectMoistureLevel(level) {
+      document.querySelectorAll('.radio-item').forEach(item => item.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    
     function closePicker() {
       document.getElementById('pickerModal').classList.remove('show');
     }
     
     function submitData() {
+      closePicker();
       document.getElementById('successModal').classList.add('show');
     }
     
@@ -307,9 +569,9 @@
       window.history.back();
     }
     
-    document.querySelectorAll('.btn-primary.btn-block').forEach(function(btn) {
-      btn.onclick = submitData;
-    });
+    function navigateTo(url) {
+      window.location.href = url;
+    }
   </script>
 </body>
 </html>

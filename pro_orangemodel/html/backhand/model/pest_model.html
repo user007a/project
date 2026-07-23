@@ -1,14 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>病虫害防控模型 - 南丰蜜桔模型管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
-        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
@@ -27,7 +28,7 @@
                     重新训练
                 </button>
                 <button onclick="openExportModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center">
-                    <iconify-icon icon="material-symbols:download" class="w-4 h-4 mr-2"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     导出模型
                 </button>
             </div>
@@ -69,7 +70,7 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <iconify-icon icon="material-symbols:bug-report" class="w-5 h-5 mr-2 text-red-600"></iconify-icon>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7h-9m0 0V5a3 3 0 016 0v2m-6 0a3 3 0 00-6 0v10a3 3 0 006 0m10-3a2 2 0 11-4 0 2 2 0 014 0zM17 10H7m0 0l3-3m-3 3l3 3"/></svg>
                         病虫害识别类别
                     </h3>
                     <div class="overflow-x-auto">
@@ -99,7 +100,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center space-x-2">
                                             <button onclick="editCategory('红蜘蛛')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </button>
                                         </div>
                                     </td>
@@ -119,7 +120,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center space-x-2">
                                             <button onclick="editCategory('黄龙病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </button>
                                         </div>
                                     </td>
@@ -139,7 +140,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center space-x-2">
                                             <button onclick="editCategory('炭疽病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </button>
                                         </div>
                                     </td>
@@ -159,7 +160,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center space-x-2">
                                             <button onclick="editCategory('潜叶蛾')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </button>
                                         </div>
                                     </td>
@@ -179,7 +180,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center space-x-2">
                                             <button onclick="editCategory('黑点病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <iconify-icon icon="material-symbols:edit" class="w-4 h-4"></iconify-icon>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             </button>
                                         </div>
                                     </td>
@@ -193,7 +194,7 @@
             <div class="space-y-6">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <iconify-icon icon="material-symbols:info" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         模型信息
                     </h3>
                     <div class="space-y-4">
@@ -226,62 +227,21 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <iconify-icon icon="material-symbols:activity" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
-                        模型状态
+                        <iconify-icon icon="material-symbols:bar-chart" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                        各类别准确率
                     </h3>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                        <span class="text-sm font-medium text-gray-800">运行中</span>
-                    </div>
-                    <div class="mt-4 space-y-2">
-                        <div>
-                            <div class="flex items-center justify-between text-xs mb-1">
-                                <span class="text-gray-500">今日识别量</span>
-                                <span class="text-gray-800">1,256</span>
-                            </div>
-                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="w-3/4 h-full bg-green-500 rounded-full"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between text-xs mb-1">
-                                <span class="text-gray-500">今日成功率</span>
-                                <span class="text-gray-800">95.2%</span>
-                            </div>
-                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div class="w-[95%] h-full bg-green-500 rounded-full"></div>
-                            </div>
-                        </div>
+                    <div class="h-56">
+                        <canvas id="accuracyBarChart"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <iconify-icon icon="material-symbols:history" class="w-5 h-5 mr-2 text-gray-600"></iconify-icon>
-                        训练历史
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                        训练历史趋势
                     </h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">v2.1.0</p>
-                                <p class="text-xs text-gray-500">2026-07-15 14:30</p>
-                            </div>
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">v2.0.0</p>
-                                <p class="text-xs text-gray-500">2026-06-20 10:00</p>
-                            </div>
-                            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">成功</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800">v1.5.0</p>
-                                <p class="text-xs text-gray-500">2026-05-15 16:45</p>
-                            </div>
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">需优化</span>
-                        </div>
+                    <div class="h-56">
+                        <canvas id="trainingTrendChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -296,30 +256,36 @@
                     重新训练模型
                 </h3>
                 <button onclick="closeModal('train-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">训练轮数 (Epochs)</label>
-                        <input type="number" id="train-epochs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="50">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">学习率</label>
-                        <input type="text" id="train-lr" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="0.001">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">训练数据集</label>
-                        <select id="train-dataset" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>完整数据集 (42,650张)</option>
-                            <option>最新数据集 (10,000张)</option>
-                            <option>精选数据集 (20,000张)</option>
-                        </select>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">训练数据量</label>
+                            <input type="number" id="train-data-volume" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="42650">
+                            <p class="text-xs text-gray-500 mt-1">参与训练的样本总数</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">迭代次数 (Epochs)</label>
+                            <input type="number" id="train-epochs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="50">
+                            <p class="text-xs text-gray-500 mt-1">训练总轮数</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">学习率</label>
+                            <input type="text" id="train-lr" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="0.001">
+                            <p class="text-xs text-gray-500 mt-1">优化器学习率</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">批次大小 (Batch Size)</label>
+                            <input type="number" id="train-batch-size" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="32">
+                            <p class="text-xs text-gray-500 mt-1">每次迭代处理的样本数</p>
+                        </div>
                     </div>
                     <div class="p-4 bg-yellow-50 rounded-lg">
                         <p class="text-sm text-yellow-700">
-                            <iconify-icon icon="material-symbols:warning" class="w-4 h-4 inline mr-1"></iconify-icon>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.66 1.732-3L13.732 4c-.77-1.34-2.694-1.34-3.464 0L3.34 16c-.77 1.34.192 3 1.732 3z"/></svg>
                             模型训练可能需要较长时间，请确保服务器资源充足。训练期间模型服务将暂停。
                         </p>
                     </div>
@@ -336,44 +302,54 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:download" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     导出模型
                 </h3>
                 <button onclick="closeModal('export-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">导出格式</label>
-                        <select id="export-format" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>ONNX</option>
-                            <option>TensorFlow SavedModel</option>
-                            <option>PyTorch</option>
-                            <option>TFLite</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">量化级别</label>
-                        <select id="export-quantization" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>无量化</option>
-                            <option>FP16</option>
-                            <option>INT8</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">包含配置文件</label>
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="export-config" checked class="w-4 h-4 text-green-600 rounded">
-                            <span class="text-sm text-gray-600">导出模型配置文件</span>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">导出格式</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="export-format" value=".pkl" class="w-4 h-4 text-green-600 mr-3">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-800">.pkl</span>
+                                    <span class="text-xs text-gray-500 ml-2">Pickle 格式（PyTorch 原生）</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="export-format" value=".onnx" class="w-4 h-4 text-green-600 mr-3" checked>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-800">.onnx</span>
+                                    <span class="text-xs text-gray-500 ml-2">ONNX 格式（跨平台通用）</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="export-format" value=".h5" class="w-4 h-4 text-green-600 mr-3">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-800">.h5</span>
+                                    <span class="text-xs text-gray-500 ml-2">HDF5 格式（TensorFlow/Keras）</span>
+                                </div>
+                            </label>
                         </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">模型版本号</label>
+                        <input type="text" id="export-version" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="v2.1.0" placeholder="如 v2.1.0">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
+                        <textarea id="export-remark" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请输入导出备注信息"></textarea>
                     </div>
                 </div>
             </div>
             <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
                 <button onclick="closeModal('export-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="exportModel()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">导出</button>
+                <button onclick="exportModel()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">确认导出</button>
             </div>
         </div>
     </div>
@@ -382,11 +358,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:edit" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     编辑类别配置
                 </h3>
                 <button onclick="closeModal('category-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -449,13 +425,20 @@
         }
 
         function startTraining() {
-            alert('模型训练任务已提交！\n训练完成后将自动更新模型版本。');
+            const dataVolume = document.getElementById('train-data-volume').value;
+            const epochs = document.getElementById('train-epochs').value;
+            const lr = document.getElementById('train-lr').value;
+            const batchSize = document.getElementById('train-batch-size').value;
+            alert('模型训练任务已提交！\n训练数据量: ' + dataVolume + '\n迭代次数: ' + epochs + '\n学习率: ' + lr + '\n批次大小: ' + batchSize + '\n训练完成后将自动更新模型版本。');
             closeModal('train-modal');
         }
 
         function exportModel() {
-            const format = document.getElementById('export-format').value;
-            alert('模型导出成功！\n格式: ' + format);
+            const formatEl = document.querySelector('input[name="export-format"]:checked');
+            const format = formatEl ? formatEl.value : '.onnx';
+            const version = document.getElementById('export-version').value;
+            const remark = document.getElementById('export-remark').value;
+            alert('模型导出成功！\n格式: ' + format + '\n版本: ' + version + (remark ? '\n备注: ' + remark : ''));
             closeModal('export-modal');
         }
 
@@ -471,6 +454,86 @@
                 const btn = e.target.closest('[onclick*="' + modalId + '"]');
                 if (!modal.contains(e.target) && !btn) {
                     modal.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx1 = document.getElementById('accuracyBarChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['红蜘蛛', '黄龙病', '炭疽病', '潜叶蛾', '黑点病'],
+                    datasets: [{
+                        label: '识别准确率',
+                        data: [94, 91, 87, 85, 82],
+                        backgroundColor: ['#16A34A', '#16A34A', '#EAB308', '#EAB308', '#EAB308'],
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 75,
+                            max: 100,
+                            ticks: { callback: (value) => value + '%' }
+                        }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('trainingTrendChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['v1.0', 'v1.2', 'v1.5', 'v2.0', 'v2.1'],
+                    datasets: [{
+                        label: '训练准确率',
+                        data: [78, 82, 85, 87, 89],
+                        borderColor: '#16A34A',
+                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#16A34A',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }, {
+                        label: '验证准确率',
+                        data: [76, 80, 83, 86, 88],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#3B82F6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 } } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 100,
+                            ticks: { callback: (value) => value + '%' }
+                        }
+                    }
                 }
             });
         });

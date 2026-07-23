@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>南丰蜜桔人工数据采集 - 数据管理</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
     <style>
         body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
-        .content-wrapper { padding: 24px; height: calc(100vh - 60px); overflow-y: auto; }
+        .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
@@ -26,8 +26,12 @@
                     <iconify-icon icon="material-symbols:search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></iconify-icon>
                     <input type="text" id="search-input" placeholder="搜索数据记录..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64" oninput="filterData()">
                 </div>
+                <button onclick="exportCollectData()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm flex items-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    导出数据
+                </button>
                 <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center">
-                    <iconify-icon icon="material-symbols:add" class="w-4 h-4 mr-2"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     录入数据
                 </button>
             </div>
@@ -132,7 +136,7 @@
                                 <button onclick="openDeleteModal('DAT-202607004')" class="text-red-600 hover:text-red-700">删除</button>
                             </td>
                         </tr>
-                        <tr class="hover:bg-gray-50" data-id="DAT-202607005" data-type="土壤养分" data-status="已驳回">
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607005" data-type="土壤养分" data-status="已驳回">
                             <td class="py-3 px-4 text-gray-600">DAT-202607005</td>
                             <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
                             <td class="py-3 px-4">南丰县XX果园-C地块</td>
@@ -144,18 +148,264 @@
                                 <button onclick="openDeleteModal('DAT-202607005')" class="text-red-600 hover:text-red-700">删除</button>
                             </td>
                         </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607006" data-type="土壤墒情" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607006</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤墒情</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-2号园</td>
+                            <td class="py-3 px-4">周农技</td>
+                            <td class="py-3 px-4">2026-07-20 08:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607006')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607006')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607007" data-type="温湿度" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607007</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-D地块</td>
+                            <td class="py-3 px-4">吴农户</td>
+                            <td class="py-3 px-4">2026-07-19 15:20</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607007')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607007')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607007')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607008" data-type="农事操作" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607008</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">农事操作</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-西园</td>
+                            <td class="py-3 px-4">郑农户</td>
+                            <td class="py-3 px-4">2026-07-19 10:00</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607008')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607008')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607009" data-type="土壤养分" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607009</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-3号园</td>
+                            <td class="py-3 px-4">钱农技</td>
+                            <td class="py-3 px-4">2026-07-18 14:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607009')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607009')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607010" data-type="土壤墒情" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607010</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤墒情</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-E地块</td>
+                            <td class="py-3 px-4">冯农户</td>
+                            <td class="py-3 px-4">2026-07-18 09:45</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607010')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607010')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607010')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607011" data-type="温湿度" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607011</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-南园</td>
+                            <td class="py-3 px-4">陈农户</td>
+                            <td class="py-3 px-4">2026-07-17 16:10</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607011')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607011')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607012" data-type="农事操作" data-status="已驳回">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607012</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">农事操作</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-4号园</td>
+                            <td class="py-3 px-4">杨农技</td>
+                            <td class="py-3 px-4">2026-07-17 11:20</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">已驳回</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607012')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607012')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607013" data-type="土壤养分" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607013</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-F地块</td>
+                            <td class="py-3 px-4">何农户</td>
+                            <td class="py-3 px-4">2026-07-16 13:45</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607013')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607013')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607014" data-type="土壤墒情" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607014</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤墒情</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-5号园</td>
+                            <td class="py-3 px-4">许农技</td>
+                            <td class="py-3 px-4">2026-07-16 08:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607014')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607014')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607015" data-type="温湿度" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607015</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-北园</td>
+                            <td class="py-3 px-4">韩农户</td>
+                            <td class="py-3 px-4">2026-07-15 15:00</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607015')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607015')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607015')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607016" data-type="农事操作" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607016</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">农事操作</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-G地块</td>
+                            <td class="py-3 px-4">唐农户</td>
+                            <td class="py-3 px-4">2026-07-15 10:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607016')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607016')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607017" data-type="土壤养分" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607017</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-6号园</td>
+                            <td class="py-3 px-4">曹农技</td>
+                            <td class="py-3 px-4">2026-07-14 14:00</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607017')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607017')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607018" data-type="土壤墒情" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607018</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤墒情</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-H地块</td>
+                            <td class="py-3 px-4">袁农户</td>
+                            <td class="py-3 px-4">2026-07-14 09:15</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607018')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607018')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607018')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607019" data-type="温湿度" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607019</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-中心园</td>
+                            <td class="py-3 px-4">邓农户</td>
+                            <td class="py-3 px-4">2026-07-13 16:45</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607019')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607019')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607020" data-type="农事操作" data-status="已驳回">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607020</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">农事操作</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-7号园</td>
+                            <td class="py-3 px-4">肖农技</td>
+                            <td class="py-3 px-4">2026-07-13 11:00</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">已驳回</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607020')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607020')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607021" data-type="土壤养分" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607021</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-I地块</td>
+                            <td class="py-3 px-4">石农户</td>
+                            <td class="py-3 px-4">2026-07-12 13:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607021')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607021')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607022" data-type="土壤墒情" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607022</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">土壤墒情</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-8号园</td>
+                            <td class="py-3 px-4">蒋农技</td>
+                            <td class="py-3 px-4">2026-07-12 08:45</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607022')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607022')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607023" data-type="温湿度" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607023</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">温湿度</span></td>
+                            <td class="py-3 px-4">南丰县XX种植大户-东扩园</td>
+                            <td class="py-3 px-4">田农户</td>
+                            <td class="py-3 px-4">2026-07-11 15:30</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607023')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607023')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607023')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-id="DAT-202607024" data-type="农事操作" data-status="已审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607024</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">农事操作</span></td>
+                            <td class="py-3 px-4">南丰县XX果园-J地块</td>
+                            <td class="py-3 px-4">谭农户</td>
+                            <td class="py-3 px-4">2026-07-11 10:15</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607024')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openDeleteModal('DAT-202607024')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50" data-id="DAT-202607025" data-type="土壤养分" data-status="待审核">
+                            <td class="py-3 px-4 text-gray-600">DAT-202607025</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">土壤养分</span></td>
+                            <td class="py-3 px-4">南丰县XX合作社-9号园</td>
+                            <td class="py-3 px-4">廖农技</td>
+                            <td class="py-3 px-4">2026-07-10 14:00</td>
+                            <td class="py-3 px-4"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待审核</span></td>
+                            <td class="py-3 px-4">
+                                <button onclick="openDetailModal('DAT-202607025')" class="text-blue-600 hover:text-blue-700 mr-3">查看</button>
+                                <button onclick="openAuditModal('DAT-202607025')" class="text-green-600 hover:text-green-700 mr-3">审核</button>
+                                <button onclick="openDeleteModal('DAT-202607025')" class="text-red-600 hover:text-red-700">删除</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-                <p class="text-sm text-gray-500">共 125 条记录</p>
-                <div class="flex items-center space-x-2">
+                <p class="text-sm text-gray-500">共 <span id="total-count">25</span> 条记录</p>
+                <div id="pagination-controls" class="flex items-center space-x-2">
                     <button onclick="prevPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
-                        <iconify-icon icon="material-symbols:chevron-left" class="w-4 h-4"></iconify-icon>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     </button>
                     <span class="px-3 py-1 bg-green-600 text-white rounded text-sm" id="current-page">1</span>
                     <button onclick="nextPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
-                        <iconify-icon icon="material-symbols:chevron-right" class="w-4 h-4"></iconify-icon>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
             </div>
@@ -166,11 +416,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:add" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     录入数据
                 </h3>
                 <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -213,11 +463,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:visibility" class="w-5 h-5 mr-2 text-blue-600"></iconify-icon>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                     数据详情
                 </h3>
                 <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -262,11 +512,11 @@
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:check-circle" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     数据审核
                 </h3>
                 <button onclick="closeModal('audit-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <iconify-icon icon="material-symbols:close" class="w-5 h-5 text-gray-500"></iconify-icon>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
@@ -299,7 +549,7 @@
         <div class="modal-content">
             <div class="p-6 text-center">
                 <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <iconify-icon icon="material-symbols:delete" class="w-8 h-8 text-red-500"></iconify-icon>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
                 <p class="text-sm text-gray-500 mb-6">确定要删除这条数据记录吗？此操作不可撤销。</p>
@@ -313,8 +563,60 @@
 
     <script>
         let currentPage = 1;
+        let pageSize = 10;
         let deleteId = null;
         let auditId = null;
+
+        function initPagination() {
+            const rows = document.querySelectorAll('#data-table-body tr');
+            const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+            document.getElementById('total-count').textContent = rows.length;
+            showPage(1, totalPages);
+        }
+
+        function showPage(page, totalPages) {
+            currentPage = page;
+            const rows = document.querySelectorAll('#data-table-body tr');
+            
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (page - 1) * pageSize && index < page * pageSize) ? '' : 'none';
+            });
+            
+            const paginationDiv = document.getElementById('pagination-controls');
+            paginationDiv.innerHTML = '';
+            
+            const prevBtn = document.createElement('button');
+            prevBtn.className = `px-3 py-1 bg-white border border-gray-300 rounded text-sm ${currentPage <= 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}`;
+            prevBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>';
+            prevBtn.onclick = () => currentPage > 1 && showPage(currentPage - 1, totalPages);
+            paginationDiv.appendChild(prevBtn);
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `px-3 py-1 rounded text-sm ${i === currentPage ? 'bg-green-600 text-white' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => showPage(i, totalPages);
+                paginationDiv.appendChild(pageBtn);
+            }
+            
+            const nextBtn = document.createElement('button');
+            nextBtn.className = `px-3 py-1 bg-white border border-gray-300 rounded text-sm ${currentPage >= totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}`;
+            nextBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+            nextBtn.onclick = () => currentPage < totalPages && showPage(currentPage + 1, totalPages);
+            paginationDiv.appendChild(nextBtn);
+            
+            const pageSizeSelect = document.createElement('select');
+            pageSizeSelect.className = 'px-3 py-1 border border-gray-300 rounded text-sm ml-2';
+            pageSizeSelect.innerHTML = '<option value="10">10条/页</option><option value="20">20条/页</option><option value="25">25条/页</option>';
+            pageSizeSelect.value = pageSize;
+            pageSizeSelect.onchange = () => {
+                pageSize = parseInt(pageSizeSelect.value);
+                currentPage = 1;
+                const totalRows = document.querySelectorAll('#data-table-body tr').length;
+                showPage(1, Math.max(1, Math.ceil(totalRows / pageSize)));
+            };
+            paginationDiv.appendChild(pageSizeSelect);
+        }
 
         function openAddModal() {
             document.getElementById('add-location').value = '';
@@ -412,20 +714,6 @@
             });
         }
 
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                document.getElementById('current-page').textContent = currentPage;
-                alert('已切换到第 ' + currentPage + ' 页');
-            }
-        }
-
-        function nextPage() {
-            currentPage++;
-            document.getElementById('current-page').textContent = currentPage;
-            alert('已切换到第 ' + currentPage + ' 页');
-        }
-
         document.addEventListener('click', (e) => {
             ['add-modal', 'detail-modal', 'audit-modal', 'delete-modal'].forEach(modalId => {
                 const modal = document.getElementById(modalId);
@@ -435,6 +723,8 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', initPagination);
     </script>
 </body>
 </html>

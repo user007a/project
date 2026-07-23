@@ -3,169 +3,331 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>南丰蜜桔智慧果园 - 病虫害防控</title>
+  <title>南丰蜜桔智慧果园 - 病虫害</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
+  <style>
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-content { padding-left: 44px; }
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+    
+    .header-actions {
+      position: absolute;
+      right: 12px;
+      top: 44px;
+    }
+    
+    .header-action-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-action-btn svg { width: 18px; height: 18px; }
+
+    .stats-bar {
+      display: flex; gap: 8px;
+      padding: 0 16px; margin-top: 12px;
+      position: relative; z-index: 10;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .stat-num {
+      font-size: var(--font-lg); font-weight: 700;
+    }
+    
+    .stat-num.danger { color: var(--error); }
+    .stat-num.info { color: var(--info); }
+    .stat-num.success { color: var(--success); }
+    
+    .stat-label {
+      font-size: var(--font-xs);
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .quick-actions {
+      display: flex; gap: 12px;
+      padding: 0 16px 16px;
+    }
+    
+    .quick-action {
+      flex: 1;
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .quick-action:active { transform: scale(0.96); }
+    
+    .quick-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .quick-icon svg { width: 22px; height: 22px; }
+    .quick-icon.red { background: var(--error-bg); color: var(--error); }
+    .quick-icon.orange { background: var(--warning-bg); color: var(--warning); }
+    .quick-icon.blue { background: var(--info-bg); color: var(--info); }
+    .quick-icon.purple { background: var(--purple-bg); color: var(--purple); }
+    
+    .quick-name {
+      font-size: var(--font-sm);
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .disease-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      margin: 0 16px 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .disease-card:active { transform: scale(0.99); }
+    
+    .disease-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .disease-name {
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    
+    .disease-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    
+    .disease-dot.danger { background: var(--error); }
+    .disease-dot.warning { background: var(--warning); }
+    .disease-dot.info { background: var(--info); }
+    
+    .disease-status {
+      font-size: var(--font-xs);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-weight: 500;
+    }
+    
+    .disease-status.danger { background: var(--error-bg); color: var(--error); }
+    .disease-status.warning { background: var(--warning-bg); color: var(--warning); }
+    
+    .disease-desc {
+      font-size: var(--font-sm);
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .skeleton-state { display: none; }
+    .mb-app.loading .real-content { display: none; }
+    .mb-app.loading .skeleton-state { display: block; }
+  </style>
 </head>
 <body>
-  <div class="mb-app">
-    <div class="page-header mb-header-detail">
-      <div class="header-nav">
-        <div class="header-back" onclick="window.history.back()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </div>
-        <div class="header-title">病虫害防控</div>
-      </div>
-      <div class="header-content">
-        <div class="header-sub">AI智能识别与科学防治</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="card">
-        <div class="card-title">病虫害风险预警</div>
-        <div class="mb-grid mb-grid-2">
-          <div class="mb-grid-item">
-            <div style="font-size: 28px; font-weight: bold; color: var(--warning);">3</div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">高风险病虫害</div>
-          </div>
-          <div class="mb-grid-item">
-            <div style="font-size: 28px; font-weight: bold; color: var(--text);">12</div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">识别记录</div>
-          </div>
-        </div>
-        <div style="margin-top: 16px;">
-          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">本周高发病虫害</div>
-          <div class="mb-grid mb-grid-3">
-            <div style="background: var(--danger-bg); padding: 8px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 12px; color: var(--danger); font-weight: bold;">红蜘蛛</div>
-            </div>
-            <div style="background: var(--warning-bg); padding: 8px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 12px; color: var(--warning); font-weight: bold;">蚧壳虫</div>
-            </div>
-            <div style="background: var(--warning-bg); padding: 8px; border-radius: 8px; text-align: center;">
-              <div style="font-size: 12px; color: var(--warning); font-weight: bold;">炭疽病</div>
-            </div>
-          </div>
+  <div class="mb-app loading">
+    <div class="skeleton-state">
+      <div class="page-header">
+        <div style="width:36px;height:36px;"></div>
+        <div class="header-content">
+          <div class="mb-skeleton" style="width:100px;height:20px;"></div>
+          <div class="mb-skeleton" style="width:160px;height:14px;margin-top:6px;"></div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-title">功能菜单</div>
-        <div class="list-item" onclick="navigateTo('mb_disease_ai.html')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">AI智能识别</div>
-            <div class="list-subtitle">拍照或上传图片识别病虫害</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="list-item" onclick="navigateTo('mb_disease_knowledge.html')">
-          <div class="list-icon green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">病虫害知识库</div>
-            <div class="list-subtitle">病害查询、虫害查询、防治方案</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="list-item" onclick="navigateTo('mb_disease_report.html')">
-          <div class="list-icon red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11l2 2m-2-2v10a1 1 0 0 1-1 1h-3m-6 0a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1m-6 0h6"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">预警上报</div>
-            <div class="list-subtitle">上报病虫害信息与处置记录</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
+      <div class="stats-bar">
+        <div class="stat-card"><div class="mb-skeleton" style="width:32px;height:24px;margin:0 auto;"></div><div class="mb-skeleton" style="width:40px;height:12px;margin:6px auto 0;"></div></div>
+        <div class="stat-card"><div class="mb-skeleton" style="width:32px;height:24px;margin:0 auto;"></div><div class="mb-skeleton" style="width:40px;height:12px;margin:6px auto 0;"></div></div>
+        <div class="stat-card"><div class="mb-skeleton" style="width:32px;height:24px;margin:0 auto;"></div><div class="mb-skeleton" style="width:40px;height:12px;margin:6px auto 0;"></div></div>
       </div>
-
-      <div class="card">
-        <div class="card-title">近期识别记录</div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <div class="timeline-title">红蜘蛛 · 置信度95%</div>
-            <div class="timeline-date">2026-07-22 14:30 | 已处理</div>
+      <div class="mb-body">
+        <div class="mb-section">
+          <div class="mb-skeleton" style="width:80px;height:16px;margin-bottom:12px;"></div>
+          <div class="quick-actions">
+            <div class="quick-action"><div class="mb-skeleton" style="width:44px;height:44px;border-radius:var(--radius-lg);"></div><div class="mb-skeleton" style="width:32px;height:12px;margin-top:8px;"></div></div>
+            <div class="quick-action"><div class="mb-skeleton" style="width:44px;height:44px;border-radius:var(--radius-lg);"></div><div class="mb-skeleton" style="width:32px;height:12px;margin-top:8px;"></div></div>
+            <div class="quick-action"><div class="mb-skeleton" style="width:44px;height:44px;border-radius:var(--radius-lg);"></div><div class="mb-skeleton" style="width:32px;height:12px;margin-top:8px;"></div></div>
+            <div class="quick-action"><div class="mb-skeleton" style="width:44px;height:44px;border-radius:var(--radius-lg);"></div><div class="mb-skeleton" style="width:32px;height:12px;margin-top:8px;"></div></div>
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <div class="timeline-title">蚧壳虫 · 置信度92%</div>
-            <div class="timeline-date">2026-07-21 09:15 | 已处理</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-content">
-            <div class="timeline-title">正常叶片 · 置信度99%</div>
-            <div class="timeline-date">2026-07-20 16:45 | 无异常</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">防治小贴士</div>
-        <div style="background: var(--warning-bg); padding: 12px; border-radius: 8px;">
-          <div style="font-size: 14px; font-weight: bold; color: var(--warning); margin-bottom: 8px;">🌿 当前建议</div>
-          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-            近期气温升高，湿度适宜，红蜘蛛和蚧壳虫进入高发期。建议每7-10天喷洒一次杀虫剂，注意药剂轮换使用，避免产生抗药性。
-          </div>
+        <div class="mb-section">
+          <div class="mb-skeleton" style="width:120px;height:16px;margin-bottom:12px;"></div>
+          <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line medium"></div></div>
+          <div class="mb-skeleton-card"><div class="mb-skeleton-line long"></div><div class="mb-skeleton-line medium"></div></div>
         </div>
       </div>
     </div>
 
-    <nav class="tab-bar">
-      <a href="mb_home.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>首页</span>
-      </a>
-      <a href="mb_data.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span>数据</span>
-      </a>
-      <a href="mb_disease.html" class="tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <span>病虫害</span>
-      </a>
-      <a href="mb_news.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span>资讯</span>
-      </a>
-      <a href="mb_profile.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>我的</span>
-      </a>
-    </nav>
+    <div class="real-content">
+      <div class="page-header">
+        <div class="header-back" onclick="navigateTo('mb_home.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <div class="header-content">
+          <div class="header-title">病虫害防治</div>
+          <div class="header-sub">AI智能识别病虫害，科学防治保丰收</div>
+        </div>
+        <div class="header-actions">
+          <div class="header-action-btn" onclick="navigateTo('mb_disease_ai.html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-num danger">3</div>
+          <div class="stat-label">高风险</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num info">12</div>
+          <div class="stat-label">识别记录</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num success">5</div>
+          <div class="stat-label">已防治</div>
+        </div>
+      </div>
+
+      <div class="mb-body">
+        <div class="mb-section">
+          <div class="mb-section-title"><span class="mb-section-dot"></span>防治功能</div>
+          <div class="quick-actions">
+            <div class="quick-action" onclick="navigateTo('mb_disease_ai.html')">
+              <div class="quick-icon red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+              <div class="quick-name">AI识别</div>
+            </div>
+            <div class="quick-action" onclick="navigateTo('mb_disease_knowledge.html')">
+              <div class="quick-icon orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+              </div>
+              <div class="quick-name">病虫害库</div>
+            </div>
+            <div class="quick-action" onclick="navigateTo('mb_disease_report.html')">
+              <div class="quick-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+              <div class="quick-name">防治记录</div>
+            </div>
+            <div class="quick-action" onclick="navigateTo('mb_disease_knowledge.html')">
+              <div class="quick-icon purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <div class="quick-name">预警设置</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-section">
+          <div class="flex justify-between items-center mb-3 px-4">
+            <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>近期高发病虫害</div>
+            <span class="text-xs text-secondary" onclick="navigateTo('mb_disease_knowledge.html')">查看全部 ›</span>
+          </div>
+          <div class="disease-card" onclick="navigateTo('mb_disease_knowledge.html')">
+            <div class="disease-header">
+              <div class="disease-name"><span class="disease-dot danger"></span>红蜘蛛</div>
+              <span class="disease-status danger">高风险</span>
+            </div>
+            <div class="disease-desc">近期气温升高，红蜘蛛进入高发期。建议使用阿维菌素或螺螨酯进行防治。</div>
+          </div>
+          <div class="disease-card" onclick="navigateTo('mb_disease_knowledge.html')">
+            <div class="disease-header">
+              <div class="disease-name"><span class="disease-dot warning"></span>蚧壳虫</div>
+              <span class="disease-status warning">中风险</span>
+            </div>
+            <div class="disease-desc">蚧壳虫开始活动，注意巡查枝叶交界处。可选用噻嗪酮或毒死蜱喷雾。</div>
+          </div>
+          <div class="disease-card" onclick="navigateTo('mb_disease_knowledge.html')">
+            <div class="disease-header">
+              <div class="disease-name"><span class="disease-dot warning"></span>炭疽病</div>
+              <span class="disease-status warning">中风险</span>
+            </div>
+            <div class="disease-desc">高温高湿环境易引发炭疽病。建议喷施咪鲜胺或苯醚甲环唑预防。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_data.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>数据</span></div>
+      <div class="mb-tab-item active" onclick="navigateTo('mb_disease.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>病虫害</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>资讯</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>我的</span></div>
+    </div>
   </div>
 
   <script>
-    function navigateTo(page) {
-      window.location.href = page;
-    }
+    function navigateTo(page) { window.location.href = page; }
+    (function() {
+      var app = document.querySelector('.mb-app');
+      setTimeout(function() {
+        app.classList.remove('loading');
+      }, 600);
+    })();
   </script>
 </body>
 </html>

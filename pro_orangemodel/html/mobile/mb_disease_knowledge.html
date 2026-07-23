@@ -5,199 +5,335 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>南丰蜜桔智慧果园 - 病虫害知识库</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
+  <style>
+    .page-header {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+      padding: 44px 16px 20px;
+      color: var(--bg-white);
+    }
+    
+    .header-back {
+      position: absolute;
+      left: 12px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .header-back svg { width: 18px; height: 18px; }
+    
+    .header-content { padding-left: 44px; }
+    .header-title { font-size: var(--font-xl); font-weight: 700; }
+    .header-sub { font-size: var(--font-sm); opacity: 0.85; margin-top: 4px; }
+
+    .search-box {
+      width: 100%;
+      height: 48px;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 0 var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    
+    .search-box svg { width: 20px; height: 20px; color: var(--text-light); }
+    .search-input { flex: 1; height: 100%; font-size: var(--font-base); border: none; outline: none; background: transparent; }
+    
+    .disease-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .disease-card:active { transform: scale(0.98); background: var(--gray-50); }
+    
+    .disease-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+    .disease-title { font-size: var(--font-md); font-weight: 600; color: var(--text); }
+    .disease-tag { padding: var(--space-1) var(--space-2); border-radius: var(--radius-lg); font-size: var(--font-xs); font-weight: 500; }
+    .disease-tag.disease { background: var(--error-bg); color: var(--error); }
+    .disease-tag.pest { background: var(--warning-bg); color: var(--warning); }
+    .disease-tag.high { background: var(--error-bg); color: var(--error); }
+    .disease-tag.medium { background: var(--warning-bg); color: var(--warning); }
+    
+    .disease-desc { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.5; }
+    
+    .filter-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .filter-tab {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-full);
+      font-size: var(--font-sm);
+      background: var(--bg-white);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .filter-tab.active { background: var(--primary); color: var(--bg-white); border-color: var(--primary); }
+    
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 1000;
+      display: none; justify-content: center; align-items: center;
+    }
+    
+    .modal-overlay.show { display: flex; }
+    
+    .modal-box {
+      background: var(--bg-white);
+      border-radius: var(--radius-xl);
+      width: 90%;
+      max-width: 360px;
+      max-height: 85vh;
+      overflow: hidden;
+    }
+    
+    .modal-header {
+      padding: var(--space-5);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-title { font-size: var(--font-lg); font-weight: 600; color: var(--text); }
+    .modal-close {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      background: var(--gray-100);
+    }
+    
+    .modal-close svg { width: 18px; height: 18px; color: var(--text-secondary); }
+    
+    .modal-body { padding: var(--space-5); max-height: 60vh; overflow-y: auto; }
+    
+    .detail-section { margin-bottom: var(--space-5); }
+    .detail-section:last-child { margin-bottom: 0; }
+    .detail-title { font-size: var(--font-base); font-weight: 600; color: var(--text); margin-bottom: var(--space-2); }
+    .detail-text { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.6; }
+    
+    .detail-tags { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .detail-tag {
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: var(--font-xs);
+      font-weight: 500;
+    }
+    
+    .modal-footer {
+      padding: var(--space-4);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: var(--space-3);
+    }
+    
+    .modal-footer button { flex: 1; }
+    
+    .skeleton-state { display: none; }
+    .mb-app.loading .real-content { display: none; }
+    .mb-app.loading .skeleton-state { display: block; }
+  </style>
 </head>
 <body>
-  <div class="mb-app">
-    <div class="page-header mb-header-detail">
-      <div class="header-nav">
-        <div class="header-back" onclick="window.history.back()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </div>
-        <div class="header-title">病虫害知识库</div>
-      </div>
-      <div class="header-content">
-        <div class="header-sub">病害查询、虫害查询、防治方案</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="card">
-        <div class="card-title">分类筛选</div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <span class="tag tag-primary" onclick="filterType('all')">全部</span>
-          <span class="tag tag-danger" onclick="filterType('disease')">病害</span>
-          <span class="tag tag-warning" onclick="filterType('pest')">虫害</span>
+  <div class="mb-app loading">
+    <!-- ===================== 骨架屏 ===================== -->
+    <div class="skeleton-state">
+      <div class="page-header">
+        <div class="header-nav">
+          <div style="width:36px;height:36px;"></div>
+          <div class="header-title"></div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-title">病害（8种）</div>
-        <div class="list-item" onclick="showDetail('黄龙病')">
-          <div class="list-icon red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">黄龙病</div>
-            <div class="list-subtitle">毁灭性病害 · 高风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
+      <div class="mb-section">
+        <div class="mb-skeleton" style="width:100%;height:48px;border-radius:24px;margin-bottom:16px;"></div>
+        <div class="mb-skeleton" style="width:60px;height:32px;border-radius:16px;"></div>
+        <div style="height:20px;"></div>
+        <div class="mb-skeleton-card">
+          <div class="mb-skeleton" style="width:100px;height:16px;margin-bottom:8px;"></div>
+          <div class="mb-skeleton-line long"></div>
+          <div class="mb-skeleton-line medium"></div>
         </div>
-        <div class="list-item" onclick="showDetail('黑点病')">
-          <div class="list-icon red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">黑点病</div>
-            <div class="list-subtitle">果实病害 · 中风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
+        <div style="height:20px;"></div>
+        <div class="mb-skeleton-card">
+          <div class="mb-skeleton" style="width:100px;height:16px;margin-bottom:8px;"></div>
+          <div class="mb-skeleton-line long"></div>
+          <div class="mb-skeleton-line medium"></div>
         </div>
-        <div class="list-item" onclick="showDetail('疮痂病')">
-          <div class="list-icon red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">疮痂病</div>
-            <div class="list-subtitle">叶片病害 · 中风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="list-item" onclick="showDetail('黑星病')">
-          <div class="list-icon red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">黑星病</div>
-            <div class="list-subtitle">果实病害 · 中风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">虫害（10种）</div>
-        <div class="list-item" onclick="showDetail('红蜘蛛')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">红蜘蛛</div>
-            <div class="list-subtitle">螨类害虫 · 高风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="list-item" onclick="showDetail('柑桔木虱')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">柑桔木虱</div>
-            <div class="list-subtitle">黄龙病传播媒介 · 高风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="list-item" onclick="showDetail('蚧壳虫')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">蚧壳虫</div>
-            <div class="list-subtitle">刺吸式害虫 · 中风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
-        </div>
-        <div class="list-item" onclick="showDetail('粉虱')">
-          <div class="list-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
-          <div class="list-content">
-            <div class="list-title">粉虱</div>
-            <div class="list-subtitle">刺吸式害虫 · 中风险</div>
-          </div>
-          <div class="list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </div>
+        <div style="height:20px;"></div>
+        <div class="mb-skeleton-card">
+          <div class="mb-skeleton" style="width:100px;height:16px;margin-bottom:8px;"></div>
+          <div class="mb-skeleton-line long"></div>
+          <div class="mb-skeleton-line medium"></div>
         </div>
       </div>
     </div>
 
-    <nav class="tab-bar">
-      <a href="mb_home.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>首页</span>
-      </a>
-      <a href="mb_data.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span>数据</span>
-      </a>
-      <a href="mb_disease.html" class="tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <span>病虫害</span>
-      </a>
-      <a href="mb_news.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span>资讯</span>
-      </a>
-      <a href="mb_profile.html" class="tab-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>我的</span>
-      </a>
-    </nav>
+    <!-- ===================== 真实内容 ===================== -->
+    <div class="real-content">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="header-back" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </div>
+        <div class="header-content">
+          <div class="header-title">病虫害知识库</div>
+          <div class="header-sub">了解南丰蜜桔常见病虫害及防治方法</div>
+        </div>
+      </div>
+
+      <div class="mb-section">
+        <!-- 搜索框 -->
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="搜索病虫害名称..." oninput="handleSearch(event)">
+        </div>
+
+        <!-- 筛选标签 -->
+        <div class="filter-tabs">
+          <div class="filter-tab active" onclick="filterType('all')">全部</div>
+          <div class="filter-tab" onclick="filterType('disease')">病害</div>
+          <div class="filter-tab" onclick="filterType('pest')">虫害</div>
+        </div>
+
+        <!-- 病害列表 -->
+        <div id="diseaseList">
+          <div class="disease-card" data-name="黄龙病" data-type="disease">
+            <div class="disease-header">
+              <div class="disease-title">黄龙病</div>
+              <div>
+                <span class="disease-tag disease">病害</span>
+                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">由韧皮部杆菌引起的毁灭性病害，通过柑桔木虱传播。病树表现为叶片黄化、果实畸形，严重时整株死亡。</div>
+          </div>
+
+          <div class="disease-card" data-name="黑点病" data-type="disease">
+            <div class="disease-header">
+              <div class="disease-title">黑点病</div>
+              <div>
+                <span class="disease-tag disease">病害</span>
+                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">主要危害果实，在果实表面形成黑色小斑点，影响果实外观和商品价值。高温高湿环境易发病。</div>
+          </div>
+
+          <div class="disease-card" data-name="疮痂病" data-type="disease">
+            <div class="disease-header">
+              <div class="disease-title">疮痂病</div>
+              <div>
+                <span class="disease-tag disease">病害</span>
+                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">主要危害嫩叶、嫩梢和幼果，导致叶片畸形、果实表面粗糙，影响产量和品质。</div>
+          </div>
+
+          <div class="disease-card" data-name="黑星病" data-type="disease">
+            <div class="disease-header">
+              <div class="disease-title">黑星病</div>
+              <div>
+                <span class="disease-tag disease">病害</span>
+                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">主要危害果实，在果实成熟前后发病，形成黑色星状斑点，严重影响果实外观。</div>
+          </div>
+
+          <!-- 虫害列表 -->
+          <div class="disease-card" data-name="红蜘蛛" data-type="pest">
+            <div class="disease-header">
+              <div class="disease-title">红蜘蛛</div>
+              <div>
+                <span class="disease-tag pest">虫害</span>
+                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">以刺吸式口器吸食叶片和果实汁液，导致叶片失绿、果实表面出现斑点，是蜜桔最常见的害虫之一。</div>
+          </div>
+
+          <div class="disease-card" data-name="柑桔木虱" data-type="pest">
+            <div class="disease-header">
+              <div class="disease-title">柑桔木虱</div>
+              <div>
+                <span class="disease-tag pest">虫害</span>
+                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">黄龙病的主要传播媒介，以成虫和若虫吸食嫩梢汁液，诱发煤烟病。</div>
+          </div>
+
+          <div class="disease-card" data-name="蚧壳虫" data-type="pest">
+            <div class="disease-header">
+              <div class="disease-title">蚧壳虫</div>
+              <div>
+                <span class="disease-tag pest">虫害</span>
+                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">种类繁多，以刺吸式口器吸食汁液，分泌蜜露诱发煤烟病，导致枝条衰弱甚至枯死。</div>
+          </div>
+
+          <div class="disease-card" data-name="粉虱" data-type="pest">
+            <div class="disease-header">
+              <div class="disease-title">粉虱</div>
+              <div>
+                <span class="disease-tag pest">虫害</span>
+                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+              </div>
+            </div>
+            <div class="disease-desc">以成虫和若虫吸食叶片汁液，分泌蜜露诱发煤烟病，影响光合作用。</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /real-content -->
+
+    <!-- 底部导航 -->
+    <div class="mb-tab-bar">
+      <div class="mb-tab-item" onclick="navigateTo('mb_home.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_data.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>数据</span></div>
+      <div class="mb-tab-item active" onclick="navigateTo('mb_disease.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>病虫害</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>资讯</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>我的</span></div>
+    </div>
   </div>
 
+  <!-- 详情模态框 -->
   <div class="modal-overlay" id="detailModal">
-    <div class="modal" style="width: 90%; max-width: 360px; max-height: 80vh;">
+    <div class="modal-box">
       <div class="modal-header">
         <div class="modal-title" id="detailTitle">病虫害详情</div>
+        <div class="modal-close" onclick="closeDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </div>
       </div>
-      <div class="modal-body" style="max-height: 50vh; overflow-y: auto;">
-        <div id="detailContent"></div>
-      </div>
+      <div class="modal-body" id="detailContent"></div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeDetail()">关闭</button>
-        <button class="btn btn-primary" onclick="viewTreatment()">防治方案</button>
+        <button class="mb-btn mb-btn-outline" onclick="closeDetail()">关闭</button>
+        <button class="mb-btn mb-btn-primary" onclick="viewTreatment()">防治方案</button>
       </div>
     </div>
   </div>
@@ -261,67 +397,105 @@
         prevention: '1. 悬挂黄色粘虫板诱杀成虫\n2. 保护天敌（丽蚜小蜂等）\n3. 药剂防治：吡虫啉、啶虫脒等'
       }
     };
-    
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
     function filterType(type) {
-      var cards = document.querySelectorAll('.card');
+      var cards = document.querySelectorAll('.disease-card');
       cards.forEach(function(card) {
-        if (card.querySelector('.card-title').textContent.includes('病害') && type === 'disease') {
+        var cardType = card.getAttribute('data-type');
+        if (type === 'all') {
           card.style.display = 'block';
-        } else if (card.querySelector('.card-title').textContent.includes('虫害') && type === 'pest') {
-          card.style.display = 'block';
-        } else if (type === 'all') {
+        } else if (cardType === type) {
           card.style.display = 'block';
         } else {
           card.style.display = 'none';
         }
       });
-      
-      document.querySelectorAll('.tag').forEach(function(tag) {
-        tag.classList.remove('tag-primary');
-        if (tag.textContent === (type === 'all' ? '全部' : type === 'disease' ? '病害' : '虫害')) {
-          tag.classList.add('tag-primary');
+
+      document.querySelectorAll('.filter-tab').forEach(function(tab) {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+
+    function handleSearch(event) {
+      var keyword = event.target.value.toLowerCase();
+      var cards = document.querySelectorAll('.disease-card');
+      cards.forEach(function(card) {
+        var name = card.getAttribute('data-name').toLowerCase();
+        var desc = card.querySelector('.disease-desc').textContent.toLowerCase();
+        if (name.includes(keyword) || desc.includes(keyword)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
         }
       });
     }
-    
+
     function showDetail(name) {
       var data = diseaseData[name];
       if (!data) return;
-      
-      var riskColor = data.risk === '高风险' ? 'var(--danger)' : 'var(--warning)';
-      var riskBg = data.risk === '高风险' ? 'var(--danger-bg)' : 'var(--warning-bg)';
-      
+
+      var riskColor = data.risk === '高风险' ? 'var(--error)' : 'var(--warning)';
+      var riskBg = data.risk === '高风险' ? 'var(--error-bg)' : 'var(--warning-bg)';
+      var typeColor = data.type === '病害' ? 'var(--error)' : 'var(--warning)';
+      var typeBg = data.type === '病害' ? 'var(--error-bg)' : 'var(--warning-bg)';
+
       document.getElementById('detailTitle').textContent = name;
       document.getElementById('detailContent').innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-          <span style="padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: ${riskBg}; color: ${riskColor};">${data.risk}</span>
-          <span style="font-size: 12px; color: var(--text-light);">${data.type}</span>
+        <div class="detail-tags">
+          <span style="background: ${typeBg}; color: ${typeColor};" class="detail-tag">${data.type}</span>
+          <span style="background: ${riskBg}; color: ${riskColor};" class="detail-tag">${data.risk}</span>
         </div>
-        <div style="margin-bottom: 16px;">
-          <div style="font-size: 13px; font-weight: bold; color: var(--text); margin-bottom: 8px;">🔍 病害描述</div>
-          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">${data.description}</div>
+        
+        <div class="detail-section">
+          <div class="detail-title">🔍 病害描述</div>
+          <div class="detail-text">${data.description}</div>
         </div>
-        <div style="margin-bottom: 16px;">
-          <div style="font-size: 13px; font-weight: bold; color: var(--text); margin-bottom: 8px;">📋 症状表现</div>
-          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; white-space: pre-line;">${data.symptoms}</div>
+        
+        <div class="detail-section">
+          <div class="detail-title">📋 症状表现</div>
+          <div class="detail-text" style="white-space: pre-line;">${data.symptoms}</div>
         </div>
-        <div>
-          <div style="font-size: 13px; font-weight: bold; color: var(--text); margin-bottom: 8px;">🌿 防治方法</div>
-          <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; white-space: pre-line;">${data.prevention}</div>
+        
+        <div class="detail-section">
+          <div class="detail-title">🌿 防治方法</div>
+          <div class="detail-text" style="white-space: pre-line;">${data.prevention}</div>
         </div>
       `;
-      
+
       document.getElementById('detailModal').classList.add('show');
     }
-    
+
     function closeDetail() {
       document.getElementById('detailModal').classList.remove('show');
     }
-    
+
     function viewTreatment() {
       closeDetail();
       window.location.href = 'mb_disease_report.html';
     }
+
+    document.querySelectorAll('.disease-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var name = this.getAttribute('data-name');
+        showDetail(name);
+      });
+    });
+
+    (function() {
+      var app = document.querySelector('.mb-app');
+      setTimeout(function() {
+        app.classList.remove('loading');
+      }, 600);
+    })();
   </script>
 </body>
 </html>
