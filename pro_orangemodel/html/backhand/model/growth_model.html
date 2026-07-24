@@ -1,412 +1,482 @@
-﻿﻿﻿﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>生长模型 - 南丰蜜桔模型管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
-        .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
-        .status-running { background-color: #D1FAE5; color: #065F46; }
-        .status-stopped { background-color: #FEF2F2; color: #991B1B; }
-        .status-training { background-color: #FEF3C7; color: #92400E; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 500px; }
+        body{margin:0;padding:0;background-color:#F0F2F5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans SC',sans-serif}
+        .content-wrapper{padding:24px;height:100vh;overflow-y:auto}
     </style>
 </head>
 <body>
-    <div class="content-wrapper">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-xl font-bold text-gray-800">生长模型</h1>
-                <p class="text-gray-500 text-sm mt-1">管理南丰蜜桔生长模型的运行状态和参数配置</p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button onclick="refreshStatus()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm flex items-center">
-                    <iconify-icon icon="material-symbols:refresh" class="w-4 h-4 mr-2"></iconify-icon>
-                    刷新状态
-                </button>
-                <button onclick="startModel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm flex items-center">
-                    <iconify-icon icon="material-symbols:play_arrow" class="w-4 h-4 mr-2"></iconify-icon>
-                    启动模型
-                </button>
-            </div>
+<div class="content-wrapper">
+
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-xl font-bold text-gray-800">生长模型</h1>
+            <p class="text-gray-500 text-sm mt-1">管理南丰蜜桔生长模型的运行状态和参数配置</p>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">运行状态</p>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-running mt-2">
-                            <iconify-icon icon="material-symbols:circle" class="w-3 h-3 mr-1"></iconify-icon>
-                            运行中
-                        </span>
-                    </div>
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                        <iconify-icon icon="material-symbols:sprout" class="w-6 h-6 text-green-600"></iconify-icon>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">训练数据总量</p>
-                        <h3 class="text-2xl font-bold text-gray-800 mt-1">1,258,600</h3>
-                        <p class="text-gray-400 text-xs mt-1">条记录</p>
-                    </div>
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">模型准确率</p>
-                        <h3 class="text-2xl font-bold text-gray-800 mt-1">94.7%</h3>
-                        <p class="text-green-500 text-xs mt-1 flex items-center">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                            较上次提升 1.2%
-                        </p>
-                    </div>
-                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                        <iconify-icon icon="material-symbols:accuracy" class="w-6 h-6 text-purple-600"></iconify-icon>
-                    </div>
-                </div>
-            </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="refreshStatus()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">刷新状态</button>
+            <button onclick="startModel()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">启动模型</button>
         </div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/></svg>
-                    训练数据占比
-                </h2>
-                <div class="h-64">
-                    <canvas id="trainingDataChart"></canvas>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                    模型准确率趋势
-                </h2>
-                <div class="h-64">
-                    <canvas id="accuracyTrendChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    模型参数配置
-                </h2>
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="font-medium text-gray-800">有效积温物候识别算法</p>
-                            <p class="text-xs text-gray-500">依据各生育阶段有效积温阈值判定物候期</p>
-                        </div>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="font-medium text-gray-800">LightGBM梯度提升回归模型</p>
-                            <p class="text-xs text-gray-500">拟合新梢生长、果径增长、糖分积累趋势</p>
-                        </div>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="font-medium text-gray-800">时序异常检测算法</p>
-                            <p class="text-xs text-gray-500">构建正常生长区间基线，识别生长胁迫状态</p>
-                        </div>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="font-medium text-gray-800">多约束农事优化推荐算法</p>
-                            <p class="text-xs text-gray-500">以品质目标为优化目标，搜索最优农事方案</p>
-                        </div>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="font-medium text-gray-800">FAO彭曼-蒙特斯作物水分平衡算法</p>
-                            <p class="text-xs text-gray-500">估算植株蒸腾量，确定最佳灌溉时机</p>
-                        </div>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待优化</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    模型参数配置
-                </h2>
-                <div class="space-y-4">
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <label class="block text-sm text-gray-600 mb-2">有效积温阈值 (°C·d)</label>
-                        <input type="number" id="param-temp" value="1200" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <p class="text-xs text-gray-400 mt-1">当前物候期判定阈值</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <label class="block text-sm text-gray-600 mb-2">土壤湿度适宜范围 (%)</label>
-                        <input type="text" id="param-moisture" value="60-80" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <p class="text-xs text-gray-400 mt-1">最佳土壤含水量区间</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <label class="block text-sm text-gray-600 mb-2">光照强度阈值 (klx)</label>
-                        <input type="number" id="param-light" value="30" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <p class="text-xs text-gray-400 mt-1">光合作用有效光照</p>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <label class="block text-sm text-gray-600 mb-2">预测周期 (天)</label>
-                        <input type="number" id="param-period" value="7" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                        <p class="text-xs text-gray-400 mt-1">品质预测时间窗口</p>
-                    </div>
-                </div>
-                <div class="flex justify-end mt-4">
-                    <button onclick="openSaveModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
-                        保存参数
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                农事年历
-            </h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-3 px-4 font-semibold text-gray-600">物候期</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-600">时间范围</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-600">主要农事操作</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-600">模型关注点</th>
-                            <th class="text-left py-3 px-4 font-semibold text-gray-600">当前状态</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4">萌芽期</td>
-                            <td class="py-3 px-4">3月上旬 - 3月下旬</td>
-                            <td class="py-3 px-4">施肥、浇水、除草</td>
-                            <td class="py-3 px-4">芽体发育、新梢萌发</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4">春梢生长期</td>
-                            <td class="py-3 px-4">4月上旬 - 5月中旬</td>
-                            <td class="py-3 px-4">修剪、施肥、病虫害防治</td>
-                            <td class="py-3 px-4">新梢生长、花芽分化</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4">开花期</td>
-                            <td class="py-3 px-4">5月下旬 - 6月中旬</td>
-                            <td class="py-3 px-4">授粉、疏花、病虫害防治</td>
-                            <td class="py-3 px-4">花量监测、授粉效果</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4">生理落果期</td>
-                            <td class="py-3 px-4">6月下旬 - 7月上旬</td>
-                            <td class="py-3 px-4">疏果、追肥、灌溉</td>
-                            <td class="py-3 px-4">坐果率、果实发育</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">已结束</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50 bg-green-50">
-                            <td class="py-3 px-4 font-medium text-green-700">果实膨大期</td>
-                            <td class="py-3 px-4">7月中旬 - 10月上旬</td>
-                            <td class="py-3 px-4">追肥、灌溉、病虫害防治</td>
-                            <td class="py-3 px-4">果径增长、糖分积累</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded font-medium">进行中</span></td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="py-3 px-4">成熟期</td>
-                            <td class="py-3 px-4">10月中旬 - 12月上旬</td>
-                            <td class="py-3 px-4">采收、分级、贮藏</td>
-                            <td class="py-3 px-4">品质检测、采收时机</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded">未开始</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div class="flex items-center justify-between"><div><p class="text-gray-500 text-sm">运行状态</p><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 mt-2">运行中</span></div><div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="flex items-center justify-between"><div><p class="text-gray-500 text-sm">训练数据总量</p><h3 class="text-2xl font-bold text-gray-800 mt-1">1,258,600</h3><p class="text-gray-400 text-xs mt-1">条记录</p></div><div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg></div></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="flex items-center justify-between"><div><p class="text-gray-500 text-sm">模型准确率</p><h3 class="text-2xl font-bold text-gray-800 mt-1">94.7%</h3><p class="text-green-500 text-xs mt-1">较上次提升 1.2%</p></div><div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg></div></div>
         </div>
     </div>
 
-    <div id="save-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-                    保存参数配置
-                </h3>
-                <button onclick="closeModal('save-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100"><h2 class="text-lg font-semibold text-gray-800 mb-4">训练数据占比</h2><div class="h-64"><canvas id="trainingDataChart"></canvas></div></div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100"><h2 class="text-lg font-semibold text-gray-800 mb-4">模型准确率趋势</h2><div class="h-64"><canvas id="accuracyTrendChart"></canvas></div></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">模型参数配置</h2>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-medium text-gray-800">有效积温物候识别算法</p><p class="text-xs text-gray-500">依据各生育阶段有效积温阈值判定物候期</p></div><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span></div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-medium text-gray-800">LightGBM梯度提升回归模型</p><p class="text-xs text-gray-500">拟合新梢生长、果径增长、糖分积累趋势</p></div><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span></div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-medium text-gray-800">时序异常检测算法</p><p class="text-xs text-gray-500">构建正常生长区间基线，识别生长胁迫状态</p></div><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span></div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-medium text-gray-800">多约束农事优化推荐算法</p><p class="text-xs text-gray-500">以品质目标为优化目标，搜索最优农事方案</p></div><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">已启用</span></div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"><div><p class="font-medium text-gray-800">FAO彭曼-蒙特斯作物水分平衡算法</p><p class="text-xs text-gray-500">估算植株蒸腾量，确定最佳灌溉时机</p></div><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">待优化</span></div>
             </div>
-            <div class="p-6">
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                    <div class="flex items-start">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <div>
-                            <p class="text-sm font-medium text-blue-800">参数修改确认</p>
-                            <p class="text-xs text-blue-600 mt-1">修改模型参数后需要重新训练模型才能生效，预计耗时约15分钟。</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span class="text-sm text-gray-600">有效积温阈值</span>
-                        <span class="text-sm font-medium text-gray-800" id="preview-temp">1200 °C·d</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span class="text-sm text-gray-600">土壤湿度适宜范围</span>
-                        <span class="text-sm font-medium text-gray-800" id="preview-moisture">60-80 %</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span class="text-sm text-gray-600">光照强度阈值</span>
-                        <span class="text-sm font-medium text-gray-800" id="preview-light">30 klx</span>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span class="text-sm text-gray-600">预测周期</span>
-                        <span class="text-sm font-medium text-gray-800" id="preview-period">7 天</span>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="restart-model" class="w-4 h-4 text-green-600">
-                        <span class="ml-2 text-sm text-gray-600">保存后自动重启模型</span>
-                    </label>
-                </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">模型参数配置</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-gray-50 rounded-lg"><label class="block text-sm text-gray-600 mb-2">有效积温阈值 (C·d)</label><input type="number" id="param-temp" value="1200" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></div>
+                <div class="p-4 bg-gray-50 rounded-lg"><label class="block text-sm text-gray-600 mb-2">土壤湿度适宜范围 (%)</label><input type="text" id="param-moisture" value="60-80" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></div>
+                <div class="p-4 bg-gray-50 rounded-lg"><label class="block text-sm text-gray-600 mb-2">光照强度阈值 (klx)</label><input type="number" id="param-light" value="30" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></div>
+                <div class="p-4 bg-gray-50 rounded-lg"><label class="block text-sm text-gray-600 mb-2">预测周期 (天)</label><input type="number" id="param-period" value="7" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('save-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
-                <button onclick="submitSaveParams()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认保存</button>
-            </div>
+            <div class="flex justify-end mt-4"><button onclick="openSaveModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存参数</button></div>
         </div>
     </div>
 
-    <script>
-        function refreshStatus() {
-            alert('正在刷新模型状态...\n当前状态：运行中');
-        }
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">农事年历</h2>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="calendar-search" placeholder="搜索物候期名称..." class="pl-3 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-56" oninput="filterCalendar()">
+                <button onclick="openCalendarAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">+ 添加</button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead><tr class="border-b border-gray-200"><th class="text-left py-3 px-4 font-semibold text-gray-600">物候期</th><th class="text-left py-3 px-4 font-semibold text-gray-600">时间范围</th><th class="text-left py-3 px-4 font-semibold text-gray-600">主要农事操作</th><th class="text-left py-3 px-4 font-semibold text-gray-600">模型关注点</th><th class="text-left py-3 px-4 font-semibold text-gray-600">当前状态</th><th class="text-left py-3 px-4 font-semibold text-gray-600">操作</th></tr></thead>
+                <tbody id="calendar-tbody"></tbody>
+            </table>
+        </div>
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+            <p class="text-sm text-gray-500">共 <span id="calendar-total-count">6</span> 条记录</p>
+            <div class="flex items-center space-x-2">
+                <button onclick="calendarPrevPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                <span class="text-sm text-gray-600"><span id="calendar-current-page">1</span> / <span id="calendar-total-pages">2</span></span>
+                <button onclick="calendarNextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function startModel() {
-            alert('模型启动中...\n预计需要30秒完成初始化');
-        }
+<!-- 保存参数弹窗 -->
+<div id="save-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">保存参数配置</h3>
+            <button onclick="closeModal('save-modal')" style="padding:4px;background:none;border:none;cursor:pointer;border-radius:4px">&times;</button>
+        </div>
+        <div style="padding:24px">
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:16px">
+                <p style="font-size:14px;font-weight:500;color:#1e40af">参数修改确认</p>
+                <p style="font-size:12px;color:#2563eb;margin-top:4px">修改模型参数后需要重新训练模型才能生效，预计耗时约15分钟。</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#4b5563">有效积温阈值</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="preview-temp">1200 C·d</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#4b5563">土壤湿度适宜范围</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="preview-moisture">60-80 %</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#4b5563">光照强度阈值</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="preview-light">30 klx</span></div>
+                <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#4b5563">预测周期</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="preview-period">7 天</span></div>
+            </div>
+            <div style="margin-top:16px"><label style="display:flex;align-items:center;cursor:pointer"><input type="checkbox" id="restart-model" style="width:16px;height:16px"><span style="margin-left:8px;font-size:14px;color:#4b5563">保存后自动重启模型</span></label></div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+            <button onclick="closeModal('save-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+            <button onclick="submitSaveParams()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认保存</button>
+        </div>
+    </div>
+</div>
 
-        function openSaveModal() {
-            document.getElementById('preview-temp').textContent = document.getElementById('param-temp').value + ' °C·d';
-            document.getElementById('preview-moisture').textContent = document.getElementById('param-moisture').value + ' %';
-            document.getElementById('preview-light').textContent = document.getElementById('param-light').value + ' klx';
-            document.getElementById('preview-period').textContent = document.getElementById('param-period').value + ' 天';
-            document.getElementById('save-modal').classList.add('active');
-        }
+<!-- 查看物候期弹窗 -->
+<div id="calendar-view-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">查看物候期详情</h3>
+            <button onclick="closeModal('calendar-view-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                <div><label style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">物候期</label><p style="font-size:14px;font-weight:500;color:#1f2937" id="view-cal-name">-</p></div>
+                <div><label style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">时间范围</label><p style="font-size:14px;font-weight:500;color:#1f2937" id="view-cal-time">-</p></div>
+                <div><label style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">当前状态</label><p style="font-size:14px;font-weight:500;color:#1f2937" id="view-cal-status">-</p></div>
+                <div style="grid-column:1/-1"><label style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">主要农事操作</label><p style="font-size:14px;color:#1f2937" id="view-cal-operation">-</p></div>
+                <div style="grid-column:1/-1"><label style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">模型关注点</label><p style="font-size:14px;color:#1f2937" id="view-cal-focus">-</p></div>
+            </div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end">
+            <button onclick="closeModal('calendar-view-modal')" style="padding:8px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:14px;cursor:pointer">关闭</button>
+        </div>
+    </div>
+</div>
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
+<!-- 添加物候期弹窗 -->
+<div id="calendar-add-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">+ 添加物候期</h3>
+            <button onclick="closeModal('calendar-add-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">物候期名称 <span style="color:#ef4444">*</span></label><input type="text" id="add-cal-name" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="请输入物候期名称"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">开始时间</label><input type="text" id="add-cal-time-start" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：7月中旬"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">结束时间</label><input type="text" id="add-cal-time-end" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：10月上旬"></div>
+            </div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">主要农事操作 <span style="color:#ef4444">*</span></label><input type="text" id="add-cal-operation" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：追肥、灌溉、病虫害防治"></div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">模型关注点 <span style="color:#ef4444">*</span></label><input type="text" id="add-cal-focus" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：果径增长、糖分积累"></div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">当前状态</label><select id="add-cal-status" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="未开始">未开始</option><option value="进行中">进行中</option><option value="已结束">已结束</option></select></div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+            <button onclick="closeModal('calendar-add-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+            <button onclick="submitCalendarAdd()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认添加</button>
+        </div>
+    </div>
+</div>
 
-        function submitSaveParams() {
-            closeModal('save-modal');
-            alert('参数保存成功！\n模型将自动重新训练以应用新参数。');
-        }
+<!-- 编辑物候期弹窗 -->
+<div id="calendar-edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">编辑物候期</h3>
+            <button onclick="closeModal('calendar-edit-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">物候期名称 <span style="color:#ef4444">*</span></label><input type="text" id="edit-cal-name" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">开始时间</label><input type="text" id="edit-cal-time-start" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">结束时间</label><input type="text" id="edit-cal-time-end" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+            </div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">主要农事操作 <span style="color:#ef4444">*</span></label><input type="text" id="edit-cal-operation" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">模型关注点 <span style="color:#ef4444">*</span></label><input type="text" id="edit-cal-focus" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+            <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">当前状态</label><select id="edit-cal-status" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="未开始">未开始</option><option value="进行中">进行中</option><option value="已结束">已结束</option></select></div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+            <button onclick="closeModal('calendar-edit-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+            <button onclick="submitCalendarEdit()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">保存修改</button>
+        </div>
+    </div>
+</div>
 
-        document.addEventListener('click', (e) => {
-            const modal = document.getElementById('save-modal');
-            if (!modal.contains(e.target) && !e.target.closest('[onclick="openSaveModal()"]')) {
-                modal.classList.remove('active');
+<!-- 删除确认弹窗 -->
+<div id="calendar-delete-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:400px">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">删除确认</h3>
+            <button onclick="closeModal('calendar-delete-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px;text-align:center">
+            <div style="width:60px;height:60px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span style="font-size:28px;color:#dc2626">!</span></div>
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937;margin-bottom:8px">确认删除</h3>
+            <p style="font-size:14px;color:#6b7280;margin-bottom:24px">确定要删除物候期"<span id="delete-cal-name" style="font-weight:500;color:#1f2937"></span>"吗？</p>
+            <div style="display:flex;justify-content:center;gap:12px">
+                <button onclick="closeModal('calendar-delete-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="confirmCalendarDelete()" style="padding:8px 16px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 刷新状态弹窗 -->
+<div id="refresh-status-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:420px">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">模型状态刷新</h3>
+            <button onclick="closeModal('refresh-status-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px;text-align:center">
+            <div style="width:60px;height:60px;background:#dbeafe;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+                <svg width="28" height="28" fill="none" stroke="#2563eb" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </div>
+            <h3 style="font-size:16px;font-weight:600;color:#1f2937;margin-bottom:12px">正在刷新模型状态...</h3>
+            <div style="background:#f9fafb;border-radius:8px;padding:16px;margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb">
+                    <span style="font-size:14px;color:#6b7280">运行状态</span><span style="font-size:14px;font-weight:500;color:#059669">运行中</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb">
+                    <span style="font-size:14px;color:#6b7280">模型准确率</span><span style="font-size:14px;font-weight:500;color:#1f2937">94.7%</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb">
+                    <span style="font-size:14px;color:#6b7280">训练数据总量</span><span style="font-size:14px;font-weight:500;color:#1f2937">1,258,600 条</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0">
+                    <span style="font-size:14px;color:#6b7280">最后更新时间</span><span style="font-size:14px;font-weight:500;color:#1f2937">2026-07-23 14:30:00</span>
+                </div>
+            </div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end">
+            <button onclick="closeModal('refresh-status-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- 启动模型弹窗 -->
+<div id="start-model-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;width:90%;max-width:480px">
+        <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+            <h3 style="font-size:18px;font-weight:600;color:#1f2937">启动生长模型</h3>
+            <button onclick="closeModal('start-model-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+        </div>
+        <div style="padding:24px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+                <div style="width:48px;height:48px;background:#dcfce7;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="24" height="24" fill="none" stroke="#16a34a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                    <h4 style="font-size:15px;font-weight:600;color:#1f2937">确认启动模型服务</h4>
+                    <p style="font-size:13px;color:#6b7280;margin-top:2px">模型启动后将开始数据处理和预测计算</p>
+                </div>
+            </div>
+            <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px;margin-bottom:16px">
+                <p style="font-size:13px;color:#c2410c;font-weight:500;margin-bottom:4px">启动须知</p>
+                <ul style="font-size:12px;color:#9a3412;list-style:disc;padding-left:16px;margin:0;line-height:1.8">
+                    <li>预计初始化耗时约30秒</li>
+                    <li>将加载最新气象与土壤数据</li>
+                    <li>启动期间部分功能可能暂时不可用</li>
+                    <li>建议在非高峰时段操作</li>
+                </ul>
+            </div>
+        </div>
+        <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+            <button onclick="closeModal('start-model-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+            <button onclick="confirmStartModel()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认启动</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var calendarData = [
+    { id:'cal-1', name:'萌芽期', time:'3月上旬 - 3月下旬', timeStart:'3月上旬', timeEnd:'3月下旬', operation:'施肥、浇水、除草', focus:'芽体发育、新梢萌发', status:'已结束', statusClass:'bg-gray-100 text-gray-600' },
+    { id:'cal-2', name:'春梢生长期', time:'4月上旬 - 5月中旬', timeStart:'4月上旬', timeEnd:'5月中旬', operation:'修剪、施肥、病虫害防治', focus:'新梢生长、花芽分化', status:'已结束', statusClass:'bg-gray-100 text-gray-600' },
+    { id:'cal-3', name:'开花期', time:'5月下旬 - 6月中旬', timeStart:'5月下旬', timeEnd:'6月中旬', operation:'授粉、疏花、病虫害防治', focus:'花量监测、授粉效果', status:'已结束', statusClass:'bg-gray-100 text-gray-600' },
+    { id:'cal-4', name:'生理落果期', time:'6月下旬 - 7月上旬', timeStart:'6月下旬', timeEnd:'7月上旬', operation:'疏果、追肥、灌溉', focus:'坐果率、果实发育', status:'已结束', statusClass:'bg-gray-100 text-gray-600' },
+    { id:'cal-5', name:'果实膨大期', time:'7月中旬 - 10月上旬', timeStart:'7月中旬', timeEnd:'10月上旬', operation:'追肥、灌溉、病虫害防治', focus:'果径增长、糖分积累', status:'进行中', statusClass:'bg-green-100 text-green-600' },
+    { id:'cal-6', name:'成熟期', time:'10月中旬 - 12月上旬', timeStart:'10月中旬', timeEnd:'12月上旬', operation:'采收、分级、贮藏', focus:'品质检测、采收时机', status:'未开始', statusClass:'bg-blue-100 text-blue-600' }
+];
+var calendarCurrentPage = 1;
+var calendarPageSize = 5;
+var filteredCalendarData = calendarData.slice();
+var calendarEditId = null;
+var calendarDeleteId = null;
+
+function renderCalendarTable(){
+    var tbody = document.getElementById('calendar-tbody');
+    var start = (calendarCurrentPage - 1) * calendarPageSize;
+    var end = start + calendarPageSize;
+    var pageData = filteredCalendarData.slice(start, end);
+    var html = '';
+    for(var i=0; i<pageData.length; i++){
+        var item = pageData[i];
+        html += '<tr class="border-b border-gray-100 hover:bg-gray-50'+(item.status==='进行中'?' bg-green-50':'')+'">';
+        html += '<td class="py-3 px-4'+(item.status==='进行中'?' font-medium text-green-700':'')+'">'+item.name+'</td>';
+        html += '<td class="py-3 px-4">'+item.time+'</td>';
+        html += '<td class="py-3 px-4">'+item.operation+'</td>';
+        html += '<td class="py-3 px-4">'+item.focus+'</td>';
+        html += '<td class="py-3 px-4"><span class="px-2 py-1 '+item.statusClass+' text-xs rounded'+(item.status==='进行中'?' font-medium':'')+'">'+item.status+'</span></td>';
+        html += '<td class="py-3 px-4"><div style="display:flex;gap:4px">';
+        html += '<button onclick="viewCalendarItem(\''+item.id+'\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="查看"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>';
+        html += '<button onclick="editCalendarItem(\''+item.id+'\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="编辑"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>';
+        html += '<button onclick="deleteCalendarItem(\''+item.id+'\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="删除"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>';
+        html += '</div></td></tr>';
+    }
+    tbody.innerHTML = html;
+    document.getElementById('calendar-total-count').textContent = filteredCalendarData.length;
+    document.getElementById('calendar-current-page').textContent = calendarCurrentPage;
+    document.getElementById('calendar-total-pages').textContent = Math.ceil(filteredCalendarData.length/calendarPageSize)||1;
+}
+
+function filterCalendar(){
+    var term = document.getElementById('calendar-search').value.toLowerCase();
+    filteredCalendarData = calendarData.filter(function(item){return item.name.toLowerCase().indexOf(term)!==-1;});
+    calendarCurrentPage = 1;
+    renderCalendarTable();
+}
+
+function calendarPrevPage(){if(calendarCurrentPage>1){calendarCurrentPage--;renderCalendarTable();}}
+function calendarNextPage(){var t=Math.ceil(filteredCalendarData.length/calendarPageSize);if(calendarCurrentPage<t){calendarCurrentPage++;renderCalendarTable();}}
+
+function showModal(id){var m=document.getElementById(id);if(m)m.style.display='flex';}
+function hideModal(id){var m=document.getElementById(id);if(m)m.style.display='none';}
+function closeModal(id){hideModal(id);}
+
+function openCalendarAddModal(){
+    document.getElementById('add-cal-name').value='';
+    document.getElementById('add-cal-time-start').value='';
+    document.getElementById('add-cal-time-end').value='';
+    document.getElementById('add-cal-operation').value='';
+    document.getElementById('add-cal-focus').value='';
+    document.getElementById('add-cal-status').value='未开始';
+    showModal('calendar-add-modal');
+}
+
+function submitCalendarAdd(){
+    var name=document.getElementById('add-cal-name').value.trim();
+    var ts=document.getElementById('add-cal-time-start').value.trim();
+    var te=document.getElementById('add-cal-time-end').value.trim();
+    var op=document.getElementById('add-cal-operation').value.trim();
+    var fo=document.getElementById('add-cal-focus').value.trim();
+    var st=document.getElementById('add-cal-status').value;
+    if(!name||!op||!fo){alert('请填写物候期名称、农事操作和模型关注点');return;}
+    var map={'未开始':'bg-blue-100 text-blue-600','进行中':'bg-green-100 text-green-600','已结束':'bg-gray-100 text-gray-600'};
+    calendarData.push({id:'cal-'+(calendarData.length+1),name:name,time:ts+' - '+te,timeStart:ts,timeEnd:te,operation:op,focus:fo,status:st,statusClass:map[st]||'bg-gray-100 text-gray-600'});
+    hideModal('calendar-add-modal');
+    filteredCalendarData=calendarData.slice();
+    calendarCurrentPage=1;
+    renderCalendarTable();
+    alert('物候期添加成功！');
+}
+
+function viewCalendarItem(id){
+    for(var i=0;i<calendarData.length;i++){
+        if(calendarData[i].id===id){
+            var item=calendarData[i];
+            document.getElementById('view-cal-name').textContent=item.name;
+            document.getElementById('view-cal-time').textContent=item.time;
+            document.getElementById('view-cal-status').textContent=item.status;
+            document.getElementById('view-cal-operation').textContent=item.operation;
+            document.getElementById('view-cal-focus').textContent=item.focus;
+            showModal('calendar-view-modal');
+            break;
+        }
+    }
+}
+
+function editCalendarItem(id){
+    for(var i=0;i<calendarData.length;i++){
+        if(calendarData[i].id===id){
+            var item=calendarData[i];
+            calendarEditId=id;
+            document.getElementById('edit-cal-name').value=item.name;
+            document.getElementById('edit-cal-time-start').value=item.timeStart||'';
+            document.getElementById('edit-cal-time-end').value=item.timeEnd||'';
+            document.getElementById('edit-cal-operation').value=item.operation;
+            document.getElementById('edit-cal-focus').value=item.focus;
+            document.getElementById('edit-cal-status').value=item.status;
+            showModal('calendar-edit-modal');
+            break;
+        }
+    }
+}
+
+function submitCalendarEdit(){
+    var name=document.getElementById('edit-cal-name').value.trim();
+    var ts=document.getElementById('edit-cal-time-start').value.trim();
+    var te=document.getElementById('edit-cal-time-end').value.trim();
+    var op=document.getElementById('edit-cal-operation').value.trim();
+    var fo=document.getElementById('edit-cal-focus').value.trim();
+    var st=document.getElementById('edit-cal-status').value;
+    if(!name||!op||!fo){alert('请填写物候期名称、农事操作和模型关注点');return;}
+    for(var i=0;i<calendarData.length;i++){
+        if(calendarData[i].id===calendarEditId){
+            calendarData[i].name=name;
+            calendarData[i].time=ts+' - '+te;
+            calendarData[i].timeStart=ts;
+            calendarData[i].timeEnd=te;
+            calendarData[i].operation=op;
+            calendarData[i].focus=fo;
+            calendarData[i].status=st;
+            var map={'未开始':'bg-blue-100 text-blue-600','进行中':'bg-green-100 text-green-600','已结束':'bg-gray-100 text-gray-600'};
+            calendarData[i].statusClass=map[st]||'bg-gray-100 text-gray-600';
+            break;
+        }
+    }
+    hideModal('calendar-edit-modal');
+    calendarEditId=null;
+    filteredCalendarData=calendarData.slice();
+    renderCalendarTable();
+    alert('物候期修改成功！');
+}
+
+function deleteCalendarItem(id){
+    for(var i=0;i<calendarData.length;i++){
+        if(calendarData[i].id===id){
+            calendarDeleteId=id;
+            document.getElementById('delete-cal-name').textContent=calendarData[i].name;
+            showModal('calendar-delete-modal');
+            break;
+        }
+    }
+}
+
+function confirmCalendarDelete(){
+    for(var i=0;i<calendarData.length;i++){if(calendarData[i].id===calendarDeleteId){calendarData.splice(i,1);break;}}
+    hideModal('calendar-delete-modal');
+    calendarDeleteId=null;
+    filteredCalendarData=calendarData.slice();
+    if(calendarCurrentPage>Math.ceil(filteredCalendarData.length/calendarPageSize)){calendarCurrentPage=Math.max(1,Math.ceil(filteredCalendarData.length/calendarPageSize)||1);}
+    renderCalendarTable();
+    alert('物候期删除成功！');
+}
+
+function openSaveModal(){
+    document.getElementById('preview-temp').textContent=document.getElementById('param-temp').value+' C·d';
+    document.getElementById('preview-moisture').textContent=document.getElementById('param-moisture').value+' %';
+    document.getElementById('preview-light').textContent=document.getElementById('param-light').value+' klx';
+    document.getElementById('preview-period').textContent=document.getElementById('param-period').value+' 天';
+    showModal('save-modal');
+}
+
+function submitSaveParams(){hideModal('save-modal');alert('参数保存成功！\n模型将自动重新训练以应用新参数。');}
+function refreshStatus(){showModal('refresh-status-modal');}
+function startModel(){showModal('start-model-modal');}
+function confirmStartModel(){hideModal('start-model-modal');alert('模型启动成功！\n预计30秒后完成初始化，部分功能将逐步恢复。');}
+
+// 点击遮罩关闭弹窗
+document.addEventListener('click',function(e){
+    var ids=['save-modal','calendar-view-modal','calendar-add-modal','calendar-edit-modal','calendar-delete-modal','refresh-status-modal','start-model-modal'];
+    for(var i=0;i<ids.length;i++){
+        var m=document.getElementById(ids[i]);
+        if(m&&m.style.display==='flex'){
+            var inner=m.children[0];
+            if(inner&&!inner.contains(e.target)&&e.target===m){
+                m.style.display='none';
             }
-        });
+        }
+    }
+});
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx1 = document.getElementById('trainingDataChart').getContext('2d');
-            new Chart(ctx1, {
-                type: 'pie',
-                data: {
-                    labels: ['环境气象数据', '土壤监测数据', '物候期记录', '农事操作记录', '品质检测数据'],
-                    datasets: [{
-                        data: [35, 28, 20, 12, 5],
-                        backgroundColor: ['#3B82F6', '#16A34A', '#8B5CF6', '#F97316', '#EF4444'],
-                        borderColor: '#ffffff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: { size: 12 }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const ctx2 = document.getElementById('accuracyTrendChart').getContext('2d');
-            new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
-                    datasets: [{
-                        label: '模型准确率',
-                        data: [85.2, 87.5, 89.1, 91.3, 92.8, 93.5, 94.7],
-                        borderColor: '#16A34A',
-                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#16A34A',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: { font: { size: 12 } }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 80,
-                            max: 100,
-                            ticks: { callback: (value) => value + '%' }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+document.addEventListener('DOMContentLoaded',function(){
+    renderCalendarTable();
+    new Chart(document.getElementById('trainingDataChart'),{
+        type:'pie',
+        data:{labels:['环境气象数据','土壤监测数据','物候期记录','农事操作记录','品质检测数据'],datasets:[{data:[35,28,20,12,5],backgroundColor:['#3B82F6','#16A34A','#8B5CF6','#F97316','#EF4444']}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:20,usePointStyle:true,font:{size:12}}}}}
+    });
+    new Chart(document.getElementById('accuracyTrendChart'),{
+        type:'line',
+        data:{labels:['1月','2月','3月','4月','5月','6月','7月'],datasets:[{label:'模型准确率',data:[85.2,87.5,89.1,91.3,92.8,93.5,94.7],borderColor:'#16A34A',backgroundColor:'rgba(22,163,74,0.1)',borderWidth:2,fill:true,tension:0.3}]},
+        options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:false,min:80,max:100,ticks:{callback:function(v){return v+'%';}}}}}
+    });
+});
+</script>
 </body>
 </html>

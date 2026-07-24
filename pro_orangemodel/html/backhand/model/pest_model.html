@@ -1,18 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>病虫害防控模型 - 南丰蜜桔模型管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
         .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -69,10 +65,13 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7h-9m0 0V5a3 3 0 016 0v2m-6 0a3 3 0 00-6 0v10a3 3 0 006 0m10-3a2 2 0 11-4 0 2 2 0 014 0zM17 10H7m0 0l3-3m-3 3l3 3"/></svg>
-                        病虫害识别类别
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7h-9m0 0V5a3 3 0 016 0v2m-6 0a3 3 0 00-6 0v10a3 3 0 006 0m10-3a2 2 0 11-4 0 2 2 0 014 0zM17 10H7m0 0l3-3m-3 3l3 3"/></svg>
+                            病虫害识别类别
+                        </h3>
+                        <button onclick="openPestAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">+ 添加</button>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
@@ -84,109 +83,16 @@
                                     <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500">操作</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-800">红蜘蛛</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害</span></td>
-                                    <td class="px-4 py-3 text-center text-sm text-gray-600">12,580</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center">
-                                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div class="w-[94%] h-full bg-green-500 rounded-full"></div>
-                                            </div>
-                                            <span class="ml-2 text-sm text-gray-600">94%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <button onclick="editCategory('红蜘蛛')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-800">黄龙病</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害</span></td>
-                                    <td class="px-4 py-3 text-center text-sm text-gray-600">8,920</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center">
-                                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div class="w-[91%] h-full bg-green-500 rounded-full"></div>
-                                            </div>
-                                            <span class="ml-2 text-sm text-gray-600">91%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <button onclick="editCategory('黄龙病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-800">炭疽病</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害</span></td>
-                                    <td class="px-4 py-3 text-center text-sm text-gray-600">6,750</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center">
-                                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div class="w-[87%] h-full bg-yellow-500 rounded-full"></div>
-                                            </div>
-                                            <span class="ml-2 text-sm text-gray-600">87%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <button onclick="editCategory('炭疽病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-800">潜叶蛾</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">虫害</span></td>
-                                    <td class="px-4 py-3 text-center text-sm text-gray-600">5,320</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center">
-                                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div class="w-[85%] h-full bg-yellow-500 rounded-full"></div>
-                                            </div>
-                                            <span class="ml-2 text-sm text-gray-600">85%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <button onclick="editCategory('潜叶蛾')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-800">黑点病</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">病害</span></td>
-                                    <td class="px-4 py-3 text-center text-sm text-gray-600">4,180</td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center">
-                                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div class="w-[82%] h-full bg-yellow-500 rounded-full"></div>
-                                            </div>
-                                            <span class="ml-2 text-sm text-gray-600">82%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <div class="flex items-center justify-center space-x-2">
-                                            <button onclick="editCategory('黑点病')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody class="divide-y divide-gray-100" id="pest-tbody"></tbody>
                         </table>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <p class="text-sm text-gray-500">共 <span id="pest-total-count">10</span> 条记录</p>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="pestPrevPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                            <span class="text-sm text-gray-600"><span id="pest-current-page">1</span> / <span id="pest-total-pages">2</span></span>
+                            <button onclick="pestNextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -248,293 +154,346 @@
         </div>
     </div>
 
-    <div id="train-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <iconify-icon icon="material-symbols:refresh" class="w-5 h-5 mr-2 text-green-600"></iconify-icon>
-                    重新训练模型
-                </h3>
-                <button onclick="closeModal('train-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <!-- 查看弹窗 -->
+    <div id="pest-view-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">查看类别详情</h3>
+                <button onclick="closeModal('pest-view-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">训练数据量</label>
-                            <input type="number" id="train-data-volume" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="42650">
-                            <p class="text-xs text-gray-500 mt-1">参与训练的样本总数</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">迭代次数 (Epochs)</label>
-                            <input type="number" id="train-epochs" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="50">
-                            <p class="text-xs text-gray-500 mt-1">训练总轮数</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">学习率</label>
-                            <input type="text" id="train-lr" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="0.001">
-                            <p class="text-xs text-gray-500 mt-1">优化器学习率</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">批次大小 (Batch Size)</label>
-                            <input type="number" id="train-batch-size" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="32">
-                            <p class="text-xs text-gray-500 mt-1">每次迭代处理的样本数</p>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-yellow-50 rounded-lg">
-                        <p class="text-sm text-yellow-700">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.66 1.732-3L13.732 4c-.77-1.34-2.694-1.34-3.464 0L3.34 16c-.77 1.34.192 3 1.732 3z"/></svg>
-                            模型训练可能需要较长时间，请确保服务器资源充足。训练期间模型服务将暂停。
-                        </p>
-                    </div>
+            <div style="padding:24px">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">类别名称</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="view-pest-name">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">识别对象</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="view-pest-target">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">识别精度</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="view-pest-accuracy">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">应用场景</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="view-pest-scene">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">状态</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="view-pest-status">-</span></div>
                 </div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('train-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="startTraining()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">开始训练</button>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end">
+                <button onclick="closeModal('pest-view-modal')" style="padding:8px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:14px;cursor:pointer">关闭</button>
             </div>
         </div>
     </div>
 
-    <div id="export-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    导出模型
-                </h3>
-                <button onclick="closeModal('export-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <!-- 编辑弹窗 -->
+    <div id="pest-edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">编辑类别配置</h3>
+                <button onclick="closeModal('pest-edit-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">导出格式</label>
-                        <div class="space-y-2">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="export-format" value=".pkl" class="w-4 h-4 text-green-600 mr-3">
-                                <div>
-                                    <span class="text-sm font-medium text-gray-800">.pkl</span>
-                                    <span class="text-xs text-gray-500 ml-2">Pickle 格式（PyTorch 原生）</span>
-                                </div>
-                            </label>
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="export-format" value=".onnx" class="w-4 h-4 text-green-600 mr-3" checked>
-                                <div>
-                                    <span class="text-sm font-medium text-gray-800">.onnx</span>
-                                    <span class="text-xs text-gray-500 ml-2">ONNX 格式（跨平台通用）</span>
-                                </div>
-                            </label>
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="export-format" value=".h5" class="w-4 h-4 text-green-600 mr-3">
-                                <div>
-                                    <span class="text-sm font-medium text-gray-800">.h5</span>
-                                    <span class="text-xs text-gray-500 ml-2">HDF5 格式（TensorFlow/Keras）</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">模型版本号</label>
-                        <input type="text" id="export-version" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" value="v2.1.0" placeholder="如 v2.1.0">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                        <textarea id="export-remark" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请输入导出备注信息"></textarea>
-                    </div>
-                </div>
+            <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">类别名称 <span style="color:#ef4444">*</span></label><input type="text" id="edit-pest-name" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">识别对象 <span style="color:#ef4444">*</span></label><input type="text" id="edit-pest-target" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">识别精度</label><input type="text" id="edit-pest-accuracy" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">应用场景</label><input type="text" id="edit-pest-scene" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">状态</label><select id="edit-pest-status" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="启用">启用</option><option value="禁用">禁用</option></select></div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('export-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="exportModel()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">确认导出</button>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('pest-edit-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="submitPestEdit()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">保存修改</button>
             </div>
         </div>
     </div>
 
-    <div id="category-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    编辑类别配置
-                </h3>
-                <button onclick="closeModal('category-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <!-- 删除确认弹窗 -->
+    <div id="pest-delete-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:400px">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">删除确认</h3>
+                <button onclick="closeModal('pest-delete-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">类别名称</label>
-                        <input type="text" id="category-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" readonly>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">类别类型</label>
-                        <select id="category-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="虫害">虫害</option>
-                            <option value="病害">病害</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">优先级</label>
-                        <select id="category-priority" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="high">高优先级</option>
-                            <option value="medium">中优先级</option>
-                            <option value="low">低优先级</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">描述</label>
-                        <textarea id="category-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请输入类别描述"></textarea>
-                    </div>
+            <div style="padding:24px;text-align:center">
+                <div style="width:60px;height:60px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span style="font-size:28px;color:#dc2626">!</span></div>
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937;margin-bottom:8px">确认删除</h3>
+                <p style="font-size:14px;color:#6b7280;margin-bottom:24px">确定要删除类别"<span id="delete-pest-name" style="font-weight:500;color:#1f2937"></span>"吗？</p>
+                <div style="display:flex;justify-content:center;gap:12px">
+                    <button onclick="closeModal('pest-delete-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                    <button onclick="confirmPestDelete()" style="padding:8px 16px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认删除</button>
                 </div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('category-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="saveCategory()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+        </div>
+    </div>
+
+    <!-- 添加弹窗 -->
+    <div id="pest-add-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">+ 添加类别</h3>
+                <button onclick="closeModal('pest-add-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">类别名称 <span style="color:#ef4444">*</span></label><input type="text" id="add-pest-name" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：红蜘蛛"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">识别对象 <span style="color:#ef4444">*</span></label><input type="text" id="add-pest-target" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：柑橘红蜘蛛成虫/若虫"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">识别精度</label><input type="text" id="add-pest-accuracy" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：90%"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">应用场景</label><input type="text" id="add-pest-scene" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="如：叶片背面检测、果园巡检"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">状态</label><select id="add-pest-status" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="启用">启用</option><option value="禁用">禁用</option></select></div>
+            </div>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('pest-add-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="submitPestAdd()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重新训练弹窗 -->
+    <div id="train-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">重新训练模型</h3>
+                <button onclick="closeModal('train-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px">
+                <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px;margin-bottom:16px">
+                    <p style="font-size:14px;font-weight:500;color:#c2410c">确认重新训练模型？</p>
+                    <p style="font-size:12px;color:#9a3412;margin-top:4px">训练期间模型服务将暂停，预计耗时较长，请确保服务器资源充足。</p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:16px">
+                    <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">训练轮数</label><select id="train-epochs" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="5">5 轮</option><option value="10">10 轮</option><option value="20" selected>20 轮</option><option value="50">50 轮</option></select></div>
+                    <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">数据集选择</label><select id="train-dataset" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="full">全量数据集（42,650张）</option><option value="recent">近期数据集（15,000张）</option><option value="augmented">增强数据集（85,300张）</option></select></div>
+                </div>
+            </div>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('train-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="startTraining()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认训练</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导出模型弹窗 -->
+    <div id="export-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">导出模型</h3>
+                <button onclick="closeModal('export-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                    <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:8px">导出格式</label><div style="display:flex;flex-direction:column;gap:8px">
+                        <label style="display:flex;align-items:center;padding:12px;border:1px solid #d1d5db;border-radius:8px;cursor:pointer"><input type="radio" name="export-format" value="ONNX" checked style="width:16px;height:16px;margin-right:12px"><div><span style="font-size:14px;font-weight:500;color:#1f2937">ONNX</span><span style="font-size:12px;color:#6b7280;margin-left:8px">跨平台通用格式</span></div></label>
+                        <label style="display:flex;align-items:center;padding:12px;border:1px solid #d1d5db;border-radius:8px;cursor:pointer"><input type="radio" name="export-format" value="TensorFlow" style="width:16px;height:16px;margin-right:12px"><div><span style="font-size:14px;font-weight:500;color:#1f2937">TensorFlow</span><span style="font-size:12px;color:#6b7280;margin-left:8px">SavedModel / H5 格式</span></div></label>
+                        <label style="display:flex;align-items:center;padding:12px;border:1px solid #d1d5db;border-radius:8px;cursor:pointer"><input type="radio" name="export-format" value="PyTorch" style="width:16px;height:16px;margin-right:12px"><div><span style="font-size:14px;font-weight:500;color:#1f2937">PyTorch</span><span style="font-size:12px;color:#6b7280;margin-left:8px">.pt / .pth 格式</span></div></label>
+                    </div></div>
+                </div>
+            </div>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('export-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="exportModel()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认导出</button>
             </div>
         </div>
     </div>
 
     <script>
-        function openTrainModal() {
-            document.getElementById('train-modal').classList.add('active');
+        var pestData = [
+            {id:'p-1', name:'红蜘蛛', target:'柑橘红蜘蛛成虫/若虫', accuracy:'94%', scene:'叶片背面检测、果园巡检', status:'启用', type:'虫害', samples:'12,580'},
+            {id:'p-2', name:'黄龙病', target:'黄龙病症状叶片', accuracy:'91%', scene:'叶片斑驳检测、PCR辅助诊断', status:'启用', type:'病害', samples:'8,920'},
+            {id:'p-3', name:'炭疽病', target:'炭疽病典型病斑', accuracy:'87%', scene:'果实表面检测、落叶期监测', status:'启用', type:'病害', samples:'6,750'},
+            {id:'p-4', name:'潜叶蛾', target:'潜叶蛾幼虫/潜道', accuracy:'85%', scene:'新梢嫩叶检测、春梢期监测', status:'启用', type:'虫害', samples:'5,320'},
+            {id:'p-5', name:'黑点病', target:'黑点病斑果实/叶片', accuracy:'82%', scene:'果实表面检测、采收前筛查', status:'启用', type:'病害', samples:'4,180'},
+            {id:'p-6', name:'疮痂病', target:'疮痂病斑果实/枝梢', accuracy:'89%', scene:'幼果期检测、枝梢筛查', status:'启用', type:'病害', samples:'3,650'},
+            {id:'p-7', name:'锈壁虱', target:'锈壁虱成虫/若虫', accuracy:'86%', scene:'果实表皮检测、夏秋季监测', status:'启用', type:'虫害', samples:'2,940'},
+            {id:'p-8', name:'煤烟病', target:'煤烟病菌丝/孢子', accuracy:'78%', scene:'叶片表面检测、蚜虫伴生检测', status:'禁用', type:'病害', samples:'2,310'},
+            {id:'p-9', name:'溃疡病', target:'溃疡病斑叶片/果实', accuracy:'92%', scene:'叶片斑点检测、果面筛查', status:'启用', type:'病害', samples:'5,880'},
+            {id:'p-10', name:'蚜虫', target:'蚜虫成虫/若虫/卵', accuracy:'83%', scene:'嫩梢嫩叶检测、春夏季监测', status:'启用', type:'虫害', samples:'4,120'}
+        ];
+        var pestCurrentPage = 1;
+        var pestPageSize = 5;
+        var pestEditId = null;
+        var pestDeleteId = null;
+
+        function showModal(id) { var m = document.getElementById(id); if(m) m.style.display = 'flex'; }
+        function hideModal(id) { var m = document.getElementById(id); if(m) m.style.display = 'none'; }
+        function closeModal(id) { hideModal(id); }
+
+        function renderPestTable() {
+            var tbody = document.getElementById('pest-tbody');
+            var start = (pestCurrentPage - 1) * pestPageSize;
+            var end = start + pestPageSize;
+            var pageData = pestData.slice(start, end);
+            var html = '';
+            for (var i = 0; i < pageData.length; i++) {
+                var item = pageData[i];
+                var accNum = parseInt(item.accuracy);
+                var barColor = accNum >= 90 ? '#16a34a' : (accNum >= 85 ? '#eab308' : '#ef4444');
+                html += '<tr class="hover:bg-gray-50">';
+                html += '<td class="px-4 py-3 text-sm font-medium text-gray-800">' + item.name + '</td>';
+                html += '<td class="px-4 py-3"><span class="px-2 py-1 ' + (item.type === '病害' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') + ' text-xs rounded-full">' + item.type + '</span></td>';
+                html += '<td class="px-4 py-3 text-center text-sm text-gray-600">' + item.samples + '</td>';
+                html += '<td class="px-4 py-3"><div class="flex items-center justify-center"><div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:' + item.accuracy + ';background:' + barColor + '"></div></div><span class="ml-2 text-sm text-gray-600">' + item.accuracy + '</span></div></td>';
+                html += '<td class="px-4 py-3"><div style="display:flex;justify-content:center;gap:4px">';
+                html += '<button onclick="viewPestItem(\'' + item.id + '\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="查看"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>';
+                html += '<button onclick="editPestItem(\'' + item.id + '\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="编辑"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>';
+                html += '<button onclick="deletePestItem(\'' + item.id + '\')" style="background:none;border:none;cursor:pointer;color:#9ca3af;padding:4px" title="删除"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>';
+                html += '</div></td></tr>';
+            }
+            tbody.innerHTML = html;
+            document.getElementById('pest-total-count').textContent = pestData.length;
+            document.getElementById('pest-current-page').textContent = pestCurrentPage;
+            document.getElementById('pest-total-pages').textContent = Math.ceil(pestData.length / pestPageSize) || 1;
         }
 
-        function openExportModal() {
-            document.getElementById('export-modal').classList.add('active');
+        function pestPrevPage() { if (pestCurrentPage > 1) { pestCurrentPage--; renderPestTable(); } }
+        function pestNextPage() { var t = Math.ceil(pestData.length / pestPageSize); if (pestCurrentPage < t) { pestCurrentPage++; renderPestTable(); } }
+
+        function viewPestItem(id) {
+            for (var i = 0; i < pestData.length; i++) {
+                if (pestData[i].id === id) {
+                    var item = pestData[i];
+                    document.getElementById('view-pest-name').textContent = item.name;
+                    document.getElementById('view-pest-target').textContent = item.target;
+                    document.getElementById('view-pest-accuracy').textContent = item.accuracy;
+                    document.getElementById('view-pest-scene').textContent = item.scene;
+                    document.getElementById('view-pest-status').textContent = item.status;
+                    showModal('pest-view-modal');
+                    break;
+                }
+            }
         }
 
-        function editCategory(name) {
-            document.getElementById('category-name').value = name;
-            document.getElementById('category-type').value = name.includes('病') ? '病害' : '虫害';
-            document.getElementById('category-desc').value = '';
-            document.getElementById('category-modal').classList.add('active');
+        function editPestItem(id) {
+            for (var i = 0; i < pestData.length; i++) {
+                if (pestData[i].id === id) {
+                    var item = pestData[i];
+                    pestEditId = id;
+                    document.getElementById('edit-pest-name').value = item.name;
+                    document.getElementById('edit-pest-target').value = item.target;
+                    document.getElementById('edit-pest-accuracy').value = item.accuracy;
+                    document.getElementById('edit-pest-scene').value = item.scene;
+                    document.getElementById('edit-pest-status').value = item.status;
+                    showModal('pest-edit-modal');
+                    break;
+                }
+            }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        function submitPestEdit() {
+            var name = document.getElementById('edit-pest-name').value.trim();
+            var target = document.getElementById('edit-pest-target').value.trim();
+            var accuracy = document.getElementById('edit-pest-accuracy').value.trim();
+            var scene = document.getElementById('edit-pest-scene').value.trim();
+            var status = document.getElementById('edit-pest-status').value;
+            if (!name || !target) { alert('请填写类别名称和识别对象'); return; }
+            for (var i = 0; i < pestData.length; i++) {
+                if (pestData[i].id === pestEditId) {
+                    pestData[i].name = name;
+                    pestData[i].target = target;
+                    pestData[i].accuracy = accuracy;
+                    pestData[i].scene = scene;
+                    pestData[i].status = status;
+                    break;
+                }
+            }
+            hideModal('pest-edit-modal');
+            pestEditId = null;
+            renderPestTable();
+            alert('类别修改成功！');
+        }
+
+        function deletePestItem(id) {
+            for (var i = 0; i < pestData.length; i++) {
+                if (pestData[i].id === id) {
+                    pestDeleteId = id;
+                    document.getElementById('delete-pest-name').textContent = pestData[i].name;
+                    showModal('pest-delete-modal');
+                    break;
+                }
+            }
+        }
+
+        function confirmPestDelete() {
+            for (var i = 0; i < pestData.length; i++) { if (pestData[i].id === pestDeleteId) { pestData.splice(i, 1); break; } }
+            hideModal('pest-delete-modal');
+            pestDeleteId = null;
+            if (pestCurrentPage > Math.ceil(pestData.length / pestPageSize)) { pestCurrentPage = Math.max(1, Math.ceil(pestData.length / pestPageSize) || 1); }
+            renderPestTable();
+            alert('类别删除成功！');
+        }
+
+        function openPestAddModal() {
+            document.getElementById('add-pest-name').value = '';
+            document.getElementById('add-pest-target').value = '';
+            document.getElementById('add-pest-accuracy').value = '';
+            document.getElementById('add-pest-scene').value = '';
+            document.getElementById('add-pest-status').value = '启用';
+            showModal('pest-add-modal');
+        }
+
+        function submitPestAdd() {
+            var name = document.getElementById('add-pest-name').value.trim();
+            var target = document.getElementById('add-pest-target').value.trim();
+            var accuracy = document.getElementById('add-pest-accuracy').value.trim();
+            var scene = document.getElementById('add-pest-scene').value.trim();
+            var status = document.getElementById('add-pest-status').value;
+            if (!name || !target) { alert('请填写类别名称和识别对象'); return; }
+            var newId = 'p-' + (pestData.length + 1);
+            pestData.push({id: newId, name: name, target: target, accuracy: accuracy || '--', scene: scene, status: status, type: '病害', samples: '0'});
+            hideModal('pest-add-modal');
+            pestCurrentPage = Math.ceil(pestData.length / pestPageSize);
+            renderPestTable();
+            alert('类别添加成功！');
         }
 
         function saveParams() {
-            const threshold = document.getElementById('confidence-threshold').value;
+            var threshold = document.getElementById('confidence-threshold').value;
             alert('模型参数保存成功！\n置信度阈值: ' + threshold);
         }
 
+        function openTrainModal() { showModal('train-modal'); }
+        function openExportModal() { showModal('export-modal'); }
+
         function startTraining() {
-            const dataVolume = document.getElementById('train-data-volume').value;
-            const epochs = document.getElementById('train-epochs').value;
-            const lr = document.getElementById('train-lr').value;
-            const batchSize = document.getElementById('train-batch-size').value;
-            alert('模型训练任务已提交！\n训练数据量: ' + dataVolume + '\n迭代次数: ' + epochs + '\n学习率: ' + lr + '\n批次大小: ' + batchSize + '\n训练完成后将自动更新模型版本。');
+            var epochs = document.getElementById('train-epochs').value;
+            var dataset = document.getElementById('train-dataset').value;
+            var dsMap = {full: '全量数据集', recent: '近期数据集', augmented: '增强数据集'};
+            alert('训练已启动！\n训练轮数: ' + epochs + ' 轮\n数据集: ' + dsMap[dataset] + '\n训练完成后将自动更新模型版本。');
             closeModal('train-modal');
         }
 
         function exportModel() {
-            const formatEl = document.querySelector('input[name="export-format"]:checked');
-            const format = formatEl ? formatEl.value : '.onnx';
-            const version = document.getElementById('export-version').value;
-            const remark = document.getElementById('export-remark').value;
-            alert('模型导出成功！\n格式: ' + format + '\n版本: ' + version + (remark ? '\n备注: ' + remark : ''));
+            var formatEl = document.querySelector('input[name="export-format"]:checked');
+            var format = formatEl ? formatEl.value : 'ONNX';
+            alert('导出成功！\n格式: ' + format);
             closeModal('export-modal');
         }
 
-        function saveCategory() {
-            const name = document.getElementById('category-name').value;
-            alert('类别配置保存成功！\n类别: ' + name);
-            closeModal('category-modal');
-        }
-
-        document.addEventListener('click', (e) => {
-            ['train-modal', 'export-modal', 'category-modal'].forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                const btn = e.target.closest('[onclick*="' + modalId + '"]');
-                if (!modal.contains(e.target) && !btn) {
-                    modal.classList.remove('active');
+        // 点击遮罩关闭弹窗
+        document.addEventListener('click', function(e) {
+            var ids = ['pest-view-modal', 'pest-edit-modal', 'pest-delete-modal', 'pest-add-modal', 'train-modal', 'export-modal'];
+            for (var i = 0; i < ids.length; i++) {
+                var m = document.getElementById(ids[i]);
+                if (m && m.style.display === 'flex') {
+                    var inner = m.children[0];
+                    if (inner && !inner.contains(e.target) && e.target === m) {
+                        m.style.display = 'none';
+                    }
                 }
-            });
+            }
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx1 = document.getElementById('accuracyBarChart').getContext('2d');
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPestTable();
+            var ctx1 = document.getElementById('accuracyBarChart').getContext('2d');
             new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: ['红蜘蛛', '黄龙病', '炭疽病', '潜叶蛾', '黑点病'],
-                    datasets: [{
-                        label: '识别准确率',
-                        data: [94, 91, 87, 85, 82],
-                        backgroundColor: ['#16A34A', '#16A34A', '#EAB308', '#EAB308', '#EAB308'],
-                        borderRadius: 6,
-                        borderSkipped: false
-                    }]
+                    datasets: [{label: '识别准确率', data: [94, 91, 87, 85, 82], backgroundColor: ['#16A34A', '#16A34A', '#EAB308', '#EAB308', '#EAB308'], borderRadius: 6, borderSkipped: false}]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 75,
-                            max: 100,
-                            ticks: { callback: (value) => value + '%' }
-                        }
-                    }
-                }
+                options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: false, min: 75, max: 100, ticks: {callback: function(v) {return v + '%';}}}}}
             });
 
-            const ctx2 = document.getElementById('trainingTrendChart').getContext('2d');
+            var ctx2 = document.getElementById('trainingTrendChart').getContext('2d');
             new Chart(ctx2, {
                 type: 'line',
                 data: {
                     labels: ['v1.0', 'v1.2', 'v1.5', 'v2.0', 'v2.1'],
-                    datasets: [{
-                        label: '训练准确率',
-                        data: [78, 82, 85, 87, 89],
-                        borderColor: '#16A34A',
-                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#16A34A',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                    }, {
-                        label: '验证准确率',
-                        data: [76, 80, 83, 86, 88],
-                        borderColor: '#3B82F6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#3B82F6',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                    }]
+                    datasets: [
+                        {label: '训练准确率', data: [78, 82, 85, 87, 89], borderColor: '#16A34A', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#16A34A', pointBorderColor: '#ffffff', pointBorderWidth: 2, pointRadius: 4},
+                        {label: '验证准确率', data: [76, 80, 83, 86, 88], borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#3B82F6', pointBorderColor: '#ffffff', pointBorderWidth: 2, pointRadius: 4}
+                    ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { size: 11 } } }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 70,
-                            max: 100,
-                            ticks: { callback: (value) => value + '%' }
-                        }
-                    }
-                }
+                options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {position: 'bottom', labels: {font: {size: 11}}}}, scales: {y: {beginAtZero: false, min: 70, max: 100, ticks: {callback: function(v) {return v + '%';}}}}}
             });
         });
     </script>

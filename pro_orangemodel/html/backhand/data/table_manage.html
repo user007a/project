@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -9,9 +9,6 @@
     <style>
         body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; }
         .content-wrapper { padding: 24px; height: 100vh; overflow-y: auto; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -217,600 +214,145 @@
                                 <button onclick="openDeleteModal('施肥记录数据表')" class="text-red-600 hover:text-red-700">删除</button>
                             </td>
                         </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="灌溉记录数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">灌溉记录数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">地块ID、灌溉方式、水量、时间...</td>
-                            <td class="py-3 px-4">12,345</td>
-                            <td class="py-3 px-4">IoT传感器</td>
-                            <td class="py-3 px-4">每小时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('灌溉记录数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('灌溉记录数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('灌溉记录数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="产量统计数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">产量统计数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">地块ID、年份、产量、品质等级...</td>
-                            <td class="py-3 px-4">2,345</td>
-                            <td class="py-3 px-4">产业大数据平台</td>
-                            <td class="py-3 px-4">每年</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('产量统计数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('产量统计数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('产量统计数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="品质检测数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">品质检测数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">样本ID、糖度、酸度、果径...</td>
-                            <td class="py-3 px-4">5,678</td>
-                            <td class="py-3 px-4">实验室检测</td>
-                            <td class="py-3 px-4">每周</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('品质检测数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('品质检测数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('品质检测数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="病虫害防治记录表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">病虫害防治记录表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">地块ID、病虫害名称、防治措施...</td>
-                            <td class="py-3 px-4">3,456</td>
-                            <td class="py-3 px-4">人工采集</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('病虫害防治记录表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('病虫害防治记录表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('病虫害防治记录表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="农药使用记录表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">农药使用记录表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">地块ID、农药名称、用量、日期...</td>
-                            <td class="py-3 px-4">6,789</td>
-                            <td class="py-3 px-4">人工采集</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('农药使用记录表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('农药使用记录表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('农药使用记录表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="病害数据库表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">病害数据库表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">病害ID、名称、症状、防治方法...</td>
-                            <td class="py-3 px-4">20</td>
-                            <td class="py-3 px-4">标准化整理</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('病害数据库表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('病害数据库表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('病害数据库表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="虫害数据库表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">虫害数据库表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">虫害ID、名称、危害、防治方法...</td>
-                            <td class="py-3 px-4">20</td>
-                            <td class="py-3 px-4">标准化整理</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('虫害数据库表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('虫害数据库表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('虫害数据库表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="灾害数据库表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">灾害数据库表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">灾害ID、名称、危害、预防措施...</td>
-                            <td class="py-3 px-4">20</td>
-                            <td class="py-3 px-4">标准化整理</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('灾害数据库表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('灾害数据库表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('灾害数据库表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="生长模型参数表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">生长模型参数表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">参数ID、名称、取值范围、默认值...</td>
-                            <td class="py-3 px-4">50</td>
-                            <td class="py-3 px-4">模型训练</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('生长模型参数表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('生长模型参数表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('生长模型参数表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="病虫害模型参数表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">病虫害模型参数表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">参数ID、名称、取值范围、默认值...</td>
-                            <td class="py-3 px-4">45</td>
-                            <td class="py-3 px-4">模型训练</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('病虫害模型参数表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('病虫害模型参数表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('病虫害模型参数表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="预测结果数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">预测结果数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">预测ID、地块ID、预测类型、结果...</td>
-                            <td class="py-3 px-4">89,234</td>
-                            <td class="py-3 px-4">模型运算</td>
-                            <td class="py-3 px-4">实时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('预测结果数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('预测结果数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('预测结果数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="预警记录数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">预警记录数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">预警ID、类型、级别、状态...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">系统生成</td>
-                            <td class="py-3 px-4">实时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('预警记录数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('预警记录数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('预警记录数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="处置记录数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">处置记录数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">处置ID、预警ID、处理人、状态...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">人工录入</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('处置记录数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('处置记录数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('处置记录数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="识别日志数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">识别日志数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">日志ID、图片URL、识别结果...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">AI识别</td>
-                            <td class="py-3 px-4">实时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('识别日志数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('识别日志数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('识别日志数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="风险提示数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">风险提示数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">提示ID、类型、内容、时间...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">模型运算</td>
-                            <td class="py-3 px-4">每小时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('风险提示数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('风险提示数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('风险提示数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="预测提示数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">预测提示数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">提示ID、果园、类型、内容...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">模型运算</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('预测提示数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('预测提示数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('预测提示数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="长势研判数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">长势研判数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">研判ID、地块、指标、结果...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">模型运算</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('长势研判数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('长势研判数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('长势研判数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="品质预测数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">品质预测数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">预测ID、地块、糖度、酸度...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">模型运算</td>
-                            <td class="py-3 px-4">每周</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('品质预测数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('品质预测数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('品质预测数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="气象监控数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">气象监控数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">站点ID、气温、湿度、降雨量...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">气象站</td>
-                            <td class="py-3 px-4">每10分钟</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('气象监控数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('气象监控数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('气象监控数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="用户管理数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">用户管理数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">用户ID、姓名、角色、状态...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">系统管理</td>
-                            <td class="py-3 px-4">实时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('用户管理数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('用户管理数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('用户管理数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="角色管理数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">角色管理数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">角色ID、名称、权限、描述...</td>
-                            <td class="py-3 px-4">10</td>
-                            <td class="py-3 px-4">系统管理</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('角色管理数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('角色管理数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('角色管理数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="预警规则数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">预警规则数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">规则ID、名称、阈值、级别...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">系统配置</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('预警规则数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('预警规则数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('预警规则数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="发送模板数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">发送模板数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">模板ID、名称、类型、内容...</td>
-                            <td class="py-3 px-4">35</td>
-                            <td class="py-3 px-4">系统配置</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('发送模板数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('发送模板数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('发送模板数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="内容设置数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">内容设置数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">设置ID、名称、值、描述...</td>
-                            <td class="py-3 px-4">20</td>
-                            <td class="py-3 px-4">系统配置</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('内容设置数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('内容设置数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('内容设置数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="流程设置数据表" data-model="病虫害模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">流程设置数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">病虫害模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">流程ID、名称、步骤、配置...</td>
-                            <td class="py-3 px-4">15</td>
-                            <td class="py-3 px-4">系统配置</td>
-                            <td class="py-3 px-4">按需</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('流程设置数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('流程设置数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('流程设置数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="人工采集数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">人工采集数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">采集ID、地块、指标、值...</td>
-                            <td class="py-3 px-4">25</td>
-                            <td class="py-3 px-4">人工采集</td>
-                            <td class="py-3 px-4">每天</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('人工采集数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('人工采集数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('人工采集数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="数据对接数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">数据对接数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">设备ID、名称、类型、状态...</td>
-                            <td class="py-3 px-4">25</td>
-                            <td class="py-3 px-4">IoT传感器</td>
-                            <td class="py-3 px-4">实时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('数据对接数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('数据对接数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('数据对接数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-100 hover:bg-gray-50" data-name="外部抓取数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">外部抓取数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">数据源ID、名称、类型、状态...</td>
-                            <td class="py-3 px-4">25</td>
-                            <td class="py-3 px-4">外部API</td>
-                            <td class="py-3 px-4">定时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('外部抓取数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('外部抓取数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('外部抓取数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50" data-name="共享数据数据表" data-model="生长模型">
-                            <td class="py-3 px-4 font-medium text-gray-800">共享数据数据表</td>
-                            <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">生长模型</span></td>
-                            <td class="py-3 px-4 text-gray-600">数据表ID、名称、方向、状态...</td>
-                            <td class="py-3 px-4">25</td>
-                            <td class="py-3 px-4">产业大数据平台</td>
-                            <td class="py-3 px-4">定时</td>
-                            <td class="py-3 px-4">
-                                <button onclick="openDetailModal('共享数据数据表')" class="text-blue-600 hover:text-blue-700 mr-3">详情</button>
-                                <button onclick="syncTable('共享数据数据表')" class="text-green-600 hover:text-green-700 mr-3">同步</button>
-                                <button onclick="openDeleteModal('共享数据数据表')" class="text-red-600 hover:text-red-700">删除</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
-                <p class="text-sm text-gray-500">共 <span id="total-count">37</span> 条记录</p>
-                <div class="flex items-center space-x-2">
-                    <button onclick="prevPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    </button>
-                    <span class="px-3 py-1 bg-green-600 text-white rounded text-sm" id="current-page">1</span>
-                    <button onclick="nextPage()" class="px-3 py-1 bg-white border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                    <select id="page-size" class="px-3 py-1 border border-gray-300 rounded text-sm ml-2" onchange="changePageSize()">
-                        <option value="10">10条/页</option>
-                        <option value="20">20条/页</option>
-                        <option value="35">35条/页</option>
-                    </select>
-                </div>
+                <p class="text-sm text-gray-500">共 <span id="total-count">8</span> 条记录</p>
+                <div class="flex items-center space-x-2" id="pagination-controls"></div>
             </div>
         </div>
     </div>
 
-    <div id="add-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    新建数据表
-                </h3>
-                <button onclick="closeModal('add-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <!-- 新建数据表弹窗 -->
+    <div id="add-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">新建数据表</h3>
+                <button onclick="closeModal('add-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">数据表名称</label>
-                        <input type="text" id="add-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入数据表名称">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">所属模型</label>
-                        <select id="add-model" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="生长模型">生长模型</option>
-                            <option value="病虫害模型">病虫害防控模型</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">核心字段（逗号分隔）</label>
-                        <input type="text" id="add-fields" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="如：地块ID、气温、湿度">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">数据来源</label>
-                        <input type="text" id="add-source" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入数据来源">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">更新频率</label>
-                        <select id="add-frequency" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="实时">实时</option>
-                            <option value="每5分钟">每5分钟</option>
-                            <option value="每天">每天</option>
-                            <option value="每月">每月</option>
-                            <option value="按需">按需</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">表说明</label>
-                        <textarea id="add-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请输入数据表说明（如用于蜜桔膨大期生长监测）"></textarea>
-                    </div>
-                </div>
+            <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">表名 <span style="color:#ef4444">*</span></label><input type="text" id="add-name" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" placeholder="请输入数据表名称"></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">所属模型 <span style="color:#ef4444">*</span></label><select id="add-model" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="生长模型">生长模型</option><option value="品质模型">品质模型</option><option value="预警模型">预警模型</option><option value="气象模型">气象模型</option></select></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">字段定义</label><textarea id="add-fields" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box" rows="4" placeholder="请输入字段名和类型，每行一个字段&#10;例如：&#10;地块ID VARCHAR(50)&#10;温度 DECIMAL(10,2)&#10;湿度 DECIMAL(10,2)"></textarea></div>
+                <div><label style="font-size:14px;font-weight:500;color:#374151;display:block;margin-bottom:4px">数据源</label><select id="add-source" style="width:100%;padding:8px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box"><option value="产业大数据平台">产业大数据平台</option><option value="农业气象平台">农业气象平台</option><option value="土壤监测系统">土壤监测系统</option><option value="人工录入">人工录入</option></select></div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('add-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="saveTable()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">保存</button>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('add-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="saveTable()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认创建</button>
             </div>
         </div>
     </div>
 
-    <div id="detail-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    数据表详情
-                </h3>
-                <button onclick="closeModal('detail-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+    <!-- 导入数据表弹窗 -->
+    <div id="import-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">导入数据表</h3>
+                <button onclick="closeModal('import-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">数据表名称</span>
-                        <span class="text-sm font-medium text-gray-800" id="detail-name">果园基础信息表</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">所属模型</span>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded" id="detail-model">生长模型</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">核心字段</span>
-                        <span class="text-sm font-medium text-gray-800" id="detail-fields">地块ID、名称、坐标、面积...</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">数据量</span>
-                        <span class="text-sm font-medium text-gray-800" id="detail-count">2,456</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">数据来源</span>
-                        <span class="text-sm font-medium text-gray-800" id="detail-source">产业大数据平台</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">更新频率</span>
-                        <span class="text-sm font-medium text-gray-800" id="detail-frequency">每天</span>
-                    </div>
-                    <div>
-                        <span class="text-sm text-gray-500">表说明</span>
-                        <p class="text-sm text-gray-800 mt-1" id="detail-note">用于南丰蜜桔膨大期生长模型训练，记录果园地块基础信息及栽培品种。</p>
-                    </div>
+            <div style="padding:24px">
+                <div style="border:2px dashed #d1d5db;border-radius:8px;padding:32px;text-align:center;cursor:pointer" onclick="document.getElementById('import-file').click()">
+                    <svg style="width:48px;height:48px;margin:0 auto 8px;color:#9ca3af" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <p style="color:#4b5563;margin-bottom:4px">点击或拖拽文件到此处上传</p>
+                    <p style="font-size:12px;color:#9ca3af">支持 Excel (.xlsx)、CSV 文件</p>
+                    <input type="file" id="import-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleImportFile(this)">
                 </div>
-            </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end">
-                <button onclick="closeModal('detail-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">关闭</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="delete-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-6 text-center">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
-                <p class="text-sm text-gray-500 mb-6">确定要删除这个数据表吗？删除后将影响关联模型训练，此操作不可撤销。</p>
-                <div class="flex justify-center space-x-3">
-                    <button onclick="closeModal('delete-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">确认删除</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="sync-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    确认同步
-                </h3>
-                <button onclick="closeModal('sync-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">数据表名称</span>
-                        <span class="text-sm font-medium text-gray-800" id="sync-name">-</span>
-                    </div>
-                    <div class="p-3 bg-blue-50 rounded-lg">
-                        <p class="text-sm text-blue-700 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            同步操作将从数据来源拉取最新数据，请确认数据来源可用
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('sync-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="confirmSync()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认同步</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="import-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    导入数据表
-                </h3>
-                <button onclick="closeModal('import-modal')" class="p-1 hover:bg-gray-100 rounded">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition cursor-pointer" onclick="document.getElementById('import-file').click()">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <p class="text-gray-600 mb-2">点击或拖拽文件到此处上传</p>
-                    <p class="text-sm text-gray-400">支持 Excel (.xlsx)、CSV 文件</p>
-                    <input type="file" id="import-file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportFile(this)">
-                </div>
-                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
-                    <p class="text-sm text-blue-700 flex items-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        导入模板说明：数据表名称为必填字段
+                <div style="margin-top:16px;padding:12px;background:#eff6ff;border-radius:8px">
+                    <p style="font-size:13px;color:#1d4ed8;display:flex;align-items:center">
+                        <svg style="width:16px;height:16px;flex-shrink:0;margin-right:6px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        导入模板说明：表名、所属模型为必填字段
                     </p>
                 </div>
-                <div class="mt-4 flex justify-between items-center">
-                    <button onclick="downloadTemplate()" class="text-blue-600 hover:text-blue-700 text-sm flex items-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
+                    <button onclick="downloadTemplate()" style="background:none;border:none;color:#2563eb;font-size:13px;cursor:pointer;display:flex;align-items:center">
+                        <svg style="width:16px;height:16px;margin-right:4px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         下载导入模板
                     </button>
                 </div>
             </div>
-            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('import-modal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">取消</button>
-                <button onclick="submitImport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">开始导入</button>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('import-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="submitImport()" style="padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div id="detail-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">数据表详情</h3>
+                <button onclick="closeModal('detail-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">表名</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="detail-name">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">所属模型</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="detail-model">-</span></div>
+                    <div style="padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280;display:block;margin-bottom:4px">字段列表</span><span style="font-size:14px;color:#1f2937" id="detail-fields">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">记录数</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="detail-count">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">数据来源</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="detail-source">-</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">同步频率</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="detail-frequency">-</span></div>
+                </div>
+            </div>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end">
+                <button onclick="closeModal('detail-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 同步确认弹窗 -->
+    <div id="sync-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:400px">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">确认同步</h3>
+                <button onclick="closeModal('sync-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:8px"><span style="font-size:14px;color:#6b7280">数据表名称</span><span style="font-size:14px;font-weight:500;color:#1f2937" id="sync-name">-</span></div>
+                    <div style="padding:12px;background:#eff6ff;border-radius:8px">
+                        <p style="font-size:13px;color:#1d4ed8;display:flex;align-items:center;margin:0">
+                            <svg style="width:16px;height:16px;flex-shrink:0;margin-right:6px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            确认同步该数据表？同步将拉取最新数据。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:16px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:12px">
+                <button onclick="closeModal('sync-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                <button onclick="confirmSync()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认同步</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div id="delete-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:400px">
+            <div style="padding:16px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937">删除确认</h3>
+                <button onclick="closeModal('delete-modal')" style="padding:4px;background:none;border:none;cursor:pointer;font-size:20px">&times;</button>
+            </div>
+            <div style="padding:24px;text-align:center">
+                <div style="width:60px;height:60px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span style="font-size:28px;color:#dc2626">!</span></div>
+                <h3 style="font-size:18px;font-weight:600;color:#1f2937;margin-bottom:8px">确认删除</h3>
+                <p style="font-size:14px;color:#6b7280;margin-bottom:24px">确定要删除数据表「<span id="delete-name" style="font-weight:500;color:#1f2937"></span>」吗？删除后将影响关联模型训练，此操作不可撤销。</p>
+                <div style="display:flex;justify-content:center;gap:12px">
+                    <button onclick="closeModal('delete-modal')" style="padding:8px 16px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:8px;font-size:14px;cursor:pointer">取消</button>
+                    <button onclick="confirmDelete()" style="padding:8px 16px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">确认删除</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentPage = 1;
-        let pageSize = 10;
-        let deleteName = null;
+        var currentPage = 1;
+        var pageSize = 10;
+        var deleteName = null;
+
+        function showModal(id) { var m = document.getElementById(id); if (m) m.style.display = 'flex'; }
+        function hideModal(id) { var m = document.getElementById(id); if (m) m.style.display = 'none'; }
+        function closeModal(id) { hideModal(id); }
 
         function initPagination() {
             showPage(1);
@@ -818,50 +360,46 @@
 
         function showPage(page) {
             currentPage = page;
-            const allRows = document.querySelectorAll('#data-table-body tr');
-            const filteredRows = Array.from(allRows).filter(r => r.dataset.filtered !== 'false');
-            const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+            var allRows = document.querySelectorAll('#data-table-body tr');
+            var filteredRows = Array.from(allRows).filter(function(r) { return r.dataset.filtered !== 'false'; });
+            var totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
 
-            allRows.forEach(row => { row.style.display = 'none'; });
+            allRows.forEach(function(row) { row.style.display = 'none'; });
 
-            const start = (page - 1) * pageSize;
-            const end = start + pageSize;
-            filteredRows.slice(start, end).forEach(row => { row.style.display = ''; });
+            var start = (page - 1) * pageSize;
+            var end = start + pageSize;
+            filteredRows.slice(start, end).forEach(function(row) { row.style.display = ''; });
 
             document.getElementById('total-count').textContent = filteredRows.length;
 
-            const paginationDiv = document.querySelector('.px-4.py-3.bg-gray-50 .flex.items-center.space-x-2');
+            var paginationDiv = document.getElementById('pagination-controls');
             paginationDiv.innerHTML = '';
 
-            const prevBtn = document.createElement('button');
-            prevBtn.className = `px-3 py-1 bg-white border border-gray-300 rounded text-sm ${currentPage <= 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}`;
+            var prevBtn = document.createElement('button');
+            prevBtn.className = 'px-3 py-1 bg-white border border-gray-300 rounded text-sm ' + (currentPage <= 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50');
             prevBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>';
-            prevBtn.onclick = () => currentPage > 1 && showPage(currentPage - 1);
+            prevBtn.onclick = function() { if (currentPage > 1) showPage(currentPage - 1); };
             paginationDiv.appendChild(prevBtn);
 
-            for (let i = 1; i <= totalPages; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = `px-3 py-1 rounded text-sm ${i === currentPage ? 'bg-green-600 text-white' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'}`;
+            for (var i = 1; i <= totalPages; i++) {
+                var pageBtn = document.createElement('button');
+                pageBtn.className = 'px-3 py-1 rounded text-sm ' + (i === currentPage ? 'bg-green-600 text-white' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50');
                 pageBtn.textContent = i;
-                pageBtn.onclick = () => showPage(i);
+                (function(p) { pageBtn.onclick = function() { showPage(p); }; })(i);
                 paginationDiv.appendChild(pageBtn);
             }
 
-            const nextBtn = document.createElement('button');
-            nextBtn.className = `px-3 py-1 bg-white border border-gray-300 rounded text-sm ${currentPage >= totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50'}`;
+            var nextBtn = document.createElement('button');
+            nextBtn.className = 'px-3 py-1 bg-white border border-gray-300 rounded text-sm ' + (currentPage >= totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-50');
             nextBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
-            nextBtn.onclick = () => currentPage < totalPages && showPage(currentPage + 1);
+            nextBtn.onclick = function() { if (currentPage < totalPages) showPage(currentPage + 1); };
             paginationDiv.appendChild(nextBtn);
 
-            const pageSizeSelect = document.createElement('select');
+            var pageSizeSelect = document.createElement('select');
             pageSizeSelect.className = 'px-3 py-1 border border-gray-300 rounded text-sm ml-2';
             pageSizeSelect.innerHTML = '<option value="10">10条/页</option><option value="20">20条/页</option><option value="35">35条/页</option>';
             pageSizeSelect.value = pageSize;
-            pageSizeSelect.onchange = () => {
-                pageSize = parseInt(pageSizeSelect.value);
-                currentPage = 1;
-                showPage(1);
-            };
+            pageSizeSelect.onchange = function() { pageSize = parseInt(pageSizeSelect.value); currentPage = 1; showPage(1); };
             paginationDiv.appendChild(pageSizeSelect);
         }
 
@@ -869,143 +407,86 @@
             document.getElementById('add-name').value = '';
             document.getElementById('add-model').value = '生长模型';
             document.getElementById('add-fields').value = '';
-            document.getElementById('add-source').value = '';
-            document.getElementById('add-frequency').value = '每天';
-            document.getElementById('add-desc').value = '';
-            document.getElementById('add-modal').classList.add('active');
+            document.getElementById('add-source').value = '产业大数据平台';
+            showModal('add-modal');
         }
 
         function openImportModal() {
             document.getElementById('import-file').value = '';
-            document.getElementById('import-modal').classList.add('active');
+            showModal('import-modal');
         }
 
         function handleImportFile(input) {
-            const file = input.files[0];
-            if (file) {
-                alert('已选择文件: ' + file.name);
-            }
+            var file = input.files[0];
+            if (file) { alert('已选择文件: ' + file.name); }
         }
 
         function downloadTemplate() {
-            const content = '数据表名称,所属模型,核心字段,数据量,数据来源,更新频率,表说明\n果园基础信息表,生长模型,地块ID、名称、坐标,2456,产业大数据平台,每天,记录果园地块基础信息';
-            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
+            var content = '数据表名称,所属模型,核心字段,数据量,数据来源,更新频率,表说明\n果园基础信息表,生长模型,地块ID、名称、坐标,2456,产业大数据平台,每天,记录果园地块基础信息';
+            var blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = '数据表导入模板.csv';
             link.click();
         }
 
         function submitImport() {
-            const file = document.getElementById('import-file').files[0];
-            if (!file) {
-                alert('请先选择要导入的文件');
-                return;
-            }
+            var file = document.getElementById('import-file').files[0];
+            if (!file) { alert('请先选择要导入的文件'); return; }
             alert('数据表导入成功！\n文件: ' + file.name + '\n导入数量: 3 条');
             closeModal('import-modal');
         }
 
         function exportTables() {
-            const content = '数据表名称,所属模型,核心字段,数据量,数据来源,更新频率\n果园基础信息表,生长模型,地块ID、名称、坐标、面积,2,456,产业大数据平台,每天\n气象监测数据表,生长模型,温度、湿度、光照、降雨量,156,234,IoT传感器,实时\n土壤监测数据表,生长模型,土壤温度、湿度、pH值、养分,89,456,IoT传感器,每小时\n物候期记录表,生长模型,萌芽期、开花期、坐果期、膨大期,1,234,人工采集,按需\n病虫害监测表,病虫害模型,病害名称、虫害名称、发生时间,3,456,IoT传感器+人工,每天\n品质检测数据表,品质模型,糖度、酸度、果径、色泽,567,实验室检测,每周\n产量预测数据表,产量模型,历史产量、树龄、管理措施,890,产业大数据平台,每月';
-            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
+            var content = '数据表名称,所属模型,核心字段,数据量,数据来源,更新频率\n果园基础信息表,生长模型,地块ID、名称、坐标、面积,2,456,产业大数据平台,每天\n气象监测数据表,生长模型,温度、湿度、光照、降雨量,156,234,IoT传感器,实时';
+            var blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = '数据表列表_' + new Date().toISOString().split('T')[0] + '.csv';
             link.click();
         }
 
-        const tableNotes = {
-            '果园基础信息表': '用于南丰蜜桔膨大期生长模型训练，记录果园地块基础信息及栽培品种。',
-            '土壤基线普查数据表': '存储果园土壤pH值、有机质含量、氮磷钾等基线数据，为施肥决策提供依据。',
-            '环境气象实时监测表': '对接气象站实时数据，包含气温、湿度、光照、风速等，每5分钟更新。',
-            '蜜桔病虫害基础知识库': '标准化整理南丰蜜桔常见病虫害信息，包括症状、防治方法等。',
-            '病虫害AI识别任务表': '记录小程序上传的病虫害图片识别任务及AI识别结果。',
-            '气象灾害风险参数配置表': '由农技专家制定的灾害触发阈值与防护措施配置。',
-            '物候期记录表': '记录各地块蜜桔萌芽、开花、坐果、膨大、转色等物候期观察数据。',
-            '施肥记录数据表': '记录各地块施肥时间、肥料名称、用量等信息，用于生长模型训练。',
-            '灌溉记录数据表': '通过IoT传感器自动采集灌溉方式、水量、时间等数据。',
-            '产量统计数据表': '历年各地块产量及品质等级统计，用于产量预测模型验证。',
-            '品质检测数据表': '实验室检测的糖度、酸度、果径等品质指标数据。',
-            '病虫害防治记录表': '记录病虫害发生及防治措施执行情况，用于效果评估。',
-            '农药使用记录表': '记录农药名称、用量、施用时间等，确保用药安全可追溯。',
-            '病害数据库表': '南丰蜜桔常见病害标准化数据库，含症状图片及防治方案。',
-            '虫害数据库表': '南丰蜜桔常见虫害标准化数据库，含危害特征及防控措施。',
-            '灾害数据库表': '气象灾害及生物灾害信息库，含预防措施和应急处置方案。',
-            '生长模型参数表': '生长模型训练所需的各项参数配置，含取值范围和默认值。',
-            '病虫害模型参数表': '病虫害防控模型训练参数配置，含阈值和权重设置。',
-            '预测结果数据表': '模型运算生成的预测结果，包含地块、预测类型、结果值等。',
-            '预警记录数据表': '系统自动生成的预警信息记录，含类型、级别、状态等。',
-            '处置记录数据表': '预警处置的执行记录，含处理人、处置措施、完成状态等。',
-            '识别日志数据表': 'AI识别引擎的运行日志，含图片URL、识别结果、置信度等。',
-            '风险提示数据表': '模型运算识别的风险提示信息，按小时更新。',
-            '预测提示数据表': '生长模型生成的预测提示，如果实膨大期预测、成熟期预测等。',
-            '长势研判数据表': '基于多维度数据的长势研判结果，含指标和研判结论。',
-            '品质预测数据表': '预测各地块蜜桔品质指标，包括糖度、酸度、果径等。',
-            '气象监控数据表': '气象站点监控数据汇总，含气温、湿度、降雨量等指标。',
-            '用户管理数据表': '系统用户账号信息表，含姓名、角色、状态等字段。',
-            '角色管理数据表': '系统角色及权限配置表，定义各角色的操作权限范围。',
-            '预警规则数据表': '预警触发规则配置，含指标阈值、预警级别、通知方式等。',
-            '发送模板数据表': '预警消息发送模板配置，含模板类型、内容和变量。',
-            '内容设置数据表': '系统内容配置项，如默认值、提示文案等。',
-            '流程设置数据表': '业务流程配置表，定义预警处置流程步骤和流转规则。',
-            '人工采集数据表': '人工采集的农情数据，含采集人、地块、指标和数值。',
-            '数据对接数据表': 'IoT设备数据对接配置表，含设备ID、名称、类型和状态。',
-            '外部抓取数据表': '外部API数据抓取配置表，含数据源、抓取频率和状态。',
-            '共享数据数据表': '与产业大数据平台共享的数据表配置，含方向和状态。'
-        };
-
         function openDetailModal(name) {
-            const row = document.querySelector(`tr[data-name="${name}"]`);
+            var row = document.querySelector('tr[data-name="' + name + '"]');
             if (row) {
                 document.getElementById('detail-name').textContent = name;
-                const model = row.getAttribute('data-model');
-                const modelBadge = document.getElementById('detail-model');
-                modelBadge.textContent = model;
-                if (model === '生长模型') {
-                    modelBadge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded';
-                } else {
-                    modelBadge.className = 'px-2 py-1 bg-red-100 text-red-700 text-xs rounded';
-                }
+                var model = row.getAttribute('data-model');
+                document.getElementById('detail-model').textContent = model;
                 document.getElementById('detail-fields').textContent = row.querySelector('td:nth-child(3)').textContent;
                 document.getElementById('detail-count').textContent = row.querySelector('td:nth-child(4)').textContent;
                 document.getElementById('detail-source').textContent = row.querySelector('td:nth-child(5)').textContent;
                 document.getElementById('detail-frequency').textContent = row.querySelector('td:nth-child(6)').textContent;
-                document.getElementById('detail-note').textContent = tableNotes[name] || '暂无说明信息。';
             }
-            document.getElementById('detail-modal').classList.add('active');
+            showModal('detail-modal');
         }
 
         function openDeleteModal(name) {
             deleteName = name;
-            document.getElementById('delete-modal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+            document.getElementById('delete-name').textContent = name;
+            showModal('delete-modal');
         }
 
         function saveTable() {
-            const name = document.getElementById('add-name').value;
-            const fields = document.getElementById('add-fields').value;
-            const source = document.getElementById('add-source').value;
+            var name = document.getElementById('add-name').value;
+            var model = document.getElementById('add-model').value;
+            var fields = document.getElementById('add-fields').value;
 
-            if (!name || !fields || !source) {
-                alert('请填写完整的数据表信息');
+            if (!name || !model) {
+                alert('请填写表名和所属模型');
                 return;
             }
 
-            alert('数据表创建成功！\n数据表名称: ' + name);
+            alert('数据表创建成功！\n数据表名称: ' + name + '\n所属模型: ' + model + '\n字段数量: ' + (fields ? fields.split('\n').filter(function(l) { return l.trim(); }).length : 0));
             closeModal('add-modal');
         }
 
         function syncTable(name) {
             document.getElementById('sync-name').textContent = name;
-            document.getElementById('sync-modal').classList.add('active');
+            showModal('sync-modal');
         }
 
         function confirmSync() {
-            const name = document.getElementById('sync-name').textContent;
+            var name = document.getElementById('sync-name').textContent;
             alert('数据表 "' + name + '" 同步成功！');
             closeModal('sync-modal');
         }
@@ -1016,19 +497,19 @@
         }
 
         function filterData() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const modelFilter = document.getElementById('model-filter').value;
+            var searchTerm = document.getElementById('search-input').value.toLowerCase();
+            var modelFilter = document.getElementById('model-filter').value;
 
-            const rows = document.querySelectorAll('#data-table-body tr');
+            var rows = document.querySelectorAll('#data-table-body tr');
 
-            rows.forEach(row => {
-                const name = row.getAttribute('data-name').toLowerCase();
-                const model = row.getAttribute('data-model');
-                const fields = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-                const source = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+            rows.forEach(function(row) {
+                var name = row.getAttribute('data-name').toLowerCase();
+                var model = row.getAttribute('data-model');
+                var fields = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                var source = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
 
-                const matchesSearch = name.includes(searchTerm) || fields.includes(searchTerm) || source.includes(searchTerm);
-                const matchesModel = !modelFilter || model === modelFilter;
+                var matchesSearch = name.includes(searchTerm) || fields.includes(searchTerm) || source.includes(searchTerm);
+                var matchesModel = !modelFilter || model === modelFilter;
 
                 row.dataset.filtered = (matchesSearch && matchesModel) ? 'true' : 'false';
             });
@@ -1043,35 +524,18 @@
             filterData();
         }
 
-        function prevPage() {
-            if (currentPage > 1) {
-                showPage(currentPage - 1);
-            }
-        }
-
-        function nextPage() {
-            const allRows = document.querySelectorAll('#data-table-body tr');
-            const filteredRows = Array.from(allRows).filter(r => r.dataset.filtered !== 'false');
-            const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
-            if (currentPage < totalPages) {
-                showPage(currentPage + 1);
-            }
-        }
-
-        function changePageSize() {
-            pageSize = parseInt(document.getElementById('page-size').value);
-            currentPage = 1;
-            showPage(1);
-        }
-
-        document.addEventListener('click', (e) => {
-            ['add-modal', 'detail-modal', 'delete-modal', 'sync-modal', 'import-modal'].forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                const btn = e.target.closest('[onclick*="' + modalId + '"]');
-                if (!modal.contains(e.target) && !btn) {
-                    modal.classList.remove('active');
+        // 点击遮罩关闭弹窗
+        document.addEventListener('click', function(e) {
+            var ids = ['add-modal', 'import-modal', 'detail-modal', 'sync-modal', 'delete-modal'];
+            for (var i = 0; i < ids.length; i++) {
+                var m = document.getElementById(ids[i]);
+                if (m && m.style.display === 'flex') {
+                    var inner = m.children[0];
+                    if (inner && !inner.contains(e.target) && e.target === m) {
+                        m.style.display = 'none';
+                    }
                 }
-            });
+            }
         });
 
         window.onload = function() {

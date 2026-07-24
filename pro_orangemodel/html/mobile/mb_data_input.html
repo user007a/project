@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>南丰蜜桔智慧果园 - 数据录入</title>
+  <title>南丰蜜桔智慧果园 - 数据上报</title>
   <link rel="stylesheet" href="css/mobile-design-system.css">
   <style>
     .page-header {
@@ -156,6 +156,38 @@
       color: var(--text-secondary);
     }
 
+    .location-picker {
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: var(--font-base);
+      color: var(--text);
+      background: var(--bg-white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .location-picker:active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .location-picker svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+    }
+    
+    .location-value {
+      color: var(--text-secondary);
+      flex: 1;
+      text-align: left;
+    }
+
     .radio-group {
       display: flex;
       gap: 12px;
@@ -290,7 +322,7 @@
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </div>
-      <div class="header-title">数据录入</div>
+      <div class="header-title">数据上报</div>
       <div class="header-sub">记录果园各项数据信息</div>
     </div>
 
@@ -312,10 +344,13 @@
           地块信息
         </div>
         <div class="form-item">
-          <label class="form-label">选择地块</label>
-          <div class="form-select" onclick="showPicker('orchard', this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <label class="form-label">定位地块</label>
+          <div class="location-picker" onclick="getLocation('soil')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span class="location-value" id="soilLocation">点击定位</span>
           </div>
         </div>
         <div class="form-item">
@@ -364,10 +399,13 @@
           墒情数据
         </div>
         <div class="form-item">
-          <label class="form-label">选择地块</label>
-          <div class="form-select" onclick="showPicker('orchard', this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <label class="form-label">定位地块</label>
+          <div class="location-picker" onclick="getLocation('moisture')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span class="location-value" id="moistureLocation">点击定位</span>
           </div>
         </div>
         <div class="form-item">
@@ -416,9 +454,13 @@
         </div>
         <div class="form-item">
           <label class="form-label">天气状况</label>
-          <div class="form-select" onclick="showPicker('weather', this)">
-            <span class="form-select-value">请选择天气状况</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <div class="radio-group">
+            <div class="radio-item" onclick="selectWeather('晴', this)"><div class="radio-label">晴</div></div>
+            <div class="radio-item" onclick="selectWeather('多云', this)"><div class="radio-label">多云</div></div>
+            <div class="radio-item" onclick="selectWeather('阴', this)"><div class="radio-label">阴</div></div>
+            <div class="radio-item" onclick="selectWeather('小雨', this)"><div class="radio-label">小雨</div></div>
+            <div class="radio-item" onclick="selectWeather('中雨', this)"><div class="radio-label">中雨</div></div>
+            <div class="radio-item" onclick="selectWeather('大雨', this)"><div class="radio-label">大雨</div></div>
           </div>
         </div>
       </div>
@@ -433,17 +475,24 @@
           农事记录
         </div>
         <div class="form-item">
-          <label class="form-label">选择地块</label>
-          <div class="form-select" onclick="showPicker('orchard', this)">
-            <span class="form-select-value">请选择地块</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <label class="form-label">定位地块</label>
+          <div class="location-picker" onclick="getLocation('farming')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span class="location-value" id="farmingLocation">点击定位</span>
           </div>
         </div>
         <div class="form-item">
           <label class="form-label">农事类型</label>
-          <div class="form-select" onclick="showPicker('farming', this)">
-            <span class="form-select-value">请选择农事类型</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <div class="radio-group">
+            <div class="radio-item" onclick="selectFarmingType('施肥', this)"><div class="radio-label">施肥</div></div>
+            <div class="radio-item" onclick="selectFarmingType('灌溉', this)"><div class="radio-label">灌溉</div></div>
+            <div class="radio-item" onclick="selectFarmingType('剪枝', this)"><div class="radio-label">剪枝</div></div>
+            <div class="radio-item" onclick="selectFarmingType('疏果', this)"><div class="radio-label">疏果</div></div>
+            <div class="radio-item" onclick="selectFarmingType('喷药', this)"><div class="radio-label">喷药</div></div>
+            <div class="radio-item" onclick="selectFarmingType('其他', this)"><div class="radio-label">其他</div></div>
           </div>
         </div>
         <div class="form-item">
@@ -471,15 +520,15 @@
       </div>
       <div class="mb-tab-item active" onclick="navigateTo('mb_data.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        <span>数据</span>
+        <span>监测</span>
+      </div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_ai.html')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        <span>AI</span>
       </div>
       <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span>病虫害</span>
-      </div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_news.html')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <span>资讯</span>
       </div>
       <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -488,29 +537,8 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="pickerModal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title" id="pickerTitle">请选择</div>
-        <div class="modal-close" onclick="closePicker()"></div>
-      </div>
-      <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
-        <div id="pickerContent"></div>
-      </div>
-    </div>
-  </div>
-
-
-
   <script>
-    var currentPickerTarget;
-    
-    var pickerData = {
-      orchard: ['1号早熟蜜桔区', '2号中熟蜜桔区', '3号晚熟蜜桔区', '4号试验田'],
-      moistureLevel: ['干旱', '适中', '充足'],
-      weather: ['晴', '多云', '阴', '小雨', '中雨', '大雨', '暴雨'],
-      farming: ['施肥', '灌溉', '剪枝', '疏果', '喷药', '其他']
-    };
+    var orchardLocations = ['1号早熟蜜桔区', '2号中熟蜜桔区', '3号晚熟蜜桔区', '4号试验田'];
     
     function goBack() { window.history.back(); }
     
@@ -525,42 +553,36 @@
       document.getElementById(type + 'Form').style.display = 'block';
     }
     
-    function showPicker(type, target) {
-      currentPickerTarget = target;
-      var title = '请选择';
-      var data = pickerData[type];
+    function getLocation(type) {
+      var locationSpan = document.getElementById(type + 'Location');
+      locationSpan.textContent = '定位中...';
       
-      if (type === 'orchard') title = '请选择地块';
-      else if (type === 'moistureLevel') title = '请选择墒情等级';
-      else if (type === 'weather') title = '请选择天气状况';
-      else if (type === 'farming') title = '请选择农事类型';
-      
-      document.getElementById('pickerTitle').textContent = title;
-      var content = '';
-      data.forEach(function(item) {
-        content += '<div class="picker-option" onclick="selectPickerValue(\'' + item + '\')">' + item + '</div>';
-      });
-      document.getElementById('pickerContent').innerHTML = content;
-      document.getElementById('pickerModal').classList.add('show');
-    }
-    
-    function selectPickerValue(value) {
-      currentPickerTarget.querySelector('.form-select-value').textContent = value;
-      currentPickerTarget.querySelector('.form-select-value').style.color = 'var(--text)';
-      closePicker();
+      setTimeout(function() {
+        var randomLocation = orchardLocations[Math.floor(Math.random() * orchardLocations.length)];
+        locationSpan.textContent = randomLocation;
+        locationSpan.style.color = 'var(--text)';
+      }, 1000);
     }
     
     function selectMoistureLevel(level) {
-      document.querySelectorAll('.radio-item').forEach(item => item.classList.remove('active'));
+      var container = event.target.closest('.card');
+      container.querySelectorAll('.radio-item').forEach(item => item.classList.remove('active'));
       event.target.classList.add('active');
     }
     
-    function closePicker() {
-      document.getElementById('pickerModal').classList.remove('show');
+    function selectWeather(weather, element) {
+      var container = element.closest('.card');
+      container.querySelectorAll('.radio-item').forEach(item => item.classList.remove('active'));
+      element.classList.add('active');
+    }
+    
+    function selectFarmingType(type, element) {
+      var container = element.closest('.card');
+      container.querySelectorAll('.radio-item').forEach(item => item.classList.remove('active'));
+      element.classList.add('active');
     }
     
     function submitData() {
-      closePicker();
       document.getElementById('successModal').classList.add('show');
     }
     
