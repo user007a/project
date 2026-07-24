@@ -58,11 +58,24 @@
       border: 1px solid var(--border);
       cursor: pointer;
       transition: all var(--transition-fast);
+      display: flex;
+      gap: var(--space-4);
     }
     
     .disease-card:active { transform: scale(0.98); background: var(--gray-50); }
     
-    .disease-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+    .disease-image {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    
+    .disease-content { flex: 1; display: flex; flex-direction: column; }
+    
+    .disease-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2); }
     .disease-title { font-size: var(--font-md); font-weight: 600; color: var(--text); }
     .disease-tag { padding: var(--space-1) var(--space-2); border-radius: var(--radius-lg); font-size: var(--font-xs); font-weight: 500; }
     .disease-tag.disease { background: var(--error-bg); color: var(--error); }
@@ -70,7 +83,7 @@
     .disease-tag.high { background: var(--error-bg); color: var(--error); }
     .disease-tag.medium { background: var(--warning-bg); color: var(--warning); }
     
-    .disease-desc { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.5; }
+    .disease-desc { font-size: var(--font-sm); color: var(--text-secondary); line-height: 1.5; flex: 1; }
     
     .filter-tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-4); }
     .filter-tab {
@@ -153,7 +166,6 @@
 </head>
 <body>
   <div class="mb-app loading">
-    <!-- ===================== 骨架屏 ===================== -->
     <div class="skeleton-state">
       <div class="page-header">
         <div class="header-nav">
@@ -185,9 +197,7 @@
       </div>
     </div>
 
-    <!-- ===================== 真实内容 ===================== -->
     <div class="real-content">
-      <!-- Header -->
       <div class="page-header">
         <div class="header-back" onclick="goBack()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -201,7 +211,6 @@
       </div>
 
       <div class="mb-section">
-        <!-- 搜索框 -->
         <div class="search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/>
@@ -210,118 +219,137 @@
           <input type="text" class="search-input" placeholder="搜索病虫害名称..." oninput="handleSearch(event)">
         </div>
 
-        <!-- 筛选标签 -->
         <div class="filter-tabs">
           <div class="filter-tab active" onclick="filterType('all')">全部</div>
           <div class="filter-tab" onclick="filterType('disease')">病害</div>
           <div class="filter-tab" onclick="filterType('pest')">虫害</div>
         </div>
 
-        <!-- 病害列表 -->
         <div id="diseaseList">
           <div class="disease-card" data-name="黄龙病" data-type="disease">
-            <div class="disease-header">
-              <div class="disease-title">黄龙病</div>
-              <div>
-                <span class="disease-tag disease">病害</span>
-                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=黄龙病危害蜜桔叶片症状，叶片黄化斑驳&image_size=square_hd" alt="黄龙病" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>黄龙病</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">黄龙病</div>
+                <div>
+                  <span class="disease-tag disease">病害</span>
+                  <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+                </div>
               </div>
+              <div class="disease-desc">由韧皮部杆菌引起的毁灭性病害，通过柑桔木虱传播。病树表现为叶片黄化、果实畸形，严重时整株死亡。</div>
             </div>
-            <div class="disease-desc">由韧皮部杆菌引起的毁灭性病害，通过柑桔木虱传播。病树表现为叶片黄化、果实畸形，严重时整株死亡。</div>
           </div>
 
           <div class="disease-card" data-name="黑点病" data-type="disease">
-            <div class="disease-header">
-              <div class="disease-title">黑点病</div>
-              <div>
-                <span class="disease-tag disease">病害</span>
-                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=黑点病危害蜜桔果实症状，果实表面黑色斑点&image_size=square_hd" alt="黑点病" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>黑点病</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">黑点病</div>
+                <div>
+                  <span class="disease-tag disease">病害</span>
+                  <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+                </div>
               </div>
+              <div class="disease-desc">主要危害果实，在果实表面形成黑色小斑点，影响果实外观和商品价值。高温高湿环境易发病。</div>
             </div>
-            <div class="disease-desc">主要危害果实，在果实表面形成黑色小斑点，影响果实外观和商品价值。高温高湿环境易发病。</div>
           </div>
 
           <div class="disease-card" data-name="疮痂病" data-type="disease">
-            <div class="disease-header">
-              <div class="disease-title">疮痂病</div>
-              <div>
-                <span class="disease-tag disease">病害</span>
-                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=疮痂病危害蜜桔果实症状，果实表面粗糙疮痂&image_size=square_hd" alt="疮痂病" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>疮痂病</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">疮痂病</div>
+                <div>
+                  <span class="disease-tag disease">病害</span>
+                  <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+                </div>
               </div>
+              <div class="disease-desc">主要危害嫩叶、嫩梢和幼果，导致叶片畸形、果实表面粗糙，影响产量和品质。</div>
             </div>
-            <div class="disease-desc">主要危害嫩叶、嫩梢和幼果，导致叶片畸形、果实表面粗糙，影响产量和品质。</div>
           </div>
 
           <div class="disease-card" data-name="黑星病" data-type="disease">
-            <div class="disease-header">
-              <div class="disease-title">黑星病</div>
-              <div>
-                <span class="disease-tag disease">病害</span>
-                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=黑星病危害蜜桔果实症状，果实表面黑色星状斑点&image_size=square_hd" alt="黑星病" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>黑星病</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">黑星病</div>
+                <div>
+                  <span class="disease-tag disease">病害</span>
+                  <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+                </div>
               </div>
+              <div class="disease-desc">主要危害果实，在果实成熟前后发病，形成黑色星状斑点，严重影响果实外观。</div>
             </div>
-            <div class="disease-desc">主要危害果实，在果实成熟前后发病，形成黑色星状斑点，严重影响果实外观。</div>
           </div>
 
-          <!-- 虫害列表 -->
           <div class="disease-card" data-name="红蜘蛛" data-type="pest">
-            <div class="disease-header">
-              <div class="disease-title">红蜘蛛</div>
-              <div>
-                <span class="disease-tag pest">虫害</span>
-                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=红蜘蛛危害蜜桔叶片症状，叶片发白失绿&image_size=square_hd" alt="红蜘蛛" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>红蜘蛛</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">红蜘蛛</div>
+                <div>
+                  <span class="disease-tag pest">虫害</span>
+                  <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+                </div>
               </div>
+              <div class="disease-desc">以刺吸式口器吸食叶片和果实汁液，导致叶片失绿、果实表面出现斑点，是蜜桔最常见的害虫之一。</div>
             </div>
-            <div class="disease-desc">以刺吸式口器吸食叶片和果实汁液，导致叶片失绿、果实表面出现斑点，是蜜桔最常见的害虫之一。</div>
           </div>
 
           <div class="disease-card" data-name="柑桔木虱" data-type="pest">
-            <div class="disease-header">
-              <div class="disease-title">柑桔木虱</div>
-              <div>
-                <span class="disease-tag pest">虫害</span>
-                <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=柑桔木虱成虫形态，蜜桔叶片上的木虱特写&image_size=square_hd" alt="柑桔木虱" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>柑桔木虱</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">柑桔木虱</div>
+                <div>
+                  <span class="disease-tag pest">虫害</span>
+                  <span class="disease-tag high" style="margin-left: 8px;">高风险</span>
+                </div>
               </div>
+              <div class="disease-desc">黄龙病的主要传播媒介，以成虫和若虫吸食嫩梢汁液，诱发煤烟病。</div>
             </div>
-            <div class="disease-desc">黄龙病的主要传播媒介，以成虫和若虫吸食嫩梢汁液，诱发煤烟病。</div>
           </div>
 
           <div class="disease-card" data-name="蚧壳虫" data-type="pest">
-            <div class="disease-header">
-              <div class="disease-title">蚧壳虫</div>
-              <div>
-                <span class="disease-tag pest">虫害</span>
-                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=蚧壳虫危害蜜桔枝条症状，枝条上的褐色蚧壳&image_size=square_hd" alt="蚧壳虫" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>蚧壳虫</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">蚧壳虫</div>
+                <div>
+                  <span class="disease-tag pest">虫害</span>
+                  <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+                </div>
               </div>
+              <div class="disease-desc">种类繁多，以刺吸式口器吸食汁液，分泌蜜露诱发煤烟病，导致枝条衰弱甚至枯死。</div>
             </div>
-            <div class="disease-desc">种类繁多，以刺吸式口器吸食汁液，分泌蜜露诱发煤烟病，导致枝条衰弱甚至枯死。</div>
           </div>
 
           <div class="disease-card" data-name="粉虱" data-type="pest">
-            <div class="disease-header">
-              <div class="disease-title">粉虱</div>
-              <div>
-                <span class="disease-tag pest">虫害</span>
-                <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+            <img class="disease-image" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=粉虱危害蜜桔叶片症状，叶背白色小虫群&image_size=square_hd" alt="粉虱" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><rect fill=%22%23f5f7fa%22 width=%2280%22 height=%2280%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>粉虱</text></svg>'">
+            <div class="disease-content">
+              <div class="disease-header">
+                <div class="disease-title">粉虱</div>
+                <div>
+                  <span class="disease-tag pest">虫害</span>
+                  <span class="disease-tag medium" style="margin-left: 8px;">中风险</span>
+                </div>
               </div>
+              <div class="disease-desc">以成虫和若虫吸食叶片汁液，分泌蜜露诱发煤烟病，影响光合作用。</div>
             </div>
-            <div class="disease-desc">以成虫和若虫吸食叶片汁液，分泌蜜露诱发煤烟病，影响光合作用。</div>
           </div>
         </div>
       </div>
-    </div><!-- /real-content -->
+    </div>
 
-    <!-- 底部导航 -->
     <div class="mb-tab-bar">
       <div class="mb-tab-item" onclick="navigateTo('mb_home.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></div>
       <div class="mb-tab-item" onclick="navigateTo('mb_data.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>监测</span></div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_ai.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><span>AI</span></div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_ai.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><span>AI助手</span></div>
       <div class="mb-tab-item active" onclick="navigateTo('mb_disease.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>病虫害</span></div>
       <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>我的</span></div>
     </div>
   </div>
 
-  <!-- 详情模态框 -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
       <div class="modal-header">
