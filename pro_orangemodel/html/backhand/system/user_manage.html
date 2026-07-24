@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -38,14 +38,7 @@
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     重置
                 </button>
-                <button onclick="openImportModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    导入用户
-                </button>
-                <button onclick="exportUsers()" class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 transition flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    导出用户
-                </button>
+
                 <button onclick="openAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                     新增用户
@@ -289,40 +282,48 @@
         </div>
     </div>
 
-    <div id="import-modal" class="modal-overlay">
-        <div class="modal-content">
+    <div id="reset-password-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 450px;">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    导入用户
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    重置密码
                 </h3>
-                <button onclick="closeModal('import-modal')" class="p-1 hover:bg-gray-100 rounded">
+                <button onclick="closeModal('reset-password-modal')" class="p-1 hover:bg-gray-100 rounded">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition cursor-pointer" onclick="document.getElementById('import-file').click()">
-                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <p class="text-gray-600 mb-2">点击或拖拽文件到此处上传</p>
-                    <p class="text-sm text-gray-400">支持 Excel (.xlsx)、CSV 文件</p>
-                    <input type="file" id="import-file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportFile(this)">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">确认重置密码？</p>
+                        <p class="text-sm text-gray-500 mt-1">重置后用户将使用新密码登录</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mb-4">要重置密码的用户：<span id="reset-username" class="font-medium text-gray-800"></span></p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">新密码</label>
+                        <input type="password" id="reset-new-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入新密码">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">确认密码</label>
+                        <input type="password" id="reset-confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请再次输入新密码">
+                    </div>
                 </div>
                 <div class="mt-4 p-3 bg-blue-50 rounded-lg">
                     <p class="text-sm text-blue-700 flex items-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        导入模板说明：用户名、姓名、手机号为必填字段，密码为空时默认设置为 123456
+                        密码要求：至少6位字符，包含字母和数字
                     </p>
-                </div>
-                <div class="mt-4 flex justify-between items-center">
-                    <button onclick="downloadTemplate()" class="text-blue-600 hover:text-blue-700 text-sm flex items-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        下载导入模板
-                    </button>
                 </div>
             </div>
             <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('import-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
-                <button onclick="submitImport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">开始导入</button>
+                <button onclick="closeModal('reset-password-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitResetPassword()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">确认重置</button>
             </div>
         </div>
     </div>
@@ -409,6 +410,9 @@
                         <div class="flex items-center justify-center space-x-1">
                             <button onclick="openEditModal('${u.username}')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button onclick="openResetPasswordModal('${u.username}', '${u.name}')" class="p-1.5 text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 rounded" title="重置密码">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                             </button>
                             <button onclick="openDeleteModal('${u.username}', '${u.name}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
@@ -528,47 +532,36 @@
             document.getElementById('add-modal').classList.add('active');
         }
 
-        function openImportModal() {
-            document.getElementById('import-file').value = '';
-            document.getElementById('import-modal').classList.add('active');
+        function openResetPasswordModal(username, name) {
+            document.getElementById('reset-username').textContent = name + ' (' + username + ')';
+            document.getElementById('reset-new-password').value = '';
+            document.getElementById('reset-confirm-password').value = '';
+            document.getElementById('reset-password-modal').classList.add('active');
         }
 
-        function handleImportFile(input) {
-            const file = input.files[0];
-            if (file) {
-                alert('已选择文件: ' + file.name);
-            }
-        }
+        function submitResetPassword() {
+            const newPassword = document.getElementById('reset-new-password').value.trim();
+            const confirmPassword = document.getElementById('reset-confirm-password').value.trim();
 
-        function downloadTemplate() {
-            const content = '用户名,姓名,手机号,所属部门,角色,密码\nzhangsan,张三,13800138000,技术服务部,操作员,123456\nlisi,李四,13800138001,生产指导部,查看员,123456';
-            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = '用户导入模板.csv';
-            link.click();
-        }
-
-        function submitImport() {
-            const file = document.getElementById('import-file').files[0];
-            if (!file) {
-                alert('请先选择要导入的文件');
+            if (!newPassword) {
+                alert('请输入新密码');
                 return;
             }
-            alert('用户导入成功！\n文件: ' + file.name + '\n导入数量: 15 条');
-            closeModal('import-modal');
-        }
+            if (newPassword.length < 6) {
+                alert('密码长度至少为6位');
+                return;
+            }
+            if (!/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+                alert('密码必须包含字母和数字');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
 
-        function exportUsers() {
-            let csv = '用户名,姓名,手机号,所属部门,角色,状态,创建时间\n';
-            usersData.forEach(u => {
-                csv += `${u.username},${u.name},${u.phone},${u.department},${u.role},${u.status},${u.time}\n`;
-            });
-            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = '用户列表_' + new Date().toISOString().split('T')[0] + '.csv';
-            link.click();
+            closeModal('reset-password-modal');
+            alert('密码重置成功！');
         }
 
         function openEditModal(username) {
@@ -619,7 +612,7 @@
 
         // 点击空白关闭弹窗
         document.addEventListener('click', (e) => {
-            ['add-modal', 'edit-modal', 'delete-modal', 'import-modal'].forEach(id => {
+            ['add-modal', 'edit-modal', 'delete-modal', 'reset-password-modal'].forEach(id => {
                 const modal = document.getElementById(id);
                 if (modal && modal.classList.contains('active') && !modal.contains(e.target) && !e.target.closest('[onclick*="open"]')) {
                     modal.classList.remove('active');

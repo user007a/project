@@ -23,9 +23,9 @@
                 <p class="text-gray-500 mt-1">管理预警产生、审核、发布及用户阅读状态</p>
             </div>
             <div class="flex items-center space-x-3">
-                <button onclick="openImportModal()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center transition">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    批量导入
+                <button onclick="openAddAlertModal()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center transition">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    新增人工预警
                 </button>
                 <button onclick="openExportModal()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 flex items-center transition">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
@@ -281,35 +281,196 @@
         </div>
     </div>
 
-    <!-- 批量导入弹窗 -->
-    <div id="import-modal" class="modal-overlay">
+    <!-- 新增人工预警弹窗 -->
+    <div id="add-alert-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    批量导入预警
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    新增人工预警
                 </h3>
-                <button onclick="closeModal('import-modal')" class="p-1 hover:bg-gray-100 rounded">
+                <button onclick="closeModal('add-alert-modal')" class="p-1 hover:bg-gray-100 rounded">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="p-6">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-500 transition cursor-pointer" onclick="document.getElementById('import-file').click()">
-                    <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    <p class="text-gray-600 mt-2 mb-1">点击或拖拽文件到此处上传</p>
-                    <p class="text-sm text-gray-400">支持 Excel (.xlsx)、CSV 文件</p>
-                    <input type="file" id="import-file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportFile(this)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">预警标题 <span class="text-red-500">*</span></label>
+                        <input type="text" id="add-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">预警级别</label>
+                            <select id="add-level" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="红色预警">红色预警</option>
+                                <option value="橙色预警">橙色预警</option>
+                                <option value="黄色预警">黄色预警</option>
+                                <option value="蓝色预警">蓝色预警</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">预警来源</label>
+                            <select id="add-source" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option value="人工上报" selected>人工上报</option>
+                                <option value="模型自动生成">模型自动生成</option>
+                                <option value="气象系统">气象系统</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">影响区域</label>
+                        <input type="text" id="add-area" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">预警内容</label>
+                        <textarea id="add-content" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                        <select id="add-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="待审核" selected>待审核</option>
+                            <option value="已发布">已发布</option>
+                            <option value="已处置">已处置</option>
+                            <option value="已驳回">已驳回</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('add-alert-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitAddAlert()" class="px-4 py-2 text-white rounded-lg hover:bg-green-700 text-sm" style="background-color: #16A34A;">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 审核预警弹窗 -->
+    <div id="audit-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    审核预警
+                </h3>
+                <button onclick="closeModal('audit-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500 mb-2">待审核预警信息</p>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-sm font-medium text-gray-800" id="audit-alert-title"></p>
+                        <p class="text-sm text-gray-500" id="audit-alert-id"></p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">审核结果</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-green-500 hover:bg-green-50">
+                            <input type="radio" name="audit-result" value="approve" checked class="mr-2">
+                            <span class="text-sm text-green-600 font-medium">通过</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-red-500 hover:bg-red-50">
+                            <input type="radio" name="audit-result" value="reject" class="mr-2">
+                            <span class="text-sm text-red-600 font-medium">驳回</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">审核意见</label>
+                    <textarea id="audit-comment" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入审核意见（选填）"></textarea>
+                </div>
+                
+                <div class="p-3 bg-blue-50 rounded-lg">
                     <p class="text-sm text-blue-700 flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        导入说明：预警标题、预警级别、影响区域为必填字段
+                        审核通过后预警状态将变为"待发布"，驳回后状态将变为"已驳回"
                     </p>
                 </div>
             </div>
             <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeModal('import-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
-                <button onclick="submitImport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">开始导入</button>
+                <button onclick="closeModal('audit-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitAudit()" class="px-4 py-2 text-white rounded-lg hover:bg-green-700 text-sm" style="background-color: #16A34A;">确认审核</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布预警弹窗 -->
+    <div id="publish-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    发布预警
+                </h3>
+                <button onclick="closeModal('publish-modal')" class="p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500 mb-2">发布预警信息</p>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-sm font-medium text-gray-800" id="publish-alert-title"></p>
+                        <p class="text-sm text-gray-500" id="publish-alert-id"></p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">发送区域</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center"><input type="radio" name="publish-area" value="all" checked class="mr-2"> 全县范围</label>
+                        <label class="flex items-center"><input type="radio" name="publish-area" value="custom" class="mr-2"> 指定区域</label>
+                    </div>
+                    <input type="text" id="publish-custom-area" class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入发送区域，如：太和镇、桑田镇" disabled>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">发送范围</label>
+                    <select id="publish-scope" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="all-users">全部用户</option>
+                        <option value="role-admin">管理员</option>
+                        <option value="role-operator">操作员</option>
+                        <option value="role-viewer">查看员</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">指定发送用户</label>
+                    <input type="text" id="publish-users" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入用户名，多个用户用逗号分隔（选填）">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">发送方式</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-green-500 hover:bg-green-50">
+                            <input type="checkbox" name="publish-method" value="system" checked class="mr-2">
+                            <span class="text-sm">系统消息</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-green-500 hover:bg-green-50">
+                            <input type="checkbox" name="publish-method" value="sms" class="mr-2">
+                            <span class="text-sm">短信通知</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-green-500 hover:bg-green-50">
+                            <input type="checkbox" name="publish-method" value="email" class="mr-2">
+                            <span class="text-sm">邮件通知</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-700 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        发布后预警状态将变为"已发布"，用户将收到通知
+                    </p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+                <button onclick="closeModal('publish-modal')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button onclick="submitPublish()" class="px-4 py-2 text-white rounded-lg hover:bg-green-700 text-sm" style="background-color: #16A34A;">确认发布</button>
             </div>
         </div>
     </div>
@@ -453,16 +614,12 @@
                             <td class="px-6 py-4"><span class="px-2 py-1 ${statusStyle} text-xs rounded-full">${escapeHtml(a.status)}</span></td>
                             <td class="px-6 py-4 text-sm text-gray-500">${escapeHtml(a.created)}</td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center justify-center space-x-2">
-                                    <button onclick="openDetailModal('${a.id}')" class="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" title="查看">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                    </button>
-                                    <button onclick="openEditModal('${a.id}')" class="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="编辑">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </button>
-                                    <button onclick="openDeleteModal('${a.id}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="删除">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
+                                <div class="flex items-center justify-center space-x-1">
+                                    <button onclick="openDetailModal('${a.id}')" class="px-2 py-1 text-xs text-green-600 hover:bg-green-50 rounded transition">详情</button>
+                                    <button onclick="openEditModal('${a.id}')" class="px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded transition">编辑</button>
+                                    <button onclick="openAuditModal('${a.id}')" class="px-2 py-1 text-xs text-purple-600 hover:bg-purple-50 rounded transition">审核</button>
+                                    <button onclick="openPublishModal('${a.id}')" class="px-2 py-1 text-xs text-orange-600 hover:bg-orange-50 rounded transition">发布</button>
+                                    <button onclick="openDeleteModal('${a.id}')" class="px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded transition">删除</button>
                                 </div>
                             </td>
                         </tr>
@@ -629,22 +786,133 @@
             });
         }
 
-        function openImportModal() {
-            document.getElementById('import-file').value = '';
-            document.getElementById('import-modal').classList.add('active');
+        let publishTargetId = null;
+        let auditTargetId = null;
+
+        function openAuditModal(id) {
+            const a = alerts.find(x => x.id === id);
+            if (!a) return;
+            auditTargetId = id;
+            document.getElementById('audit-alert-title').textContent = a.title;
+            document.getElementById('audit-alert-id').textContent = a.id;
+            document.querySelector('input[name="audit-result"][value="approve"]').checked = true;
+            document.getElementById('audit-comment').value = '';
+            document.getElementById('audit-modal').classList.add('active');
         }
 
-        function handleImportFile(input) {
-            const file = input.files[0];
-            if (file) { alert('已选择文件: ' + file.name); }
-        }
-
-        function submitImport() {
-            const file = document.getElementById('import-file').files[0];
-            if (!file) { alert('请先选择要导入的文件'); return; }
-            alert('预警数据导入成功！\n文件: ' + file.name + '\n导入数量: 5 条');
-            closeModal('import-modal');
+        function submitAudit() {
+            if (auditTargetId === null) return;
+            
+            const result = document.querySelector('input[name="audit-result"]:checked').value;
+            const comment = document.getElementById('audit-comment').value.trim();
+            
+            const a = alerts.find(x => x.id === auditTargetId);
+            if (a) {
+                a.status = result === 'approve' ? '待发布' : '已驳回';
+            }
+            
+            closeModal('audit-modal');
+            auditTargetId = null;
+            filteredAlerts = applyCurrentFilter();
+            updateStats();
             renderTable();
+            alert(result === 'approve' ? '审核通过！预警状态已更新为"待发布"' : '审核驳回！预警状态已更新为"已驳回"');
+        }
+
+        function openAddAlertModal() {
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-level').value = '黄色预警';
+            document.getElementById('add-source').value = '人工上报';
+            document.getElementById('add-area').value = '';
+            document.getElementById('add-content').value = '';
+            document.getElementById('add-status').value = '待审核';
+            document.getElementById('add-alert-modal').classList.add('active');
+        }
+
+        function submitAddAlert() {
+            const title = document.getElementById('add-title').value.trim();
+            const level = document.getElementById('add-level').value;
+            const source = document.getElementById('add-source').value;
+            const area = document.getElementById('add-area').value.trim();
+            const content = document.getElementById('add-content').value.trim();
+            const status = document.getElementById('add-status').value;
+            
+            if (!title) { alert('请输入预警标题'); return; }
+            
+            const now = new Date();
+            const dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            
+            const newId = 'YJ-' + dateStr.replace(/-/g, '') + '-' + String(alerts.length + 1).padStart(3, '0');
+            
+            alerts.unshift({
+                id: newId,
+                title: title,
+                level: level,
+                source: source,
+                area: area,
+                status: status,
+                created: dateStr + ' ' + timeStr,
+                published: status === '已发布' ? dateStr + ' ' + timeStr : '-',
+                content: content
+            });
+            
+            closeModal('add-alert-modal');
+            filteredAlerts = applyCurrentFilter();
+            updateStats();
+            renderTable();
+            alert('预警添加成功！');
+        }
+
+        function openPublishModal(id) {
+            const a = alerts.find(x => x.id === id);
+            if (!a) return;
+            publishTargetId = id;
+            document.getElementById('publish-alert-title').textContent = a.title;
+            document.getElementById('publish-alert-id').textContent = a.id;
+            
+            document.querySelector('input[name="publish-area"][value="all"]').checked = true;
+            document.getElementById('publish-custom-area').value = '';
+            document.getElementById('publish-custom-area').disabled = true;
+            document.getElementById('publish-scope').value = 'all-users';
+            document.getElementById('publish-users').value = '';
+            document.querySelectorAll('input[name="publish-method"]').forEach(cb => cb.checked = false);
+            document.querySelector('input[name="publish-method"][value="system"]').checked = true;
+            
+            document.getElementById('publish-modal').classList.add('active');
+        }
+
+        function submitPublish() {
+            if (publishTargetId === null) return;
+            
+            const area = document.querySelector('input[name="publish-area"]:checked').value;
+            const customArea = area === 'custom' ? document.getElementById('publish-custom-area').value.trim() : '';
+            const scope = document.getElementById('publish-scope').value;
+            const users = document.getElementById('publish-users').value.trim();
+            const methods = Array.from(document.querySelectorAll('input[name="publish-method"]:checked')).map(cb => cb.value);
+            
+            if (area === 'custom' && !customArea) {
+                alert('请输入指定发送区域');
+                return;
+            }
+            if (methods.length === 0) {
+                alert('请至少选择一种发送方式');
+                return;
+            }
+            
+            const a = alerts.find(x => x.id === publishTargetId);
+            if (a) {
+                a.status = '已发布';
+                const now = new Date();
+                a.published = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            }
+            
+            closeModal('publish-modal');
+            publishTargetId = null;
+            filteredAlerts = applyCurrentFilter();
+            updateStats();
+            renderTable();
+            alert('预警发布成功！');
         }
 
         function openExportModal() {
@@ -666,8 +934,14 @@
             alert('导出成功！共导出 ' + data.length + ' 条预警数据。');
         }
 
+        document.querySelectorAll('input[name="publish-area"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('publish-custom-area').disabled = this.value !== 'custom';
+            });
+        });
+
         document.addEventListener('click', (e) => {
-            ['detail-modal', 'edit-modal', 'delete-modal', 'import-modal', 'export-modal'].forEach(id => {
+            ['detail-modal', 'edit-modal', 'delete-modal', 'add-alert-modal', 'audit-modal', 'publish-modal', 'export-modal'].forEach(id => {
                 const modal = document.getElementById(id);
                 if (!modal) return;
                 if (e.target === modal) modal.classList.remove('active');
