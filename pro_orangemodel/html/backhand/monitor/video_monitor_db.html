@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频监测库 - 南丰蜜桔模型管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #F0F2F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif; overflow: visible !important; }
+        .content-wrapper { padding: 24px; min-height: 100%; overflow: visible !important; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center; overflow: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background-color: white; border-radius: 12px; width: 95%; max-width: 1100px; max-height: 90vh; overflow-y: auto; }
+        .video-card:hover { transform: translateY(-2px); transition: transform 0.2s; }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">视频监测库</h1>
+                <p class="text-gray-500 mt-1">果园监控视频管理</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <input type="text" id="search-input" placeholder="搜索监控点名称..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-48" oninput="filterVideos()">
+                <select id="camera-filter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" onchange="filterVideos()">
+                    <option value="">全部类型</option>
+                    <option value="固定">固定相机</option>
+                    <option value="移动">移动相机</option>
+                </select>
+                <button onclick="refreshData()" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition flex items-center">
+                    <iconify-icon icon="material-symbols:refresh" class="w-4 h-4 mr-1"></iconify-icon>
+                    刷新数据
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">监控点位</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">8</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:video-camera-front" class="w-6 h-6 text-blue-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">在线监控</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">6</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:check-circle" class="w-6 h-6 text-green-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">离线监控</p>
+                        <h3 class="text-2xl font-bold text-red-600 mt-1">2</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:offline-bolt" class="w-6 h-6 text-red-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">录制时长</p>
+                        <h3 class="text-2xl font-bold text-purple-600 mt-1">1,248 h</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <iconify-icon icon="material-symbols:timer" class="w-6 h-6 text-purple-500"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(1)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">LIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">太和镇果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 实时监控</p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(2)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1455065166274-4b61319b3031?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">LIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">桑田镇果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 实时监控</p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(3)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1518977676609-a2b51f8f0e4e?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">LIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">市山镇果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">移动相机 | 实时监控</p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(4)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-yellow-600 text-white text-xs rounded-full">REC</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">白舍镇果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 录制中</p>
+                    </div>
+                    <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(5)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">LIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">三溪乡果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 实时监控</p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(6)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1543382758-b11d1456e229?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover grayscale">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/50">
+                        <div class="text-center">
+                            <iconify-icon icon="material-symbols:wifi-off" class="w-8 h-8 text-gray-400 mx-auto"></iconify-icon>
+                            <p class="text-gray-400 text-xs mt-1">离线</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">洽湾镇果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 设备离线</p>
+                    </div>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(7)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                            <iconify-icon icon="material-symbols:play-arrow" class="w-6 h-6 text-green-600 ml-1"></iconify-icon>
+                        </div>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 bg-green-600 text-white text-xs rounded-full">LIVE</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">东坪乡果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">移动相机 | 实时监控</p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 video-card cursor-pointer" onclick="openVideoPlayer(8)">
+                <div class="relative h-40 bg-gray-900 rounded-lg overflow-hidden mb-3">
+                    <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=800&auto=format&fit=crop" alt="果园监控" class="w-full h-full object-cover grayscale">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/50">
+                        <div class="text-center">
+                            <iconify-icon icon="material-symbols:wifi-off" class="w-8 h-8 text-gray-400 mx-auto"></iconify-icon>
+                            <p class="text-gray-400 text-xs mt-1">离线</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-800">莱溪乡果园</h4>
+                        <p class="text-xs text-gray-500 mt-1">固定相机 | 设备离线</p>
+                    </div>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800">录像回放列表</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">监控点</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日期</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时长</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">大小</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="video-table-body" class="divide-y divide-gray-100">
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="text-sm text-gray-500">显示 <span id="page-size">10</span> 条，共 <span id="total-count">0</span> 条</div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="prevPage()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50" id="prev-btn">上一页</button>
+                    <span id="page-info" class="text-sm text-gray-600">第 1 页 / 共 1 页</span>
+                    <button onclick="nextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50" id="next-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="video-modal">
+        <div class="modal-content">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-800" id="video-modal-title">视频播放</h3>
+                <button onclick="closeVideoModal()" class="text-gray-400 hover:text-gray-600">
+                    <iconify-icon icon="material-symbols:close" class="w-6 h-6"></iconify-icon>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-gray-900 rounded-xl overflow-hidden mb-4">
+                    <video id="video-player" controls class="w-full h-80" poster="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=800&auto=format&fit=crop">
+                        <source src="" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 text-xs">监控点</p>
+                        <p class="text-gray-800 font-medium mt-1" id="video-info-camera">-</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 text-xs">录制时间</p>
+                        <p class="text-gray-800 font-medium mt-1" id="video-info-time">-</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 text-xs">分辨率</p>
+                        <p class="text-gray-800 font-medium mt-1" id="video-info-resolution">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mockVideos = [
+            { id: 1, camera: '太和镇果园', date: '2026-07-25', time: '14:00', duration: '2小时30分', size: '450 MB', status: '已完成' },
+            { id: 2, camera: '桑田镇果园', date: '2026-07-25', time: '13:00', duration: '3小时00分', size: '580 MB', status: '已完成' },
+            { id: 3, camera: '市山镇果园', date: '2026-07-25', time: '12:00', duration: '2小时15分', size: '410 MB', status: '已完成' },
+            { id: 4, camera: '白舍镇果园', date: '2026-07-25', time: '11:00', duration: '1小时45分', size: '320 MB', status: '录制中' },
+            { id: 5, camera: '三溪乡果园', date: '2026-07-25', time: '10:00', duration: '2小时00分', size: '380 MB', status: '已完成' },
+            { id: 6, camera: '洽湾镇果园', date: '2026-07-24', time: '16:00', duration: '1小时30分', size: '280 MB', status: '已完成' },
+            { id: 7, camera: '东坪乡果园', date: '2026-07-24', time: '15:00', duration: '2小时45分', size: '510 MB', status: '已完成' },
+            { id: 8, camera: '莱溪乡果园', date: '2026-07-24', time: '14:00', duration: '1小时00分', size: '190 MB', status: '已完成' },
+            { id: 9, camera: '太和镇果园', date: '2026-07-24', time: '13:00', duration: '2小时30分', size: '450 MB', status: '已完成' },
+            { id: 10, camera: '桑田镇果园', date: '2026-07-24', time: '12:00', duration: '3小时00分', size: '580 MB', status: '已完成' },
+            { id: 11, camera: '市山镇果园', date: '2026-07-23', time: '11:00', duration: '2小时15分', size: '410 MB', status: '已完成' },
+            { id: 12, camera: '白舍镇果园', date: '2026-07-23', time: '10:00', duration: '1小时45分', size: '320 MB', status: '已完成' }
+        ];
+
+        let currentPage = 1;
+        const pageSize = 10;
+        let filteredVideos = [...mockVideos];
+
+        function getStatusClass(status) {
+            return status === '录制中' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700';
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('video-table-body');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const data = filteredVideos.slice(start, end);
+
+            tbody.innerHTML = data.map(video => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${video.camera}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${video.date} ${video.time}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${video.duration}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${video.size}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(video.status)}">${video.status}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button onclick="playVideo(${video.id})" class="text-blue-600 hover:text-blue-900 mr-3">播放</button>
+                        <button onclick="downloadVideo(${video.id})" class="text-green-600 hover:text-green-900">下载</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredVideos.length / pageSize);
+            document.getElementById('total-count').textContent = filteredVideos.length;
+            document.getElementById('page-info').textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+            document.getElementById('prev-btn').disabled = currentPage === 1;
+            document.getElementById('next-btn').disabled = currentPage === totalPages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredVideos.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function filterVideos() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const cameraType = document.getElementById('camera-filter').value;
+            
+            filteredVideos = mockVideos.filter(v => {
+                const matchSearch = v.camera.toLowerCase().includes(search);
+                const matchType = !cameraType || (cameraType === '固定' && ['太和镇果园', '桑田镇果园', '白舍镇果园', '三溪乡果园', '洽湾镇果园', '莱溪乡果园'].includes(v.camera)) || 
+                                 (cameraType === '移动' && ['市山镇果园', '东坪乡果园'].includes(v.camera));
+                return matchSearch && matchType;
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function refreshData() {
+            document.getElementById('search-input').value = '';
+            filteredVideos = [...mockVideos];
+            currentPage = 1;
+            renderTable();
+        }
+
+        function openVideoPlayer(id) {
+            const cameras = ['太和镇果园', '桑田镇果园', '市山镇果园', '白舍镇果园', '三溪乡果园', '洽湾镇果园', '东坪乡果园', '莱溪乡果园'];
+            const cameraName = cameras[id - 1] || '未知监控点';
+            
+            document.getElementById('video-modal-title').textContent = cameraName;
+            document.getElementById('video-info-camera').textContent = cameraName;
+            document.getElementById('video-info-time').textContent = new Date().toLocaleString('zh-CN');
+            document.getElementById('video-info-resolution').textContent = '1080P';
+            
+            document.getElementById('video-modal').classList.add('active');
+        }
+
+        function playVideo(id) {
+            const video = mockVideos.find(v => v.id === id);
+            if (!video) return;
+
+            document.getElementById('video-modal-title').textContent = video.camera;
+            document.getElementById('video-info-camera').textContent = video.camera;
+            document.getElementById('video-info-time').textContent = video.date + ' ' + video.time;
+            document.getElementById('video-info-resolution').textContent = '1080P';
+            
+            document.getElementById('video-modal').classList.add('active');
+        }
+
+        function downloadVideo(id) {
+            alert('录像文件下载中...');
+        }
+
+        function closeVideoModal() {
+            document.getElementById('video-modal').classList.remove('active');
+            const player = document.getElementById('video-player');
+            player.pause();
+        }
+
+        window.addEventListener('load', () => {
+            renderTable();
+        });
+    </script>
+</body>
+</html>

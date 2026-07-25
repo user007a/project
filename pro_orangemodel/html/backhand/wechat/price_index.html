@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>微信后台 - 价格指数</title>
+  <title>价格数据库 - 南丰蜜桔模型管理系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { margin: 0; padding: 0; background: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
@@ -54,14 +54,13 @@
     .detail-label { font-size: 12px; color: #8898aa; margin-bottom: 4px; }
     .detail-value { font-size: 14px; color: #1b2a41; }
     
-    .stats-card { background: #fff; border-radius: 12px; margin: 24px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .stats-row { display: flex; justify-content: space-between; }
-    .stat-item { flex: 1; display: flex; align-items: center; padding: 12px 0; border-right: 1px solid #f0f2f5; }
-    .stat-item:last-child { border-right: none; }
-    .stat-info { flex: 1; text-align: left; }
-    .stat-number { font-size: 28px; font-weight: 700; color: #1b2a41; margin-bottom: 4px; }
-    .stat-label { font-size: 13px; color: #8898aa; }
-    .stat-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 16px; }
+    .stats-card { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 24px; }
+    .stat-item { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .stat-info { text-align: left; }
+    .stat-number { font-size: 24px; font-weight: 700; color: #1b2a41; margin-bottom: 2px; }
+    .stat-label { font-size: 12px; color: #8898aa; }
+    .stat-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .stat-icon svg { width: 20px; height: 20px; }
     .stat-icon.days { background: #e6f7ee; color: #22a84a; }
     .stat-icon.market { background: #dbeafe; color: #3b82f6; }
     .stat-icon.max { background: #fee2e2; color: #ef4444; }
@@ -71,15 +70,13 @@
 <body>
   <div class="page-header">
     <div>
-      <div class="page-title">价格指数</div>
-      <div class="page-subtitle">管理微信端的价格指数数据</div>
+      <div class="page-title">价格数据库</div>
+      <div class="page-subtitle">管理南丰蜜桔价格数据</div>
     </div>
     <button class="btn btn-primary" onclick="openAddModal()">+ 新增数据</button>
   </div>
 
-  <div class="stats-card">
-    <div class="stats-row" id="statsRow">
-    </div>
+  <div class="stats-card" id="statsCard">
   </div>
 
   <div class="card">
@@ -238,8 +235,8 @@
       var maxPrice = Math.max.apply(null, originalPrices.map(function(p) { return parseFloat(p.highPrice); }));
       var minPrice = Math.min.apply(null, originalPrices.map(function(p) { return parseFloat(p.lowPrice); }));
       
-      var statsRow = document.getElementById('statsRow');
-      statsRow.innerHTML = `
+      var statsCard = document.getElementById('statsCard');
+      statsCard.innerHTML = `
         <div class="stat-item">
           <div class="stat-info">
             <div class="stat-number">${totalDays}</div>
