@@ -852,11 +852,11 @@
         </div>
         <div class="kpi-card animate-fade-in-up" style="animation-delay: 0.4s;" onclick="openModal('物候期')">
             <div class="kpi-info">
-                <h4>当前物候期</h4>
-                <div class="kpi-number">膨大期</div>
-                <span class="trend-badge">68%</span>
+                <h4>蜜桔品种</h4>
+                <div class="kpi-number">7个</div>
+                <span class="trend-badge">品种</span>
             </div>
-            <div class="kpi-icon"><i class="fas fa-seedling"></i></div>
+            <div class="kpi-icon"><i class="fas fa-apple-alt"></i></div>
         </div>
         <div class="kpi-card animate-fade-in-up" style="animation-delay: 0.5s;" onclick="openModal('甜度')">
             <div class="kpi-info">
@@ -1604,7 +1604,7 @@
             '主体': '涉农主体分布统计',
             '面积': '监测面积分布',
             '活跃度': '用户活跃度分析',
-            '物候期': '当前物候期分布',
+            '物候期': '蜜桔品种分布',
             '甜度': '甜度预测趋势',
             '优品率': '优品率分析',
             '采纳率': '农事建议采纳率',
@@ -1712,17 +1712,20 @@
                 break;
             case '物候期':
                 option = {
-                    tooltip: { trigger: 'item' },
-                    legend: { bottom: '5%', left: 'center', width: '90%', textStyle: { fontSize: 12 } },
+                    tooltip: { trigger: 'item', formatter: '{b}: {c}万亩 ({d}%)' },
+                    legend: { bottom: '5%', left: 'center', width: '90%', textStyle: { fontSize: 11 } },
                     series: [{
                         type: 'pie',
                         radius: ['40%', '70%'],
                         center: ['50%', '45%'],
                         data: [
-                            { value: 68, name: '果实膨大期', itemStyle: { color: '#22c55e' } },
-                            { value: 18, name: '落果期', itemStyle: { color: '#f59e0b' } },
-                            { value: 8, name: '成熟期', itemStyle: { color: '#ef4444' } },
-                            { value: 6, name: '其他', itemStyle: { color: '#64748b' } }
+                            { value: 12.5, name: '小果系', itemStyle: { color: '#3b82f6' } },
+                            { value: 5.2, name: '大果系', itemStyle: { color: '#10b981' } },
+                            { value: 1.8, name: '桂花蒂系', itemStyle: { color: '#f59e0b' } },
+                            { value: 1.2, name: '早熟系', itemStyle: { color: '#ef4444' } },
+                            { value: 0.9, name: '蜜广1号', itemStyle: { color: '#8b5cf6' } },
+                            { value: 0.4, name: '桂月红', itemStyle: { color: '#ec4899' } },
+                            { value: 0.08, name: '其他引进', itemStyle: { color: '#64748b' } }
                         ],
                         label: { show: true, formatter: '{b}: {d}%', fontSize: 11 }
                     }]
@@ -1818,9 +1821,9 @@
                 { value: '82.5%', label: '周活跃率', color: '#f59e0b' }
             ],
             '物候期': [
-                { value: '68%', label: '膨大期', color: '#166534' },
-                { value: '18%', label: '落果期', color: '#f59e0b' },
-                { value: '8%', label: '成熟期', color: '#22c55e' }
+                { value: '12.5万', label: '小果系(56%)', color: '#3b82f6' },
+                { value: '5.2万', label: '大果系(24%)', color: '#10b981' },
+                { value: '1.8万', label: '桂花蒂系(8%)', color: '#f59e0b' }
             ],
             '甜度': [
                 { value: '13.2', label: '当前甜度(°Bx)', color: '#166534' },
@@ -1879,12 +1882,14 @@
                 { label: '活跃度趋势', value: '↗ 持续增长' }
             ],
             '物候期': [
-                { label: '果实膨大期', value: '68%' },
-                { label: '生理落果期', value: '18%' },
-                { label: '成熟期', value: '8%' },
-                { label: '幼果期', value: '4%' },
-                { label: '开花期', value: '2%' },
-                { label: '统计时间', value: '2026-07' }
+                { label: '小果系', value: '12.5万亩 (56%)' },
+                { label: '大果系', value: '5.2万亩 (24%)' },
+                { label: '桂花蒂系', value: '1.8万亩 (8%)' },
+                { label: '早熟系', value: '1.2万亩 (5.5%)' },
+                { label: '蜜广1号', value: '0.9万亩 (4%)' },
+                { label: '桂月红', value: '0.4万亩 (1.8%)' },
+                { label: '其他引进', value: '0.08万亩' },
+                { label: '品种总数', value: '7个' }
             ],
             '甜度': [
                 { label: '当前甜度', value: '13.2°Bx' },
