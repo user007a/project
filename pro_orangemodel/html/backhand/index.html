@@ -42,6 +42,9 @@
     #sidebar {
       transition: width 0.3s ease;
     }
+    #sidebar.collapsed {
+      width: 64px;
+    }
     #sidebar.collapsed .nav-text,
     #sidebar.collapsed .brand-text,
     #sidebar.collapsed .menu-arrow {
@@ -396,8 +399,9 @@
       </nav>
 
       <div class="flex-shrink-0 border-t border-white/10">
-        <button id="collapseBtn" onclick="toggleSidebar()" aria-label="折叠侧边栏"
-                class="w-full flex items-center justify-center py-3 text-white/50 hover:text-white hover:bg-sidebar-hover transition-all duration-200">
+        <button id="collapseBtn" aria-label="折叠侧边栏"
+                class="w-full flex items-center justify-center py-3 text-white/50 hover:text-white hover:bg-sidebar-hover transition-all duration-200"
+                onclick="var s=document.getElementById('sidebar');var p=this.querySelector('path');if(s&&p){s.classList.toggle('collapsed');p.setAttribute('d',s.classList.contains('collapsed')?'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4':'M4 6h16M4 12h16M4 18h16');}">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
@@ -413,8 +417,9 @@
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
           </button>
 
-          <button onclick="toggleFullscreen()"
-                  class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors">
+          <button id="fullscreenBtn"
+                  class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+                  onclick="var p=this.querySelector('path');if(p){if(!document.fullscreenElement){document.documentElement.requestFullscreen();p.setAttribute('d','M5 15l7-7 7 7M5 15l7 7 7-7');}else{document.exitFullscreen();p.setAttribute('d','M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4');}}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
           </button>
 
@@ -652,16 +657,17 @@
   </div>
 
   <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const icon = document.getElementById('collapseIcon');
-      sidebar.classList.toggle('collapsed');
-      if (sidebar.classList.contains('collapsed')) {
-        icon.setAttribute('data-icon', 'ri:menu-unfold-line');
+    document.addEventListener('fullscreenchange', function() {
+      var btn = document.getElementById('fullscreenBtn');
+      if (!btn) return;
+      var p = btn.querySelector('path');
+      if (!p) return;
+      if (document.fullscreenElement) {
+        p.setAttribute('d', 'M5 15l7-7 7 7M5 15l7 7 7-7');
       } else {
-        icon.setAttribute('data-icon', 'ri:menu-fold-line');
+        p.setAttribute('d', 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4');
       }
-    }
+    });
 
     function toggleSubMenu(el) {
       const li = el.closest('li');
@@ -756,25 +762,6 @@
       const dropdown = document.getElementById('userDropdown');
       if (!dropdown.contains(e.target)) {
         closeUserMenu();
-      }
-    });
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        document.getElementById('fullscreenIcon').setAttribute('data-icon', 'ri:fullscreen-exit-line');
-      } else {
-        document.exitFullscreen();
-        document.getElementById('fullscreenIcon').setAttribute('data-icon', 'ri:fullscreen-line');
-      }
-    }
-
-    document.addEventListener('fullscreenchange', function() {
-      const icon = document.getElementById('fullscreenIcon');
-      if (document.fullscreenElement) {
-        icon.setAttribute('data-icon', 'ri:fullscreen-exit-line');
-      } else {
-        icon.setAttribute('data-icon', 'ri:fullscreen-line');
       }
     });
 

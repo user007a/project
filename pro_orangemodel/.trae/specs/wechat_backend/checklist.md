@@ -1,8 +1,0 @@
-- [ ] Checkpoint 1: 微信后台目录结构已创建，包含user_manage.html、orchard_manage.html、news_manage.html、price_index.html四个文件
-- [ ] Checkpoint 2: 导航菜单已更新，微信后台一级菜单在系统管理后面显示，包含四个二级菜单
-- [ ] Checkpoint 3: 用户管理页面已实现，包含搜索、新增、查看、编辑、删除功能
-- [ ] Checkpoint 4: 果园管理页面已实现，包含搜索、新增、查看、编辑、删除功能
-- [ ] Checkpoint 5: 资讯管理页面已实现，包含搜索、分类筛选、新增、查看、编辑、发布、删除功能
-- [ ] Checkpoint 6: 价格指数页面已实现，包含搜索、新增、查看、编辑、删除功能
-- [ ] Checkpoint 7: 所有页面风格与现有系统保持一致，操作区域使用文字按钮
-- [ ] Checkpoint 8: 所有页面使用Mock数据，功能可正常运行

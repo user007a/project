@@ -123,6 +123,146 @@
       margin-bottom: 4px;
     }
 
+    .task-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    }
+
+    .task-modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .task-modal {
+      background: var(--bg-white);
+      width: 100%;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: var(--space-5);
+      padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform var(--transition-normal);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .task-modal-overlay.show .task-modal {
+      transform: translateY(0);
+    }
+
+    .task-modal-close {
+      position: absolute;
+      top: var(--space-4);
+      right: var(--space-4);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .task-modal-close svg { width: 16px; height: 16px; }
+
+    .task-modal-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+
+    .task-modal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-modal-icon.pending { background: var(--warning-bg); color: var(--warning); }
+    .task-modal-icon.doing { background: var(--primary-50); color: var(--primary); }
+
+    .task-modal-badge {
+      font-size: var(--font-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 500;
+    }
+
+    .task-modal-badge.pending { background: var(--warning-bg); color: var(--warning); }
+    .task-modal-badge.doing { background: var(--success-bg); color: var(--success); }
+
+    .task-modal-section {
+      margin-bottom: var(--space-4);
+    }
+
+    .task-modal-section-title {
+      font-size: var(--font-sm);
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: var(--space-2);
+    }
+
+    .task-modal-desc {
+      font-size: var(--font-base);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .task-modal-detail {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+
+    .task-modal-detail-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+    }
+
+    .task-modal-detail-item svg { width: 16px; height: 16px; color: var(--text-light); }
+
+    .task-modal-btn-group {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+
+    .task-modal-btn {
+      flex: 1;
+      height: 48px;
+      border-radius: var(--radius-md);
+      font-size: var(--font-base);
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .task-modal-btn.primary {
+      background: var(--gradient-primary);
+      color: var(--bg-white);
+    }
+
+    .task-modal-btn.secondary {
+      background: var(--bg);
+      color: var(--text);
+    }
+
     .env-value-wrap {
       display: flex;
       align-items: baseline;
@@ -257,32 +397,32 @@
     </div>
 
     <div class="mb-section">
-      <div class="flex justify-between items-center mb-3">
-        <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>农事推荐</div>
-        <span class="text-xs text-secondary">查看全部 ›</span>
-      </div>
-      <div class="mb-task-card pending">
-        <div class="mb-task-header">
-          <div class="mb-task-title"><span class="mb-task-dot pending"></span>叶面喷施磷酸二氢钾</div>
-          <div class="mb-task-time">推荐时段：07:00-09:00</div>
+        <div class="flex justify-between items-center mb-3">
+          <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>农事推荐</div>
+          <span class="text-xs text-secondary">查看全部 ›</span>
         </div>
-        <div class="mb-task-desc">果实膨大期需补充磷钾，促进果实发育和糖分积累</div>
-      </div>
-      <div class="mb-task-card doing">
-        <div class="mb-task-header">
-          <div class="mb-task-title"><span class="mb-task-dot doing"></span>红蜘蛛防治</div>
-          <div class="mb-task-time">推荐时段：16:00-18:00</div>
+        <div class="mb-task-card pending" onclick="openTaskModal(0)">
+          <div class="mb-task-header">
+            <div class="mb-task-title"><span class="mb-task-dot pending"></span>叶面喷施磷酸二氢钾</div>
+            <div class="mb-task-time">推荐时段：07:00-09:00</div>
+          </div>
+          <div class="mb-task-desc">果实膨大期需补充磷钾，促进果实发育和糖分积累</div>
         </div>
-        <div class="mb-task-desc">近期气温升高，红蜘蛛进入高发期，建议及时喷施阿维菌素</div>
+        <div class="mb-task-card doing" onclick="openTaskModal(1)">
+          <div class="mb-task-header">
+            <div class="mb-task-title"><span class="mb-task-dot doing"></span>红蜘蛛防治</div>
+            <div class="mb-task-time">推荐时段：16:00-18:00</div>
+          </div>
+          <div class="mb-task-desc">近期气温升高，红蜘蛛进入高发期，建议及时喷施阿维菌素</div>
+        </div>
       </div>
-    </div>
 
     <div class="mb-section">
       <div class="flex justify-between items-center mb-3">
         <div class="mb-section-title" style="margin-bottom:0;"><span class="mb-section-dot"></span>农技资讯</div>
         <span class="text-xs text-secondary" onclick="navigateTo('mb_news.html')">查看全部 ›</span>
       </div>
-      <div class="mb-news-card">
+      <div class="mb-news-card" onclick="navigateTo('mb_news_detail.html')">
         <div class="news-card-header">
           <div class="mb-news-title">南丰蜜桔夏季病虫害综合防治技术要点</div>
           <span class="news-tag important">重要</span>
@@ -292,7 +432,7 @@
           <span>3258人已读</span>
         </div>
       </div>
-      <div class="mb-news-card">
+      <div class="mb-news-card" onclick="navigateTo('mb_news_detail.html')">
         <div class="news-card-header">
           <div class="mb-news-title">高温天气下南丰蜜桔灌溉管理技巧</div>
           <span class="news-tag technology">技术</span>
@@ -305,26 +445,11 @@
     </div>
 
     <div class="mb-tab-bar">
-      <div class="mb-tab-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span>首页</span>
-      </div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_data.html')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        <span>监测</span>
-      </div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_ai.html')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-        <span>AI助手</span>
-      </div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>病虫害</span>
-      </div>
-      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>我的</span>
-      </div>
+      <div class="mb-tab-item active">首页</div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_data.html')">监测</div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_ai.html')">AI助手</div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_disease.html')">病虫害</div>
+      <div class="mb-tab-item" onclick="navigateTo('mb_profile.html')">我的</div>
     </div>
   </div>
 
@@ -382,6 +507,50 @@
     </div>
   </div>
 
+  <!-- Task detail modal -->
+  <div class="task-modal-overlay" id="taskModalOverlay" onclick="closeTaskModal()">
+    <div class="task-modal" onclick="event.stopPropagation()">
+      <div class="task-modal-close" onclick="closeTaskModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div class="task-modal-header">
+        <div class="task-modal-icon" id="taskModalIcon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <div>
+          <h3 class="detail-title" style="margin-bottom:4px;" id="taskModalTitle">任务标题</h3>
+          <span class="task-modal-badge" id="taskModalBadge">待执行</span>
+        </div>
+      </div>
+      <div class="task-modal-section">
+        <div class="task-modal-section-title">任务描述</div>
+        <div class="task-modal-desc" id="taskModalDesc">任务描述内容</div>
+      </div>
+      <div class="task-modal-detail">
+        <div class="task-modal-detail-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="taskModalTime">推荐时段：07:00-09:00</span>
+        </div>
+        <div class="task-modal-detail-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span id="taskModalArea">适用区域：全部地块</span>
+        </div>
+        <div class="task-modal-detail-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span id="taskModalSource">来源：AI农事助手</span>
+        </div>
+      </div>
+      <div class="task-modal-section">
+        <div class="task-modal-section-title">操作建议</div>
+        <div class="task-modal-desc" id="taskModalSuggestion">详细操作建议内容</div>
+      </div>
+      <div class="task-modal-btn-group">
+        <button class="task-modal-btn secondary" onclick="closeTaskModal()">关闭</button>
+        <button class="task-modal-btn primary" onclick="completeTask()">标记完成</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Message detail pop-up -->
   <div class="msg-detail-overlay" id="msgDetailOverlay">
     <div class="msg-detail-modal">
@@ -409,6 +578,63 @@
   <script>
     function navigateTo(page) {
       window.location.href = page;
+    }
+
+    var tasks = [
+      {
+        id: 0,
+        title: '叶面喷施磷酸二氢钾',
+        status: 'pending',
+        time: '推荐时段：07:00-09:00',
+        area: '适用区域：全部地块',
+        source: '来源：AI农事助手',
+        desc: '果实膨大期需补充磷钾，促进果实发育和糖分积累。磷酸二氢钾是优质的磷钾复合肥，叶面喷施吸收快，效果显著。',
+        suggestion: '1. 选择晴朗无风的早晨或傍晚进行喷施；\n2. 浓度控制在0.2%-0.3%，避免浓度过高灼伤叶片；\n3. 喷施时要均匀周到，重点喷洒叶片背面；\n4. 可与微量元素肥料混合使用；\n5. 连续喷施2-3次，间隔7-10天。'
+      },
+      {
+        id: 1,
+        title: '红蜘蛛防治',
+        status: 'doing',
+        time: '推荐时段：16:00-18:00',
+        area: '适用区域：A1-A3地块',
+        source: '来源：病虫害监测系统',
+        desc: '近期气温升高，红蜘蛛进入高发期，建议及时喷施阿维菌素进行防治。红蜘蛛繁殖速度快，需及时控制，避免造成严重危害。',
+        suggestion: '1. 选择高效低毒的杀螨剂，如阿维菌素、螺螨酯等；\n2. 注意药剂轮换使用，避免产生抗药性；\n3. 喷施时要重点喷洒叶片背面，红蜘蛛主要集中在那里；\n4. 连续防治2次，间隔5-7天；\n5. 注意安全防护，佩戴口罩和手套。'
+      }
+    ];
+
+    function openTaskModal(index) {
+      var task = tasks[index];
+      document.getElementById('taskModalTitle').textContent = task.title;
+      document.getElementById('taskModalDesc').textContent = task.desc;
+      document.getElementById('taskModalTime').textContent = task.time;
+      document.getElementById('taskModalArea').textContent = task.area;
+      document.getElementById('taskModalSource').textContent = task.source;
+      document.getElementById('taskModalSuggestion').textContent = task.suggestion;
+      
+      var icon = document.getElementById('taskModalIcon');
+      var badge = document.getElementById('taskModalBadge');
+      
+      if (task.status === 'pending') {
+        icon.className = 'task-modal-icon pending';
+        badge.className = 'task-modal-badge pending';
+        badge.textContent = '待执行';
+      } else {
+        icon.className = 'task-modal-icon doing';
+        badge.className = 'task-modal-badge doing';
+        badge.textContent = '执行中';
+      }
+      
+      document.getElementById('taskModalOverlay').classList.add('show');
+    }
+
+    function closeTaskModal() {
+      document.getElementById('taskModalOverlay').classList.remove('show');
+    }
+
+    function completeTask() {
+      closeTaskModal();
+      alert('任务已标记完成！');
     }
 
     var messages = [

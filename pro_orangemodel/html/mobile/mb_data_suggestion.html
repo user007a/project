@@ -323,11 +323,51 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
+
+    .skeleton-state { display: none; }
+    .mb-app.loading .real-content { display: none; }
+    .mb-app.loading .skeleton-state { display: block; }
   </style>
 </head>
 <body>
-  <div class="mb-app">
-    <div class="page-header">
+  <div class="mb-app loading">
+    <div class="skeleton-state">
+      <div class="page-header">
+        <div style="width:36px;height:36px;"></div>
+        <div class="header-content">
+          <div class="mb-skeleton" style="width:100px;height:24px;"></div>
+          <div class="mb-skeleton" style="width:160px;height:14px;margin-top:6px;"></div>
+        </div>
+      </div>
+      <div class="assistant-section">
+        <div class="assistant-card">
+          <div class="mb-skeleton" style="width:72px;height:72px;border-radius:50%;"></div>
+          <div style="flex:1;">
+            <div class="mb-skeleton" style="width:80px;height:16px;margin-bottom:4px;"></div>
+            <div class="mb-skeleton" style="width:100%;height:12px;margin-bottom:4px;"></div>
+            <div class="mb-skeleton" style="width:80%;height:12px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="mb-skeleton" style="width:80px;height:16px;margin-bottom:16px;"></div>
+        <div class="mb-skeleton" style="width:100%;height:44px;border-radius:var(--radius-lg);margin-bottom:16px;"></div>
+        <div class="mb-skeleton" style="width:100%;height:44px;border-radius:var(--radius-lg);"></div>
+      </div>
+      <div class="questions-card">
+        <div class="mb-skeleton" style="width:100px;height:16px;margin-bottom:12px;"></div>
+        <div class="mb-skeleton-line long"></div>
+        <div class="mb-skeleton-line long"></div>
+        <div class="mb-skeleton-line long"></div>
+        <div class="mb-skeleton-line long"></div>
+      </div>
+      <div style="padding: 0 16px 16px;">
+        <div class="mb-skeleton" style="width:100%;height:48px;border-radius:var(--radius-full);"></div>
+      </div>
+    </div>
+
+    <div class="real-content">
+      <div class="page-header">
       <div class="header-back" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 18l-6-6 6-6"/>
@@ -365,11 +405,9 @@
         生成智能建议
       </button>
     </div>
+    </div>
 
-
-
-
-  <div class="modal-overlay" id="loadingModal">
+    <div class="modal-overlay" id="loadingModal">
     <div class="modal-box">
       <div class="modal-icon" style="background: var(--primary-light);">
         <div class="loading-spinner"></div>
@@ -477,6 +515,13 @@
       document.getElementById('suggestionText').innerHTML = html;
       document.getElementById('resultModal').classList.add('show');
     }
+
+    (function() {
+      var app = document.querySelector('.mb-app');
+      setTimeout(function() {
+        app.classList.remove('loading');
+      }, 600);
+    })();
   </script>
 </body>
 </html>

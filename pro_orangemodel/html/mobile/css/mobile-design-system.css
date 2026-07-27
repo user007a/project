@@ -272,6 +272,55 @@ img {
   display: block;
 }
 
+/* 图片容器 */
+.img-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: var(--gray-100);
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--transition-normal);
+}
+
+/* 图片加载状态 */
+.img-wrapper.loading img {
+  opacity: 0;
+}
+
+.img-wrapper.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-skeleton);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+/* 图片加载失败状态 */
+.img-wrapper.error::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E");
+  background-size: 40px;
+  background-repeat: no-repeat;
+}
+
+.img-wrapper.error img {
+  opacity: 0;
+}
+
 /* 滚动条优化 */
 ::-webkit-scrollbar {
   width: 4px;
@@ -894,6 +943,11 @@ img {
 
 .mb-btn:active {
   transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.mb-btn:hover {
+  opacity: 0.9;
 }
 
 /* 主按钮 */
@@ -906,6 +960,11 @@ img {
 .mb-btn-primary:active {
   background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
   box-shadow: 0 1px 4px rgba(46, 158, 90, 0.2);
+  transform: scale(0.96);
+}
+
+.mb-btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(46, 158, 90, 0.4);
 }
 
 /* 次按钮 */
@@ -917,6 +976,11 @@ img {
 
 .mb-btn-secondary:active {
   background: var(--primary-100);
+  transform: scale(0.96);
+}
+
+.mb-btn-secondary:hover {
+  border-color: var(--primary-300);
 }
 
 /* 文字按钮 */
@@ -928,6 +992,11 @@ img {
 
 .mb-btn-text:active {
   background: var(--primary-50);
+  transform: scale(0.96);
+}
+
+.mb-btn-text:hover {
+  background: var(--primary-50);
 }
 
 /* 危险按钮 */
@@ -935,6 +1004,16 @@ img {
   background: var(--error-light);
   color: var(--error-dark);          /* v2: 原 error → error-dark */
   border: 1px solid var(--error);
+}
+
+.mb-btn-danger:active {
+  background: var(--error);
+  color: var(--bg-white);
+  transform: scale(0.96);
+}
+
+.mb-btn-danger:hover {
+  border-color: var(--error-dark);
 }
 
 /* 禁用状态 */

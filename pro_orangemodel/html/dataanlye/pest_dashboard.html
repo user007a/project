@@ -720,6 +720,7 @@
         .status-completed { background: #e0f2e9; color: #1f7840; }
         .status-progress { background: #fff0db; color: #c47d2e; }
         .status-pending { background: #fee9e6; color: #bc4e2c; }
+        .status-info { background: #eff6ff; color: #2563eb; }
         .pest-rank-list {
             display: flex;
             flex-direction: column;
@@ -832,6 +833,9 @@
             <a href="../mobile/mb_home.html" class="platform-entry" title="进入微信小程序">
                 <i class="fas fa-mobile-alt"></i> 移动端
             </a>
+            <button class="platform-entry" onclick="toggleFullscreen()" title="全屏显示" style="cursor:pointer;">
+                <i class="fas fa-expand"></i> 全屏
+            </button>
             <div class="date-badge" id="dateBadge"><i class="far fa-calendar-alt"></i> <span id="currentDate">2026年7月22日</span> · 防控关键期</div>
         </div>
     </div>
@@ -1169,6 +1173,18 @@
 <script>
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(function(err) {
+                console.log('Error attempting to enable fullscreen:', err);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
     var recognitionChart = echarts.init(document.getElementById('recognitionChart'));
     recognitionChart.setOption({
         tooltip: { trigger: 'axis' },
@@ -1217,49 +1233,6 @@
             { name: '漏报率', type: 'line', data: [5.3, 4.7, 4.0, 3.7, 3.2], smooth: true, itemStyle: { color: '#ef4444' } }
         ]
     });
-
-    // 病虫害滚动卡片数据
-    var pestCardsData = [
-        { name: '溃疡病', type: 'disease', area: '太和镇', severity: '高', person: '李医生', status: '预警中' },
-        { name: '红蜘蛛', type: 'pest', area: '桑田镇', severity: '高', person: '王技术员', status: '预警中' },
-        { name: '炭疽病', type: 'disease', area: '白舍镇', severity: '中', person: '张植保', status: '监测中' },
-        { name: '潜叶蛾', type: 'pest', area: '市山镇', severity: '中', person: '刘农艺师', status: '监测中' },
-        { name: '树脂病', type: 'disease', area: '洽湾镇', severity: '中', person: '陈专家', status: '监测中' },
-        { name: '蚜虫', type: 'pest', area: '东坪乡', severity: '低', person: '赵技术员', status: '正常' },
-        { name: '疮痂病', type: 'disease', area: '太和镇', severity: '低', person: '孙植保', status: '正常' },
-        { name: '介壳虫', type: 'pest', area: '桑田镇', severity: '低', person: '周农艺师', status: '正常' },
-        { name: '黄龙病', type: 'disease', area: '白舍镇', severity: '高', person: '吴医生', status: '紧急处理' },
-        { name: '木虱', type: 'pest', area: '市山镇', severity: '高', person: '郑技术员', status: '紧急处理' },
-        { name: '黑星病', type: 'disease', area: '洽湾镇', severity: '中', person: '黄植保', status: '监测中' },
-        { name: '粉虱', type: 'pest', area: '东坪乡', severity: '中', person: '冯农艺师', status: '监测中' },
-        { name: '流胶病', type: 'disease', area: '太和镇', severity: '低', person: '何技术员', status: '正常' },
-        { name: '卷叶蛾', type: 'pest', area: '桑田镇', severity: '低', person: '梁植保', status: '正常' },
-        { name: '黑斑病', type: 'disease', area: '白舍镇', severity: '中', person: '谢专家', status: '监测中' },
-        { name: '锈壁虱', type: 'pest', area: '市山镇', severity: '高', person: '宋农艺师', status: '预警中' },
-        { name: '褐腐病', type: 'disease', area: '洽湾镇', severity: '中', person: '曹植保', status: '监测中' },
-        { name: '天牛', type: 'pest', area: '东坪乡', severity: '低', person: '许技术员', status: '正常' },
-        { name: '灰霉病', type: 'disease', area: '太和镇', severity: '中', person: '韩专家', status: '监测中' },
-        { name: '食心虫', type: 'pest', area: '桑田镇', severity: '高', person: '唐农艺师', status: '预警中' },
-        { name: '裂皮病', type: 'disease', area: '白舍镇', severity: '低', person: '邓医生', status: '正常' },
-        { name: '毒蛾', type: 'pest', area: '市山镇', severity: '中', person: '石技术员', status: '监测中' },
-        { name: '煤污病', type: 'disease', area: '洽湾镇', severity: '低', person: '袁植保', status: '正常' },
-        { name: '象鼻虫', type: 'pest', area: '东坪乡', severity: '低', person: '史农艺师', status: '正常' },
-        { name: '白绢病', type: 'disease', area: '太和镇', severity: '中', person: '金专家', status: '监测中' },
-        { name: '凤蝶', type: 'pest', area: '桑田镇', severity: '低', person: '魏技术员', status: '正常' },
-        { name: '线虫病', type: 'disease', area: '白舍镇', severity: '高', person: '罗医生', status: '紧急处理' },
-        { name: '尺蠖', type: 'pest', area: '市山镇', severity: '中', person: '殷植保', status: '监测中' },
-        { name: '紫纹羽病', type: 'disease', area: '洽湾镇', severity: '低', person: '陶专家', status: '正常' },
-        { name: '金龟子', type: 'pest', area: '东坪乡', severity: '低', person: '姜农艺师', status: '正常' }
-    ];
-
-    function getSeverityColor(severity) {
-        switch(severity) {
-            case '高': return '#dc2626';
-            case '中': return '#d97706';
-            case '低': return '#22c55e';
-            default: return '#64748b';
-        }
-    }
 
     function renderPestCards(filterType) {
         var container = document.getElementById('pestScrollingContainer');
@@ -1391,17 +1364,17 @@
     var nanfengGeoJson = {
         "type": "FeatureCollection",
         "features": [
-            {"type":"Feature","properties":{"name":"太和镇","risk":85,"warningCount":23,"affectedArea":2850,"incidence":"23.5%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[68,55],[92,42],[128,40],[152,52],[165,75],[158,100],[135,115],[100,118],[72,105],[60,82],[68,55]]]}},
-            {"type":"Feature","properties":{"name":"桑田镇","risk":82,"warningCount":18,"affectedArea":2430,"incidence":"18.8%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[165,50],[195,38],[228,35],[258,48],[270,70],[268,95],[248,112],[215,118],[185,110],[168,88],[165,50]]]}},
-            {"type":"Feature","properties":{"name":"白舍镇","risk":65,"warningCount":12,"affectedArea":2180,"incidence":"12.3%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[270,48],[302,35],[340,32],[372,40],[392,58],[398,82],[385,105],[358,115],[325,118],[295,112],[272,95],[262,72],[270,48]]]}},
-            {"type":"Feature","properties":{"name":"市山镇","risk":68,"warningCount":8,"affectedArea":1960,"incidence":"8.5%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[398,58],[418,48],[445,45],[470,55],[482,78],[480,108],[468,138],[442,150],[415,145],[398,125],[392,95],[398,58]]]}},
-            {"type":"Feature","properties":{"name":"太源乡","risk":58,"warningCount":6,"affectedArea":1850,"incidence":"6.2%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[60,82],[72,105],[88,118],[82,145],[78,172],[68,192],[48,198],[28,180],[18,150],[22,118],[35,95],[50,85],[60,82]]]}},
-            {"type":"Feature","properties":{"name":"琴城镇","risk":72,"warningCount":15,"affectedArea":2200,"incidence":"15.6%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[88,118],[105,98],[125,88],[150,85],[168,88],[185,110],[195,128],[200,150],[188,175],[168,188],[142,192],[118,182],[98,165],[88,142],[88,118]]]}},
-            {"type":"Feature","properties":{"name":"头陂镇","risk":60,"warningCount":7,"affectedArea":2050,"incidence":"7.8%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[200,150],[225,135],[258,128],[290,132],[322,145],[345,165],[350,190],[335,215],[305,222],[275,215],[248,200],[225,180],[210,165],[200,150]]]}},
-            {"type":"Feature","properties":{"name":"洽湾镇","risk":55,"warningCount":5,"affectedArea":1720,"incidence":"5.2%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[392,95],[398,125],[415,145],[442,150],[468,148],[478,175],[472,218],[455,248],[425,262],[390,265],[358,252],[338,228],[332,195],[340,165],[355,135],[375,110],[392,95]]]}},
-            {"type":"Feature","properties":{"name":"东坪乡","risk":45,"warningCount":2,"affectedArea":1460,"incidence":"2.1%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[18,150],[28,180],[42,200],[52,225],[48,255],[32,272],[12,268],[5,240],[8,205],[15,175],[18,150]]]}},
-            {"type":"Feature","properties":{"name":"莱溪乡","risk":52,"warningCount":4,"affectedArea":1680,"incidence":"4.8%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[52,225],[68,192],[82,165],[98,165],[118,182],[135,192],[145,215],[148,245],[135,270],[108,280],[78,275],[55,260],[42,235],[52,225]]]}},
-            {"type":"Feature","properties":{"name":"三溪乡","risk":48,"warningCount":3,"affectedArea":1520,"incidence":"3.5%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[145,215],[168,188],[188,175],[210,165],[225,180],[248,200],[275,215],[305,222],[322,235],[320,260],[298,275],[268,282],[235,278],[200,268],[168,255],[150,235],[145,215]]]}}
+            {"type":"Feature","properties":{"name":"太和镇","risk":85,"warningCount":38,"affectedArea":2850,"incidence":"23.5%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[68,55],[92,42],[128,40],[152,52],[165,75],[158,100],[135,115],[100,118],[72,105],[60,82],[68,55]]]}},
+            {"type":"Feature","properties":{"name":"桑田镇","risk":82,"warningCount":32,"affectedArea":2430,"incidence":"18.8%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[165,50],[195,38],[228,35],[258,48],[270,70],[268,95],[248,112],[215,118],[185,110],[168,88],[165,50]]]}},
+            {"type":"Feature","properties":{"name":"白舍镇","risk":65,"warningCount":20,"affectedArea":2180,"incidence":"12.3%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[270,48],[302,35],[340,32],[372,40],[392,58],[398,82],[385,105],[358,115],[325,118],[295,112],[272,95],[262,72],[270,48]]]}},
+            {"type":"Feature","properties":{"name":"市山镇","risk":68,"warningCount":14,"affectedArea":1960,"incidence":"8.5%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[398,58],[418,48],[445,45],[470,55],[482,78],[480,108],[468,138],[442,150],[415,145],[398,125],[392,95],[398,58]]]}},
+            {"type":"Feature","properties":{"name":"太源乡","risk":58,"warningCount":10,"affectedArea":1850,"incidence":"6.2%","trend":"↑"},"geometry":{"type":"Polygon","coordinates":[[[60,82],[72,105],[88,118],[82,145],[78,172],[68,192],[48,198],[28,180],[18,150],[22,118],[35,95],[50,85],[60,82]]]}},
+            {"type":"Feature","properties":{"name":"琴城镇","risk":72,"warningCount":20,"affectedArea":2200,"incidence":"15.6%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[88,118],[105,98],[125,88],[150,85],[168,88],[185,110],[195,128],[200,150],[188,175],[168,188],[142,192],[118,182],[98,165],[88,142],[88,118]]]}},
+            {"type":"Feature","properties":{"name":"头陂镇","risk":60,"warningCount":10,"affectedArea":2050,"incidence":"7.8%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[200,150],[225,135],[258,128],[290,132],[322,145],[345,165],[350,190],[335,215],[305,222],[275,215],[248,200],[225,180],[210,165],[200,150]]]}},
+            {"type":"Feature","properties":{"name":"洽湾镇","risk":55,"warningCount":8,"affectedArea":1720,"incidence":"5.2%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[392,95],[398,125],[415,145],[442,150],[468,148],[478,175],[472,218],[455,248],[425,262],[390,265],[358,252],[338,228],[332,195],[340,165],[355,135],[375,110],[392,95]]]}},
+            {"type":"Feature","properties":{"name":"东坪乡","risk":45,"warningCount":3,"affectedArea":1460,"incidence":"2.1%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[18,150],[28,180],[42,200],[52,225],[48,255],[32,272],[12,268],[5,240],[8,205],[15,175],[18,150]]]}},
+            {"type":"Feature","properties":{"name":"莱溪乡","risk":52,"warningCount":7,"affectedArea":1680,"incidence":"4.8%","trend":"→"},"geometry":{"type":"Polygon","coordinates":[[[52,225],[68,192],[82,165],[98,165],[118,182],[135,192],[145,215],[148,245],[135,270],[108,280],[78,275],[55,260],[42,235],[52,225]]]}},
+            {"type":"Feature","properties":{"name":"三溪乡","risk":48,"warningCount":4,"affectedArea":1520,"incidence":"3.5%","trend":"↓"},"geometry":{"type":"Polygon","coordinates":[[[145,215],[168,188],[188,175],[210,165],[225,180],[248,200],[275,215],[305,222],[322,235],[320,260],[298,275],[268,282],[235,278],[200,268],[168,255],[150,235],[145,215]]]}}
         ]
     };
 
@@ -1800,11 +1773,11 @@
                 option = {
                     tooltip: { trigger: 'axis' },
                     grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
-                    xAxis: { type: 'category', data: ['太和镇', '桑田镇', '白舍镇', '市山镇', '洽湾镇', '东坪乡'] },
+                    xAxis: { type: 'category', data: ['太和镇', '桑田镇', '白舍镇', '市山镇', '太源乡', '琴城镇', '头陂镇', '洽湾镇', '东坪乡', '莱溪乡', '三溪乡'] },
                     yAxis: { type: 'value' },
                     series: [{
                         type: 'bar',
-                        data: [45, 52, 28, 18, 10, 3],
+                        data: [38, 32, 20, 14, 10, 20, 10, 8, 3, 7, 4],
                         itemStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                                 { offset: 0, color: '#ef4444' }, { offset: 1, color: '#f87171' }
@@ -1902,7 +1875,7 @@
             ],
             '预警': [
                 { value: '156', label: '预警总数', color: '#166534' },
-                { value: '52', label: '桑田镇最多', color: '#ef4444' },
+                { value: '38', label: '太和镇最多', color: '#ef4444' },
                 { value: '78.3%', label: '处置完成率', color: '#22c55e' }
             ],
             '处置': [
@@ -1970,12 +1943,17 @@
                 { label: '较上月提升', value: '+8.3%' }
             ],
             '预警': [
-                { label: '太和镇', value: '45条' },
-                { label: '桑田镇', value: '52条' },
-                { label: '白舍镇', value: '28条' },
-                { label: '市山镇', value: '18条' },
-                { label: '洽湾镇', value: '10条' },
-                { label: '东坪乡', value: '3条' }
+                { label: '太和镇', value: '38条' },
+                { label: '桑田镇', value: '32条' },
+                { label: '白舍镇', value: '20条' },
+                { label: '市山镇', value: '14条' },
+                { label: '太源乡', value: '10条' },
+                { label: '琴城镇', value: '20条' },
+                { label: '头陂镇', value: '10条' },
+                { label: '洽湾镇', value: '8条' },
+                { label: '东坪乡', value: '3条' },
+                { label: '莱溪乡', value: '7条' },
+                { label: '三溪乡', value: '4条' }
             ],
             '处置': [
                 { label: '1月完成率', value: '65%' },
@@ -2038,70 +2016,7 @@
     </div>
 </div>
 <script>
-(function() {
-    setTimeout(function() {
-        var container = document.getElementById('pestScrollingContainer');
-        if (container) {
-            var data = [
-                { name: '溃疡病', type: 'disease', area: '太和镇', severity: '高', person: '李医生', status: '预警中' },
-                { name: '红蜘蛛', type: 'pest', area: '桑田镇', severity: '高', person: '王技术员', status: '预警中' },
-                { name: '黄龙病', type: 'disease', area: '白舍镇', severity: '高', person: '吴医生', status: '紧急处理' },
-                { name: '木虱', type: 'pest', area: '市山镇', severity: '高', person: '郑技术员', status: '紧急处理' },
-                { name: '锈壁虱', type: 'pest', area: '市山镇', severity: '高', person: '宋农艺师', status: '预警中' },
-                { name: '食心虫', type: 'pest', area: '桑田镇', severity: '高', person: '唐农艺师', status: '预警中' },
-                { name: '线虫病', type: 'disease', area: '白舍镇', severity: '高', person: '罗医生', status: '紧急处理' },
-                { name: '炭疽病', type: 'disease', area: '白舍镇', severity: '中', person: '张植保', status: '监测中' },
-                { name: '潜叶蛾', type: 'pest', area: '市山镇', severity: '中', person: '刘农艺师', status: '监测中' },
-                { name: '树脂病', type: 'disease', area: '洽湾镇', severity: '中', person: '陈专家', status: '监测中' },
-                { name: '黑星病', type: 'disease', area: '洽湾镇', severity: '中', person: '黄植保', status: '监测中' },
-                { name: '灰霉病', type: 'disease', area: '太和镇', severity: '中', person: '韩专家', status: '监测中' },
-                { name: '白绢病', type: 'disease', area: '太和镇', severity: '中', person: '金专家', status: '监测中' },
-                { name: '黑斑病', type: 'disease', area: '白舍镇', severity: '中', person: '谢专家', status: '监测中' },
-                { name: '毒蛾', type: 'pest', area: '市山镇', severity: '中', person: '石技术员', status: '监测中' },
-                { name: '褐腐病', type: 'disease', area: '洽湾镇', severity: '中', person: '曹植保', status: '监测中' },
-                { name: '粉虱', type: 'pest', area: '东坪乡', severity: '中', person: '冯农艺师', status: '监测中' },
-                { name: '尺蠖', type: 'pest', area: '市山镇', severity: '中', person: '殷植保', status: '监测中' },
-                { name: '蚜虫', type: 'pest', area: '东坪乡', severity: '低', person: '赵技术员', status: '正常' },
-                { name: '疮痂病', type: 'disease', area: '太和镇', severity: '低', person: '孙植保', status: '正常' },
-                { name: '介壳虫', type: 'pest', area: '桑田镇', severity: '低', person: '周农艺师', status: '正常' },
-                { name: '流胶病', type: 'disease', area: '太和镇', severity: '低', person: '何技术员', status: '正常' },
-                { name: '卷叶蛾', type: 'pest', area: '桑田镇', severity: '低', person: '梁植保', status: '正常' },
-                { name: '裂皮病', type: 'disease', area: '白舍镇', severity: '低', person: '邓医生', status: '正常' },
-                { name: '煤污病', type: 'disease', area: '洽湾镇', severity: '低', person: '袁植保', status: '正常' },
-                { name: '天牛', type: 'pest', area: '东坪乡', severity: '低', person: '许技术员', status: '正常' },
-                { name: '象鼻虫', type: 'pest', area: '东坪乡', severity: '低', person: '史农艺师', status: '正常' },
-                { name: '凤蝶', type: 'pest', area: '桑田镇', severity: '低', person: '魏技术员', status: '正常' },
-                { name: '紫纹羽病', type: 'disease', area: '洽湾镇', severity: '低', person: '陶专家', status: '正常' },
-                { name: '金龟子', type: 'pest', area: '东坪乡', severity: '低', person: '姜农艺师', status: '正常' }
-            ];
-            function sevColor(s) { if(s==='高')return'#dc2626';if(s==='中')return'#d97706';return'#22c55e'; }
-            var rows='';
-            data.concat(data).forEach(function(item) {
-                var w = item.status!=='正常';
-                rows+='<tr'+(w?' class="highlight-row"':'')+'>'+
-                    '<td>'+(item.type==='disease'?'<i class="fas fa-virus" style="color:#ef4444;margin-right:6px;"></i>':'<i class="fas fa-bug" style="color:#f59e0b;margin-right:6px;"></i>')+item.name+'</td>'+
-                    '<td>'+item.area+'</td>'+
-                    '<td><span style="color:'+sevColor(item.severity)+';font-weight:500;">'+item.severity+'</span></td>'+
-                    '<td>'+item.person+'</td>'+
-                    '<td class="'+(w?'warning-cell':'normal-cell')+'">'+item.status+'</td>'+
-                    '</tr>';
-            });
-            container.innerHTML='<div class="scrolling-wrapper"><table class="scrolling-table"><thead><tr><th>病（虫）害名称</th><th>发生区域</th><th>严重程度</th><th>负责人员</th><th>状态</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-        }
-        // KPI number fix
-        var kpiValues = ['8','10','96.8','156','78.3','5','85.6','92.5'];
-        var kpiEls = document.querySelectorAll('.kpi-number[data-value]');
-        kpiEls.forEach(function(el, i) {
-            var v = parseFloat(kpiValues[i]||el.getAttribute('data-value'));
-            if (v>=1000) el.textContent = v.toLocaleString('zh-CN',{maximumFractionDigits:1});
-            else if (v%1!=0) el.textContent = v.toFixed(1);
-            else el.textContent = Math.round(v).toLocaleString('zh-CN');
-        });
-        // Map update time
-        var timeEl = document.getElementById('mapUpdateTime');
-        if (timeEl) timeEl.textContent = new Date().toLocaleTimeString('zh-CN');
-    }, 300);
-})();
+    document.getElementById('mapUpdateTime').textContent = new Date().toLocaleTimeString('zh-CN');
 </script>
 </body>
 </html>

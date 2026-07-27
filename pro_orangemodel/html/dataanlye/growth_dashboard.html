@@ -821,6 +821,9 @@
             <a href="../mobile/mb_home.html" class="platform-entry" title="进入微信小程序">
                 <i class="fas fa-mobile-alt"></i> 移动端
             </a>
+            <button class="platform-entry" onclick="toggleFullscreen()" title="全屏显示" style="cursor:pointer;">
+                <i class="fas fa-expand"></i> 全屏
+            </button>
             <div class="date-badge" id="dateBadge"><i class="far fa-calendar-alt"></i> <span id="currentDate">2026年7月22日</span> · 果实膨大期</div>
         </div>
     </div>
@@ -844,8 +847,8 @@
         </div>
         <div class="kpi-card animate-fade-in-up" style="animation-delay: 0.3s;" onclick="openModal('面积')">
             <div class="kpi-info">
-                <h4>监测面积</h4>
-                <div class="kpi-number" data-value="8.6">0</div>
+                <h4>种植面积</h4>
+                <div class="kpi-number" data-value="19.8">0</div>
                 <span class="trend-badge">万亩</span>
             </div>
             <div class="kpi-icon"><i class="fas fa-square"></i></div>
@@ -1041,8 +1044,13 @@
                     <text x="220" y="72" fill="#475569" font-size="11" font-weight="500">桑田镇</text>
                     <text x="310" y="67" fill="#475569" font-size="11" font-weight="500">白舍镇</text>
                     <text x="400" y="95" fill="#475569" font-size="11" font-weight="500">市山镇</text>
+                    <text x="115" y="175" fill="#475569" font-size="11" font-weight="500">莱溪乡</text>
+                    <text x="200" y="170" fill="#475569" font-size="11" font-weight="500">太源乡</text>
+                    <text x="290" y="165" fill="#475569" font-size="11" font-weight="500">三溪乡</text>
+                    <text x="385" y="185" fill="#475569" font-size="11" font-weight="500">傅坊乡</text>
                     <text x="405" y="230" fill="#475569" font-size="11" font-weight="500">洽湾镇</text>
                     <text x="110" y="245" fill="#475569" font-size="11" font-weight="500">东坪乡</text>
+                    <text x="230" y="250" fill="#475569" font-size="11" font-weight="500">紫霄镇</text>
                     <text x="250" y="170" text-anchor="middle" fill="rgba(22,101,52,0.08)" font-size="40" font-weight="bold">南丰县</text>
                     <g filter="url(#bubbleGlow)">
                         <!-- 原有21个气泡（半径减半） -->
@@ -1131,8 +1139,8 @@
                         <div style="font-size:10px;color:#94a3b8;margin-top:1px;">主体总数</div>
                     </div>
                     <div style="background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:8px 14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
-                        <div style="font-size:20px;font-weight:700;color:#22c55e;">19.8<span style="font-size:12px;">万亩</span></div>
-                        <div style="font-size:10px;color:#94a3b8;margin-top:1px;">种植面积</div>
+                        <div style="font-size:20px;font-weight:700;color:#22c55e;">8.6<span style="font-size:12px;">万亩</span></div>
+                        <div style="font-size:10px;color:#94a3b8;margin-top:1px;">监测面积</div>
                     </div>
                 </div>
                 <div class="map-popup" id="mapPopup">
@@ -1159,7 +1167,7 @@
 
         <div class="side-col">
             <div class="card compact-card">
-                <div class="card-header"><span><i class="fas fa-chart-line"></i> 品质预测趋势</span><span class="header-extra">未来30天</span></div>
+                <div class="card-header"><span><i class="fas fa-chart-line"></i> 品质预测趋势</span><span class="header-extra">近7天趋势</span></div>
                 <div id="qualityTrendChart" class="chart-box"></div>
             </div>
 
@@ -1230,6 +1238,18 @@
 
 <script>
     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(function(err) {
+                console.log('Error attempting to enable fullscreen:', err);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
 
     var healthRingChart = echarts.init(document.getElementById('healthRingChart'));
     healthRingChart.setOption({
@@ -1662,7 +1682,7 @@
                     series: [{
                         name: '监测面积',
                         type: 'bar',
-                        data: [1.5, 2.1, 2.4, 1.3, 1.0, 0.7],
+                        data: [1.4, 2.0, 2.3, 1.2, 0.9, 0.8],
                         itemStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                                 { offset: 0, color: '#3b82f6' }, { offset: 1, color: '#60a5fa' }
@@ -1672,7 +1692,7 @@
                     }, {
                         name: '未监测面积',
                         type: 'bar',
-                        data: [0.6, 0.7, 0.8, 0.5, 0.5, 0.5],
+                        data: [1.8, 2.2, 2.5, 1.5, 1.4, 1.8],
                         itemStyle: {
                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                                 { offset: 0, color: '#cbd5e1' }, { offset: 1, color: '#94a3b8' }
